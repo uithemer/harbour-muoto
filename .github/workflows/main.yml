@@ -4,6 +4,7 @@ env:
   sfos_target: 4.2.0.21
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*-sfos4.2'
