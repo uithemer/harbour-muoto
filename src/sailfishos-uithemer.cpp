@@ -18,9 +18,12 @@
 
 int main(int argc, char *argv[])
 {
-    qDebug() << setuid(0);
+    // Removed direct setuid(0) call. UI apps must not escalate privileges.
+    // Privileged operations should be moved to a dedicated helper/service
+    // and invoked securely (DBus + polkit or a packaged helper invoked via pkexec).
+    // qDebug() << setuid(0);
 
-    QGuiApplication *app = SailfishApp::application(argc,argv);
+    QGuiApplication *app = SailfishApp::application(argc, argv);
     QQuickView *view = SailfishApp::createView();
     QString qml = QString("qml/sailfishos-uithemer.qml");
 

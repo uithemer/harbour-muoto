@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <QFileInfo>
 #include <QDebug>
+#include <QProcess>
 
 ThemePack::ThemePack(QObject* parent): QObject(parent)
 {
@@ -56,26 +57,30 @@ qint64 ThemePack::getFileSize(const QString& file)
 }
 
 QString ThemePack::whoami() const
-{ 
-    setuid_ex(0);
-    return Spawner::executeSync("whoami");
+{
+    // Avoid attempting to escalate privileges from the UI.
+    // If you need to know the privileged user, implement this in the helper.
+    QProcess proc;
+    proc.start("whoami");
+    proc.waitForFinished(1000);
+    return QString(proc.readAllStandardOutput()).trimmed();
 }
 
 void ThemePack::restartHomescreen() const
 {
-    setuid_ex(0);
+    // Removed setuid_ex(0). Execution of privileged scripts must be handled by a helper/service.
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/homescreen.sh", [this]() { emit homescreenRestarted(); });
 }
 
 void ThemePack::installDependencies() const
 {
-    setuid_ex(0);
+    // Removed setuid_ex(0). Use a privileged helper for package installation.
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/install_dependencies.sh", [this]() { emit dependenciesInstalled(); });
 }
 
 void ThemePack::installImageMagick() const
 {
-    setuid_ex(0);
+    // Removed setuid_ex(0). Use a privileged helper for package installation.
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/install_imagemagick.sh", [this]() { emit imageMagickInstalled(); });
 }
 
@@ -91,7 +96,7 @@ void ThemePack::disableddensity() const
 
 void ThemePack::restoreIZ() const
 {
-    setuid_ex(0);
+    // Removed setuid_ex(0). Restoration requiring root must be done by the privileged helper.
     Spawner::executeSync("/usr/share/sailfishos-uithemer/scripts/restore_iz.sh");
 }
 
@@ -127,7 +132,7 @@ void ThemePack::applyHours(const QString& hours) const
 
 void ThemePack::hideIcon() const
 {
-    setuid_ex(0);
+    // Removed setuid_ex(0). Modifying system application files requires root — move to helper.
     Spawner::executeSync("echo \"NoDisplay=true\" >> /usr/share/applications/harbour-iconpacksupport.desktop");
     Spawner::executeSync("echo \"NoDisplay=true\" >> /usr/share/applications/harbour-themepacksupport.desktop");
 }

@@ -11,7 +11,11 @@ appicons.path = /usr/share/icons/hicolor/
 
 INSTALLS += scripts images appicons
 
-CONFIG += sailfishapp c++11
+# Use a newer C++ standard supported on Sailfish 5.x toolchains
+CONFIG += sailfishapp c++14
+
+# Make sure required Qt modules are available; keep conservative list
+QT += qml quick
 
 SOURCES += src/sailfishos-uithemer.cpp \
     src/spawner.cpp \
