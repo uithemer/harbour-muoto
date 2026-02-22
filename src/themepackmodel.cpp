@@ -34,18 +34,17 @@ bool ThemePackModel::hasCapability(int index, const QString &capability) const
     return dir.count() > 0;
 }
 
-void ThemePackModel::applyTheme(int index, bool icon, bool overlay, bool font, const QString& weight, bool sound) const
+void ThemePackModel::applyTheme(int index, bool icon, bool overlay, bool font, const QString& weight, bool sound) 
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/themeapply.sh", SPAWN_ARGS(RAW_PACK_NAME(this->_packlist[index]) << QString::number(icon) << QString::number(overlay) << QString::number(font) << weight << QString::number(sound)), [this]() { emit themeApplied(); });
 }
 
-void ThemePackModel::reapplyIcons() const
+void ThemePackModel::reapplyIcons() 
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/reapply_icons.sh", [this]() { emit iconReapplied(); });
-
 }
 
-void ThemePackModel::iconsPreview(int index) const
+void ThemePackModel::iconsPreview(int index) 
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/iconspreview.sh", SPAWN_ARGS(RAW_PACK_NAME(this->_packlist[index])), [this]() { emit iconsPreviewed(); });
 }
@@ -65,7 +64,7 @@ void ThemePackModel::restoreDpi(bool dpr, bool adpi)
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/restore_dpi.sh", SPAWN_ARGS(QString::number(dpr) << QString::number(adpi)), [this]() { emit dpiRestored(); });
 }
 
-void ThemePackModel::ocr() const
+void ThemePackModel::ocr() 
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/ocr.sh", [this]() { emit ocrRestored(); });
 }
@@ -75,7 +74,7 @@ void ThemePackModel::recoveryTheme(bool icon, bool font, bool sound)
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/themerecovery.sh", SPAWN_ARGS(QString::number(icon) << QString::number(font) << QString::number(sound)), [this]() { emit themeRecovered(); });
 }
 
-void ThemePackModel::toolsBackupIcons() const
+void ThemePackModel::toolsBackupIcons() 
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/tools-backupicons.sh", [this]() { emit toolsApplied(); });
 }

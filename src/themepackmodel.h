@@ -1,8 +1,9 @@
 #ifndef THEMEPACKMODEL_H
 #define THEMEPACKMODEL_H
-
 #include <QAbstractListModel>
+#include <QFile>
 #include <QDir>
+#include <QStringList>
 
 class ThemePackModel : public QAbstractListModel
 {
@@ -19,16 +20,16 @@ class ThemePackModel : public QAbstractListModel
         bool hasCapability(int index, const QString& capability) const;
 
     public slots:
-        void applyTheme(int index, bool icon, bool overlay, bool font, const QString& weight, bool sound) const;
-        void iconsPreview(int index) const;
+        void applyTheme(int index, bool icon, bool overlay, bool font, const QString& weight, bool sound);
+        void iconsPreview(int index);
         void restoreTheme(bool icon, bool font, bool sound);
         void uninstall(int index);
-        void reapplyIcons() const;
+        void reapplyIcons();
         void applyADPI(const QString& adpi);
         void restoreDpi(bool dpr, bool adpi);
-        void ocr() const;
+        void ocr();
         void recoveryTheme(bool icon, bool font, bool sound);
-        void toolsBackupIcons() const;
+        void toolsBackupIcons();
         void toolsRestoreIcons(const QString& filename);
 
     public slots:

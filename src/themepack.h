@@ -22,18 +22,18 @@ class ThemePack : public QObject
         QString getTimer() const;                       // gets hours from timer
         double droidDPI() const;
         qint64 getFileSize(const QString& file);
-        void installDependencies() const;
-        void installImageMagick() const;
-        void restartHomescreen() const;
-        void applyHours(const QString& hours) const;
-        void enableddensity() const;
-        void disableddensity() const;
-        void restoreIZ() const;
-        void enableserviceautoupdate() const;
-        void disableserviceautoupdate() const;
-        void enableservicesu() const;
-        void disableservicesu() const;
-        void hideIcon() const;                          // hides icon of original app, so user does not have to have two same icons on home screen
+        void installDependencies();
+        void installImageMagick();
+        void restartHomescreen();
+        void applyHours(const QString& hours);
+        void enableddensity();
+        void disableddensity();
+        void restoreIZ();
+        void enableserviceautoupdate();
+        void disableserviceautoupdate();
+        void enableservicesu();
+        void disableservicesu();
+        void hideIcon();                          // hides icon of original app, so user does not have to have two same icons on home screen
 
     private:
         bool getDroidDPI(double *dpi) const;

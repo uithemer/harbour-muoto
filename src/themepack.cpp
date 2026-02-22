@@ -61,58 +61,58 @@ QString ThemePack::whoami() const
     return Spawner::executeSync("whoami");
 }
 
-void ThemePack::restartHomescreen() const
+void ThemePack::restartHomescreen()
 {
     setuid_ex(0);
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/homescreen.sh", [this]() { emit homescreenRestarted(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/homescreen.sh", [this]() mutable { emit homescreenRestarted(); });
 }
 
-void ThemePack::installDependencies() const
+void ThemePack::installDependencies()
 {
     setuid_ex(0);
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/install_dependencies.sh", [this]() { emit dependenciesInstalled(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/install_dependencies.sh", [this]() mutable { emit dependenciesInstalled(); });
 }
 
-void ThemePack::installImageMagick() const
+void ThemePack::installImageMagick()
 {
     setuid_ex(0);
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/install_imagemagick.sh", [this]() { emit imageMagickInstalled(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/install_imagemagick.sh", [this]() mutable { emit imageMagickInstalled(); });
 }
 
-void ThemePack::enableddensity() const
+void ThemePack::enableddensity()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/enable-dpi.sh", [this]() { emit serviceChanged(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/enable-dpi.sh", [this]() mutable { emit serviceChanged(); });
 }
 
-void ThemePack::disableddensity() const
+void ThemePack::disableddensity()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/disable-dpi.sh", [this]() { emit serviceChanged(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/disable-dpi.sh", [this]() mutable { emit serviceChanged(); });
 }
 
-void ThemePack::restoreIZ() const
+void ThemePack::restoreIZ()
 {
     setuid_ex(0);
     Spawner::executeSync("/usr/share/sailfishos-uithemer/scripts/restore_iz.sh");
 }
 
-void ThemePack::enableserviceautoupdate() const
+void ThemePack::enableserviceautoupdate()
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/enable-autoupdate.sh", [this]() { });
 }
 
-void ThemePack::disableserviceautoupdate() const
+void ThemePack::disableserviceautoupdate()
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/scripts/disable-autoupdate.sh", [this]() { });
 }
 
-void ThemePack::enableservicesu() const
+void ThemePack::enableservicesu()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/enable-servicesu.sh", [this]() { emit serviceChanged(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/enable-servicesu.sh", [this]() mutable { emit serviceChanged(); });
 }
 
-void ThemePack::disableservicesu() const
+void ThemePack::disableservicesu()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/disable-servicesu.sh", [this]() { emit serviceChanged(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/disable-servicesu.sh", [this]() mutable { emit serviceChanged(); });
 }
 
 QString ThemePack::getTimer() const
@@ -120,12 +120,12 @@ QString ThemePack::getTimer() const
     return Spawner::executeSync("cat /usr/share/harbour-themepacksupport/service/hours");
 }
 
-void ThemePack::applyHours(const QString& hours) const
+void ThemePack::applyHours(const QString& hours)
 {
     Spawner::executeSync("/usr/share/sailfishos-uithemer/scripts/apply_hours.sh " + hours);
 }
 
-void ThemePack::hideIcon() const
+void ThemePack::hideIcon()
 {
     setuid_ex(0);
     Spawner::executeSync("echo \"NoDisplay=true\" >> /usr/share/applications/harbour-iconpacksupport.desktop");

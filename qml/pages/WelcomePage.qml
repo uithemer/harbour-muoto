@@ -237,7 +237,7 @@ Page
              Button {
                   id: startuit
                   anchors.horizontalCenter: parent.horizontalCenter
-                  enabled: vDep && vDon && vIM
+                  // enabled: vDep && vDon && vIM
                   text: qsTr("Start UI Themer")
                   onClicked: {
                       settings.wizardDone = true;
