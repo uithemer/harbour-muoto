@@ -40,7 +40,7 @@ Enables customization of icons, fonts and pixel density in Sailfish OS.
 
 %preun
 if [ $1 == 0 ]; then
-    rm -rf /home/nemo/.local/share/%{name}
+    rm -rf /home/defaultuser/.local/share/%{name}
     rm /etc/dconf/db/vendor.d/%{name}.txt
     dconf update
     filepath="/usr/share/applications/harbour-themepacksupport.desktop"
