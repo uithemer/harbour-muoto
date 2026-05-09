@@ -4,7 +4,7 @@ icons=$1
 fonts=$2
 sounds=$3
 
-main=/usr/share/harbour-themepacksupport
+main=/usr/share/sailfishos-uithemer
 
 if [ "$icons" = 1 ]; then
     echo "restoring icons"

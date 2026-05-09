@@ -6,7 +6,7 @@ overlay=$3
 font=$4
 weight=$5
 sound=$6
-main=/usr/share/harbour-themepacksupport
+main=/usr/share/sailfishos-uithemer
 source $main/config.shlib
 
 function font-changer {

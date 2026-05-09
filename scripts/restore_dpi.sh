@@ -3,7 +3,7 @@
 dpr=$1
 adpi=$2
 
-main=/usr/share/harbour-themepacksupport
+main=/usr/share/sailfishos-uithemer
 
 if [ "$dpr" = 1 ]; then
     echo "restoring dpr"

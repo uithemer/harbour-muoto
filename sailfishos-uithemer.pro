@@ -1,7 +1,10 @@
 TARGET = sailfishos-uithemer
 
-scripts.files = scripts/*
-scripts.path = $$PREFIX/share/$$TARGET/scripts
+scripts.files = scripts/* tps/*
+scripts.path = $$PREFIX/share/$$TARGET
+
+service.files = service/*
+service.path = $$PREFIX/share/$$TARGET/service
 
 images.files = images/*
 images.path = $$PREFIX/share/$$TARGET/images
@@ -9,7 +12,7 @@ images.path = $$PREFIX/share/$$TARGET/images
 appicons.files = appicons/*
 appicons.path = /usr/share/icons/hicolor/
 
-INSTALLS += scripts images appicons
+INSTALLS += scripts service images appicons
 
 CONFIG += sailfishapp c++11
 

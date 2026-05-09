@@ -11,7 +11,7 @@ ThemePack::ThemePack(QObject* parent): QObject(parent)
 
 QString ThemePack::readDeviceModel() const
 {
-    QFile file("/usr/share/harbour-themepacksupport/device-model");
+    QFile file("/usr/share/sailfishos-uithemer/device-model");
     file.open(QFile::ReadOnly);
     QString s = file.readAll().simplified();
     file.close();
@@ -64,77 +64,76 @@ QString ThemePack::whoami() const
 void ThemePack::restartHomescreen()
 {
     setuid_ex(0);
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/homescreen.sh", [this]() mutable { emit homescreenRestarted(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/homescreen.sh", [this]() mutable { emit homescreenRestarted(); });
 }
 
 void ThemePack::installDependencies()
 {
     setuid_ex(0);
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/install_dependencies.sh", [this]() mutable { emit dependenciesInstalled(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/install_dependencies.sh", [this]() mutable { emit dependenciesInstalled(); });
 }
 
 void ThemePack::installImageMagick()
 {
     setuid_ex(0);
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/install_imagemagick.sh", [this]() mutable { emit imageMagickInstalled(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/install_imagemagick.sh", [this]() mutable { emit imageMagickInstalled(); });
 }
 
 void ThemePack::enableddensity()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/enable-dpi.sh", [this]() mutable { emit serviceChanged(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/enable-dpi.sh", [this]() mutable { emit serviceChanged(); });
 }
 
 void ThemePack::disableddensity()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/disable-dpi.sh", [this]() mutable { emit serviceChanged(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/disable-dpi.sh", [this]() mutable { emit serviceChanged(); });
 }
 
 void ThemePack::restoreIZ()
 {
     setuid_ex(0);
-    Spawner::executeSync("/usr/share/sailfishos-uithemer/scripts/restore_iz.sh");
+    Spawner::executeSync("/usr/share/sailfishos-uithemer/restore_iz.sh");
 }
 
 void ThemePack::enableserviceautoupdate()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/enable-autoupdate.sh", [this]() { });
+    Spawner::execute("/usr/share/sailfishos-uithemer/enable-autoupdate.sh", [this]() { });
 }
 
 void ThemePack::disableserviceautoupdate()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/disable-autoupdate.sh", [this]() { });
+    Spawner::execute("/usr/share/sailfishos-uithemer/disable-autoupdate.sh", [this]() { });
 }
 
 void ThemePack::enableservicesu()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/enable-servicesu.sh", [this]() mutable { emit serviceChanged(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/enable-servicesu.sh", [this]() mutable { emit serviceChanged(); });
 }
 
 void ThemePack::disableservicesu()
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/scripts/disable-servicesu.sh", [this]() mutable { emit serviceChanged(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/disable-servicesu.sh", [this]() mutable { emit serviceChanged(); });
 }
 
 QString ThemePack::getTimer() const
 {
-    return Spawner::executeSync("cat /usr/share/harbour-themepacksupport/service/hours");
+    return Spawner::executeSync("cat /usr/share/sailfishos-uithemer/service/hours");
 }
 
 void ThemePack::applyHours(const QString& hours)
 {
-    Spawner::executeSync("/usr/share/sailfishos-uithemer/scripts/apply_hours.sh " + hours);
+    Spawner::executeSync("/usr/share/sailfishos-uithemer/apply_hours.sh " + hours);
 }
 
 void ThemePack::hideIcon()
 {
     setuid_ex(0);
     Spawner::executeSync("echo \"NoDisplay=true\" >> /usr/share/applications/harbour-iconpacksupport.desktop");
-    Spawner::executeSync("echo \"NoDisplay=true\" >> /usr/share/applications/harbour-themepacksupport.desktop");
 }
 
 bool ThemePack::getDroidDPI(double *dpi) const
 {
-    QString s = Spawner::executeSync("cat /usr/share/harbour-themepacksupport/droiddpi-current").simplified();
+    QString s = Spawner::executeSync("cat /usr/share/sailfishos-uithemer/droiddpi-current").simplified();
 
     if(s.isEmpty())
         return false;

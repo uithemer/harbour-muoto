@@ -13,15 +13,20 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.2.1
-Release:        3
+Version:        2.3.0
+Release:        1
 Group:          Qt/Qt
 License:        GPLv3
 Packager:       fravaccaro <fravaccaro@jollacommunity.it>
 URL:            https://github.com/uithemer/sailfishos-uithemer
 Source0:        %{name}-%{version}.tar.bz2
 Source100:      sailfishos-uithemer.yaml
-Requires:       sailfish-version >= 2.1.4, harbour-themepacksupport >= 0.8.11-1
+
+Requires:       sailfish-version >= 2.1.4, rsync
+Obsoletes:      harbour-themepacksupport < 0.8.14
+Provides:       harbour-themepacksupport = 0.8.14
+Conflicts:      harbour-iconpacksupport
+
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
@@ -29,7 +34,8 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 
 %description
-Enables customization of icons, fonts and pixel density in Sailfish OS.
+Enables customization of icons, fonts, sounds and pixel density in Sailfish OS.
+Includes the former Theme pack support engine and CLI (themepacksupport).
 
 
 %prep
@@ -38,20 +44,17 @@ Enables customization of icons, fonts and pixel density in Sailfish OS.
 # >> setup
 # << setup
 
-%preun
-if [ $1 == 0 ]; then
-    rm -rf /home/defaultuser/.local/share/%{name}
-    rm /etc/dconf/db/vendor.d/%{name}.txt
-    dconf update
-    filepath="/usr/share/applications/harbour-themepacksupport.desktop"
-    if [ -e "$filepath" ]; then
-        if grep -q NoDisplay "$filepath"; then
-            cont=$(cat $filepath)
-            replace=""
-            repl=${cont//NoDisplay=true/$replace}
-            echo "$repl" > $filepath
+# Before harbour-themepacksupport is erased on upgrade, neutralise its %preun
+# restore scripts so the user's theme is not reset mid-transaction.
+%pretrans -p /bin/sh
+if [ -d /usr/share/harbour-themepacksupport ]; then
+    for s in icon-restore.sh font-restore.sh sound-restore.sh graphic-restore.sh \
+             restore_dpr.sh restore_adpi.sh restore_iz.sh disable-dpi.sh disable-autoupdate.sh; do
+        f="/usr/share/harbour-themepacksupport/$s"
+        if [ -e "$f" ]; then
+            printf '#!/bin/sh\nexit 0\n' > "$f" || :
         fi
-     fi
+    done
 fi
 
 %build
@@ -84,13 +87,76 @@ desktop-file-install --delete-original       \
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+%ghost %{_bindir}/themepacksupport
 # >> files
 # << files
 
 %post
-mv %{_datadir}/%{name}/scripts/%{name}.txt /etc/dconf/db/vendor.d/
+chmod +x %{_datadir}/%{name}/*.sh
+chmod +x %{_datadir}/%{name}/service/*.sh
+mkdir -p %{_datadir}/%{name}/backup
+mkdir -p %{_datadir}/%{name}/tmp
+mkdir -p /home/nemo/.themepack
+mkdir -p /etc/systemd/system/aliendalvik.service.d/
+mv -f %{_datadir}/%{name}/service/10-themepacksupport.conf /etc/systemd/system/aliendalvik.service.d/
+mv -f %{_datadir}/%{name}/service/themepacksupport-systemupgrade.service /lib/systemd/system/
+mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.service /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.timer /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable themepacksupport-systemupgrade.service
+
+touch -a %{_datadir}/%{name}/icon-current
+touch -a %{_datadir}/%{name}/font-current
+touch -a %{_datadir}/%{name}/sound-current
+touch -a %{_datadir}/%{name}/graphic-current
+touch -a %{_datadir}/%{name}/droiddpi-current
+ssu mo 2>/dev/null | sed 's/.*: //' > %{_datadir}/%{name}/device-model || true
+
+mv -f %{_datadir}/%{name}/sailfishos-uithemer.txt /etc/dconf/db/vendor.d/
 dconf update
-if [ $1 == 1 ]; then
-    // First installation
-    echo "NoDisplay=true" >> /usr/share/applications/harbour-themepacksupport.desktop
+
+ln -sf %{_datadir}/%{name}/themepacksupport.sh %{_bindir}/themepacksupport
+
+old=/usr/share/harbour-themepacksupport
+new=%{_datadir}/%{name}
+if [ -d "$old" ]; then
+    for d in backup tmp; do
+        if [ -d "$old/$d" ] && [ ! -d "$new/$d" ]; then
+            mv "$old/$d" "$new/$d" || true
+        fi
+    done
+    for f in icon-current font-current sound-current graphic-current droiddpi-current device-model config.cfg; do
+        if [ -e "$old/$f" ] && [ ! -e "$new/$f" ]; then
+            mv "$old/$f" "$new/$f" || true
+        fi
+    done
+fi
+
+%preun
+if [ $1 -eq 0 ]; then
+    rm -rf /home/defaultuser/.local/share/%{name}
+    rm -f /etc/dconf/db/vendor.d/%{name}.txt
+    dconf update
+
+    systemctl disable themepacksupport-systemupgrade.service || true
+    %{_datadir}/%{name}/disable-autoupdate.sh || true
+    %{_datadir}/%{name}/icon-restore.sh || true
+    %{_datadir}/%{name}/graphic-restore.sh || true
+    %{_datadir}/%{name}/font-restore.sh || true
+    %{_datadir}/%{name}/sound-restore.sh || true
+    %{_datadir}/%{name}/restore_dpr.sh || true
+    %{_datadir}/%{name}/restore_adpi.sh || true
+    %{_datadir}/%{name}/restore_iz.sh || true
+    %{_datadir}/%{name}/disable-dpi.sh || true
+fi
+
+%postun
+if [ $1 -eq 0 ]; then
+    rm -f %{_bindir}/themepacksupport
+    rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
+    rm -f /lib/systemd/system/themepacksupport-systemupgrade.service
+    rm -f /etc/systemd/system/themepacksupport-autoupdate.timer
+    rm -f /etc/systemd/system/themepacksupport-autoupdate.service
+    systemctl daemon-reload
+    rm -rf /home/nemo/.themepack
 fi

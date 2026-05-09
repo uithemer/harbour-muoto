@@ -1,0 +1,10 @@
+[Unit]
+Description=Update icon theme via Theme pack support.
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=/usr/share/sailfishos-uithemer/service/run.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer for updating icon theme via Theme pack support.
+
+[Timer]
+OnBootSec=0
+OnCalendar=*-*-* 00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

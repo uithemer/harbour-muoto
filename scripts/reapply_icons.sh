@@ -1,6 +1,6 @@
 #!/bin/bash
 
-main=/usr/share/harbour-themepacksupport
+main=/usr/share/sailfishos-uithemer
 iconpack=$(<$main/icon-current)
 pack=/usr/share/harbour-themepack-$iconpack
 source $main/config.shlib

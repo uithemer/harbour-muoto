@@ -8,7 +8,7 @@ permalink: /
 
 # UI Themer
 
-UI Themer lets customize icons, fonts, sounds and pixel density in Sailfish OS. Graphical User Interface for [Theme pack support](https://uithemer.github.io/themepacksupport-sailfishos/).
+UI Themer lets customize icons, fonts, sounds and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (shell scripts, systemd services, and the `themepacksupport` CLI) in a single package.
 
 [![GitHub license](https://img.shields.io/github/license/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/releases/latest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fravaccaro)
 
@@ -32,7 +32,7 @@ A usage guide is available [here](docs/guide).
 
 ## Create custom theme packs
 
-Documentation on how to create theme packs available [here](https://uithemer.github.io/themepacksupport-sailfishos/docs/getstarted).
+Documentation on how to create theme packs is in this repository under [`docs/getstarted.md`](docs/getstarted.md) (also published with the project site).
 
 ## Translate
 
@@ -56,6 +56,7 @@ Roadmap and features will be tracked on the [Trello dashboard](https://trello.co
 
 ## Credits
 
+- Theme pack support engine (bash, systemd, CLI) by fravaccaro (formerly separate `themepacksupport-sailfishos` package).
 - Partially based on [Icon pack support GUI](https://github.com/RikudouSage/sailfish-iconpacksupport-gui).
 - App icon by [Free Vectors](http://www.freevectors.com/blue-painting-roller/).
 - Iconography by [Retinaicons](https://www.flaticon.com/authors/retinaicons).

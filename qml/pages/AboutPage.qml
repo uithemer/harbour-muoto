@@ -103,7 +103,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeSmall
-                text: "UI Themer 2.2.1" }
+                text: "UI Themer 2.3.0" }
 
             LabelText {
                 text: qsTr("UI Themer lets you customize icons, fonts, sounds and pixel density in Sailfish OS.")
@@ -132,7 +132,7 @@ Page
               Button {
                   anchors.horizontalCenter: parent.horizontalCenter
                   text: qsTr("Documentation")
-                  onClicked: Qt.openUrlExternally("https://uithemer.github.io/themepacksupport-sailfishos/docs/getstarted.html")
+                  onClicked: Qt.openUrlExternally("https://github.com/uithemer/sailfishos-uithemer/blob/master/docs/getstarted.md")
               }
 
               SectionHeader { text: qsTr("Feedback") }

@@ -29,7 +29,7 @@ CoverBackground
          if (status === Cover.Active || Cover.Activating || Cover.Deactivating) {
              if (pageStack.currentPage.hasIcons || pageStack.currentPage.hasIconOverlay) {
                  coverimgpreview.source = ""
-                 coverimgpreview.source = "/usr/share/harbour-themepacksupport/tmp/iconspreview.png"
+                 coverimgpreview.source = "/usr/share/sailfishos-uithemer/tmp/iconspreview.png"
              }
              if (pageStack.currentPage.hasFont && pageStack.currentPage.selectedFont !== "") {
                  fontloader.visible = true

@@ -52,7 +52,7 @@ Dialog
     Connections {
         target: themePackModel
         onIconsPreviewed: {
-            imgpreview.source = "/usr/share/harbour-themepacksupport/tmp/iconspreview.png"
+            imgpreview.source = "/usr/share/sailfishos-uithemer/tmp/iconspreview.png"
             busyimg.running = false
         }
     }

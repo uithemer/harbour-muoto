@@ -1,7 +1,7 @@
 #!/bin/bash
 
 timer=$1
-main=/usr/share/harbour-themepacksupport
+main=/usr/share/sailfishos-uithemer
 echo $timer > $main/service/hours
 
     case "$timer" in
@@ -80,12 +80,13 @@ OnActiveSec=24h
 WantedBy=timers.target' > /etc/systemd/system/themepacksupport-autoupdate.timer ;;
 		esac
 
-if [[ "$(sed -n 2p $main/themepacksupport.cfg)" =~ "1" ]]; then
+source "$main/config.shlib"
+if [[ "$(config_get autoupd)" == "1" ]]; then
     systemctl daemon-reload
 else
     systemctl enable themepacksupport-autoupdate.timer
     systemctl start themepacksupport-autoupdate.timer
     systemctl enable themepacksupport-autoupdate.service
     systemctl start themepacksupport-autoupdate.service
-    sed -i "s/.*tps_service.*/tps_service='1'/" $main/themepacksupport.cfg
+    config_write autoupd 1
 fi

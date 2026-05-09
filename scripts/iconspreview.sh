@@ -1,7 +1,7 @@
 #!/bin/bash
 
 iconpack=$1
-main=/usr/share/harbour-themepacksupport
+main=/usr/share/sailfishos-uithemer
 
 mkdir -p $main/tmp
 
