@@ -11,15 +11,15 @@ Here you'll find info on how to create icons compatible with Theme pack support.
 
 ## Icon paths in Sailfish OS
 
-Icons are located in three folders:
+Icons are located in three places:
 * `/usr/share/themes/sailfish-default/meegotouch` for Jolla stock icons.
 * `/usr/share/icons/hicolor` for native icons.
-* `/var/lib/apkd/` for Android icons.
+* `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/` for Android app launcher icons (flat directory: one PNG per app, typically named like `<package>.png`; modern Sailfish OS no longer mirrors APK icons under `/var/lib/apkd` size subfolders).
 
 ## Create your icons
 
 1. Create icons with the image editor of your choice. 
-2. Icons go in `jolla` if they are Jolla stock icons, `native` if they are 3rd party icons or `apk` if they are Android apps icons. Size and place them accordingly with the folder, so icons 86x86px will go in `86x86/apps`; for Jolla stock icons, 86x86px in `z1.0/icons`, 129x129px in `z1.5/icons` and 172x172px in `z2.0/icons`; Android ones go in `apk/86x86` and `apk/128x128`.
+2. Icons go in `jolla` if they are Jolla stock icons, `native` if they are 3rd party icons or `apk` if they are Android apps icons. Size and place them accordingly with the folder, so icons 86x86px will go in `86x86/apps`; for Jolla stock icons, 86x86px in `z1.0/icons`, 129x129px in `z1.5/icons` and 172x172px in `z2.0/icons`; Android ones in the theme pack still use `apk/192x192/`, `apk/128x128/`, and `apk/86x86/` — prefer **`apk/192x192/`** when possible, since apkd-bridge does not downscale to smaller buckets; smaller sizes remain for backward compatibility and are only used when `192x192` is missing in the theme.
 
 ### Jolla Ambient
 

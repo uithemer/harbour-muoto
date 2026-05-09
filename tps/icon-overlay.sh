@@ -14,7 +14,8 @@ main=/usr/share/sailfishos-uithemer
 pack=/usr/share/harbour-themepack-$iconpack
 dir_jolla=/usr/share/themes/sailfish-default/meegotouch
 dir_native=/usr/share/icons/hicolor
-dir_apk=/var/lib/apkd
+dir_apk=/home/defaultuser/.local/share/apkd-bridge/launcherIcon
+mkdir -p "$dir_apk"
 
 # Native icons
 if [[ ! -f $pack/type || $(<$pack/type) != "android" ]]; then
@@ -44,38 +45,43 @@ if [[ ! -f $pack/type || $(<$pack/type) != "android" ]]; then
 
 fi
 
-# if there are Android icons
-apkCap=( "192x192" "128x128" "86x86" )
-apkSize=( "122x122" "78x78" "56x56" )
+# Android launcher icons (flat apkd-bridge directory)
+apkSize="192x192"
+apkInner="122x122"
+: > "$main/tmp/apk.overlaydroid"
 
-for ((i=0;i<${#apkCap[@]};++i)); do
-# if there are Android icons
-if [ -d $pack/apk/${apkCap[i]} ]; then
-	# List icons not in the theme
-	diff -r $dir_apk $pack/apk/${apkCap[i]} | grep 'Only in /var/lib/apkd' | awk '{print $4}' > $main/tmp/${apkCap[i]}.overlaydroid
-fi
-done
-
-if [[ ! -f $main/tmp/*.overlaydroid && $(<$pack/type) == "android" ]]; then
-   ls $dir_apk > $main/tmp/192x192.overlaydroid
-fi
-
-for ((i=0;i<${#apkCap[@]};++i)); do
-
-if [ -f $main/tmp/${apkCap[i]}.overlaydroid ]; then
-
-	for file in $(<$main/tmp/${apkCap[i]}.overlaydroid); do 
-	# Convert icons with ImageMagick
-	find $pack/overlay/ -type f -name "*.png" | shuf -n 1 |\
-	convert \( @- -scale ${apkCap[i]} -gravity Center \) \( $dir_apk/$file -scale ${apkSize[i]} -gravity Center \) -composite -gravity Center -geometry ${apkCap[i]} $main/tmp/$file
-	# Move icons
-	mv "$main/tmp/$file" $dir_apk
+if [[ -f $pack/type && $(<$pack/type) == "android" ]]; then
+	shopt -s nullglob
+	for f in "$dir_apk"/*.png; do
+		base=$(basename "$f")
+		echo "$base" >> "$main/tmp/apk.overlaydroid"
 	done
-	break 3
-
+	shopt -u nullglob
+else
+	shopt -s nullglob
+	for f in "$dir_apk"/*.png; do
+		[ -e "$f" ] || continue
+		base=$(basename "$f")
+		found=0
+		for size in 192x192 128x128 86x86; do
+			[ -e "$pack/apk/$size/$base" ] && { found=1; break; }
+		done
+		[ $found -eq 0 ] && echo "$base" >> "$main/tmp/apk.overlaydroid"
+	done
+	shopt -u nullglob
 fi
 
-done
+if [ -s "$main/tmp/apk.overlaydroid" ] && [ -d "$pack/overlay" ] && [ "$(ls -A "$pack/overlay" 2>/dev/null)" ]; then
+	while IFS= read -r file; do
+		[ -n "$file" ] || continue
+		find "$pack/overlay/" -type f -name "*.png" | shuf -n 1 |\
+			convert \( @- -scale ${apkSize} -gravity Center \) \
+				\( "$dir_apk/$file" -scale ${apkInner} -gravity Center \) \
+				-composite -gravity Center -geometry ${apkSize} "$main/tmp/$file"
+		mv "$main/tmp/$file" "$dir_apk/"
+	done < "$main/tmp/apk.overlaydroid"
+	chown -R defaultuser:defaultuser "$dir_apk" 2>/dev/null || true
+fi
 
 # Save current icon pack
 rm $main/icon-current

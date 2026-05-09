@@ -4,7 +4,7 @@
 main=/usr/share/sailfishos-uithemer
 dir_jolla=/usr/share/themes/sailfish-default/meegotouch
 dir_native=/usr/share/icons/hicolor
-dir_apk=/var/lib/apkd
+dir_apk=/home/defaultuser/.local/share/apkd-bridge/launcherIcon
 source $main/config.shlib
 
 # Disable service
@@ -37,13 +37,13 @@ for ((i=0;i<${#nativeCap[@]};++i)); do
 	rsync -a --existing --ignore-times $main/backup/icons/native/${nativeCap[i]}/apps/ $dir_native/${nativeCap[i]}/apps/
 done
 
-# If Android support is installed
-if [ -d "$dir_apk" ]; then
-	if [ -d $main/backup/apk/ ]; then
-		rsync -a --existing --ignore-times $main/backup/apk/ $dir_apk/
-	fi
-	rsync -a --existing --ignore-times $main/backup/icons/apk/ $dir_apk/
+# Android launcher icons (apkd-bridge)
+mkdir -p "$dir_apk"
+if [ -d $main/backup/apk/ ]; then
+	rsync -a --existing --ignore-times $main/backup/apk/ $dir_apk/
 fi
+rsync -a --existing --ignore-times $main/backup/icons/apk/ $dir_apk/
+chown -R defaultuser:defaultuser "$dir_apk" 2>/dev/null || true
 
 # If DynCal is installed
 if [ -d "/usr/share/harbour-dyncal" ]; then

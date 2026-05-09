@@ -93,6 +93,24 @@ for ((j=i;j<${#nativeCap[@]};++j)); do
 done
 done
 
+# APK launcher icons (apkd-bridge)
+dir_apk=/home/defaultuser/.local/share/apkd-bridge/launcherIcon
+mkdir -p "$dir_apk"
+rsync -a --existing --ignore-times $main/backup/icons/apk/ $dir_apk/
+shopt -s nullglob
+for png in "$dir_apk"/*.png; do
+	rsync -a --ignore-existing "$png" $main/backup/icons/apk/
+done
+shopt -u nullglob
+apkCap=( "192x192" "128x128" "86x86" )
+for ((i=0;i<${#apkCap[@]};++i)); do
+	if [ -d $pack/apk/${apkCap[i]} ]; then
+		rsync -a --existing $pack/apk/${apkCap[i]}/ $dir_apk/
+		break
+	fi
+done
+chown -R defaultuser:defaultuser "$dir_apk" 2>/dev/null || true
+
 # Overlay
 
 if [[ "$(config_get iconoverlay)" == "1" ]]; then

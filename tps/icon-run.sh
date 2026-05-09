@@ -14,7 +14,7 @@ main=/usr/share/sailfishos-uithemer
 pack=/usr/share/harbour-themepack-$iconpack
 dir_jolla=/usr/share/themes/sailfish-default/meegotouch
 dir_native=/usr/share/icons/hicolor
-dir_apk=/var/lib/apkd
+dir_apk=/home/defaultuser/.local/share/apkd-bridge/launcherIcon
 source $main/config.shlib
 
 # Check if a backup has been performed
@@ -51,23 +51,18 @@ for ((j=i;j<${#nativeCap[@]};++j)); do
 done
 done
 
-# If Android support is installed
-if [ -d "$dir_apk" ]; then
-
+# Android launcher icons (apkd-bridge: flat PNGs in launcherIcon)
+mkdir -p "$dir_apk"
 apkCap=( "192x192" "128x128" "86x86" )
-
 for ((i=0;i<${#apkCap[@]};++i)); do
 for ((j=i;j<${#apkCap[@]};++j)); do
-	# if there are Android icons
 	if [ -d $pack/apk/${apkCap[j]} ]; then
-		# Perform copy of existing icons
 		rsync -a --existing $pack/apk/${apkCap[j]}/ $dir_apk/
+		chown -R defaultuser:defaultuser "$dir_apk" 2>/dev/null || true
 		break 3
 	fi
 done
 done
-
-fi
 
 # If DynCal is installed
 if [ -d "/usr/share/harbour-dyncal" ]; then

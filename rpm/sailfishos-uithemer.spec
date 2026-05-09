@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.3.0
+Version:        2.3.1
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -97,13 +97,14 @@ chmod +x %{_datadir}/%{name}/service/*.sh
 mkdir -p %{_datadir}/%{name}/backup
 mkdir -p %{_datadir}/%{name}/tmp
 mkdir -p /home/nemo/.themepack
-mkdir -p /etc/systemd/system/aliendalvik.service.d/
-mv -f %{_datadir}/%{name}/service/10-themepacksupport.conf /etc/systemd/system/aliendalvik.service.d/
 mv -f %{_datadir}/%{name}/service/themepacksupport-systemupgrade.service /lib/systemd/system/
 mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.service /etc/systemd/system/
 mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.timer /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable themepacksupport-systemupgrade.service
+
+# Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
+rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
 touch -a %{_datadir}/%{name}/icon-current
 touch -a %{_datadir}/%{name}/font-current
@@ -153,7 +154,6 @@ fi
 %postun
 if [ $1 -eq 0 ]; then
     rm -f %{_bindir}/themepacksupport
-    rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
     rm -f /lib/systemd/system/themepacksupport-systemupgrade.service
     rm -f /etc/systemd/system/themepacksupport-autoupdate.timer
     rm -f /etc/systemd/system/themepacksupport-autoupdate.service
