@@ -81,12 +81,16 @@ CoverBackground
         CoverLabel {
             visible: (settings.activeIconPack !== 'default')
             icon: isLightTheme ? "../../images/icon.png" : "../../images/icon-light.png"
-            label: themepackmodel.readThemePackName("harbour-themepack-" + settings.activeIconPack)
+            label: (settings.activeIconPack && settings.activeIconPack !== 'default')
+                   ? themepackmodel.readThemePackName("harbour-themepack-" + settings.activeIconPack)
+                   : ""
         }
         CoverLabel {
             visible: (settings.activeFontPack !== 'default')
             icon: isLightTheme ? "../../images/font.png" : "../../images/font-light.png"
-            label: themepackmodel.readThemePackName("harbour-themepack-" + settings.activeFontPack)
+            label: (settings.activeFontPack && settings.activeFontPack !== 'default')
+                   ? themepackmodel.readThemePackName("harbour-themepack-" + settings.activeFontPack)
+                   : ""
         }
     }
 

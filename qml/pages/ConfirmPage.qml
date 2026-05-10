@@ -234,14 +234,16 @@ Dialog
 
                 Loader {
                     id: fontloader
-                    source: "../components/FontPreview.qml"
+                    active: hasFont || hasFontNonLatin
+                    source: ""
                     width: parent.width
                     height: 350
                     visible: false
 
                     function reload() {
                         source = ""
-                        source = "../components/FontPreview.qml"
+                        if (hasFont || hasFontNonLatin)
+                            source = "../components/FontPreview.qml"
                     }
                 }
 

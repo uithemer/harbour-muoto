@@ -93,14 +93,16 @@ CoverBackground
 
         Loader {
             id: fontloader
-            source: "FontPreviewCover.qml"
+            active: pageStack.currentPage.hasFont || pageStack.currentPage.hasFontNonLatin
+            source: ""
             visible: false
             width: root.width
             height: root.height
 
             function reload() {
                 source = ""
-                source = "FontPreviewCover.qml"
+                if (pageStack.currentPage.hasFont || pageStack.currentPage.hasFontNonLatin)
+                    source = "FontPreviewCover.qml"
             }
         }
     }

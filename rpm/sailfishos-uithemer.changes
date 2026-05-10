@@ -1,3 +1,39 @@
+* Sun May 10 2026 2.4.8-1
+- Font preview: restore `font.weight` on the preview labels using a
+  small QML helper that maps the selected font file basename (e.g.
+  ibm-plex-Light, Regular) to `Font.Thin` … `Font.Black` via substring
+  checks, with `Font.Normal` as fallback. This replaces the 2.4.7
+  approach of leaving weight unset while still avoiding the old bug
+  of binding a QString directly to `font.weight`.
+- Version bumped to 2.4.8; AboutPage label updated.
+
+* Sun May 10 2026 2.4.7-1
+- Font preview: stop loading FontPreview / FontPreviewCover for
+  themes that ship no fonts. The Confirm-page and cover-side
+  Loaders are now `active: hasFont || hasFontNonLatin` with an
+  empty initial source and a guard inside `reload()`, so an
+  icon-only theme no longer triggers `<pack>/font/.ttf` lookups.
+- Font preview: dropped the broken `font.weight: selectedFont`
+  binding (it assigned a QString filename basename to an int
+  enum slot, producing `Unable to assign QString to int` every
+  time). The chosen weight is already encoded in the loaded TTF
+  and rendered via `font.family: previewfont.name`.
+- Font preview: gated `FontLoader.source` in both FontPreview.qml
+  and FontPreviewCover.qml on non-empty `packName` and
+  `selectedFont`, so a stray instantiation can never produce
+  `<pack>/font/.ttf` paths.
+- Cover page: gated `themepackmodel.readThemePackName(...)` in
+  `CoverLabel.label:` bindings on a real, non-`default` active
+  pack. QML evaluates `label:` even when the parent is
+  `visible: false`, so without the guard an empty or `default`
+  active pack triggered a read of `/usr/share/harbour-themepack-`
+  / `/usr/share/harbour-themepack-default/package`.
+- C++: `ThemePackModel::readThemePackName` now checks
+  `QFile::open()` and returns an empty QString on failure,
+  removing the underlying `QIODevice::read (QFile, ...): device
+  not open` warning regardless of caller.
+- Version bumped to 2.4.7; AboutPage label updated.
+
 * Sun May 10 2026 2.4.6-1
 - ConfirmPage / Cover icon-pack preview overhaul:
   - The preview is now built as a QImage in C++ and served from memory

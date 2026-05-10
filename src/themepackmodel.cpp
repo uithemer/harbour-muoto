@@ -14,9 +14,10 @@ ThemePackModel::ThemePackModel(QObject *parent) : QAbstractListModel(parent)
 
 QString ThemePackModel::readThemePackName(const QString &packname) const
 {
-    QFile file("/usr/share/" + packname + "/package");
-    file.open(QFile::ReadOnly);
-    QString s = file.readAll().simplified();
+    QFile file(QStringLiteral("/usr/share/") + packname + QStringLiteral("/package"));
+    if(!file.open(QFile::ReadOnly))
+        return QString();
+    const QString s = QString::fromUtf8(file.readAll()).simplified();
     file.close();
     return s;
 }
