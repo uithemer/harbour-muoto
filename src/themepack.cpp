@@ -55,7 +55,11 @@ QString ThemePack::whoami() const
 
 void ThemePack::restartHomescreen()
 {
-    setuid_ex(0);
+    // No setuid(0) here: homescreen.sh detects whether it runs as root or as
+    // the user and switches to defaultuser via su when needed, so it works
+    // regardless of the current uid. Avoiding the elevation keeps the GUI
+    // process from becoming permanently root just because the user clicked
+    // "restart homescreen" first.
     Spawner::execute("/usr/share/sailfishos-uithemer/homescreen.sh", [this]() mutable { emit homescreenRestarted(); });
 }
 

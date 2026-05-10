@@ -188,23 +188,23 @@ Page
             }
         }
 
-        header: Column {
-                   width: parent.width
-                   height: titlepageheader.height
-                   PageHeader { id: titlepageheader; title: qsTr("Themes") }
-                   IconButton {
-                           visible: themepack.hasStoremanInstalled()
-                           anchors {
-                               verticalCenter: parent.verticalCenter
-                               left: parent.left
-                               leftMargin: Theme.paddingMedium
-                           }
-                           icon.width: Theme.iconSizeSmallPlus
-                           icon.height: Theme.iconSizeSmallPlus
-                           icon.color: Theme.highlightColor
-                           icon.source: isLightTheme ? "../../images/download.png" : "../../images/download-light.png"
-                           onClicked: openStore.call('openPage', ['SearchPage', {initialSearch: 'themepack'}])
-                       }
+        header: Item {
+            width: parent.width
+            height: titlepageheader.height
+
+            PageHeader { id: titlepageheader; title: qsTr("Themes") }
+
+            IconButton {
+                visible: themepack.hasStoremanInstalled()
+                anchors.verticalCenter: titlepageheader.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.paddingMedium
+                icon.width: Theme.iconSizeSmallPlus
+                icon.height: Theme.iconSizeSmallPlus
+                icon.color: Theme.highlightColor
+                icon.source: isLightTheme ? "../../images/download.png" : "../../images/download-light.png"
+                onClicked: openStore.call('openPage', ['SearchPage', {initialSearch: 'themepack'}])
+            }
         }
 
         model: themepackmodel
