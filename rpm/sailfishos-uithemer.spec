@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.5.6
+Version:        2.5.7
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -199,10 +199,6 @@ dconf update || :
 # now resets icon_size_launcher to vendor default). Drop both leftovers.
 rm -f %{_datadir}/%{name}/icon-z
 su - defaultuser -c "dconf reset /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed" 2>/dev/null || :
-
-# 2.5.5: device-model file is no longer produced or read. Drop it on upgrade
-# so it does not linger. Settings.qml's deviceModel/isXA2 derivation is gone.
-rm -f %{_datadir}/%{name}/device-model
 
 %preun
 if [ $1 -eq 0 ]; then

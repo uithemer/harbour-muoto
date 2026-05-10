@@ -1,3 +1,21 @@
+* Sun May 10 2026 2.5.7-1
+- TPS: deleted four dead/quasi-dead artifacts under tps/:
+  device-model (empty placeholder, retired in 2.5.5), size_droid and
+  size_native (empty 0-byte placeholders, never read by anything in the
+  workspace), and ddensity-menu.sh (only consumer was the now-trimmed
+  D branch of themepacksupport.sh). app.pro ships tps/* wholesale so
+  deleting from the workspace removes them from the package.
+- TPS CLI: tps/themepacksupport.sh dropped the (F)ont theme and
+  (D)isplay density menu lines and their F/f + D/d case branches.
+  Both invocations dead-ended into deleted scripts (font-menu.sh was
+  retired in 2.5.0, ddensity-menu.sh in this release), so the trim is
+  cosmetic; the remaining branches (L/O/M/A/H/U/Q) are unchanged.
+- Spec hygiene: %post no longer rm -f's device-model on upgrade. The
+  2.5.5 cleanup has had a release cycle to clear pre-2.5.5 installs;
+  size_droid / size_native get no cleanup either since they were
+  always empty and harmless to leave behind on the rare upgrade.
+- Version bumped to 2.5.7; AboutPage shows UI Themer 2.5.7.
+
 * Sun May 10 2026 2.5.6-1
 - icon_size_launcher: dropped the iconSizeLauncherSeed snapshot key.
   The "Restore display density" dialog now resets the live
