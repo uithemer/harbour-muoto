@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.5.7
+Version:        2.5.8
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3

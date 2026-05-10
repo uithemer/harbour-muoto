@@ -1,3 +1,20 @@
+* Sun May 10 2026 2.5.8-1
+- Retired tps/install_dependencies.sh: it was a leftover from the
+  removed graphic-theming / PNG-overwriting icon era (pkcon refresh +
+  force-install all sailfish-content-graphics-default-z*-base and
+  closed-z* packages). Current UI Themer does not touch those paths;
+  the closed-* installs could also fail on community ports. Deleted
+  the script; app.pro ships tps/* wholesale so it drops from the RPM.
+- C++/QML: removed ThemePack::installDependencies() and the
+  dependenciesInstalled() signal from ThemePack. WelcomePage.qml drops
+  the entire Dependencies wizard block (Section, two Labels, install
+  button, "I already installed" switch), the Connections handler that
+  cleared settings.isRunning and published a notification on
+  completion, and the unused vDep property plus BusyState /
+  Notification imports and instances. Donate / Support section
+  unchanged; "Start UI Themer" stays unconditionally enabled.
+- Version bumped to 2.5.8; AboutPage shows UI Themer 2.5.8.
+
 * Sun May 10 2026 2.5.7-1
 - TPS: deleted four dead/quasi-dead artifacts under tps/:
   device-model (empty placeholder, retired in 2.5.5), size_droid and

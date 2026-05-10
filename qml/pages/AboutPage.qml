@@ -103,7 +103,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeSmall
-                text: "UI Themer 2.5.7" }
+                text: "UI Themer 2.5.8" }
 
             LabelText {
                 text: qsTr("UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.")

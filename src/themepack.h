@@ -18,7 +18,6 @@ class ThemePack : public QObject
         QString whoami() const;                         // function to test what user runs app
         QString getTimer() const;                       // gets hours from timer
         qint64 getFileSize(const QString& file);
-        void installDependencies();
         void restartHomescreen();
         void applyHours(const QString& hours);
         void enableserviceautoupdate();
@@ -28,7 +27,6 @@ class ThemePack : public QObject
         void hideIcon();                          // hides icon of original app, so user does not have to have two same icons on home screen
 
     signals:
-        void dependenciesInstalled();
         void homescreenRestarted();
         void serviceChanged();
 };

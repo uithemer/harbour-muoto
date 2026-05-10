@@ -47,12 +47,6 @@ void ThemePack::restartHomescreen()
     Spawner::execute("/usr/share/sailfishos-uithemer/homescreen.sh", [this]() mutable { emit homescreenRestarted(); });
 }
 
-void ThemePack::installDependencies()
-{
-    setuid_ex(0);
-    Spawner::execute("/usr/share/sailfishos-uithemer/install_dependencies.sh", [this]() mutable { emit dependenciesInstalled(); });
-}
-
 void ThemePack::enableserviceautoupdate()
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/enable-autoupdate.sh", [this]() { });
