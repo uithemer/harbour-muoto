@@ -26,9 +26,6 @@ Dialog
     id: dlgconfirm
     focus: true
     canAccept: itsicons.checked || itsiconoverlay.checked || (itsfonts.checked && selectedFont !== "") || (itsfonts.checked && !hasFont && hasFontNonLatin)
-    backNavigation: !settings.isRunning
-    forwardNavigation: !settings.isRunning
-    showNavigationIndicator: !settings.isRunning
 
     BusyState { id: busyindicator }
 
@@ -110,12 +107,21 @@ Dialog
 
     FontWeightModel { id: fontweightmodel; packName: dlgconfirm.packName }
 
+    DialogHeader {
+        id: header
+        dialog: dlgconfirm
+        cancelText: qsTr("Cancel")
+        acceptText: qsTr("Apply")
+    }
+
     SilicaFlickable
     {
         id: flickable
-        anchors.fill: parent
+        anchors.top: header.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         contentHeight: content.height
-        width: parent.width
         enabled: !settings.isRunning
         opacity: settings.isRunning ? 0.2 : 1.0
 
@@ -125,8 +131,6 @@ Dialog
         {
             id: content
             width: parent.width
-
-            DialogHeader { id: header; cancelText: qsTr("Cancel"); acceptText: qsTr("Apply") }
 
             ConfirmHeader { text: dlgconfirm.confirmheadername }
 

@@ -1,3 +1,23 @@
+* Sun May 10 2026 2.4.9-1
+- Dialog layout: pulled `DialogHeader` out of the inner
+  `SilicaFlickable` / `Column` and made it a direct child of the
+  surrounding `Dialog` in ConfirmPage, RestorePage, RestoreDDPage
+  and RecoveryPage. The flickable now anchors top to
+  `header.bottom` and fills the rest of the dialog. This matches
+  Silica's documented pattern and silences the
+  `Cannot read property 'backIndicatorDown' / 'forwardIndicatorDown'
+  of null` TypeErrors emitted from system DialogHeader.qml.
+- Dialog header now sets `dialog: dlg...` explicitly so it never
+  has to walk up through the flickable to find its owning Dialog.
+- Removed the `backNavigation` / `forwardNavigation` /
+  `showNavigationIndicator` bindings tied to `settings.isRunning`
+  on the four dialogs above; toggling those handles while the
+  header was alive was the trigger for the indicator-null binding
+  evaluations. Interaction blocking during long-running operations
+  is still enforced by the flickable's `enabled` / `opacity` and
+  by `canAccept`.
+- Version bumped to 2.4.9; AboutPage label updated.
+
 * Sun May 10 2026 2.4.8-1
 - Font preview: restore `font.weight` on the preview labels using a
   small QML helper that maps the selected font file basename (e.g.

@@ -15,9 +15,6 @@ Dialog
     id: dlgrestore
     focus: true
     canAccept: itsrestoredpr.checked || ( itsrestoreadpi.checked && themepack.hasAndroidSupport )
-    backNavigation: !settings.isRunning
-    forwardNavigation: !settings.isRunning
-    showNavigationIndicator: !settings.isRunning
 
     BusyState { id: busyindicator }
 
@@ -63,12 +60,21 @@ Dialog
         }
     }
 
+    DialogHeader {
+        id: header
+        dialog: dlgrestore
+        acceptText: qsTr("Restore")
+        cancelText: qsTr("Cancel")
+    }
+
     SilicaFlickable
     {
         id: flickable
-        anchors.fill: parent
+        anchors.top: header.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         contentHeight: column.height
-        width: parent.width
         enabled: !settings.isRunning
         opacity: settings.isRunning ? 0.2 : 1.0
 
@@ -78,8 +84,6 @@ Dialog
         {
             id: column
             width: parent.width
-
-            DialogHeader { id: header; acceptText: qsTr("Restore"); cancelText: qsTr("Cancel") }
 
             ConfirmHeader { text: qsTr("Restore") }
 
