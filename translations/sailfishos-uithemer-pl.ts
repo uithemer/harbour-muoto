@@ -562,42 +562,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Backup icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Backup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Backuping</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restore icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select backup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restoring backup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>From here you can backup all the default icons into a compressed archive. The archive will be saved into &lt;i&gt;/home/nemo/&lt;/i&gt;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select and restore an archive previously saved via UI Themer. You will still need to perform a &lt;i&gt;Restore theme&lt;/i&gt; from the &lt;i&gt;Themes&lt;/i&gt; page in order to restore the icons in your system.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -615,10 +579,6 @@
     </message>
     <message>
         <source>advanced</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -833,22 +793,6 @@
     </message>
     <message>
         <source>Dependencies</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ImageMagick</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Install ImageMagick</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ImageMagick installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

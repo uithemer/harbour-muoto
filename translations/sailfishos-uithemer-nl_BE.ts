@@ -562,42 +562,6 @@
         <translation>volledig</translation>
     </message>
     <message>
-        <source>Backup icons</source>
-        <translation>Back-up van pictogrammen maken</translation>
-    </message>
-    <message>
-        <source>Backup</source>
-        <translation>Back-up maken</translation>
-    </message>
-    <message>
-        <source>Backuping</source>
-        <translation>Bezig met maken van back-up</translation>
-    </message>
-    <message>
-        <source>Restore icons</source>
-        <translation>Pictogrammen herstellen</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>Bestand</translation>
-    </message>
-    <message>
-        <source>Select backup</source>
-        <translation>Selecteert nen back-up</translation>
-    </message>
-    <message>
-        <source>Restoring backup</source>
-        <translation>Back-up wordt hersteld</translation>
-    </message>
-    <message>
-        <source>From here you can backup all the default icons into a compressed archive. The archive will be saved into &lt;i&gt;/home/nemo/&lt;/i&gt;.</source>
-        <translation>Van hieruit kunt ge nen back-up van alle standaardpictogrammen maken in een gecomprimeerd archief. Dit archief gaat opgeslagen worden in &lt;i&gt;/home/nemo/&lt;/i&gt;.</translation>
-    </message>
-    <message>
-        <source>Select and restore an archive previously saved via UI Themer. You will still need to perform a &lt;i&gt;Restore theme&lt;/i&gt; from the &lt;i&gt;Themes&lt;/i&gt; page in order to restore the icons in your system.</source>
-        <translation>Selecteert en herstelt een archief dat ge voordien met UI Themer hebt opgeslagen. Ge gaat nog altijd &lt;i&gt;Thema herstellen&lt;/i&gt; moeten uitvoeren op de pagina &lt;i&gt;Thema’s&lt;/i&gt; voor de pictogrammen in uw systeem te herstellen.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Over UI Themer</translation>
     </message>
@@ -616,10 +580,6 @@
     <message>
         <source>advanced</source>
         <translation>geavanceerd</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Geen</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -834,22 +794,6 @@
     <message>
         <source>Dependencies</source>
         <translation>Afhankelijkheden</translation>
-    </message>
-    <message>
-        <source>ImageMagick</source>
-        <translation>ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.</source>
-        <translation>ImageMagick is vereist voor de overlays van UI Themer te laten werken. Overlays moeten ook ondersteund worden door ’t thema.</translation>
-    </message>
-    <message>
-        <source>Install ImageMagick</source>
-        <translation>ImageMagick installeren</translation>
-    </message>
-    <message>
-        <source>ImageMagick installed</source>
-        <translation>ImageMagick geïnstalleerd</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

@@ -1,74 +1,16 @@
-TARGET = sailfishos-uithemer
+TEMPLATE = subdirs
 
-scripts.files = scripts/* tps/*
-scripts.path = $$PREFIX/share/$$TARGET
+# Build the GUI app and the headless reassert helper as one project.
+# Each subdir entry uses subdir.file (no per-target subdirectory required),
+# so qmake creates per-target Makefiles in the project root and the wrapper
+# orchestrates them. This lets %qtc_qmake5 in the RPM spec build everything
+# in a single invocation, instead of cd'ing into a build subdirectory and
+# fighting whatever %_builddir / %qtc_source_path injection the macro does.
+SUBDIRS = main helper
 
-service.files = service/*
-service.path = $$PREFIX/share/$$TARGET/service
+main.file   = app.pro
+helper.file = sailfishos-uithemer-reassert.pro
 
-images.files = images/*
-images.path = $$PREFIX/share/$$TARGET/images
-
-appicons.files = appicons/*
-appicons.path = /usr/share/icons/hicolor/
-
-INSTALLS += scripts service images appicons
-
-CONFIG += sailfishapp c++11
-
-SOURCES += src/sailfishos-uithemer.cpp \
-    src/spawner.cpp \
-    src/themepackmodel.cpp \
-    src/fontweightmodel.cpp \
-    src/themepack.cpp \
-    src/desktopfile.cpp \
-    src/iconmanifest.cpp \
-    src/imageutil.cpp \
-    src/iconapplier.cpp \
-    src/filelock.cpp
-
-OTHER_FILES += \
-    qml/sailfishos-uithemer.qml \
-    qml/common/Settings.qml \
-    qml/components/AboutLanguage.qml \
-    qml/components/AboutTranslator.qml \
-    qml/components/BackgroundRectangle.qml \
-    qml/components/BusyState.qml \
-    qml/components/FontPreview.qml \
-    qml/components/LabelSpacer.qml \
-    qml/components/LabelText.qml \
-    qml/components/Notification.qml \
-    qml/components/themepacklistview/ThemePackItem.qml \
-    qml/cover/CoverPage.qml \
-    qml/cover/CoverConfirm.qml \
-    qml/cover/CoverActionList1.qml \
-    qml/cover/CoverActionList2.qml \
-    qml/cover/CoverLabel.qml \
-    qml/cover/FontPreviewCover.qml \
-    qml/pages/ConfirmPage.qml \
-    qml/pages/DensityPage.qml \
-    qml/pages/MainPage.qml \
-    qml/pages/OptionsPage.qml \
-    qml/pages/RestorePage.qml \
-    qml/pages/RestoreDDPage.qml \
-    qml/pages/WelcomePage.qml \
-    qml/pages/AboutPage.qml \
-    qml/pages/GuidePage.qml \
-    qml/pages/RecoveryPage.qml \
-    rpm/* \
-    sailfishos-uithemer.desktop \
-
-CONFIG += sailfishapp_i18n
-
-TRANSLATIONS +=  translations/*.ts
-
-HEADERS += \
-    src/spawner.h \
-    src/themepackmodel.h \
-    src/fontweightmodel.h \
-    src/themepack.h \
-    src/desktopfile.h \
-    src/iconmanifest.h \
-    src/imageutil.h \
-    src/iconapplier.h \
-    src/filelock.h
+# The helper reuses headers from the main app's src/ tree, but does not link
+# against the GUI binary, so no build-order dependency is required between
+# the two SUBDIRS entries.

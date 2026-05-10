@@ -562,42 +562,6 @@
         <translation>πλήρες</translation>
     </message>
     <message>
-        <source>Backup icons</source>
-        <translation>Δημιουργία αντιγράφου ασφαλέιας εικονιδίων</translation>
-    </message>
-    <message>
-        <source>Backup</source>
-        <translation>Δημιουργία αντιγράφου ασφαλείας</translation>
-    </message>
-    <message>
-        <source>Backuping</source>
-        <translation>Το αντίγραφο ασφαλέιας δημιουργείτε</translation>
-    </message>
-    <message>
-        <source>Restore icons</source>
-        <translation>Επαναφορά εικονιδίων</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>Αρχείο</translation>
-    </message>
-    <message>
-        <source>Select backup</source>
-        <translation>Επιλέξτε αντίγραφο ασφαλείας</translation>
-    </message>
-    <message>
-        <source>Restoring backup</source>
-        <translation>Επαναφορά αντιγράφου ασφαλείας</translation>
-    </message>
-    <message>
-        <source>From here you can backup all the default icons into a compressed archive. The archive will be saved into &lt;i&gt;/home/nemo/&lt;/i&gt;.</source>
-        <translation>Από εδώ μπορείτε να δημιουργήσετε αντίγραφα ασφαλείας όλων των προεπιλεγμένων εικονιδίων σε ένα συμπιεσμένο αρχείο. Το αρχείο θα αποθηκευτεί στο  &lt;i&gt;/home/nemo/&lt;/i&gt;.</translation>
-    </message>
-    <message>
-        <source>Select and restore an archive previously saved via UI Themer. You will still need to perform a &lt;i&gt;Restore theme&lt;/i&gt; from the &lt;i&gt;Themes&lt;/i&gt; page in order to restore the icons in your system.</source>
-        <translation>Επιλέξτε και επαναφέρετε ένα αρχείο που έχετε αποθηκεύσει προηγουμένως μέσω του UI Themer. Θα χρειαστεί να εκτελέσετε την &lt;i&gt;Επαναφορά θέματος&lt;/i&gt; από την σελίδα &lt;i&gt;Θέματα&lt;/i&gt; για να επαναφέρετε τα εικονίδια στο σύστημά σας.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Σχετικά με το UI Themer</translation>
     </message>
@@ -616,10 +580,6 @@
     <message>
         <source>advanced</source>
         <translation>προχωρημένη</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Καμία</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -834,22 +794,6 @@
     <message>
         <source>Dependencies</source>
         <translation>Εξαρτόμενες εφαρμογές</translation>
-    </message>
-    <message>
-        <source>ImageMagick</source>
-        <translation>ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.</source>
-        <translation>Το ImageMagick απαιτείται για την υποστήριξη επικαλύψεων. Οι επικαλύψεις πρέπει να υποστηρίζονται από το θέμα.</translation>
-    </message>
-    <message>
-        <source>Install ImageMagick</source>
-        <translation>Εγκατάσταση ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick installed</source>
-        <translation>Το ImageMagick εγκαταστάθηκε</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

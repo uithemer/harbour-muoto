@@ -562,42 +562,6 @@
         <translation>completa</translation>
     </message>
     <message>
-        <source>Backup icons</source>
-        <translation>Backup icone</translation>
-    </message>
-    <message>
-        <source>Backup</source>
-        <translation>Backup</translation>
-    </message>
-    <message>
-        <source>Backuping</source>
-        <translation>Backup in corso</translation>
-    </message>
-    <message>
-        <source>Restore icons</source>
-        <translation>Ripristina icone</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>File</translation>
-    </message>
-    <message>
-        <source>Select backup</source>
-        <translation>Seleziona backup</translation>
-    </message>
-    <message>
-        <source>Restoring backup</source>
-        <translation>Ripristino backup</translation>
-    </message>
-    <message>
-        <source>From here you can backup all the default icons into a compressed archive. The archive will be saved into &lt;i&gt;/home/nemo/&lt;/i&gt;.</source>
-        <translation>Da qui puoi effettuare il backup di tutte le icone predefinite in un archivio compresso. L&apos;archivio sarà salvato in &lt;i&gt;/home/nemo/&lt;/i&gt;.</translation>
-    </message>
-    <message>
-        <source>Select and restore an archive previously saved via UI Themer. You will still need to perform a &lt;i&gt;Restore theme&lt;/i&gt; from the &lt;i&gt;Themes&lt;/i&gt; page in order to restore the icons in your system.</source>
-        <translation>Seleziona e ripristina un archivio salvato precedentemente con UI Themer. Dovrai comunque effettuare un &lt;i&gt;Ripristina tema&lt;/i&gt; dalla pagina &lt;i&gt;Temi&lt;/i&gt; per ripristinare le icone nel tuo sistema.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Info su UI Themer</translation>
     </message>
@@ -616,10 +580,6 @@
     <message>
         <source>advanced</source>
         <translation>avanzata</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Nessuno</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -834,22 +794,6 @@
     <message>
         <source>Dependencies</source>
         <translation>Dipendenze</translation>
-    </message>
-    <message>
-        <source>ImageMagick</source>
-        <translation>ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.</source>
-        <translation>ImageMagick è necessario al funzionamento degli overlay di UI Themer. Gli overlay devono essere supportati dal tema.</translation>
-    </message>
-    <message>
-        <source>Install ImageMagick</source>
-        <translation>Installa ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick installed</source>
-        <translation>ImageMagick installato</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

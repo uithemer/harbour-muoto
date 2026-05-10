@@ -562,42 +562,6 @@
         <translation>完整</translation>
     </message>
     <message>
-        <source>Backup icons</source>
-        <translation>备份图标</translation>
-    </message>
-    <message>
-        <source>Backup</source>
-        <translation>备份</translation>
-    </message>
-    <message>
-        <source>Backuping</source>
-        <translation>备份中</translation>
-    </message>
-    <message>
-        <source>Restore icons</source>
-        <translation>恢复</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>文件</translation>
-    </message>
-    <message>
-        <source>Select backup</source>
-        <translation>选择备份</translation>
-    </message>
-    <message>
-        <source>Restoring backup</source>
-        <translation>正在恢复备份</translation>
-    </message>
-    <message>
-        <source>From here you can backup all the default icons into a compressed archive. The archive will be saved into &lt;i&gt;/home/nemo/&lt;/i&gt;.</source>
-        <translation>在此处，你可以将所有的默认图标备份到一个压缩文档。压缩文档会保存到&lt;i&gt;/home/nemo/&lt;/i&gt;。</translation>
-    </message>
-    <message>
-        <source>Select and restore an archive previously saved via UI Themer. You will still need to perform a &lt;i&gt;Restore theme&lt;/i&gt; from the &lt;i&gt;Themes&lt;/i&gt; page in order to restore the icons in your system.</source>
-        <translation>选择并恢复一个之前使用 UI Themer 储存的备份。你还需要从&lt;i&gt;主题&lt;/i&gt;页执行&lt;i&gt;恢复主题&lt;/i&gt;操作以恢复到系统默认图标。</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>关于 UI Themer</translation>
     </message>
@@ -616,10 +580,6 @@
     <message>
         <source>advanced</source>
         <translation>高级选项</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>无</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -834,22 +794,6 @@
     <message>
         <source>Dependencies</source>
         <translation>附属软件</translation>
-    </message>
-    <message>
-        <source>ImageMagick</source>
-        <translation>ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.</source>
-        <translation>如果你想让 UI Themer 的图标蒙版功能正常工作，必须安装  ImageMagick。图标蒙版需要得到主题支持。</translation>
-    </message>
-    <message>
-        <source>Install ImageMagick</source>
-        <translation>安装 ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick installed</source>
-        <translation>已安装 ImageMagick </translation>
     </message>
     <message>
         <source>Terms and conditions</source>

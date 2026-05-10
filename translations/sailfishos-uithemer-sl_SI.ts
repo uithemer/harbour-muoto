@@ -562,42 +562,6 @@
         <translation>napreden</translation>
     </message>
     <message>
-        <source>Backup icons</source>
-        <translation>Ustvari varnostno kopijo ikon</translation>
-    </message>
-    <message>
-        <source>Backup</source>
-        <translation>Varnostna kopija</translation>
-    </message>
-    <message>
-        <source>Backuping</source>
-        <translation>Ustvarjanje varnostne kopije</translation>
-    </message>
-    <message>
-        <source>Restore icons</source>
-        <translation>Obnovi ikone</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>Datoteka</translation>
-    </message>
-    <message>
-        <source>Select backup</source>
-        <translation>Izberi varnostno kopijo</translation>
-    </message>
-    <message>
-        <source>Restoring backup</source>
-        <translation>Obnavljanje varnostne kopije</translation>
-    </message>
-    <message>
-        <source>From here you can backup all the default icons into a compressed archive. The archive will be saved into &lt;i&gt;/home/nemo/&lt;/i&gt;.</source>
-        <translation>Tu lahko ustvarite varnostno kopijo vseh privzetih ikon, ki se shranijo v arhivsko datoteko.  Arhiv bo shranjen v &lt;i&gt;/home/nemo/&lt;/i&gt;.</translation>
-    </message>
-    <message>
-        <source>Select and restore an archive previously saved via UI Themer. You will still need to perform a &lt;i&gt;Restore theme&lt;/i&gt; from the &lt;i&gt;Themes&lt;/i&gt; page in order to restore the icons in your system.</source>
-        <translation>Izberite in obnovite datoteke iz arhiva, katerega je predhodno ustvarila aplikacija UI Themer. Še vedno bo potrebno uporabiti ukaz &lt;i&gt;Obnovi temo&lt;/i&gt; na strani &lt;i&gt;Teme&lt;/i&gt;, da se obnovijo ikone.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>O programu UI Themer</translation>
     </message>
@@ -616,10 +580,6 @@
     <message>
         <source>advanced</source>
         <translation>napredno</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Nič</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -834,22 +794,6 @@
     <message>
         <source>Dependencies</source>
         <translation>Odvisnosti</translation>
-    </message>
-    <message>
-        <source>ImageMagick</source>
-        <translation>ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.</source>
-        <translation>UI Themer potrebuje za delovanje prekrivanja ikon nameščen program ImageMagick. Prav tako mora tema podpirati prekrivanje.</translation>
-    </message>
-    <message>
-        <source>Install ImageMagick</source>
-        <translation>Namesti ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick installed</source>
-        <translation>ImageMagick je nameščen</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

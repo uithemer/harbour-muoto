@@ -563,42 +563,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>full</translation>
     </message>
     <message>
-        <source>Backup icons</source>
-        <translation>Säkerhetskopiera ikoner</translation>
-    </message>
-    <message>
-        <source>Backup</source>
-        <translation>Säkerhetskopiera</translation>
-    </message>
-    <message>
-        <source>Backuping</source>
-        <translation>Säkerhetskopiering</translation>
-    </message>
-    <message>
-        <source>Restore icons</source>
-        <translation>Återställ ikoner</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>File</translation>
-    </message>
-    <message>
-        <source>Select backup</source>
-        <translation>Välj säkerhetskopia</translation>
-    </message>
-    <message>
-        <source>Restoring backup</source>
-        <translation>Återställer säkerhetskopia</translation>
-    </message>
-    <message>
-        <source>From here you can backup all the default icons into a compressed archive. The archive will be saved into &lt;i&gt;/home/nemo/&lt;/i&gt;.</source>
-        <translation>Här kan du säkerhetskopiera alla standardikoner till ett komprimerat arkiv. Arkivet sparas i &lt;i&gt;/home/nemo/&lt;/i&gt;.</translation>
-    </message>
-    <message>
-        <source>Select and restore an archive previously saved via UI Themer. You will still need to perform a &lt;i&gt;Restore theme&lt;/i&gt; from the &lt;i&gt;Themes&lt;/i&gt; page in order to restore the icons in your system.</source>
-        <translation>Välj och återställ ett arkiv som tidigare sparats via UI Themer. Du måste fortfarande utföra en &lt;i&gt;återställning&lt;/i&gt; från &lt;i&gt;temasidan&lt;/i&gt;, för att återställa ikonerna i ditt system.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Om UI Themer</translation>
     </message>
@@ -617,10 +581,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
     <message>
         <source>advanced</source>
         <translation>avancerat</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ingen</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -835,22 +795,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
     <message>
         <source>Dependencies</source>
         <translation>Beroenden</translation>
-    </message>
-    <message>
-        <source>ImageMagick</source>
-        <translation>ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.</source>
-        <translation>ImageMagick krävs för att UI Themer överlager skall fungera. Överlager måste stödjas av temat.</translation>
-    </message>
-    <message>
-        <source>Install ImageMagick</source>
-        <translation>Installera ImageMagick</translation>
-    </message>
-    <message>
-        <source>ImageMagick installed</source>
-        <translation>ImageMagick installerad</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

@@ -74,11 +74,6 @@ fi
 
 %qtc_make %{?_smp_mflags}
 
-# Build the headless reassert helper from its sibling .pro in a separate
-# subdirectory to keep Makefiles independent.
-mkdir -p _helper
-( cd _helper && qmake5 ../sailfishos-uithemer-reassert.pro && make %{?_smp_mflags} )
-
 # >> build post
 # << build post
 
@@ -87,8 +82,6 @@ rm -rf %{buildroot}
 # >> install pre
 # << install pre
 %qmake5_install
-
-( cd _helper && make INSTALL_ROOT=%{buildroot} install )
 
 # >> install post
 # << install post
