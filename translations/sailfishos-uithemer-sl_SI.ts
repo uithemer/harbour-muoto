@@ -81,7 +81,7 @@
     </message>
     <message>
         <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">UI Themer vam omogoča prilagoditi ikone, pisave in gostoto pikslov sistema SailfishOS.</translation>
     </message>
     <message>
         <source>Thanks to LQS for helping with the Android DPI on the Xperia XA2.</source>
@@ -145,6 +145,10 @@
     <message>
         <source>The theme supports overlays.</source>
         <translation>Tema podpira prekrivanje.</translation>
+    </message>
+    <message>
+        <source>No preview available</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

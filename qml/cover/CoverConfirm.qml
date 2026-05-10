@@ -32,8 +32,11 @@ CoverBackground
      onStatusChanged: {
          if (status === Cover.Active || Cover.Activating || Cover.Deactivating) {
              if (pageStack.currentPage.hasIcons || pageStack.currentPage.hasIconOverlay) {
-                 coverimgpreview.source = ""
-                 coverimgpreview.source = "/usr/share/sailfishos-uithemer/tmp/iconspreview.png"
+                 var pn = pageStack.currentPage.packName
+                 if (pn) {
+                     coverimgpreview.source = ""
+                     coverimgpreview.source = "image://uithemer/preview/" + pn + "?t=" + Date.now()
+                 }
              }
              if (pageStack.currentPage.hasFont && pageStack.currentPage.selectedFont !== "") {
                  fontloader.visible = true

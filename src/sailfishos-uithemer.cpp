@@ -11,11 +11,13 @@
 #include <QQuickView>
 #include <QQmlContext>
 #include <QGuiApplication>
+#include <QQmlEngine>
 #include <QFileSystemWatcher>
 #include "themepack.h"
 #include "themepackmodel.h"
 #include "fontweightmodel.h"
 #include "iconapplier.h"
+#include "iconpreviewprovider.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +31,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<ThemePackModel>("harbour.uithemer", 1, 0, "ThemePackModel");
     qmlRegisterType<FontWeightModel>("harbour.uithemer", 1, 0, "FontWeightModel");
     qmlRegisterType<IconApplier>("harbour.uithemer", 1, 0, "IconApplier");
+
+    // image://uithemer/preview/<packName>?t=<ts> serves the in-memory icon
+    // pack preview built by IconApplier::buildPreview. Engine takes ownership.
+    view->engine()->addImageProvider(QStringLiteral("uithemer"),
+                                     new IconPreviewProvider);
 
     view->setSource(SailfishApp::pathTo(qml));
     view->show();

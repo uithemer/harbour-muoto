@@ -51,8 +51,11 @@ public slots:
     // Enable the QFileSystemWatcher (off by default; the GUI turns it on).
     void enableAutoTheming(bool enable);
 
-    // Build the 3x3 montage preview for the confirm page / cover into
-    // /usr/share/sailfishos-uithemer/tmp/iconspreview.png.
+    // Build the 3xN montage preview for the confirm page / cover into the
+    // process-wide IconPreviewCache. QML reads it via the QQuickImageProvider
+    // registered under "uithemer", i.e. image://uithemer/preview/<packName>.
+    // Emits previewReady(packName, ok); ok is false when the pack has no
+    // PNGs the sampler can find (the dialog flips to a fallback label).
     void buildPreview(const QString& packName);
 
     // Force lipstick to reload .desktop entries (touches them).
@@ -64,7 +67,7 @@ signals:
     void restored();
     void reasserted();
     void originalsRefreshed();
-    void previewReady();
+    void previewReady(const QString& packName, bool ok);
     void newDesktopsThemed(int count);
 
 private slots:

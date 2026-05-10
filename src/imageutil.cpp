@@ -101,6 +101,7 @@ QStringList samplePackIcons(const QString& packDir, int count)
     all << collectPngs(packDir + QStringLiteral("/native"));
     all << collectPngs(packDir + QStringLiteral("/apk"));
     all << collectPngs(packDir + QStringLiteral("/overlay"));
+    all << collectPngs(packDir + QStringLiteral("/jolla"));
 
     if(all.isEmpty())
         return all;

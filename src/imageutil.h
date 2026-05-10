@@ -21,7 +21,10 @@ namespace ImageUtil
                     const QSize& cell = QSize(128, 128),
                     int pad = 15);
 
-    // Picks up to 9 random PNGs from any of {pack/native, pack/apk, pack/overlay} (recursive).
+    // Picks up to 9 random PNGs from any of {pack/native, pack/apk, pack/overlay, pack/jolla}
+    // (recursive). The pack/jolla subtree is included so previews still have content for
+    // packs that only ship pre-3.0 ambient artwork (matching the post-2.4.3 native lookup
+    // that also falls back to <pack>/jolla/<zSize>/icons/).
     QStringList samplePackIcons(const QString& packDir, int count = 9);
 
     // Picks one random overlay base PNG from `<packDir>/overlay`. Returns empty path if none.

@@ -81,7 +81,7 @@
     </message>
     <message>
         <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Az UI Themer-rel testreszabhatod a Sailfish OS ikonjait, betűit, és a pixelsűrűséget.</translation>
     </message>
     <message>
         <source>Iconography by</source>
@@ -144,6 +144,10 @@
     </message>
     <message>
         <source>The theme supports overlays.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No preview available</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

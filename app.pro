@@ -25,6 +25,8 @@ SOURCES += src/sailfishos-uithemer.cpp \
     src/iconmanifest.cpp \
     src/imageutil.cpp \
     src/iconapplier.cpp \
+    src/iconpreviewcache.cpp \
+    src/iconpreviewprovider.cpp \
     src/filelock.cpp
 
 OTHER_FILES += \
@@ -71,4 +73,6 @@ HEADERS += \
     src/iconmanifest.h \
     src/imageutil.h \
     src/iconapplier.h \
+    src/iconpreviewcache.h \
+    src/iconpreviewprovider.h \
     src/filelock.h

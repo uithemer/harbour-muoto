@@ -2,6 +2,7 @@
 #include "desktopfile.h"
 #include "iconmanifest.h"
 #include "imageutil.h"
+#include "iconpreviewcache.h"
 #include "filelock.h"
 
 #include <QDir>
@@ -22,7 +23,6 @@ static const char* kManifestPath = "/usr/share/sailfishos-uithemer/icon-backup.j
 static const char* kNativeAppsDir = "/usr/share/applications";
 static const char* kApkAppsDir = "/home/defaultuser/.local/share/applications";
 static const char* kPackPrefix = "/usr/share/harbour-themepack-";
-static const char* kPreviewPath = "/usr/share/sailfishos-uithemer/tmp/iconspreview.png";
 
 IconApplier::IconApplier(QObject* parent)
     : QObject(parent), _watcher(nullptr)
@@ -42,7 +42,17 @@ QString IconApplier::manifestPath() const
 
 QString IconApplier::packDir(const QString& packName) const
 {
-    return QString::fromLatin1(kPackPrefix) + packName;
+    // Tolerate either the bare pack name ("numix-circle") or the full RPM /
+    // directory name ("harbour-themepack-numix-circle"). MainPage feeds
+    // applyIcons() the role-data form (already stripped) while ConfirmPage
+    // passes ThemePackModel::packName(int) which keeps the prefix; strip any
+    // leading "harbour-themepack-" so we never double up the prefix.
+    static const QString kBarePrefix = QStringLiteral("harbour-themepack-");
+    QString name = packName;
+    if(name.startsWith(kBarePrefix))
+        name = name.mid(kBarePrefix.size());
+
+    return QString::fromLatin1(kPackPrefix) + name;
 }
 
 QString IconApplier::cacheOverlayDir() const
@@ -728,18 +738,17 @@ void IconApplier::buildPreview(const QString& packName)
 {
     if(packName.isEmpty())
     {
-        emit previewReady();
+        IconPreviewCache::instance().put(packName, QImage());
+        emit previewReady(packName, false);
         return;
     }
 
-    QDir().mkpath(QStringLiteral("/usr/share/sailfishos-uithemer/tmp"));
-
-    QStringList sample = ImageUtil::samplePackIcons(packDir(packName), 9);
+    const QStringList sample = ImageUtil::samplePackIcons(packDir(packName), 9);
     QImage img = ImageUtil::montage9(sample);
-    if(!img.isNull())
-        img.save(QString::fromLatin1(kPreviewPath), "PNG");
+    const bool ok = !img.isNull();
 
-    emit previewReady();
+    IconPreviewCache::instance().put(packName, ok ? img : QImage());
+    emit previewReady(packName, ok);
 }
 
 void IconApplier::touchDesktopFiles() const

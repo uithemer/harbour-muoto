@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.4.5
+Version:        2.4.6
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -117,7 +117,6 @@ desktop-file-install --delete-original       \
 chmod +x %{_datadir}/%{name}/*.sh
 chmod +x %{_datadir}/%{name}/service/*.sh
 mkdir -p %{_datadir}/%{name}/backup
-mkdir -p %{_datadir}/%{name}/tmp
 
 mv -f %{_datadir}/%{name}/service/themepacksupport-systemupgrade.service /lib/systemd/system/
 mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.service /etc/systemd/system/
@@ -151,7 +150,7 @@ ln -sf %{_datadir}/%{name}/themepacksupport.sh %{_bindir}/themepacksupport
 old=/usr/share/harbour-themepacksupport
 new=%{_datadir}/%{name}
 if [ -d "$old" ]; then
-    for d in backup tmp; do
+    for d in backup; do
         if [ -d "$old/$d" ] && [ ! -d "$new/$d" ]; then
             mv "$old/$d" "$new/$d" || true
         fi
@@ -173,6 +172,11 @@ rm -f %{_datadir}/%{name}/graphic-current
 # the user's sounds; drop the leftovers so they do not linger.
 rm -f %{_datadir}/%{name}/sound-current
 rm -rf %{_datadir}/%{name}/backup/sound
+# 2.4.5 and earlier kept a /usr/share/sailfishos-uithemer/tmp/iconspreview.png
+# for the ConfirmPage / cover preview. The preview is now served from memory
+# via a QQuickImageProvider; drop the leftover file and the (now unused) dir.
+rm -f %{_datadir}/%{name}/tmp/iconspreview.png
+rmdir --ignore-fail-on-non-empty %{_datadir}/%{name}/tmp 2>/dev/null || :
 
 %preun
 if [ $1 -eq 0 ]; then

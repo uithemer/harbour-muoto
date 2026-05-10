@@ -1,3 +1,42 @@
+* Sun May 10 2026 2.4.6-1
+- ConfirmPage / Cover icon-pack preview overhaul:
+  - The preview is now built as a QImage in C++ and served from memory
+    through a QQuickImageProvider registered under the "uithemer"
+    scheme. QML reads it via `image://uithemer/preview/<packName>?t=<ts>`
+    URLs (the `?t=...` query is an opaque cache buster). No PNG is
+    written to disk anymore.
+  - Fixed a long-standing bug where IconApplier::packDir would double
+    up the "harbour-themepack-" prefix when the dialog passed the full
+    list-name form (the previous on-disk PNG cache happened to mask
+    this; the in-memory provider exposes it). packDir now strips the
+    prefix if present so callers can pass either form.
+  - Sampler now also walks `<pack>/jolla/`, matching the post-2.4.3
+    native lookup that falls back to that subtree.
+  - Fixed the "QML Column: Cannot specify ... centerIn anchors"
+    warnings emitted while the dialog was open: the preview area is
+    now an Item, the Image fills it with paddingMedium margins and
+    only shows when status === Image.Ready.
+  - Added a "No preview available" Label that takes over when the
+    pack has no PNGs the sampler can find (Image.Error path).
+- C++:
+  - New IconPreviewCache (process-wide, mutex-guarded singleton mapping
+    packName -> QImage) and IconPreviewProvider (QQuickImageProvider
+    that strips the `?...` cache-buster query and the optional
+    `preview/` segment, and honours requestedSize).
+  - IconApplier::buildPreview now publishes the QImage to the cache
+    and emits `previewReady(QString packName, bool ok)`; the on-disk
+    `kPreviewPath` constant and the `mkpath(.../tmp)` call are gone.
+  - The provider is registered on the QQuickView engine in main()
+    before view->setSource so it is reachable by the time QML loads.
+- RPM spec:
+  - %post no longer creates `%{_datadir}/%{name}/tmp` and the
+    harbour-themepacksupport migration loop no longer migrates the
+    `tmp/` subdir.
+  - One-shot %post cleanup removes any leftover
+    `%{_datadir}/%{name}/tmp/iconspreview.png` and the (now unused)
+    empty `tmp/` directory from older installs.
+- Version bumped to 2.4.6; AboutPage label updated.
+
 * Sun May 10 2026 2.4.5-1
 - Removed the UI-mode tier system (`showGuimode` + `guimode` dconf keys):
   - Dropped the "UI mode" SectionHeader and the easy/full/advanced

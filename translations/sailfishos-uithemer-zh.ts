@@ -146,6 +146,10 @@
         <source>The theme supports overlays.</source>
         <translation>该主题支持图标蒙版。</translation>
     </message>
+    <message>
+        <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DensityPage</name>

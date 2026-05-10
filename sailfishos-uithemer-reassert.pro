@@ -15,6 +15,7 @@ SOURCES += \
     src/iconmanifest.cpp \
     src/imageutil.cpp \
     src/iconapplier.cpp \
+    src/iconpreviewcache.cpp \
     src/filelock.cpp
 
 HEADERS += \
@@ -22,6 +23,7 @@ HEADERS += \
     src/iconmanifest.h \
     src/imageutil.h \
     src/iconapplier.h \
+    src/iconpreviewcache.h \
     src/filelock.h
 
 target.path = /usr/bin

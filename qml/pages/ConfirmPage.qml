@@ -50,9 +50,19 @@ Dialog
     Connections {
         target: iconapplier
         onPreviewReady: {
-            imgpreview.source = ""
-            imgpreview.source = "/usr/share/sailfishos-uithemer/tmp/iconspreview.png"
+            if (packName !== dlgconfirm.packName)
+                return
+
             busyimg.running = false
+
+            if (ok) {
+                imgpreviewfallback.visible = false
+                imgpreview.source = ""
+                imgpreview.source = "image://uithemer/preview/" + packName + "?t=" + Date.now()
+            } else {
+                imgpreview.source = ""
+                imgpreviewfallback.visible = true
+            }
         }
     }
 
@@ -134,20 +144,39 @@ Dialog
             {
                 width: isLandscape ? parent.width/2 : parent.width
 
-            Column {
+            Item {
                 id: iconpreview
                 width: parent.width
                 height: 450
-                BusyIndicator { id: busyimg; running: true; size: BusyIndicatorSize.Medium; anchors.centerIn: parent }
+
+                BusyIndicator {
+                    id: busyimg
+                    running: true
+                    size: BusyIndicatorSize.Medium
+                    anchors.centerIn: parent
+                }
+
                 Image {
                     id: imgpreview
-                    height: 450
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.fill: parent
+                    anchors.margins: Theme.paddingMedium
                     asynchronous: true
                     fillMode: Image.PreserveAspectFit
                     cache: false
+                    visible: status === Image.Ready
+                    onStatusChanged: {
+                        if (status === Image.Ready || status === Image.Error)
+                            busyimg.running = false
+                    }
                 }
 
+                Label {
+                    id: imgpreviewfallback
+                    visible: false
+                    anchors.centerIn: parent
+                    color: Theme.secondaryColor
+                    text: qsTr("No preview available")
+                }
             }
 
             }

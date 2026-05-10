@@ -147,6 +147,10 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <source>The theme supports overlays.</source>
         <translation>Temat stödjer överlager.</translation>
     </message>
+    <message>
+        <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DensityPage</name>
