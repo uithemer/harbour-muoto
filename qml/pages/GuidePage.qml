@@ -48,7 +48,7 @@ Page
             pageStack.replaceAbove(null, Qt.resolvedUrl("MainPage.qml"));
             event.accepted = true;
         }
-        if (event.key === Qt.Key_D && settings.showDensity === true) {
+        if (event.key === Qt.Key_D) {
             pageStack.replace(Qt.resolvedUrl("DensityPage.qml"));
             event.accepted = true;
         }
@@ -123,19 +123,17 @@ Page
                 text: qsTr("If you have Storeman installed, you can quickly look for compatible themes by using the <i>Download</i> icon in the main page.")
             }
 
-            SectionHeader { visible: settings.showDensity; text: qsTr("Display density") }
+            SectionHeader { text: qsTr("Display density") }
 
             LabelText {
-                visible: settings.showDensity
                 text: qsTr("By increasing the display density, you can display more content on your screen - or less, if you prefer to have bigger UI elements. Android apps use a different setting than Sailfish OS ones. To revert to the default settings, you can use the restore options from the pulley menu.")
             }
 
             LabelText {
-                visible: settings.showDensity
                 text: qsTr("An homescreen restart may be needed to apply your settings. You can do that from the <i>Options</i> page.")
             }
             LabelText {
-                visible: settings.showDensity && themepack.hasAndroidSupport && settings.isXA2
+                visible: themepack.hasAndroidSupport && settings.isXA2
                 text: qsTr("If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.")
             }
 
@@ -168,7 +166,6 @@ Page
             }
 
             LabelText {
-                visible: settings.showDensity
                 text: qsTr("Press <b>D</b> for the display density page.")
             }
 

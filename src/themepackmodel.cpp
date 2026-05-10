@@ -74,14 +74,9 @@ void ThemePackModel::restoreTheme(bool font)
     _fonts.restoreFonts();
 }
 
-void ThemePackModel::applyADPI(const QString& adpi)
+void ThemePackModel::restoreDpi(bool dpr)
 {
-    Spawner::executeSync("/usr/share/sailfishos-uithemer/apply_adpi.sh " + adpi);
-}
-
-void ThemePackModel::restoreDpi(bool dpr, bool adpi)
-{
-    Spawner::execute("/usr/share/sailfishos-uithemer/restore_dpi.sh", SPAWN_ARGS(QString::number(dpr) << QString::number(adpi)), [this]() { emit dpiRestored(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/restore_dpi.sh", SPAWN_ARGS(QString::number(dpr)), [this]() { emit dpiRestored(); });
 }
 
 void ThemePackModel::ocr() 

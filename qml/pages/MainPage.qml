@@ -88,7 +88,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_D && settings.showDensity === true) {
+        if (event.key === Qt.Key_D) {
             pageStack.push(Qt.resolvedUrl("DensityPage.qml"));
             event.accepted = true;
         }
@@ -151,7 +151,6 @@ Page
 
             MenuItem {
                 text: qsTr("Display density")
-                visible: settings.showDensity
                 onClicked: pageStack.push(Qt.resolvedUrl("DensityPage.qml"))
             }
 

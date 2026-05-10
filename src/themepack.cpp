@@ -34,13 +34,6 @@ bool ThemePack::hasStoremanInstalled() const
    return res;
 }
 
-double ThemePack::droidDPI() const
-{
-    double dpi = 0;
-    this->getDroidDPI(&dpi);
-    return dpi;
-}
-
 qint64 ThemePack::getFileSize(const QString& file)
 {
     QFileInfo fi("/usr/share/" + file);
@@ -67,16 +60,6 @@ void ThemePack::installDependencies()
 {
     setuid_ex(0);
     Spawner::execute("/usr/share/sailfishos-uithemer/install_dependencies.sh", [this]() mutable { emit dependenciesInstalled(); });
-}
-
-void ThemePack::enableddensity()
-{
-    Spawner::execute("/usr/share/sailfishos-uithemer/enable-dpi.sh", [this]() mutable { emit serviceChanged(); });
-}
-
-void ThemePack::disableddensity()
-{
-    Spawner::execute("/usr/share/sailfishos-uithemer/disable-dpi.sh", [this]() mutable { emit serviceChanged(); });
 }
 
 void ThemePack::restoreIZ()
@@ -119,21 +102,4 @@ void ThemePack::hideIcon()
 {
     setuid_ex(0);
     Spawner::executeSync("echo \"NoDisplay=true\" >> /usr/share/applications/harbour-iconpacksupport.desktop");
-}
-
-bool ThemePack::getDroidDPI(double *dpi) const
-{
-    QString s = Spawner::executeSync("cat /usr/share/sailfishos-uithemer/droiddpi-current").simplified();
-
-    if(s.isEmpty())
-        return false;
-
-    if(dpi)
-    {
-        bool ok = false;
-        *dpi = s.toDouble(&ok);
-        return ok;
-    }
-
-    return true;
 }

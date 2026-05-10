@@ -170,28 +170,12 @@
         <translation>Densità display</translation>
     </message>
     <message>
-        <source>Enable display density settings</source>
-        <translation>Abilita impostazioni densità display</translation>
-    </message>
-    <message>
         <source>Device pixel ratio</source>
         <translation>Device pixel ratio</translation>
     </message>
     <message>
         <source>Change the display pixel ratio. To a smaller value corresponds an higher density.</source>
         <translation>Cambia il display pixel ratio. A un valore minore corrisponde una maggiore densità.</translation>
-    </message>
-    <message>
-        <source>Android DPI</source>
-        <translation>DPI Android</translation>
-    </message>
-    <message>
-        <source>Android DPI value</source>
-        <translation>Valore DPI Android</translation>
-    </message>
-    <message>
-        <source>Change the Android DPI value. To a smaller value corresponds an higher density.</source>
-        <translation>Cambia il DPI Android. A un valore minore corrisponde una maggiore densità.</translation>
     </message>
     <message>
         <source>Icon size</source>
@@ -204,10 +188,6 @@
     <message>
         <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
         <translation>Ricorda di riavviare la schermata home (dalla pagina &lt;i&gt;Opzioni&lt;/i&gt;) subito dopo aver cambiato i settaggi in questa pagina.</translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
-        <translation>Se hai un dispositivo della serie Xperia XA2, un riavvio completo potrebbe essere necessario per applicare le impostazioni Android.</translation>
     </message>
 </context>
 <context>
@@ -592,20 +572,12 @@
         <translation>Device pixel ratio predefinito</translation>
     </message>
     <message>
-        <source>Default Android DPI</source>
-        <translation>Android DPI predefinito</translation>
-    </message>
-    <message>
         <source>Remember to restart the homescreen right after.</source>
         <translation>Ricorda di riavviare la schermata home subito dopo.</translation>
     </message>
     <message>
         <source>Restart homescreen</source>
         <translation>Riavvia schermata home</translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
-        <translation>Se hai un dispositivo della serie Xperia XA2, un riavvio completo potrebbe essere necessario per applicare le impostazioni Android.</translation>
     </message>
 </context>
 <context>

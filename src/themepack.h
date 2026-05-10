@@ -6,7 +6,6 @@
 class ThemePack : public QObject
 {
     Q_PROPERTY(bool hasAndroidSupport READ hasAndroidSupport CONSTANT FINAL)
-    Q_PROPERTY(double droidDPI READ droidDPI NOTIFY droidDPIChanged)
 
     Q_OBJECT
 
@@ -19,13 +18,10 @@ class ThemePack : public QObject
         bool hasStoremanInstalled() const;
         QString whoami() const;                         // function to test what user runs app
         QString getTimer() const;                       // gets hours from timer
-        double droidDPI() const;
         qint64 getFileSize(const QString& file);
         void installDependencies();
         void restartHomescreen();
         void applyHours(const QString& hours);
-        void enableddensity();
-        void disableddensity();
         void restoreIZ();
         void enableserviceautoupdate();
         void disableserviceautoupdate();
@@ -33,13 +29,9 @@ class ThemePack : public QObject
         void disableservicesu();
         void hideIcon();                          // hides icon of original app, so user does not have to have two same icons on home screen
 
-    private:
-        bool getDroidDPI(double *dpi) const;
-
     signals:
         void dependenciesInstalled();
         void homescreenRestarted();
-        void droidDPIChanged();
         void serviceChanged();
 };
 

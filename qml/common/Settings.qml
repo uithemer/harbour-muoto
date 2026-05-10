@@ -8,8 +8,6 @@ Item
     ConfigurationGroup {
         id: conf
         path: "/desktop/lipstick/sailfishos-uithemer"
-        property bool showDensity
-        property bool densityEnabled
         property bool wizardDone
         property string activeIconPack
         property string activeFontPack
@@ -19,8 +17,6 @@ Item
         property bool servicesu
     }
 
-    property alias showDensity: conf.showDensity
-    property alias densityEnabled: conf.densityEnabled
     property alias wizardDone: conf.wizardDone
     property alias activeIconPack: conf.activeIconPack
     property alias activeFontPack: conf.activeFontPack
@@ -37,7 +33,6 @@ Item
 
     id: settings
 
-    onDensityEnabledChanged: conf.sync();
     onWizardDoneChanged: conf.sync();
     onActiveIconPackChanged: conf.sync();
     onActiveFontPackChanged: conf.sync();

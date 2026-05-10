@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.uithemer 1.0
 import "../common"
 import "../components"
 
@@ -8,13 +7,10 @@ Dialog
 {
     property Settings settings
     property alias restoreDPR: itsrestoredpr.checked
-    property alias restoreADPI: itsrestoreadpi.checked
-
-    ThemePack { id: themepack }
 
     id: dlgrestore
     focus: true
-    canAccept: itsrestoredpr.checked || ( itsrestoreadpi.checked && themepack.hasAndroidSupport )
+    canAccept: itsrestoredpr.checked
 
     BusyState { id: busyindicator }
 
@@ -87,14 +83,6 @@ Dialog
 
             ConfirmHeader { text: qsTr("Restore") }
 
-            Grid {
-                width: parent.width
-                columns: isLandscape ? 2 : 1
-
-            Column
-            {
-                width: isLandscape ? parent.width/2 : parent.width
-
             IconTextSwitch {
                 id: itsrestoredpr
                 automaticCheck: true
@@ -102,44 +90,12 @@ Dialog
                 checked: true
 
                 onClicked: {
-                    if(!itsrestoredpr.checked && !itsrestoreadpi.checked)
-                        dlgrestore.canAccept = false
-                    else
-                        dlgrestore.canAccept = true
+                    dlgrestore.canAccept = itsrestoredpr.checked
                 }
             }
-
-            }
-
-            Column
-            {
-                width: isLandscape ? parent.width/2 : parent.width
-
-            IconTextSwitch {
-                id: itsrestoreadpi
-                visible: themepack.hasAndroidSupport
-                automaticCheck: true
-                text: qsTr("Default Android DPI")
-                checked: true
-
-                onClicked: {
-                    if(!itsrestoredpr.checked && !itsrestoreadpi.checked)
-                        dlgrestore.canAccept = false
-                    else
-                        dlgrestore.canAccept = true
-                }
-            }
-
-            }
-            } // grid
 
             LabelText {
                 text: "<br>" + qsTr("Remember to restart the homescreen right after.")
-            }
-
-            LabelText {
-                visible: themepack.hasAndroidSupport && settings.isXA2
-                text: qsTr("If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.")
             }
 
             TextSwitch {

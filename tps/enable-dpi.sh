@@ -29,6 +29,9 @@ dconf update
 
 dconf read /desktop/sailfish/silica/icon_size_launcher | egrep -o '[0-9].[0-9]+' > $main/icon-z
 
+read and store the default /desktop/sailfish/silica/icon_size_launcher option and 
+Removing the legacy dconf key /desktop/lipstick/sailfishos-uithemer/showDensity
+
 if [ -f $dir_droid/build.prop ]; then
 	grep "^ro.sf.lcd_density" $dir_droid/build.prop | tr ":" " " | egrep -o '.{1,3}$' > $main/droiddpi-current
 fi

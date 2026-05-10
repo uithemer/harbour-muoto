@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.5.3
+Version:        2.5.4
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -53,7 +53,7 @@ default theme can always be restored.
 %pretrans -p /bin/sh
 if [ -d /usr/share/harbour-themepacksupport ]; then
     for s in icon-restore.sh \
-             restore_dpr.sh restore_adpi.sh restore_iz.sh disable-dpi.sh disable-autoupdate.sh; do
+             restore_dpr.sh restore_adpi.sh restore_iz.sh disable-autoupdate.sh; do
         f="/usr/share/harbour-themepacksupport/$s"
         if [ -e "$f" ]; then
             printf '#!/bin/sh\nexit 0\n' > "$f" || :
@@ -129,7 +129,6 @@ systemctl enable sailfishos-uithemer-reassert.service
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
-touch -a %{_datadir}/%{name}/droiddpi-current
 ssu mo 2>/dev/null | sed 's/.*: //' > %{_datadir}/%{name}/device-model || true
 
 # Seed an empty icon backup manifest if one does not exist yet.
@@ -154,7 +153,7 @@ if [ -d "$old" ]; then
             mv "$old/$d" "$new/$d" || true
         fi
     done
-    for f in droiddpi-current device-model config.cfg; do
+    for f in device-model config.cfg; do
         if [ -e "$old/$f" ] && [ ! -e "$new/$f" ]; then
             mv "$old/$f" "$new/$f" || true
         fi
@@ -184,6 +183,32 @@ rm -rf %{_datadir}/%{name}/backup/font
 rm -rf %{_datadir}/%{name}/backup/font-droid
 rm -rf %{_datadir}/%{name}/backup/font-nonlatin
 
+# 2.5.4: density customizations are now always enabled. Mirror
+# DensityEnabler::ensureEnabled() at install time so the vendor dconf locks
+# for silica-configs.txt / ui-configs.txt are moved out of the way and the
+# user's current icon_size_launcher is snapshotted. Idempotent: per-file
+# move is skipped when the .bk already exists; the seed key is only written
+# when missing, so user-edited values are never clobbered.
+mkdir -p %{_datadir}/%{name}/backup/dlocks
+for f in silica-configs.txt ui-configs.txt; do
+    src=/etc/dconf/db/vendor.d/locks/$f
+    bk=%{_datadir}/%{name}/backup/dlocks/$f.bk
+    if [ -f "$src" ] && [ ! -f "$bk" ]; then
+        mv "$src" "$bk" || :
+    fi
+done
+dconf update || :
+seed=$(su - defaultuser -c "dconf read /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed" 2>/dev/null | tr -d '\n')
+if [ -z "$seed" ]; then
+    v=$(su - defaultuser -c "dconf read /desktop/sailfish/silica/icon_size_launcher" 2>/dev/null | tr -d '\n')
+    if [ -n "$v" ]; then
+        su - defaultuser -c "dconf write /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed $v" || :
+    fi
+fi
+# 2.5.4: tps/enable-dpi.sh used to drop the captured icon_size_launcher
+# into a plain file at $main/icon-z. The C++ port stores it in dconf instead.
+rm -f %{_datadir}/%{name}/icon-z
+
 %preun
 if [ $1 -eq 0 ]; then
     rm -rf /home/defaultuser/.local/share/%{name}
@@ -207,7 +232,18 @@ if [ $1 -eq 0 ]; then
     %{_datadir}/%{name}/restore_dpr.sh || true
     %{_datadir}/%{name}/restore_adpi.sh || true
     %{_datadir}/%{name}/restore_iz.sh || true
-    %{_datadir}/%{name}/disable-dpi.sh || true
+
+    # 2.5.4: enable-dpi.sh / disable-dpi.sh were dropped; the equivalent
+    # uninstall step (restore vendor dconf locks moved by %post) now runs
+    # inline. No-op when the .bk files are absent.
+    for f in silica-configs.txt ui-configs.txt; do
+        bk=%{_datadir}/%{name}/backup/dlocks/$f.bk
+        dst=/etc/dconf/db/vendor.d/locks/$f
+        if [ -f "$bk" ]; then
+            mv "$bk" "$dst" || :
+        fi
+    done
+    dconf update || :
 fi
 
 %postun
