@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.4.4
+Version:        2.4.5
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -139,8 +139,12 @@ if [ ! -e %{_datadir}/%{name}/icon-backup.json ]; then
     printf '{"version":1,"active_icon_pack":null,"entries":{}}\n' > %{_datadir}/%{name}/icon-backup.json
 fi
 
-mv -f %{_datadir}/%{name}/sailfishos-uithemer.txt /etc/dconf/db/vendor.d/
-dconf update
+# 2.4.5: the vendor dconf defaults file is no longer shipped. If it was
+# installed by an older version (<= 2.4.4), drop it and refresh the dconf db.
+if [ -f /etc/dconf/db/vendor.d/sailfishos-uithemer.txt ]; then
+    rm -f /etc/dconf/db/vendor.d/sailfishos-uithemer.txt
+    dconf update || :
+fi
 
 ln -sf %{_datadir}/%{name}/themepacksupport.sh %{_bindir}/themepacksupport
 
@@ -174,8 +178,6 @@ rm -rf %{_datadir}/%{name}/backup/sound
 if [ $1 -eq 0 ]; then
     rm -rf /home/defaultuser/.local/share/%{name}
     rm -rf /home/defaultuser/.cache/%{name}
-    rm -f /etc/dconf/db/vendor.d/%{name}.txt
-    dconf update
 
     systemctl disable themepacksupport-systemupgrade.service || true
     systemctl disable sailfishos-uithemer-reassert.service || true

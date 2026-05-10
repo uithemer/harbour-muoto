@@ -144,10 +144,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Välj huvudgrovlek för UI.</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Efter bekräftelse kommer din enhet att startas om. Alla öppna appar kommer att stängas.</translation>
-    </message>
-    <message>
         <source>The theme supports overlays.</source>
         <translation>Temat stödjer överlager.</translation>
     </message>
@@ -539,36 +535,8 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Visa nuvarande tema på programminiatyren.</translation>
     </message>
     <message>
-        <source>UI mode</source>
-        <translation>UI-läge</translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation>lätt</translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation>full</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Om UI Themer</translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation>Se färre alternativ och få en mer problemfri upplevelse.</translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation>Ta full kontroll över app-inställningarna.</translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation>Aktivera avancerade användares och utvecklares anpassade alternativ.</translation>
-    </message>
-    <message>
-        <source>advanced</source>
-        <translation>avancerat</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -641,10 +609,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Starta om hemskärmen</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Efter bekräftelse kommer din enhet att startas om. Alla öppna appar kommer att stängas.</translation>
-    </message>
-    <message>
         <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation>Om du har en Xperia XA2, kanske du måste starta om telefonen för att tillämpa Android-inställningarna.</translation>
     </message>
@@ -674,10 +638,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
     <message>
         <source>Default fonts</source>
         <translation>Standardteckensnitt</translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Efter bekräftelse kommer din enhet att startas om. Alla öppna appar kommer att stängas.</translation>
     </message>
 </context>
 <context>

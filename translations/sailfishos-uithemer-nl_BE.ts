@@ -143,10 +143,6 @@
         <translation>Kiest ’t standaardlettergewicht voor de gebruikersinterface.</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Na bevestiging gaat ’t apparaat herstarten. Uw geopende apps gaan gesloten worden.</translation>
-    </message>
-    <message>
         <source>The theme supports overlays.</source>
         <translation>’t Thema ondersteunt overlays.</translation>
     </message>
@@ -538,36 +534,8 @@
         <translation>Toont ’t huidig thema op den omslag.</translation>
     </message>
     <message>
-        <source>UI mode</source>
-        <translation>UI-modus</translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation>eenvoudig</translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation>volledig</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Over UI Themer</translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation>Voor minder opties en een eenvoudigere ervaring.</translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation>Voor volledige controle over de appinstellingen.</translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation>Voor geavanceerde gebruikers en thema-ontwikkelaars.</translation>
-    </message>
-    <message>
-        <source>advanced</source>
-        <translation>geavanceerd</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -640,10 +608,6 @@
         <translation>Startscherm herstarten</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Na bevestiging gaat ’t apparaat herstarten. Uw geopende apps gaan gesloten worden.</translation>
-    </message>
-    <message>
         <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation>Als ge nen Xperia XA2 gebruikt, moet ge ’t toestel mogelijks herstarten voor de Android-instellingen toe te passen.</translation>
     </message>
@@ -673,10 +637,6 @@
     <message>
         <source>Default fonts</source>
         <translation>Standaardlettertypen</translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Na bevestiging gaat ’t apparaat herstarten. Uw geopende apps gaan gesloten worden.</translation>
     </message>
 </context>
 <context>

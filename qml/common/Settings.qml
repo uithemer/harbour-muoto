@@ -8,9 +8,7 @@ Item
     ConfigurationGroup {
         id: conf
         path: "/desktop/lipstick/sailfishos-uithemer"
-        property bool showGuimode
         property bool showDensity
-        property int guimode
         property bool densityEnabled
         property bool wizardDone
         property string activeIconPack
@@ -22,9 +20,7 @@ Item
         property bool servicesu
     }
 
-    property alias showGuimode: conf.showGuimode
     property alias showDensity: conf.showDensity
-    property alias guimode: conf.guimode
     property alias densityEnabled: conf.densityEnabled
     property alias wizardDone: conf.wizardDone
     property alias activeIconPack: conf.activeIconPack
@@ -43,7 +39,6 @@ Item
 
     id: settings
 
-    onGuimodeChanged: conf.sync();
     onDensityEnabledChanged: conf.sync();
     onWizardDoneChanged: conf.sync();
     onActiveIconPackChanged: conf.sync();

@@ -62,7 +62,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_D && settings.showDensity === true && settings.guimode !== 0) {
+        if (event.key === Qt.Key_D && settings.showDensity === true) {
             pageStack.replace(Qt.resolvedUrl("DensityPage.qml"));
             event.accepted = true;
         }
@@ -72,7 +72,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_W && settings.guimode !== 0) {
+        if (event.key === Qt.Key_W) {
             settings.wizardDone = false
             pageStack.replaceAbove(null, Qt.resolvedUrl("WelcomePage.qml"));
             event.accepted = true;
@@ -140,7 +140,6 @@ SilicaFlickable
         }
         MenuItem {
             text: qsTr("Restart first run wizard")
-            visible: settings.guimode === 0 ? false : true
             onClicked: {
                 settings.wizardDone = false
                 pageStack.replaceAbove(null, Qt.resolvedUrl("WelcomePage.qml"))
@@ -205,7 +204,6 @@ SilicaFlickable
 
             IconTextSwitch {
                 id: itsservicesu
-                visible: settings.guimode === 0 ? false : true
                 automaticCheck: true
                 text: qsTr("Run before system updates")
                 description: qsTr("Restore the default icons, fonts and display density settings before performing a system update, so you don't need to manually do it.")
@@ -222,7 +220,7 @@ SilicaFlickable
                 }
             }
 
-            SectionHeader { visible: settings.guimode === 2; text: qsTr("Icon updater") }
+            SectionHeader { text: qsTr("Icon updater") }
 
             ComboBox {
                 function applyUpdater(setting, hours) {
@@ -240,7 +238,6 @@ SilicaFlickable
                 }
 
                 id: cbxupdate
-                visible: settings.guimode === 2
                 width: parent.width
                 label: qsTr("Update icons")
                 description: qsTr("Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. <i>Icon updater</i> will automate this process, enabling automatic update of icons at a given time.")
@@ -262,7 +259,6 @@ SilicaFlickable
 
             IconTextSwitch {
                 id: itscoveractivetheme
-                visible: settings.guimode === 0 ? false : true
                 automaticCheck: true
                 text: qsTr("Show active theme")
                 description: qsTr("Show the current theme on the cover.")
@@ -301,7 +297,6 @@ SilicaFlickable
                 }
 
                 id: cbxca2
-                visible: settings.guimode === 0 ? false : true
                 enabled: settings.coverAction1 !== 3
                 width: parent.width
                 label: qsTr("Second cover action")
@@ -316,55 +311,15 @@ SilicaFlickable
                 }
             }
 
-            SectionHeader { visible: settings.showGuimode; text: qsTr("UI mode") }
-
-            ComboBox {
-                function saveGuiMode(mode) {
-                    settings.guimode = mode;
-                }
-
-                id: cbxguimode
-                width: parent.width
-                label: qsTr("UI mode")
-                visible: settings.showGuimode;
-                description: switch(settings.guimode) {
-                    case 0:
-                        return qsTr("See less options and have an hassle-free experience.");
-                    case 1:
-                        return qsTr("Get full control of the app settings.");
-                    case 2:
-                        return qsTr("Enable advanced users and theme developers-tailored options.");
-                }
-                currentIndex: settings.guimode
-
-                menu: ContextMenu {
-                    MenuItem { text: qsTr("easy");
-                        onClicked: {
-                            cbxguimode.saveGuiMode(0)
-                            themepack.enableservicesu()
-                            themepack.disableserviceautoupdate()
-                            settings.coverAction2 = 3
-                            settings.homeRefresh = true
-                            themepack.disableddensity();
-                            settings.densityEnabled = false;
-                        }
-                    }
-                    MenuItem { text: qsTr("full"); onClicked: cbxguimode.saveGuiMode(1) }
-                    MenuItem { text: qsTr("advanced"); onClicked: cbxguimode.saveGuiMode(2) }
-                }
-            }
-
-        SectionHeader { visible: settings.guimode === 0 ? false : true; text: qsTr("Recovery") }
+        SectionHeader { text: qsTr("Recovery") }
 
         LabelText {
-            visible: settings.guimode === 0 ? false : true
             text: qsTr("Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.")
         }
 
             LabelSpacer { }
 
         Button {
-            visible: settings.guimode === 0 ? false : true
             anchors.horizontalCenter: parent.horizontalCenter
             text: qsTr("Recovery")
             onClicked: {

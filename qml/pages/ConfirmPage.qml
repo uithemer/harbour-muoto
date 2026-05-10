@@ -174,19 +174,12 @@ Dialog
                 }
             }
 
-            LabelText {
-                visible: hasIconOverlay && settings.guimode === 0
-                color: Theme.secondaryColor
-                font.pixelSize: Theme.fontSizeExtraSmall
-                text: qsTr("The theme supports overlays.")
-            }
-
             IconTextSwitch {
                 id: itsiconoverlay
                 automaticCheck: true
                 text: qsTr("Apply icon overlay")
                 description: qsTr("The theme supports overlays.")
-                visible: hasIconOverlay && settings.guimode !== 0
+                visible: hasIconOverlay
                 checked: hasIconOverlay
                 enabled: hasIconOverlay && itsicons.checked
                 onClicked: {
@@ -303,19 +296,12 @@ Dialog
             } // grid
 
                 LabelText {
-                    visible: settings.guimode === 0 ? false : true
                     text: "<br>" + qsTr("Remember to restart the homescreen right after.")
                 }
 
                 TextSwitch { id: tshomerefresh
-                    visible: settings.guimode === 0 ? false : true
                     text: qsTr("Restart homescreen")
                     checked: settings.homeRefresh
-                }
-
-                LabelText {
-                    visible: settings.guimode === 0
-                    text: "<br>" + qsTr("After confirming, your device will restart. Your currently opened apps will be closed.")
                 }
 
                 Item {

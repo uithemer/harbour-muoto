@@ -143,10 +143,6 @@
         <translation>Выберите основной вес шрифта для пользовательского интерфейса.</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>После подтверждения ваше устройство перезагрузится. Ваши приложения, открытые в настоящий момент, будут закрыты.</translation>
-    </message>
-    <message>
         <source>The theme supports overlays.</source>
         <translation>Тема поддерживает наложения.</translation>
     </message>
@@ -538,36 +534,8 @@
         <translation>Показать текущую тему на обложке.</translation>
     </message>
     <message>
-        <source>UI mode</source>
-        <translation>UI режим</translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation>лёгкий</translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation>полный</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>О программе UI Themer</translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation>Видеть меньше вариантов и иметь без проблемный опыт.</translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation>Получите полный контроль над настройками приложения.</translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation>Включение режима для продвинутых пользователей и опции для разработчиков тем.</translation>
-    </message>
-    <message>
-        <source>advanced</source>
-        <translation>продвинутый</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -640,10 +608,6 @@
         <translation>Перезагрузить домашний экран</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>После подтверждения ваше устройство перезагрузится. Ваши приложения, открытые в настоящий момент, будут закрыты.</translation>
-    </message>
-    <message>
         <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation>Если у вас устройство серии Xperia XA2, может потребоваться полная перезагрузка, чтобы применить настройки Android.</translation>
     </message>
@@ -673,10 +637,6 @@
     <message>
         <source>Default fonts</source>
         <translation>Шрифты по умолчанию</translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>После подтверждения ваше устройство перезагрузится. Ваши приложения, открытые в настоящий момент, будут закрыты.</translation>
     </message>
 </context>
 <context>

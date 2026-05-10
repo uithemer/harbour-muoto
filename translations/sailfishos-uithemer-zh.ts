@@ -143,10 +143,6 @@
         <translation>为 UI 选择主要字体粗细</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>确认之后，你的设备将会重启，目前打开的软件将被关闭</translation>
-    </message>
-    <message>
         <source>The theme supports overlays.</source>
         <translation>该主题支持图标蒙版。</translation>
     </message>
@@ -538,36 +534,8 @@
         <translation>在软件封面显示当前使用的主题</translation>
     </message>
     <message>
-        <source>UI mode</source>
-        <translation>UI 模式</translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation>简易</translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation>完整</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>关于 UI Themer</translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation>显示更少的选项以拥有舒适体验</translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation>显示全部软件设置选项</translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation>启用高级用户及开发者调试选项</translation>
-    </message>
-    <message>
-        <source>advanced</source>
-        <translation>高级选项</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -640,10 +608,6 @@
         <translation>重启主屏幕</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>确认之后，你的设备将会重启。你目前打开的应用将会关闭。</translation>
-    </message>
-    <message>
         <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation>如果你拥有一台索尼 Xperia  XA2 系列设备，可能需要一次完全重启以应用 Android 设置</translation>
     </message>
@@ -673,10 +637,6 @@
     <message>
         <source>Default fonts</source>
         <translation>默认字体</translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>确认之后，你的设备将会重启。你目前打开的应用将会关闭。</translation>
     </message>
 </context>
 <context>

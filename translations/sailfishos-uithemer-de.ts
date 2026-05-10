@@ -143,10 +143,6 @@
         <translation>Wählen Sie die Hauptschriftart für die Benutzeroberfläche.</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Nach der Bestätigung wird das Gerät neu starten. Alle zurzeit geöffneten Programme werden geschlossen.</translation>
-    </message>
-    <message>
         <source>The theme supports overlays.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -538,36 +534,8 @@
         <translation>Zeige das aktuelle Theme auf dem Cover.</translation>
     </message>
     <message>
-        <source>UI mode</source>
-        <translation>UI Modus</translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation>Einfach</translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation>Alle</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Über UI Themer </translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation>Weniger Optionen für eine leichtere Benutzerführung</translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation>Zeige alle Optionen der App an.</translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation>Aktiviere den Erweiterten Benutzermodus und Optionen für Theme-Entwickler.</translation>
-    </message>
-    <message>
-        <source>advanced</source>
-        <translation>Erweitert</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -640,10 +608,6 @@
         <translation>Startbildschirm neu starten</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Nach der Bestätigung wird das Gerät neu starten. Alle zurzeit geöffneten Programme werden geschlossen. </translation>
-    </message>
-    <message>
         <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation>Wenn ein Gerät der Xperia XA2 Reihe verwendet wird ist ein kompletter Neustart notwendig um die Android Einstellungen zu übernehmen.</translation>
     </message>
@@ -673,10 +637,6 @@
     <message>
         <source>Default fonts</source>
         <translation>Standardschrift</translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Nach der Bestätigung wird das Gerät neu starten. Alle zurzeit geöffneten Programme werden geschlossen. </translation>
     </message>
 </context>
 <context>

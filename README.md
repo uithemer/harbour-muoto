@@ -45,10 +45,6 @@ Request a new language or contribute to existing languages on the [Transifex pro
 
 Builds for armv7hl and i486 available on [OpenRepos](https://openrepos.net/content/fravaccaro/ui-themer).
 
-### Custom builds
-
-You can change the defaults of UI Themer in your custom build. More info [here](docs/custom-build).
-
 ## Roadmap
 
 Roadmap and features will be tracked on the [Trello dashboard](https://trello.com/b/WwLwj2eu).

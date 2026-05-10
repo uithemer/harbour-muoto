@@ -46,7 +46,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_D && settings.showDensity === true && settings.guimode !== 0) {
+        if (event.key === Qt.Key_D && settings.showDensity === true) {
             pageStack.replace(Qt.resolvedUrl("DensityPage.qml"));
             event.accepted = true;
         }
@@ -66,7 +66,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_W && settings.guimode !== 0) {
+        if (event.key === Qt.Key_W) {
             settings.wizardDone = false
             pageStack.replaceAbove(null, Qt.resolvedUrl("WelcomePage.qml"));
             event.accepted = true;

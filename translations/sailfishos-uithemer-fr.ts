@@ -143,10 +143,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The theme supports overlays.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -538,35 +534,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>UI mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -640,10 +608,6 @@
         <translation type="unfinished">Redémarrer l&apos;écran d&apos;accueil</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -672,10 +636,6 @@
     </message>
     <message>
         <source>Default fonts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -88,7 +88,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_D && settings.showDensity === true && settings.guimode !== 0) {
+        if (event.key === Qt.Key_D && settings.showDensity === true) {
             pageStack.push(Qt.resolvedUrl("DensityPage.qml"));
             event.accepted = true;
         }
@@ -103,7 +103,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_W && settings.guimode !== 0) {
+        if (event.key === Qt.Key_W) {
             settings.wizardDone = false
             pageStack.replaceAbove(null, Qt.resolvedUrl("WelcomePage.qml"));
             event.accepted = true;
@@ -151,7 +151,7 @@ Page
 
             MenuItem {
                 text: qsTr("Display density")
-                visible: settings.showDensity && settings.guimode !== 0
+                visible: settings.showDensity
                 onClicked: pageStack.push(Qt.resolvedUrl("DensityPage.qml"))
             }
 

@@ -143,10 +143,6 @@
         <translation>Επιλέξτε το βασικό βάρος γραμματοσειράς για το περιβάλλον χρήστη.</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Μετά την επαλήθευση, η συσκευή σας θα επανεκκινηθεί. Όλες οι ανοιχτές εφαρμογές θα κλείσουν.</translation>
-    </message>
-    <message>
         <source>The theme supports overlays.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -538,36 +534,8 @@
         <translation>Εμφάνιση τρέχοντως θέματος στο κάλυμα.</translation>
     </message>
     <message>
-        <source>UI mode</source>
-        <translation>Λειτουργία UI</translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation>εύκολο</translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation>πλήρες</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Σχετικά με το UI Themer</translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation>Δείτε λιγότερες επιλογές για μια εμπειρία χωρίς προβλήματα.</translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation>Αποκτήστε τον πλήρη έλεγχο των ρυθμίσεων της εφαρμογής.</translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation>Ενεργοποιήστε τις επιλογές γα προχωρημένους χρήστες και τις προσαρμοσμένες για προγραμματιστές θεμάτων επιλογές.</translation>
-    </message>
-    <message>
-        <source>advanced</source>
-        <translation>προχωρημένη</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -640,10 +608,6 @@
         <translation>Επανεκκίνηση αρχικής οθόνης</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Μετά την επαλήθευση, η συσκευή σας θα επανεκκινηθεί. Όλες οι ανοιχτές εφαρμογές θα κλείσουν.</translation>
-    </message>
-    <message>
         <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation>Εάν διαθέτετε συσκευή της σειράς Xperia XA2, ίσως χρειαστεί να κάνετε πλήρη επανεκκίνηση για να εφαρμόσετε τις ρυθμίσεις Android.</translation>
     </message>
@@ -673,10 +637,6 @@
     <message>
         <source>Default fonts</source>
         <translation>Προκαθορισμένες γραμματοσειρές</translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Μετά την επαλήθευση, η συσκευή σας θα επανεκκινηθεί. Όλες οι ανοιχτές εφαρμογές θα κλείσουν.</translation>
     </message>
 </context>
 <context>

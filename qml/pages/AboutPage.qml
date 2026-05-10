@@ -46,7 +46,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_D && settings.showDensity === true && settings.guimode !== 0) {
+        if (event.key === Qt.Key_D && settings.showDensity === true) {
             pageStack.replace(Qt.resolvedUrl("DensityPage.qml"));
             event.accepted = true;
         }
@@ -61,7 +61,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_W && settings.guimode !== 0) {
+        if (event.key === Qt.Key_W) {
             settings.wizardDone = false
             pageStack.replaceAbove(null, Qt.resolvedUrl("WelcomePage.qml"));
             event.accepted = true;
@@ -103,7 +103,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeSmall
-                text: "UI Themer 2.4.4" }
+                text: "UI Themer 2.4.5" }
 
             LabelText {
                 text: qsTr("UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.")

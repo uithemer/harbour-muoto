@@ -130,7 +130,6 @@ Dialog
             } // grid
 
             LabelText {
-                visible: settings.guimode === 0 ? false : true
                 text: "<br>" + qsTr("Remember to restart the homescreen right after.")
             }
 
@@ -140,17 +139,11 @@ Dialog
             }
 
             TextSwitch {
-                visible: settings.guimode === 0 ? false : true
                 text: qsTr("Restart homescreen")
                 checked: settings.homeRefresh
                 onCheckedChanged: {
                     settings.homeRefresh = checked;
                 }
-            }
-
-            LabelText {
-                visible: settings.guimode === 0
-                text: "<br>" + qsTr("After confirming, your device will restart. Your currently opened apps will be closed.")
             }
 
             Item {

@@ -143,10 +143,6 @@
         <translation>Izberite debelino pisave uporabniškega vmesnika.</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Po potrditvi se bo vaša naprava samodejno ponovno zagnala. Vse vaše trenutno zagnane aplikacije se bodo zaprle.</translation>
-    </message>
-    <message>
         <source>The theme supports overlays.</source>
         <translation>Tema podpira prekrivanje.</translation>
     </message>
@@ -538,36 +534,8 @@
         <translation>Prikaži trenutno temo na naslovnici</translation>
     </message>
     <message>
-        <source>UI mode</source>
-        <translation>Način delovanja programa</translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation>preprost</translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation>napreden</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>O programu UI Themer</translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation>Prikaži manj možnosti</translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation>Pridobite popolen nadzor v nastavitvah</translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation>Naprednim uporabnikom in razvijalcem omogoči dodatne možnosti programa</translation>
-    </message>
-    <message>
-        <source>advanced</source>
-        <translation>napredno</translation>
     </message>
     <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
@@ -640,10 +608,6 @@
         <translation>Ponovni zagon domačega zaslona</translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Po potrditvi se bo vaša naprava samodejno ponovno zagnala. Vse vaše trenutno zagnane aplikacije se bodo zaprle.</translation>
-    </message>
-    <message>
         <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation>Če uporabljate Sony Xperia XA2 je po spremembah nastavitev za Android potreben ponoveni zagon.</translation>
     </message>
@@ -673,10 +637,6 @@
     <message>
         <source>Default fonts</source>
         <translation>Privzete pisave</translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation>Po potrditvi se bo vaša naprava samodejno ponovno zagnala. Vse vaše trenutno zagnane aplikacije se bodo zaprle.</translation>
     </message>
 </context>
 <context>
