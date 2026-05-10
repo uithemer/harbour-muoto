@@ -169,8 +169,8 @@ Page
                             settings.deactivateIcon();
                         }
 
-                        if(dlgrestore.restoreFonts || dlgrestore.restoreSounds) {
-                            themepackmodel.restoreTheme(dlgrestore.restoreFonts, dlgrestore.restoreSounds);
+                        if(dlgrestore.restoreFonts) {
+                            themepackmodel.restoreTheme(dlgrestore.restoreFonts);
                         } else if(dlgrestore.restoreIcons) {
                             settings.isRunning = false;
                             notification.publish();
@@ -180,9 +180,6 @@ Page
 
                         if(dlgrestore.restoreFonts)
                             settings.deactivateFont();
-
-                        if(dlgrestore.restoreSounds)
-                            settings.deactivateSound();
                     });
                 }
             }
@@ -212,7 +209,6 @@ Page
         delegate: ThemePackItem {
             iconInstalled: model.packName === settings.activeIconPack
             fontInstalled: model.packName === settings.activeFontPack
-            soundInstalled: model.packName === settings.activeSoundPack
 
             onClicked: {
                 timer.stop()
@@ -226,8 +222,8 @@ Page
                         settings.activeIconPack = model.packName;
                     }
 
-                    if(dlgconfirm.fontsSelected || dlgconfirm.soundsSelected) {
-                        themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont, dlgconfirm.soundsSelected)
+                    if(dlgconfirm.fontsSelected) {
+                        themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont)
                     } else if(dlgconfirm.iconsSelected) {
                         // Icons-only: applyIcons is synchronous, finalise here.
                         settings.isRunning = false;
@@ -238,9 +234,6 @@ Page
 
                     if(dlgconfirm.fontsSelected)
                         settings.activeFontPack = model.packName;
-
-                    if(dlgconfirm.soundsSelected)
-                        settings.activeSoundPack = model.packName;
                 });
             }
 
@@ -260,9 +253,6 @@ Page
 
                     if(fontInstalled)
                         settings.deactivateFont();
-
-                    if(soundInstalled)
-                        settings.deactivateSound();
                 });
             }
         }

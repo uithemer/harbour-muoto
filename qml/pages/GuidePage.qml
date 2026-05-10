@@ -207,7 +207,7 @@ Page
 
             LabelText {
                  visible: settings.guimode === 0 ? false : true
-                text: qsTr("Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.")
+                text: qsTr("Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.")
             }
 
             SectionHeader { visible: settings.guimode === 2; text: qsTr("Backup & restore icons") }

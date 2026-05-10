@@ -34,14 +34,14 @@ bool ThemePackModel::hasCapability(int index, const QString &capability) const
     return dir.count() > 0;
 }
 
-void ThemePackModel::applyTheme(int index, bool font, const QString& weight, bool sound)
+void ThemePackModel::applyTheme(int index, bool font, const QString& weight)
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/themeapply.sh", SPAWN_ARGS(RAW_PACK_NAME(this->_packlist[index]) << QString::number(font) << weight << QString::number(sound)), [this]() { emit themeApplied(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/themeapply.sh", SPAWN_ARGS(RAW_PACK_NAME(this->_packlist[index]) << QString::number(font) << weight), [this]() { emit themeApplied(); });
 }
 
-void ThemePackModel::restoreTheme(bool font, bool sound)
+void ThemePackModel::restoreTheme(bool font)
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/themerestore.sh", SPAWN_ARGS(QString::number(font) << QString::number(sound)), [this]() { emit themeRestored(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/themerestore.sh", SPAWN_ARGS(QString::number(font)), [this]() { emit themeRestored(); });
 }
 
 void ThemePackModel::applyADPI(const QString& adpi)
@@ -59,9 +59,9 @@ void ThemePackModel::ocr()
     Spawner::execute("/usr/share/sailfishos-uithemer/ocr.sh", [this]() { emit ocrRestored(); });
 }
 
-void ThemePackModel::recoveryTheme(bool font, bool sound)
+void ThemePackModel::recoveryTheme(bool font)
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/themerecovery.sh", SPAWN_ARGS(QString::number(font) << QString::number(sound)), [this]() { emit themeRecovered(); });
+    Spawner::execute("/usr/share/sailfishos-uithemer/themerecovery.sh", SPAWN_ARGS(QString::number(font)), [this]() { emit themeRecovered(); });
 }
 
 void ThemePackModel::uninstall(int index)
@@ -122,11 +122,6 @@ bool ThemePackModel::hasFont(int index) const
 bool ThemePackModel::hasFontNonLatin(int index) const
 {
     return this->hasCapability(index, "font-nonlatin");
-}
-
-bool ThemePackModel::hasSound(int index) const
-{
-    return this->hasCapability(index, "sound");
 }
 
 void ThemePackModel::reloadAll()

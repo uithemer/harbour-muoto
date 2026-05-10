@@ -3,7 +3,6 @@
 theme=$1
 font=$2
 weight=$3
-sound=$4
 main=/usr/share/sailfishos-uithemer
 source $main/config.shlib
 
@@ -34,11 +33,4 @@ if [ "$font" = 1 ]; then
     $main/font-restore.sh
     $main/font-backup.sh
     font-changer
-fi
-
-if [ "$sound" = 1 ]; then
-    echo "applying sounds" $theme
-    $main/sound-restore.sh
-    $main/sound-backup.sh
-    $main/sound-run.sh $theme
 fi

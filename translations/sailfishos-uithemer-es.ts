@@ -80,7 +80,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>UI Themer lets you customize icons, fonts, sounds and pixel density in Sailfish OS.</source>
+        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -144,18 +144,6 @@
     </message>
     <message>
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Apply sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -353,7 +341,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -582,7 +570,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -619,14 +607,6 @@
     <message>
         <source>Restart homescreen</source>
         <translation type="unfinished">Reiniciar pantalla de inicio</translation>
-    </message>
-    <message>
-        <source>Reinstall sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reinstall default sounds, if sounds applying/restoring fails.</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Reinstall default fonts, if fonts applying/restoring fails.</source>
@@ -698,14 +678,6 @@
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Default sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ThemePackItem</name>
@@ -719,10 +691,6 @@
     </message>
     <message>
         <source>icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -41,7 +41,7 @@ CoverBackground
             if (settings.isRunning)
                0.1
             else
-               (settings.coverActiveTheme) && ((settings.activeIconPack !== 'default') || (settings.activeFontPack !== 'default') || (settings.activeSoundPack !== 'default')) ? 0.1 : 0.3
+               (settings.coverActiveTheme) && ((settings.activeIconPack !== 'default') || (settings.activeFontPack !== 'default')) ? 0.1 : 0.3
         }
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
@@ -87,11 +87,6 @@ CoverBackground
             visible: (settings.activeFontPack !== 'default')
             icon: isLightTheme ? "../../images/font.png" : "../../images/font-light.png"
             label: themepackmodel.readThemePackName("harbour-themepack-" + settings.activeFontPack)
-        }
-        CoverLabel {
-            visible: (settings.activeSoundPack !== 'default')
-            icon: isLightTheme ? "../../images/sound.png" : "../../images/sound-light.png"
-            label: themepackmodel.readThemePackName("harbour-themepack-" + settings.activeSoundPack)
         }
     }
 

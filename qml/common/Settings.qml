@@ -15,7 +15,6 @@ Item
         property bool wizardDone
         property string activeIconPack
         property string activeFontPack
-        property string activeSoundPack
         property bool coverActiveTheme
         property int coverAction1
         property int coverAction2
@@ -30,7 +29,6 @@ Item
     property alias wizardDone: conf.wizardDone
     property alias activeIconPack: conf.activeIconPack
     property alias activeFontPack: conf.activeFontPack
-    property alias activeSoundPack: conf.activeSoundPack
     property alias coverActiveTheme: conf.coverActiveTheme
     property alias coverAction1: conf.coverAction1
     property alias coverAction2: conf.coverAction2
@@ -42,7 +40,6 @@ Item
 
     function deactivateIcon() { activeIconPack = "default"; }
     function deactivateFont() { activeFontPack = "default"; }
-    function deactivateSound() { activeSoundPack = "default"; }
 
     id: settings
 
@@ -51,7 +48,6 @@ Item
     onWizardDoneChanged: conf.sync();
     onActiveIconPackChanged: conf.sync();
     onActiveFontPackChanged: conf.sync();
-    onActiveSoundPackChanged: conf.sync();
     onCoverActiveThemeChanged: conf.sync();
     onCoverAction1Changed: conf.sync();
     onCoverAction2Changed: conf.sync();

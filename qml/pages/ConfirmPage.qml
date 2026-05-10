@@ -15,19 +15,17 @@ Dialog
     property bool hasIconOverlay: themePackModel.hasIconOverlay(themePackIndex)
     property bool hasFont: themePackModel.hasFont(themePackIndex)
     property bool hasFontNonLatin: themePackModel.hasFontNonLatin(themePackIndex)
-    property bool hasSound: themePackModel.hasSound(themePackIndex)
     property string packDisplayName: themePackModel.packDisplayName(themePackIndex)
     property string packName: themePackModel.packName(themePackIndex)
     property alias iconsSelected: itsicons.checked
     property alias iconOverlaySelected: itsiconoverlay.checked
     property alias fontsSelected: itsfonts.checked
-    property alias soundsSelected: itssounds.checked
     property string selectedFont: ""
     property string confirmheadername: "%1".arg(packDisplayName)
 
     id: dlgconfirm
     focus: true
-    canAccept: itsicons.checked || itsiconoverlay.checked || (itsfonts.checked && selectedFont !== "") || (itsfonts.checked && !hasFont && hasFontNonLatin) || itssounds.checked
+    canAccept: itsicons.checked || itsiconoverlay.checked || (itsfonts.checked && selectedFont !== "") || (itsfonts.checked && !hasFont && hasFontNonLatin)
     backNavigation: !settings.isRunning
     forwardNavigation: !settings.isRunning
     showNavigationIndicator: !settings.isRunning
@@ -169,7 +167,7 @@ Dialog
                     iconsSelected = itsicons.checked;
                     itsiconoverlay.checked = itsicons.checked;
 
-                    if(!itsicons.checked && !itsfonts.checked && !itssounds.checked)
+                    if(!itsicons.checked && !itsfonts.checked)
                         dlgconfirm.canAccept = false
                     else
                         dlgconfirm.canAccept = true
@@ -257,7 +255,7 @@ Dialog
                 onClicked: {
                     fontsSelected = itsfonts.checked;
 
-                    if(!itsicons.checked && !itsfonts.checked && !itssounds.checked)
+                    if(!itsicons.checked && !itsfonts.checked)
                         dlgconfirm.canAccept = false
                     else
                         dlgconfirm.canAccept = true
@@ -300,27 +298,6 @@ Dialog
                 }
             }
 
-            SectionHeader {
-                text: qsTr("Sounds")
-                visible: hasSound
-            }
-            IconTextSwitch {
-                id: itssounds
-                automaticCheck: true
-                text: qsTr("Apply sounds")
-                visible: hasSound
-                checked: hasSound
-                enabled: hasSound
-                onClicked: {
-                    soundsSelected = itssounds.checked;
-
-                    if(!itsicons.checked && !itsfonts.checked && !itssounds.checked)
-                        dlgconfirm.canAccept = false
-                    else
-                        dlgconfirm.canAccept = true
-                }
-            }
-
                 }
 
             } // grid
@@ -339,10 +316,6 @@ Dialog
                 LabelText {
                     visible: settings.guimode === 0
                     text: "<br>" + qsTr("After confirming, your device will restart. Your currently opened apps will be closed.")
-                }
-
-                LabelText {
-                    text: qsTr("For sounds, a full restart may be needed to apply your settings.")
                 }
 
                 Item {

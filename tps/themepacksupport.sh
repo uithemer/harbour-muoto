@@ -46,7 +46,6 @@ do
  Please enter your choice:
  ----------------------------------
    (F)ont theme
-   (S)ound theme
    (D)isplay density
    (L)ipstick refresh
    (O)ne-click restore
@@ -60,7 +59,6 @@ EOF
     read -n1 -s
     case "$REPLY" in
     "F"|"f")  $main/font-menu.sh ;;
-    "S"|"s")  $main/sound-menu.sh ;;
     "D"|"d")  $main/ddensity-menu.sh ;;
     "L"|"l")  echo "Refresh the homescreen? y/N? "
 		read -n1 -s choice
@@ -117,7 +115,7 @@ EOF
          ((*%*
      ,#&%/,
 
-With Theme pack support you can customize icons, fonts, system sounds and pixel density in Sailfish OS. Remember to unapply themes before system updates.
+With Theme pack support you can customize icons, fonts and pixel density in Sailfish OS. Remember to unapply themes before system updates.
 It can be also used via SSH to manage and restore Sailfish OS UI if anything goes wrong. Released under GPLv3.
 The UI Themer app is included in the same package; launch it from the app grid.
 

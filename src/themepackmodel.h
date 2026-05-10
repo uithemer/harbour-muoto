@@ -20,13 +20,13 @@ class ThemePackModel : public QAbstractListModel
         bool hasCapability(int index, const QString& capability) const;
 
     public slots:
-        void applyTheme(int index, bool font, const QString& weight, bool sound);
-        void restoreTheme(bool font, bool sound);
+        void applyTheme(int index, bool font, const QString& weight);
+        void restoreTheme(bool font);
         void uninstall(int index);
         void applyADPI(const QString& adpi);
         void restoreDpi(bool dpr, bool adpi);
         void ocr();
-        void recoveryTheme(bool font, bool sound);
+        void recoveryTheme(bool font);
 
     public slots:
         QString packName(int index) const;
@@ -36,7 +36,6 @@ class ThemePackModel : public QAbstractListModel
         bool hasApk(int index) const;
         bool hasIconOverlay(int index) const;
         bool hasFont(int index) const;
-        bool hasSound(int index) const;
         bool hasFontNonLatin(int index) const;
         void reloadAll();
 

@@ -1,3 +1,28 @@
+* Sun May 10 2026 2.4.4-1
+- Removed sound theming (the Sailfish system sound theme that copied
+  WAVs into /usr/share/sounds/jolla-ambient/stereo):
+  - Dropped tps/sound-{run,restore,backup,menu,reinstall}.sh.
+  - Removed the (S)ound theme entry from the CLI menu
+    (tps/themepacksupport.sh).
+  - One-click restore (tps/ocr.sh) no longer calls sound-restore.sh.
+  - ConfirmPage / RestorePage / RecoveryPage no longer expose sound
+    options; CoverPage no longer shows the active sound pack chip.
+  - ThemePackModel slots applyTheme / restoreTheme / recoveryTheme
+    no longer take a `sound` argument; hasSound() removed.
+  - Settings.qml drops activeSoundPack (orphan dconf key on existing
+    devices is harmless); scripts/sailfishos-uithemer.txt no longer
+    seeds it.
+  - On upgrade, %pretrans runs the still-on-disk sound-restore.sh once
+    so the user's themed sounds are reverted to defaults BEFORE the
+    new package wipes the script. %post then removes sound-current
+    and backup/sound. Theme packs may still ship a `sound/` directory
+    but it is silently ignored.
+  - %pretrans no longer neutralises sound-restore.sh from older
+    harbour-themepacksupport installs, %preun no longer invokes it.
+  - Translations: dropped sound-only source strings; AboutPage and
+    GuidePage / OptionsPage advanced-settings copy were rephrased to
+    drop "sounds" and marked unfinished for translators.
+
 * Sun May 10 2026 2.4.3-1
 - Native icon lookup is now keyed off the .desktop's Icon= value (not its
   filename). This restores matches for built-in Jolla apps whose .desktop

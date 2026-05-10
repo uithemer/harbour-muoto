@@ -80,8 +80,8 @@
         <translation>Info su UI Themer</translation>
     </message>
     <message>
-        <source>UI Themer lets you customize icons, fonts, sounds and pixel density in Sailfish OS.</source>
-        <translation>UI Themer ti permette di personalizzare le icone, i font, i suoni e la densità di pixel in Sailfish OS.</translation>
+        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Thanks to LQS for helping with the Android DPI on the Xperia XA2.</source>
@@ -145,18 +145,6 @@
     <message>
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>Dopo la conferma, il tuo dispositivo si riavvierà. Le app aperte verranno chiuse.</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation>Suoni</translation>
-    </message>
-    <message>
-        <source>Apply sounds</source>
-        <translation>Applica suoni</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>Per i suoni, un riavvio completo potrebbe essere necessario per applicare le impostazioni.</translation>
     </message>
     <message>
         <source>The theme supports overlays.</source>
@@ -353,8 +341,8 @@
         <translation>Se hai un dispositivo della serie Xperia XA2, un riavvio completo potrebbe essere necessario per applicare le impostazioni Android.</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation>Qui puoi trovare impostazioni avanzate per UI Themer, ad esempio la reinstallazione delle icone, dei font o dei suoni di default se dimentichi di ritornare al tema di default prima di un aggiornamento di sistema o se l&apos;applicazione di un tema fallisce</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>If you still can&apos;t get the help you need, you can open an issue on</source>
@@ -582,8 +570,8 @@
         <translation>avanzata</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation>Qui puoi trovare impostazioni avanzate per UI Themer, ad esempio la reinstallazione delle icone, dei font o dei suoni di default se dimentichi di ritornare al tema di default prima di un aggiornamento di sistema o se l&apos;applicazione di un tema fallisce</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -611,14 +599,6 @@
     <message>
         <source>Reinstall fonts</source>
         <translation>Reinstalla font</translation>
-    </message>
-    <message>
-        <source>Reinstall sounds</source>
-        <translation>Reinstalla suoni</translation>
-    </message>
-    <message>
-        <source>Reinstall default sounds, if sounds applying/restoring fails.</source>
-        <translation>Reinstalla i suoni predefiniti, se l&apos;applicazione o il ripristino dei suoni fallisce.</translation>
     </message>
     <message>
         <source>Remember to restart the homescreen right after.</source>
@@ -698,14 +678,6 @@
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>Dopo la conferma, il tuo dispositivo si riavvierà. Le app aperte verranno chiuse.</translation>
     </message>
-    <message>
-        <source>Default sounds</source>
-        <translation>Suoni predefiniti</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>Per i suoni, un riavvio completo potrebbe essere necessario per applicare le impostazioni.</translation>
-    </message>
 </context>
 <context>
     <name>ThemePackItem</name>
@@ -720,10 +692,6 @@
     <message>
         <source>fonts</source>
         <translation>font</translation>
-    </message>
-    <message>
-        <source>sounds</source>
-        <translation>suoni</translation>
     </message>
 </context>
 <context>

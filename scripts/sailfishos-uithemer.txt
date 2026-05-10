@@ -6,7 +6,6 @@ densityEnabled=false
 wizardDone=false
 activeIconPack='default'
 activeFontPack='default'
-activeSoundPack='default'
 coverActiveTheme=true
 coverAction1=0
 coverAction2=3

@@ -199,7 +199,6 @@ SilicaFlickable
                         themepackmodel.ocr();
                         settings.deactivateIcon();
                         settings.deactivateFont();
-                        settings.deactivateSound();
                     });
                 }
             }
@@ -359,7 +358,7 @@ SilicaFlickable
 
         LabelText {
             visible: settings.guimode === 0 ? false : true
-            text: qsTr("Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.")
+            text: qsTr("Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.")
         }
 
             LabelSpacer { }
@@ -378,8 +377,8 @@ SilicaFlickable
                         settings.deactivateIcon();
                     }
 
-                    if(dlgrecovery.reinstallFonts || dlgrecovery.reinstallSounds) {
-                        themepackmodel.recoveryTheme(dlgrecovery.reinstallFonts, dlgrecovery.reinstallSounds);
+                    if(dlgrecovery.reinstallFonts) {
+                        themepackmodel.recoveryTheme(dlgrecovery.reinstallFonts);
                     } else if(dlgrecovery.reinstallIcons) {
                         settings.isRunning = false;
                         notification.publish();
@@ -387,9 +386,6 @@ SilicaFlickable
 
                     if(dlgrecovery.reinstallFonts)
                         settings.deactivateFont();
-
-                    if(dlgrecovery.reinstallSounds)
-                        settings.deactivateSound();
                 });
             }
         }

@@ -53,7 +53,7 @@ UI Themer can be navigated via a physical keyboard, using convenient shortcuts.
 
 ## Recovery
 
-Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.
+Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.
 
 ## Backup & restore
 

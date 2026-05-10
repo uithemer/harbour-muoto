@@ -80,8 +80,8 @@
         <translation>Over UI Themer</translation>
     </message>
     <message>
-        <source>UI Themer lets you customize icons, fonts, sounds and pixel density in Sailfish OS.</source>
-        <translation>Met UI Themer kunt ge pictogrammen, lettertypen, geluiden en pixeldichtheid in Sailfish OS aanpassen.</translation>
+        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Thanks to LQS for helping with the Android DPI on the Xperia XA2.</source>
@@ -145,18 +145,6 @@
     <message>
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>Na bevestiging gaat ’t apparaat herstarten. Uw geopende apps gaan gesloten worden.</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation>Geluiden</translation>
-    </message>
-    <message>
-        <source>Apply sounds</source>
-        <translation>Geluiden toepassen</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>Voor geluiden moet ge ’t toestel mogelijks herstarten voor de instellingen toe te passen.</translation>
     </message>
     <message>
         <source>The theme supports overlays.</source>
@@ -353,8 +341,8 @@
         <translation>Als ge nen Xperia XA2 gebruikt, moet ge ’t toestel mogelijks herstarten voor de Android-instellingen toe te passen.</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation>Hier vindt ge geavanceerde instellingen voor UI Themer, bv. ’t herinstalleren van standaardpictogrammen, -lettertypen of -geluiden als ge vergeten zijt van ’t standaardthema te herstellen vóór ne systeemupdate, of als er een fout is opgetreden bij ’t toepassen.</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>If you still can&apos;t get the help you need, you can open an issue on</source>
@@ -582,8 +570,8 @@
         <translation>geavanceerd</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation>Hier vindt ge geavanceerde instellingen voor UI Themer, bv. ’t herinstalleren van standaardpictogrammen, -lettertypen of -geluiden als ge vergeten zijt van ’t standaardthema te herstellen vóór ne systeemupdate, of als er een fout is opgetreden bij ’t toepassen.</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -611,14 +599,6 @@
     <message>
         <source>Reinstall fonts</source>
         <translation>Lettertypen herinstalleren</translation>
-    </message>
-    <message>
-        <source>Reinstall sounds</source>
-        <translation>Geluiden herinstalleren</translation>
-    </message>
-    <message>
-        <source>Reinstall default sounds, if sounds applying/restoring fails.</source>
-        <translation>Herinstalleert de standaardgeluiden indien dat ’t toepassen/herstellen van geluiden mislukt.</translation>
     </message>
     <message>
         <source>Remember to restart the homescreen right after.</source>
@@ -698,14 +678,6 @@
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>Na bevestiging gaat ’t apparaat herstarten. Uw geopende apps gaan gesloten worden.</translation>
     </message>
-    <message>
-        <source>Default sounds</source>
-        <translation>Standaardgeluiden</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>Voor geluiden moet ge ’t toestel mogelijks herstarten voor de instellingen toe te passen.</translation>
-    </message>
 </context>
 <context>
     <name>ThemePackItem</name>
@@ -720,10 +692,6 @@
     <message>
         <source>fonts</source>
         <translation>lettertypen</translation>
-    </message>
-    <message>
-        <source>sounds</source>
-        <translation>geluiden</translation>
     </message>
 </context>
 <context>

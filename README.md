@@ -2,13 +2,13 @@
 layout: default
 title: Home
 nav_order: 1
-description: "Enables customization of icons, fonts, sounds and pixel density in Sailfish OS"
+description: "Enables customization of icons, fonts and pixel density in Sailfish OS"
 permalink: /
 ---
 
 # UI Themer
 
-UI Themer lets customize icons, fonts, sounds and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (shell scripts, systemd services, and the `themepacksupport` CLI) in a single package.
+UI Themer lets customize icons, fonts and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (shell scripts, systemd services, and the `themepacksupport` CLI) in a single package.
 
 [![GitHub license](https://img.shields.io/github/license/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/releases/latest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fravaccaro)
 
@@ -20,7 +20,6 @@ UI Themer lets customize icons, fonts, sounds and pixel density in Sailfish OS. 
 - Icon theming.
 - Icon overlay.
 - Font theming.
-- Sound theming.
 - Change device pixel ratio.
 - Change DPI for Alien Dalvik.
 - Change icon size.

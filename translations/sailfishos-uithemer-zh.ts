@@ -80,8 +80,8 @@
         <translation>关于 UI Themer</translation>
     </message>
     <message>
-        <source>UI Themer lets you customize icons, fonts, sounds and pixel density in Sailfish OS.</source>
-        <translation>UI Themer让你定制旗鱼系统的图标、字体、声音和像素密度</translation>
+        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Thanks to LQS for helping with the Android DPI on the Xperia XA2.</source>
@@ -145,18 +145,6 @@
     <message>
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>确认之后，你的设备将会重启，目前打开的软件将被关闭</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation>声音</translation>
-    </message>
-    <message>
-        <source>Apply sounds</source>
-        <translation>应用声音</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>你可能需要一次设备重启以应用声音</translation>
     </message>
     <message>
         <source>The theme supports overlays.</source>
@@ -353,8 +341,8 @@
         <translation>如果你拥有一台索尼 Xperia  XA2 系列设备，可能需要一次完全重启以应用 Android 设置</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation> 如果你在系统更新前忘记恢复默认的主题或应用失败，你可以在此找到 UI Themer 的高级设置，例如重装默认的图标、声音或字体。</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>If you still can&apos;t get the help you need, you can open an issue on</source>
@@ -582,8 +570,8 @@
         <translation>高级选项</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation> 如果你在系统更新前忘记恢复默认的主题或应用失败，你可以在此找到 UI Themer 的高级设置，例如重装默认的图标、声音或字体。</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -611,14 +599,6 @@
     <message>
         <source>Reinstall fonts</source>
         <translation>重装字体</translation>
-    </message>
-    <message>
-        <source>Reinstall sounds</source>
-        <translation>重装声音</translation>
-    </message>
-    <message>
-        <source>Reinstall default sounds, if sounds applying/restoring fails.</source>
-        <translation>如果应用或恢复声音失败，请重装默认的声音。</translation>
     </message>
     <message>
         <source>Remember to restart the homescreen right after.</source>
@@ -698,14 +678,6 @@
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>确认之后，你的设备将会重启。你目前打开的应用将会关闭。</translation>
     </message>
-    <message>
-        <source>Default sounds</source>
-        <translation>默认声音</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>你可能需要一次设备重启以应用声音</translation>
-    </message>
 </context>
 <context>
     <name>ThemePackItem</name>
@@ -720,10 +692,6 @@
     <message>
         <source>fonts</source>
         <translation>字体</translation>
-    </message>
-    <message>
-        <source>sounds</source>
-        <translation>声音</translation>
     </message>
 </context>
 <context>

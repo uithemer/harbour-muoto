@@ -81,8 +81,8 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Om UI Themer</translation>
     </message>
     <message>
-        <source>UI Themer lets you customize icons, fonts, sounds and pixel density in Sailfish OS.</source>
-        <translation>UI Themer låter dig anpassa ikoner, teckensnitt, ljud och skärmupplösning i Sailfish OS.</translation>
+        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Thanks to LQS for helping with the Android DPI on the Xperia XA2.</source>
@@ -146,18 +146,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
     <message>
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>Efter bekräftelse kommer din enhet att startas om. Alla öppna appar kommer att stängas.</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation>Ljud</translation>
-    </message>
-    <message>
-        <source>Apply sounds</source>
-        <translation>Tillämpa ljud</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>För att tillämpa dina ljudinställningar, kanske du måste starta om enheten.</translation>
     </message>
     <message>
         <source>The theme supports overlays.</source>
@@ -354,8 +342,8 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Om du har en Xperia XA2, kanske du måste starta om telefonen för att tillämpa Android-inställningarna.</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation>Här hittar du avancerade inställningar för UI Themer, t.ex. ominstallation av ikoner, teckensnitt och ljud, om du glömmer att byta till standardtemat före en systemuppgradering eller om tillämpningen misslyckas.</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>If you still can&apos;t get the help you need, you can open an issue on</source>
@@ -583,8 +571,8 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>avancerat</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation>Här hittar du avancerade inställningar för UI Themer, t.ex. ominstallation av ikoner, teckensnitt och ljud, om du glömmer att byta till standardtemat före en systemuppgradering eller om tillämpningen misslyckas.</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -612,14 +600,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
     <message>
         <source>Reinstall fonts</source>
         <translation>Återinstallera teckensnitt</translation>
-    </message>
-    <message>
-        <source>Reinstall sounds</source>
-        <translation>Återinstallera ljud</translation>
-    </message>
-    <message>
-        <source>Reinstall default sounds, if sounds applying/restoring fails.</source>
-        <translation>Återinstallera standardljud, om ljudtillämpning/-återställning misslyckas.</translation>
     </message>
     <message>
         <source>Remember to restart the homescreen right after.</source>
@@ -699,14 +679,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>Efter bekräftelse kommer din enhet att startas om. Alla öppna appar kommer att stängas.</translation>
     </message>
-    <message>
-        <source>Default sounds</source>
-        <translation>Standardljud</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>För att tillämpa dina ljudinställningar, kanske du måste starta om enheten.</translation>
-    </message>
 </context>
 <context>
     <name>ThemePackItem</name>
@@ -721,10 +693,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
     <message>
         <source>fonts</source>
         <translation>teckensnitt</translation>
-    </message>
-    <message>
-        <source>sounds</source>
-        <translation>ljud</translation>
     </message>
 </context>
 <context>

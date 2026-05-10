@@ -15,13 +15,12 @@ Informations on how create theme packs compatible with my script. Use my [dummy 
 
 * A basic knowledge on how to use the Linux terminal and compile rpm's.
 
-## Icons, fonts, sounds
+## Icons, fonts
 
 Read the page relative to the theme part you're creating, then come back here.
 
 * [Icons](icons)
 * [Fonts](fonts)
-* [Sounds](sounds)
 
 ## .spec file
 

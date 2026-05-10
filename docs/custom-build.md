@@ -75,13 +75,6 @@ Via a post-install script, it's possible to enable a default theme pre-installed
 - *theme* is the name of the theme as in the package (e.g. *ibm-plex*).
 - *fontweight* the main font weight used throughout the UI (e.g. *Light*).
 
-### Enable a sound theme
-
-	scripts/apply_sound.sh theme
-	dconf write /desktop/lipstick/sailfishos-uithemer/activeSoundPack "'theme'"
-
-- *theme* is the name of the theme as in the package (e.g. *numix-circle*).
-
 ### Enable the auto-update service
 
 The auto-update service refreshes the current icon theme. The options are:

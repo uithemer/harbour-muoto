@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.4.3
+Version:        2.4.4
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -35,7 +35,7 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 
 %description
-Enables customization of icons, fonts, sounds and pixel density in Sailfish OS.
+Enables customization of icons, fonts and pixel density in Sailfish OS.
 Includes the former Theme pack support engine and CLI (themepacksupport).
 Icons are applied by rewriting the Icon= entries in .desktop files (no PNG
 replacement). Original Icon= values are tracked in a JSON manifest so the
@@ -52,7 +52,7 @@ default theme can always be restored.
 # restore scripts so the user's theme is not reset mid-transaction.
 %pretrans -p /bin/sh
 if [ -d /usr/share/harbour-themepacksupport ]; then
-    for s in icon-restore.sh font-restore.sh sound-restore.sh \
+    for s in icon-restore.sh font-restore.sh \
              restore_dpr.sh restore_adpi.sh restore_iz.sh disable-dpi.sh disable-autoupdate.sh; do
         f="/usr/share/harbour-themepacksupport/$s"
         if [ -e "$f" ]; then
@@ -64,6 +64,18 @@ fi
 old=/usr/share/sailfishos-uithemer/icon-restore.sh
 if [ -e "$old" ]; then
     printf '#!/bin/sh\nexit 0\n' > "$old" || :
+fi
+
+# 2.4.4: sound theming is being removed. If the previous package still has
+# sound-restore.sh on disk (i.e. we are upgrading from <= 2.4.3 with a sound
+# theme possibly applied), run it once now to revert
+# /usr/share/sounds/jolla-ambient/stereo to the user's saved originals
+# BEFORE the new package overlays the script set and removes sound-restore.sh.
+# The %post hook then deletes sound-current and backup/sound. Safe on fresh
+# installs (the script is absent and the test fails).
+sr=/usr/share/sailfishos-uithemer/sound-restore.sh
+if [ -x "$sr" ]; then
+    "$sr" || :
 fi
 
 %build
@@ -119,7 +131,6 @@ systemctl enable sailfishos-uithemer-reassert.service
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
 touch -a %{_datadir}/%{name}/font-current
-touch -a %{_datadir}/%{name}/sound-current
 touch -a %{_datadir}/%{name}/droiddpi-current
 ssu mo 2>/dev/null | sed 's/.*: //' > %{_datadir}/%{name}/device-model || true
 
@@ -141,7 +152,7 @@ if [ -d "$old" ]; then
             mv "$old/$d" "$new/$d" || true
         fi
     done
-    for f in font-current sound-current droiddpi-current device-model config.cfg; do
+    for f in font-current droiddpi-current device-model config.cfg; do
         if [ -e "$old/$f" ] && [ ! -e "$new/$f" ]; then
             mv "$old/$f" "$new/$f" || true
         fi
@@ -153,6 +164,11 @@ rm -f %{_datadir}/%{name}/icon-current
 # 2.4.1 and earlier kept a graphic-current state file for the (now removed)
 # graphic theming. Drop it on upgrade so it does not linger.
 rm -f %{_datadir}/%{name}/graphic-current
+# 2.4.3 and earlier kept a sound-current state file and a backup/sound
+# directory for the (now removed) sound theming. %pretrans already restored
+# the user's sounds; drop the leftovers so they do not linger.
+rm -f %{_datadir}/%{name}/sound-current
+rm -rf %{_datadir}/%{name}/backup/sound
 
 %preun
 if [ $1 -eq 0 ]; then
@@ -169,7 +185,6 @@ if [ $1 -eq 0 ]; then
     /usr/bin/sailfishos-uithemer-reassert --restore || true
 
     %{_datadir}/%{name}/font-restore.sh || true
-    %{_datadir}/%{name}/sound-restore.sh || true
     %{_datadir}/%{name}/restore_dpr.sh || true
     %{_datadir}/%{name}/restore_adpi.sh || true
     %{_datadir}/%{name}/restore_iz.sh || true

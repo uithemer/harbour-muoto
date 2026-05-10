@@ -80,8 +80,8 @@
         <translation>Σχετικά με το UI Themer</translation>
     </message>
     <message>
-        <source>UI Themer lets you customize icons, fonts, sounds and pixel density in Sailfish OS.</source>
-        <translation>Το UI Themer σάς επιτρέπει να προσαρμόσετε εικονίδια, γραμματοσειρές, ήχους και πυκνότητα εικονοστοιχείων στο Sailfish OS.</translation>
+        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Thanks to LQS for helping with the Android DPI on the Xperia XA2.</source>
@@ -145,18 +145,6 @@
     <message>
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>Μετά την επαλήθευση, η συσκευή σας θα επανεκκινηθεί. Όλες οι ανοιχτές εφαρμογές θα κλείσουν.</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation>Ήχοι</translation>
-    </message>
-    <message>
-        <source>Apply sounds</source>
-        <translation>Εφαρμογή ήχων</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>Για τους ήχους, ίσως χρειαστεί πλήρης επανεκκίνηση για την εφαρμογή των ρυθμίσεών σας.</translation>
     </message>
     <message>
         <source>The theme supports overlays.</source>
@@ -353,8 +341,8 @@
         <translation>Εάν διαθέτετε συσκευή της σειράς Xperia XA2, ίσως χρειαστεί να κάνετε πλήρη επανεκκίνηση για να εφαρμόσετε τις ρυθμίσεις Android.</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation>Εδώ μπορείτε να βρείτε προχωρημένες ρυθμίσεις για το UI Themer, π.χ. να επανεγκαταστήσετε προεπιλεγμένα εικονίδια, γραμματοσειρές ή ήχους αν ξεχάσετε να επανέλθετε στο προεπιλεγμένο θέμα πριν από την ενημέρωση συστήματος ή αν προηγούμενη εφαρμογή εικονιδίων αποτύχει.</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>If you still can&apos;t get the help you need, you can open an issue on</source>
@@ -582,8 +570,8 @@
         <translation>προχωρημένη</translation>
     </message>
     <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation>Εδώ μπορείτε να βρείτε προχωρημένες ρυθμίσεις για το UI Themer, π.χ. να επανεγκαταστήσετε προεπιλεγμένα εικονίδια, γραμματοσειρές ή ήχους αν ξεχάσετε να επανέλθετε στο προεπιλεγμένο θέμα πριν από την ενημέρωση συστήματος ή αν προηγούμενη εφαρμογή εικονιδίων αποτύχει.</translation>
+        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -611,14 +599,6 @@
     <message>
         <source>Reinstall fonts</source>
         <translation>Επανεγκατάσταση γραμματοσειρών</translation>
-    </message>
-    <message>
-        <source>Reinstall sounds</source>
-        <translation>Επανεγκατάσταση ήχων</translation>
-    </message>
-    <message>
-        <source>Reinstall default sounds, if sounds applying/restoring fails.</source>
-        <translation>Επανεγκατασστήστε τους προκαθορισμένους ήχους σε περίπτωση αποτυχίας εφαρμογής/επαναφοράς.</translation>
     </message>
     <message>
         <source>Remember to restart the homescreen right after.</source>
@@ -698,14 +678,6 @@
         <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
         <translation>Μετά την επαλήθευση, η συσκευή σας θα επανεκκινηθεί. Όλες οι ανοιχτές εφαρμογές θα κλείσουν.</translation>
     </message>
-    <message>
-        <source>Default sounds</source>
-        <translation>Προκαθορισμένοι ήχοι</translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation>Για τους ήχους, ίσως χρειαστεί πλήρης επανεκκίνηση για την εφαρμογή των ρυθμίσεών σας.</translation>
-    </message>
 </context>
 <context>
     <name>ThemePackItem</name>
@@ -720,10 +692,6 @@
     <message>
         <source>fonts</source>
         <translation>γραμματοσειρές</translation>
-    </message>
-    <message>
-        <source>sounds</source>
-        <translation>ήχοι</translation>
     </message>
 </context>
 <context>
