@@ -5,11 +5,27 @@
 <!--
     Polkit actions for sailfishos-uithemer-helperd.
 
-    All three actions use auth_admin_keep so the user is prompted once
-    (~5 minute retention) per action and subsequent calls inside the
-    same session are silent. Lipstick on Sailfish OS already runs an
-    authentication agent; no extra runtime piece is needed beyond
-    polkit + polkit-qt5-1.
+    Defaults policy:
+      - allow_active   = yes              (local foregrounded session:
+                                           silent, no prompt)
+      - allow_inactive = auth_admin_keep  (local but backgrounded:
+                                           prompt once, ~5min cache)
+      - allow_any      = auth_admin_keep  (everything else, e.g. SSH:
+                                           prompt once, ~5min cache)
+
+    Rationale: on a single-user phone the GUI runs in the active
+    session, so privileged ops (apply icons, restore, uninstall pack,
+    toggle autoupdate) should not interrupt the user with a device-
+    password prompt. Remote / inactive sessions still hit the prompt
+    so a stray ssh-as-defaultuser cannot drive the daemon silently.
+
+    Transport-layer gate is unchanged: the bus policy in
+    /etc/dbus-1/system.d/org.uithemer.UiThemer1.conf only allows
+    root and defaultuser to send to the well-known name, regardless
+    of polkit decisions here.
+
+    Lipstick on Sailfish OS already runs an authentication agent;
+    no extra runtime piece is needed beyond polkit + polkit-qt-core-1.
 -->
 <policyconfig>
   <vendor>UI Themer</vendor>
@@ -21,7 +37,7 @@
     <defaults>
       <allow_any>auth_admin_keep</allow_any>
       <allow_inactive>auth_admin_keep</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
+      <allow_active>yes</allow_active>
     </defaults>
   </action>
 
@@ -31,7 +47,7 @@
     <defaults>
       <allow_any>auth_admin_keep</allow_any>
       <allow_inactive>auth_admin_keep</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
+      <allow_active>yes</allow_active>
     </defaults>
   </action>
 
@@ -41,7 +57,7 @@
     <defaults>
       <allow_any>auth_admin_keep</allow_any>
       <allow_inactive>auth_admin_keep</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
+      <allow_active>yes</allow_active>
     </defaults>
   </action>
 </policyconfig>

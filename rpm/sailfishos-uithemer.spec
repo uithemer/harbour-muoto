@@ -29,7 +29,6 @@ Requires:       sailfish-version >= 2.1.4
 # missing agent makes the prompt fail and the GUI surfaces an error
 # notification rather than crashing.
 Requires:       polkit
-Requires:       polkit-qt5-1
 Obsoletes:      harbour-themepacksupport < 0.8.14
 Provides:       harbour-themepacksupport = 0.8.14
 Conflicts:      harbour-iconpacksupport
@@ -40,7 +39,7 @@ BuildRequires:  pkgconfig(Qt5Gui)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5DBus)
-BuildRequires:  pkgconfig(polkit-qt5-1)
+BuildRequires:  pkgconfig(polkit-qt-core-1)
 BuildRequires:  desktop-file-utils
 
 %description

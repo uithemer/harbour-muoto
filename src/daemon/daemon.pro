@@ -23,9 +23,13 @@ SOURCES += \
     $$PWD/auth.cpp \
     $$PWD/helperservice.cpp
 
-# polkit-qt5-1 / Qt5DBus are runtime-required.
+# Qt5DBus + polkit-qt-core-1 are runtime-required. polkit-qt-core-1 is
+# the GUI-less core of polkit-qt (just Authority, Subject, ...); it is
+# what is packaged for the SailfishOS SDK target. We never need the
+# Agent / GUI sub-libraries because lipstick already runs the user-side
+# auth agent.
 CONFIG += link_pkgconfig
-PKGCONFIG += polkit-qt5-1 Qt5DBus
+PKGCONFIG += polkit-qt-core-1 Qt5DBus
 
 target.path = /usr/libexec
 INSTALLS += target

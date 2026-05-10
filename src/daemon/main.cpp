@@ -8,7 +8,7 @@
 //   1. systemd or dbus-daemon launches us via the .service activation
 //      file when defaultuser's GUI first issues a method call.
 //   2. We register the well-known name on the system bus.
-//   3. Every method handler runs a polkit auth check via libpolkit-qt5-1
+//   3. Every method handler runs a polkit auth check via libpolkit-qt-core-1
 //      and either dispatches into IconApplier / DensityEnabler /
 //      ThemePackOps or replies "polkit denied".
 //   4. After 30 s with no method dispatched we quit; the next call
