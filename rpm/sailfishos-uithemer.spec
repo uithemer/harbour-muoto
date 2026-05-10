@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.4.1
+Version:        2.4.3
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -52,7 +52,7 @@ default theme can always be restored.
 # restore scripts so the user's theme is not reset mid-transaction.
 %pretrans -p /bin/sh
 if [ -d /usr/share/harbour-themepacksupport ]; then
-    for s in icon-restore.sh font-restore.sh sound-restore.sh graphic-restore.sh \
+    for s in icon-restore.sh font-restore.sh sound-restore.sh \
              restore_dpr.sh restore_adpi.sh restore_iz.sh disable-dpi.sh disable-autoupdate.sh; do
         f="/usr/share/harbour-themepacksupport/$s"
         if [ -e "$f" ]; then
@@ -120,7 +120,6 @@ rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
 touch -a %{_datadir}/%{name}/font-current
 touch -a %{_datadir}/%{name}/sound-current
-touch -a %{_datadir}/%{name}/graphic-current
 touch -a %{_datadir}/%{name}/droiddpi-current
 ssu mo 2>/dev/null | sed 's/.*: //' > %{_datadir}/%{name}/device-model || true
 
@@ -142,7 +141,7 @@ if [ -d "$old" ]; then
             mv "$old/$d" "$new/$d" || true
         fi
     done
-    for f in font-current sound-current graphic-current droiddpi-current device-model config.cfg; do
+    for f in font-current sound-current droiddpi-current device-model config.cfg; do
         if [ -e "$old/$f" ] && [ ! -e "$new/$f" ]; then
             mv "$old/$f" "$new/$f" || true
         fi
@@ -151,6 +150,9 @@ fi
 
 # 2.3.x left an icon-current pointer file behind; it is no longer used.
 rm -f %{_datadir}/%{name}/icon-current
+# 2.4.1 and earlier kept a graphic-current state file for the (now removed)
+# graphic theming. Drop it on upgrade so it does not linger.
+rm -f %{_datadir}/%{name}/graphic-current
 
 %preun
 if [ $1 -eq 0 ]; then
@@ -166,7 +168,6 @@ if [ $1 -eq 0 ]; then
     # Restore original Icon= for every themed .desktop file via the helper.
     /usr/bin/sailfishos-uithemer-reassert --restore || true
 
-    %{_datadir}/%{name}/graphic-restore.sh || true
     %{_datadir}/%{name}/font-restore.sh || true
     %{_datadir}/%{name}/sound-restore.sh || true
     %{_datadir}/%{name}/restore_dpr.sh || true

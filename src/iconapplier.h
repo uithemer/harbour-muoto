@@ -77,7 +77,11 @@ private:
 
     // Pack lookup helpers. Each returns the absolute path to the matching PNG inside
     // the pack, or QString() if the pack has no icon for that base.
-    QString findNativeIcon(const QString& packName, const QString& base) const;
+    // Native lookup keys off the .desktop's Icon= value (not its filename), so a
+    // jolla-camera.desktop with Icon=icon-launcher-camera matches
+    // <pack>/.../icon-launcher-camera.png. Searches <pack>/native/<size>/apps/
+    // first, then falls back to the pre-3.0 <pack>/jolla/<zSize>/icons/ subtree.
+    QString findNativeIcon(const QString& packName, const QString& iconValue) const;
     QString findApkIcon(const QString& packName, const QString& base) const;
 
     // Generate (or reuse from cache) an overlay-composited PNG and return its path.

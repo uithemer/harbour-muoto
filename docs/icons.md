@@ -18,13 +18,19 @@ inside `.desktop` files** (no PNG copies). UI Themer scans:
 * `/home/defaultuser/.local/share/applications/apkd_launcher_*.desktop` for
   Android launcher entries.
 
-For each `.desktop` whose name (or, for APK entries, whose `Icon=` value) matches
-a PNG inside the theme pack, UI Themer:
+For each `.desktop` whose `Icon=` value matches a PNG inside the theme pack,
+UI Themer:
 
 1. Records the original `Icon=` value in
    `/usr/share/sailfishos-uithemer/icon-backup.json`.
 2. Replaces the `Icon=` line with the absolute path of the matching PNG inside
    the theme pack (no copies, no overwrites of system files).
+
+Native and APK lookups are both keyed off the `.desktop`'s `Icon=` value (not
+its filename). For native apps this is what makes built-in Jolla launchers
+match the pack: e.g. `jolla-camera.desktop` ships `Icon=icon-launcher-camera`,
+so the pack only needs to provide `icon-launcher-camera.png` (no
+`jolla-camera.png` required).
 
 A boot-time oneshot service (`sailfishos-uithemer-reassert.service`)
 re-asserts the active theme, so package updates that overwrite a `.desktop`
@@ -32,10 +38,18 @@ file are transparently re-themed at the next boot. A pre-system-update service
 (`themepacksupport-systemupgrade.service`) restores all `Icon=` entries to
 their originals before the upgrade runs, so RPM never sees modified files.
 
-> Jolla ambient icons (`jolla/z1.0`, `z1.5`, `z2.0` ...), `dyncal/` and
-> `dynclock/` directories shipped by older themes are **ignored**: they are
-> still allowed inside the theme pack but no longer applied. Themes can drop
-> them safely.
+> Graphic theming for Sailfish system widgets (the old PNG-replacement
+> pipeline that copied `<pack>/graphic/*` into
+> `/usr/share/themes/sailfish-default/meegotouch/icons/`) has been
+> **removed** in 2.4.2. The `dyncal/` and `dynclock/` directories shipped
+> by older themes are **ignored**: they are still allowed inside the theme
+> pack but no longer applied.
+>
+> Since 2.4.3, the pre-3.0 Jolla ambient icon subtree
+> (`<pack>/jolla/zX.Y/icons/`) is consulted again, but **only** as a
+> fallback source of PNGs that the launcher will reference via `Icon=` —
+> nothing under `jolla/` is ever copied into
+> `/usr/share/themes/sailfish-default/meegotouch/`.
 
 ## Theme pack layout
 
@@ -43,11 +57,19 @@ Inside `/usr/share/harbour-themepack-<name>/` UI Themer looks for:
 
 ```
 native/
-  256x256/apps/<base>.png
-  172x172/apps/<base>.png
-  128x128/apps/<base>.png
-  108x108/apps/<base>.png
-   86x86/apps/<base>.png
+  256x256/apps/<icon-key>.png
+  172x172/apps/<icon-key>.png
+  128x128/apps/<icon-key>.png
+  108x108/apps/<icon-key>.png
+   86x86/apps/<icon-key>.png
+
+jolla/                            # legacy fallback, see "Lookup order" below
+  z2.0/icons/<icon-key>.png
+  z1.75/icons/<icon-key>.png
+  z1.5-large/icons/<icon-key>.png
+  z1.5/icons/<icon-key>.png
+  z1.25/icons/<icon-key>.png
+  z1.0/icons/<icon-key>.png
 
 apk/
   192x192/<launcher_id>.png
@@ -60,19 +82,34 @@ overlay/
 
 Where:
 
-* `<base>` is the basename of a system `.desktop` file (e.g.
-  `harbour-storeman.desktop` -> `harbour-storeman.png`).
+* `<icon-key>` is the literal value of `Icon=` inside the system `.desktop`
+  file (e.g. `harbour-storeman.desktop` ships `Icon=harbour-storeman`, so the
+  pack provides `harbour-storeman.png`; `jolla-camera.desktop` ships
+  `Icon=icon-launcher-camera`, so the pack provides
+  `icon-launcher-camera.png`).
 * `<launcher_id>` is the literal value of `Icon=` inside an APK
   `apkd_launcher_*.desktop` file (e.g.
   `apkd_launcher_org.example.bar.png`).
 
-For each matched app UI Themer picks the **largest** size present and points
-`Icon=` at that absolute path. Smaller buckets are still useful to support
-displays that pick a smaller icon natively.
+### Lookup order (native)
 
-For APK icons: prefer **`apk/192x192/`**, since modern apkd-bridge does not
-downscale to smaller buckets; `128x128`/`86x86` remain only as fallbacks when
-`192x192` is missing.
+For each native `.desktop`, UI Themer reads the current `Icon=` value,
+normalises it to a bare key (strips any leading directory and trailing
+`.png`), and tries, in order:
+
+1. `<pack>/native/<size>/apps/<icon-key>.png` for `<size>` in
+   `256x256, 172x172, 128x128, 108x108, 86x86` (largest first).
+2. `<pack>/jolla/<zSize>/icons/<icon-key>.png` for `<zSize>` in
+   `z2.0, z1.75, z1.5-large, z1.5, z1.25, z1.0` (largest first).
+
+First hit wins. The `jolla/` step is a **lookup-only** fallback for older
+packs: matched PNGs are referenced from the launcher via `Icon=`, never
+copied into the system theme tree.
+
+For APK icons UI Themer picks the **largest** size present in `apk/` and
+points `Icon=` at that absolute path. Prefer **`apk/192x192/`**, since modern
+apkd-bridge does not downscale to smaller buckets; `128x128`/`86x86` remain
+only as fallbacks when `192x192` is missing.
 
 ## Overlays
 

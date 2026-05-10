@@ -8,7 +8,6 @@ $main/disable-autoupdate.sh
 
 /usr/bin/sailfishos-uithemer-reassert --restore || true
 
-$main/graphic-restore.sh
 $main/font-restore.sh
 $main/sound-restore.sh
 

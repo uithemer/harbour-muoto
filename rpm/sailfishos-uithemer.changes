@@ -1,3 +1,29 @@
+* Sun May 10 2026 2.4.3-1
+- Native icon lookup is now keyed off the .desktop's Icon= value (not its
+  filename). This restores matches for built-in Jolla apps whose .desktop
+  basename does not match the icon name, e.g. jolla-camera.desktop ships
+  Icon=icon-launcher-camera, so a pack only needs icon-launcher-camera.png.
+- Added pre-3.0 Jolla ambient subtree as a lookup-only fallback:
+  <pack>/jolla/<zSize>/icons/<key>.png is consulted after native sizes for
+  packs that still ship ambient artwork. PNGs under jolla/ are referenced
+  via Icon= only, never copied into the system theme tree (graphic theming
+  removal from 2.4.2 stays intact).
+- nativeMatchCount, applyIcons and themeNewDesktops all read Icon= from
+  the .desktop and pass it as the lookup key. APK lookup is unchanged.
+- No system-tree writes; restore / reassert / manifest behaviour unchanged.
+
+* Sun May 10 2026 2.4.2-1
+- Removed graphic theming (the Sailfish system widget icons under
+  /usr/share/themes/sailfish-default/meegotouch/icons/):
+  - Dropped tps/graphic-{run,restore,menu,backup}.sh.
+  - Removed the (G)raphic theme entry from the CLI menu
+    (tps/themepacksupport.sh).
+  - One-click restore (tps/ocr.sh) no longer calls graphic-restore.sh.
+  - %pretrans no longer neutralises graphic-restore.sh from older
+    harbour-themepacksupport installs, %preun no longer invokes it,
+    and %post no longer touches or migrates graphic-current.
+  - Stale graphic-current state file (if any) is removed on upgrade.
+
 * Sun May 10 2026 2.4.1-1
 - Race fixes:
   - flock(2) on /usr/share/sailfishos-uithemer/icon-backup.lock serialises

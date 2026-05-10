@@ -46,7 +46,6 @@ do
  Please enter your choice:
  ----------------------------------
    (F)ont theme
-   (G)raphic theme
    (S)ound theme
    (D)isplay density
    (L)ipstick refresh
@@ -60,7 +59,6 @@ do
 EOF
     read -n1 -s
     case "$REPLY" in
-    "G"|"g")  $main/graphic-menu.sh ;;
     "F"|"f")  $main/font-menu.sh ;;
     "S"|"s")  $main/sound-menu.sh ;;
     "D"|"d")  $main/ddensity-menu.sh ;;

@@ -61,24 +61,58 @@ void IconApplier::chownToDefaultUser(const QString& path) const
         qDebug() << "chown failed:" << path;
 }
 
-QString IconApplier::findNativeIcon(const QString& packName, const QString& base) const
+QString IconApplier::findNativeIcon(const QString& packName, const QString& iconValue) const
 {
-    static const QStringList sizes = {
+    // Native (post-3.0) layout: <pack>/native/<size>/apps/<key>.png. Largest first
+    // so the launcher gets the highest-resolution available asset.
+    static const QStringList nativeSizes = {
         QStringLiteral("256x256"),
         QStringLiteral("172x172"),
         QStringLiteral("128x128"),
         QStringLiteral("108x108"),
         QStringLiteral("86x86")
     };
+    // Pre-3.0 Sailfish "ambience" layout: <pack>/jolla/<zX.Y>/icons/<key>.png.
+    // Order mirrors the original tps/icon-run.sh fallback (largest first).
+    static const QStringList jollaSizes = {
+        QStringLiteral("z2.0"),
+        QStringLiteral("z1.75"),
+        QStringLiteral("z1.5-large"),
+        QStringLiteral("z1.5"),
+        QStringLiteral("z1.25"),
+        QStringLiteral("z1.0")
+    };
+
+    // Normalise the Icon= value to a bare key so packs can match regardless of
+    // how the .desktop spelled it:
+    //   - strip leading directory ("/usr/share/icons/.../foo.png" -> "foo")
+    //   - strip trailing .png if some package wrote a full filename
+    QString key = iconValue;
+    if(key.contains(QLatin1Char('/')))
+        key = QFileInfo(key).completeBaseName();
+    if(key.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
+        key.chop(4);
+    if(key.isEmpty())
+        return QString();
 
     const QString root = packDir(packName);
-    for(const QString& s : sizes)
+
+    for(const QString& s : nativeSizes)
     {
         const QString p = root + QStringLiteral("/native/") + s
-                          + QStringLiteral("/apps/") + base + QStringLiteral(".png");
+                          + QStringLiteral("/apps/") + key + QStringLiteral(".png");
         if(QFileInfo::exists(p))
             return p;
     }
+
+    for(const QString& s : jollaSizes)
+    {
+        const QString p = root + QStringLiteral("/jolla/") + s
+                          + QStringLiteral("/icons/") + key + QStringLiteral(".png");
+        if(QFileInfo::exists(p))
+            return p;
+    }
+
     return QString();
 }
 
@@ -154,8 +188,16 @@ int IconApplier::nativeMatchCount(const QString& packName) const
     const QStringList ds = nativeDesktops();
     for(const QString& d : ds)
     {
-        const QString base = baseForNative(d);
-        if(!findNativeIcon(packName, base).isEmpty())
+        // Native lookup is now keyed off Icon= (so jolla-camera.desktop ->
+        // Icon=icon-launcher-camera matches the pack's icon-launcher-camera.png).
+        // We have to load the .desktop here to read it.
+        DesktopFile df(d);
+        if(!df.load())
+            continue;
+        const QString iv = df.value(QStringLiteral("Icon"));
+        if(iv.isEmpty())
+            continue;
+        if(!findNativeIcon(packName, iv).isEmpty())
             ++count;
     }
     return count;
@@ -333,10 +375,14 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         if(isApk && original.isEmpty())
             return;
 
+        // `base` is still useful as a stable, filesystem-safe key for the overlay
+        // cache filename. Native uses the .desktop basename (no slashes, no .png),
+        // APK uses the apkd_launcher_<id> from Icon=. The actual pack lookup uses
+        // Icon= directly for native (so jolla-camera -> icon-launcher-camera).
         const QString base = isApk ? baseForApk(original) : baseForNative(dpath);
 
         QString themed = isApk ? findApkIcon(packName, base)
-                               : findNativeIcon(packName, base);
+                               : findNativeIcon(packName, original);
         if(themed.isEmpty() && overlay)
             themed = makeOverlayIcon(packName, base, kind,
                                      resolveSourceIcon(original, kind));
@@ -595,10 +641,12 @@ void IconApplier::themeNewDesktops()
         if(isApk && original.isEmpty())
             return;
 
-        const QString base = isApk ? baseForApk(original) : baseForNative(dpath);
+        // APK still keys off baseForApk(Icon=); native keys off Icon= directly so
+        // built-in Jolla apps with Icon=icon-launcher-* match the pack.
+        const QString base = isApk ? baseForApk(original) : QString();
 
         const QString themedPath = isApk ? findApkIcon(pack, base)
-                                         : findNativeIcon(pack, base);
+                                         : findNativeIcon(pack, original);
         if(themedPath.isEmpty())
             return;
 
