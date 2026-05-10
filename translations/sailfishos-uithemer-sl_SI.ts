@@ -170,28 +170,12 @@
         <translation>Gostota zaslona</translation>
     </message>
     <message>
-        <source>Enable display density settings</source>
-        <translation>Omogoči nastavitve gostote zaslone</translation>
-    </message>
-    <message>
         <source>Device pixel ratio</source>
         <translation>Razmerje pikslov naprave</translation>
     </message>
     <message>
         <source>Change the display pixel ratio. To a smaller value corresponds an higher density.</source>
         <translation>Spremeni razmerje pisklov zaslona. Manjša vrednost ustreza večji gostoti.</translation>
-    </message>
-    <message>
-        <source>Android DPI</source>
-        <translation>Android DPI</translation>
-    </message>
-    <message>
-        <source>Android DPI value</source>
-        <translation>Vrednost Android DPI</translation>
-    </message>
-    <message>
-        <source>Change the Android DPI value. To a smaller value corresponds an higher density.</source>
-        <translation>Spremeni vrednost Android DPI. Manjša vrednost ustreza večji gostoti.</translation>
     </message>
     <message>
         <source>Icon size</source>
@@ -204,10 +188,6 @@
     <message>
         <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
         <translation>Ne pozabite na ponovni zagon domačega zaslona (iz menija  &lt;i&gt;Možnosti&lt;/i&gt;) takoj, ko spremenite nastavitve na tej strani.</translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
-        <translation>Če uporabljate Sony Xperia XA2 je po spremembah nastavitev za Android potreben ponoveni zagon.</translation>
     </message>
 </context>
 <context>
@@ -592,20 +572,12 @@
         <translation>Privzeto razmerje pikslov naprave</translation>
     </message>
     <message>
-        <source>Default Android DPI</source>
-        <translation>Privzeti Android DPI</translation>
-    </message>
-    <message>
         <source>Remember to restart the homescreen right after.</source>
         <translation>Ne pozabite na ponovi zagon domačega zaslona po zaključku sprememb.</translation>
     </message>
     <message>
         <source>Restart homescreen</source>
         <translation>Ponovni zagon domačega zaslona</translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
-        <translation>Če uporabljate Sony Xperia XA2 je po spremembah nastavitev za Android potreben ponoveni zagon.</translation>
     </message>
 </context>
 <context>

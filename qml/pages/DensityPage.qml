@@ -13,15 +13,13 @@ Page
 
 
     RemorsePopup { id: remorsepopup }
-    ThemePack {
-        id: themepack;
-        onServiceChanged: {
-            sladpi.value = themepack.droidDPI;
-            itsdensityenabled.busy = false;
-        }
-    }
+    ThemePack { id: themepack }
     BusyState { id: busyindicator }
     Notification { id: notification }
+
+    DensityEnabler { id: densityEnabler }
+
+    Component.onCompleted: densityEnabler.ensureEnabled();
 
     ThemePackModel {
                 function applyDone() {
@@ -39,9 +37,9 @@ Page
 
                 id: themepackmodel
                 onDpiRestored: {
-                    sladpi.value = themepack.droidDPI;
                     silica.sync();
                     sldpr.value = silica.theme_pixel_ratio;
+                    cbiz.value = silica.icon_size_launcher;
                     applyDone()
                 }
             }
@@ -150,13 +148,12 @@ Page
             }
             MenuItem {
                 text: qsTr("Restore display density")
-                enabled: settings.densityEnabled
                 onClicked: {
                     var dlgrestore = pageStack.push("RestoreDDPage.qml", { "settings": settings });
 
                     dlgrestore.accepted.connect(function() {
                         settings.isRunning = true;
-                        themepackmodel.restoreDpi(dlgrestore.restoreDPR, dlgrestore.restoreADPI);
+                        themepackmodel.restoreDpi(dlgrestore.restoreDPR, dlgrestore.restoreIconSize);
                     });
                 }
             }
@@ -169,26 +166,8 @@ Page
 
             PageHeader { title: qsTr("Display density") }
 
-            IconTextSwitch {
-                id: itsdensityenabled
-                automaticCheck: true
-                text: qsTr("Enable display density settings")
-                checked: settings.densityEnabled
-                onClicked: {
-                    itsdensityenabled.busy = true;
-                    if (!settings.densityEnabled) {
-                        themepack.enableddensity();
-                        settings.densityEnabled = true;
-                    } else {
-                        themepack.disableddensity();
-                        settings.densityEnabled = false;
-                    }
-                }
-            }
-
             Grid {
                 width: parent.width
-                visible: settings.densityEnabled
                 columns: isLandscape ? 2 : 1
 
             Column
@@ -223,32 +202,6 @@ Page
                 }
             }
 
-            Column
-            {
-                id: coladpi
-                width: parent.width
-                visible: themepack.hasAndroidSupport
-
-                SectionHeader { text: qsTr("Android DPI") }
-
-                Slider {
-                    id: sladpi
-                    width: parent.width
-                    label: qsTr("Android DPI value")
-                    maximumValue: 600
-                    minimumValue: 180
-                    stepSize: 20
-                    value: themepack.droidDPI
-                    valueText: value
-                    onReleased: themepackmodel.applyADPI(valueText)
-                    onPressAndHold: cancel()
-                }
-
-                LabelText {
-                    text: qsTr("Change the Android DPI value. To a smaller value corresponds an higher density.")
-                }
-            }
-
             }
 
             Column
@@ -280,11 +233,6 @@ Page
 
                 LabelText {
                     text: "<br>" + qsTr("Remember to restart the homescreen (from the <i>Options</i> page) right after you have changed the settings in this page.")
-                }
-
-                LabelText {
-                    visible: themepack.hasAndroidSupport && settings.isXA2
-                    text: qsTr("If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.")
                 }
 
             }

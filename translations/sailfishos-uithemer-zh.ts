@@ -170,28 +170,12 @@
         <translation>显示密度</translation>
     </message>
     <message>
-        <source>Enable display density settings</source>
-        <translation>启用显示密度设置</translation>
-    </message>
-    <message>
         <source>Device pixel ratio</source>
         <translation>设备像素比例</translation>
     </message>
     <message>
         <source>Change the display pixel ratio. To a smaller value corresponds an higher density.</source>
         <translation>更改显示像素比例。值越小，密度越大。</translation>
-    </message>
-    <message>
-        <source>Android DPI</source>
-        <translation>Android DPI</translation>
-    </message>
-    <message>
-        <source>Android DPI value</source>
-        <translation>Android DPI 值</translation>
-    </message>
-    <message>
-        <source>Change the Android DPI value. To a smaller value corresponds an higher density.</source>
-        <translation>更改 Android DPI 值。值越小，密度越大。</translation>
     </message>
     <message>
         <source>Icon size</source>
@@ -204,10 +188,6 @@
     <message>
         <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
         <translation>当你更改此页的设置之后，记得立即重启主屏幕（从&lt;i&gt;操作&lt;/i&gt;页）</translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
-        <translation>如果你拥有一台索尼 Xperia  XA2 系列设备，可能需要一次完全重启以应用 Android 设置</translation>
     </message>
 </context>
 <context>
@@ -592,20 +572,12 @@
         <translation>设备像素比例</translation>
     </message>
     <message>
-        <source>Default Android DPI</source>
-        <translation>恢复 Android DPI</translation>
-    </message>
-    <message>
         <source>Remember to restart the homescreen right after.</source>
         <translation>记住之后立即重启主屏幕。</translation>
     </message>
     <message>
         <source>Restart homescreen</source>
         <translation>重启主屏幕</translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
-        <translation>如果你拥有一台索尼 Xperia  XA2 系列设备，可能需要一次完全重启以应用 Android 设置</translation>
     </message>
 </context>
 <context>

@@ -9,15 +9,6 @@ ThemePack::ThemePack(QObject* parent): QObject(parent)
 
 }
 
-QString ThemePack::readDeviceModel() const
-{
-    QFile file("/usr/share/sailfishos-uithemer/device-model");
-    file.open(QFile::ReadOnly);
-    QString s = file.readAll().simplified();
-    file.close();
-    return s;
-}
-
 bool ThemePack::hasAndroidSupport() const
 {
     bool res = QFileInfo("/vendor/build.prop").exists() || QFileInfo("/opt/alien/system/build.prop").exists();
@@ -32,13 +23,6 @@ bool ThemePack::hasStoremanInstalled() const
 
    qDebug("%d\n", res);
    return res;
-}
-
-double ThemePack::droidDPI() const
-{
-    double dpi = 0;
-    this->getDroidDPI(&dpi);
-    return dpi;
 }
 
 qint64 ThemePack::getFileSize(const QString& file)
@@ -61,28 +45,6 @@ void ThemePack::restartHomescreen()
     // process from becoming permanently root just because the user clicked
     // "restart homescreen" first.
     Spawner::execute("/usr/share/sailfishos-uithemer/homescreen.sh", [this]() mutable { emit homescreenRestarted(); });
-}
-
-void ThemePack::installDependencies()
-{
-    setuid_ex(0);
-    Spawner::execute("/usr/share/sailfishos-uithemer/install_dependencies.sh", [this]() mutable { emit dependenciesInstalled(); });
-}
-
-void ThemePack::enableddensity()
-{
-    Spawner::execute("/usr/share/sailfishos-uithemer/enable-dpi.sh", [this]() mutable { emit serviceChanged(); });
-}
-
-void ThemePack::disableddensity()
-{
-    Spawner::execute("/usr/share/sailfishos-uithemer/disable-dpi.sh", [this]() mutable { emit serviceChanged(); });
-}
-
-void ThemePack::restoreIZ()
-{
-    setuid_ex(0);
-    Spawner::executeSync("/usr/share/sailfishos-uithemer/restore_iz.sh");
 }
 
 void ThemePack::enableserviceautoupdate()
@@ -119,21 +81,4 @@ void ThemePack::hideIcon()
 {
     setuid_ex(0);
     Spawner::executeSync("echo \"NoDisplay=true\" >> /usr/share/applications/harbour-iconpacksupport.desktop");
-}
-
-bool ThemePack::getDroidDPI(double *dpi) const
-{
-    QString s = Spawner::executeSync("cat /usr/share/sailfishos-uithemer/droiddpi-current").simplified();
-
-    if(s.isEmpty())
-        return false;
-
-    if(dpi)
-    {
-        bool ok = false;
-        *dpi = s.toDouble(&ok);
-        return ok;
-    }
-
-    return true;
 }

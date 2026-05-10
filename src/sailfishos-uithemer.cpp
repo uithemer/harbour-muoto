@@ -18,6 +18,7 @@
 #include "fontweightmodel.h"
 #include "iconapplier.h"
 #include "fontapplier.h"
+#include "densityenabler.h"
 #include "iconpreviewprovider.h"
 
 int main(int argc, char *argv[])
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<FontWeightModel>("harbour.uithemer", 1, 0, "FontWeightModel");
     qmlRegisterType<IconApplier>("harbour.uithemer", 1, 0, "IconApplier");
     qmlRegisterType<FontApplier>("harbour.uithemer", 1, 0, "FontApplier");
+    qmlRegisterType<DensityEnabler>("harbour.uithemer", 1, 0, "DensityEnabler");
 
     // image://uithemer/preview/<packName>?t=<ts> serves the in-memory icon
     // pack preview built by IconApplier::buildPreview. Engine takes ownership.

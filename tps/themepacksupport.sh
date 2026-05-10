@@ -45,8 +45,6 @@ do
 
  Please enter your choice:
  ----------------------------------
-   (F)ont theme
-   (D)isplay density
    (L)ipstick refresh
    (O)ne-click restore
    (H)elp / UI Themer info
@@ -58,8 +56,6 @@ do
 EOF
     read -n1 -s
     case "$REPLY" in
-    "F"|"f")  $main/font-menu.sh ;;
-    "D"|"d")  $main/ddensity-menu.sh ;;
     "L"|"l")  echo "Refresh the homescreen? y/N? "
 		read -n1 -s choice
 		case "$choice" in 

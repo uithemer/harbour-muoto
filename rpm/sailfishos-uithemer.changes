@@ -1,3 +1,145 @@
+* Sun May 10 2026 2.5.8-1
+- Retired tps/install_dependencies.sh: it was a leftover from the
+  removed graphic-theming / PNG-overwriting icon era (pkcon refresh +
+  force-install all sailfish-content-graphics-default-z*-base and
+  closed-z* packages). Current UI Themer does not touch those paths;
+  the closed-* installs could also fail on community ports. Deleted
+  the script; app.pro ships tps/* wholesale so it drops from the RPM.
+- C++/QML: removed ThemePack::installDependencies() and the
+  dependenciesInstalled() signal from ThemePack. WelcomePage.qml drops
+  the entire Dependencies wizard block (Section, two Labels, install
+  button, "I already installed" switch), the Connections handler that
+  cleared settings.isRunning and published a notification on
+  completion, and the unused vDep property plus BusyState /
+  Notification imports and instances. Donate / Support section
+  unchanged; "Start UI Themer" stays unconditionally enabled.
+- Version bumped to 2.5.8; AboutPage shows UI Themer 2.5.8.
+
+* Sun May 10 2026 2.5.7-1
+- TPS: deleted four dead/quasi-dead artifacts under tps/:
+  device-model (empty placeholder, retired in 2.5.5), size_droid and
+  size_native (empty 0-byte placeholders, never read by anything in the
+  workspace), and ddensity-menu.sh (only consumer was the now-trimmed
+  D branch of themepacksupport.sh). app.pro ships tps/* wholesale so
+  deleting from the workspace removes them from the package.
+- TPS CLI: tps/themepacksupport.sh dropped the (F)ont theme and
+  (D)isplay density menu lines and their F/f + D/d case branches.
+  Both invocations dead-ended into deleted scripts (font-menu.sh was
+  retired in 2.5.0, ddensity-menu.sh in this release), so the trim is
+  cosmetic; the remaining branches (L/O/M/A/H/U/Q) are unchanged.
+- Spec hygiene: %post no longer rm -f's device-model on upgrade. The
+  2.5.5 cleanup has had a release cycle to clear pre-2.5.5 installs;
+  size_droid / size_native get no cleanup either since they were
+  always empty and harmless to leave behind on the rare upgrade.
+- Version bumped to 2.5.7; AboutPage shows UI Themer 2.5.7.
+
+* Sun May 10 2026 2.5.6-1
+- icon_size_launcher: dropped the iconSizeLauncherSeed snapshot key.
+  The "Restore display density" dialog now resets the live
+  /desktop/sailfish/silica/icon_size_launcher key to the vendor default
+  (Option B), matching how DPR is restored. DensityEnabler::ensureEnabled
+  no longer captures or writes a seed; %post drops the legacy seed key
+  via `dconf reset` on upgrade so it does not linger in user dconf.
+- RestoreDDPage gains a second IconTextSwitch "Default icon size"
+  (default checked) so the user can pick DPR-only, icon-size-only, or
+  both. canAccept ORs the two switches.
+- C++: new DensityEnabler::restoreDensity(bool dpr, bool iconSize) slot
+  runs the dconf resets directly as defaultuser under FileLock, emits
+  restored() unconditionally so the QML busy spinner drains. The seed
+  helpers (kIconSizeSeedKey + read/writeDefaultUserDconf) were replaced
+  by a single runDefaultUserDconf(cmd) wrapper.
+- ThemePackModel::restoreDpi(bool, bool) forwards to
+  DensityEnabler::restoreDensity via a one-shot signal connection. No
+  more shell out; QML's onDpiRestored also rebinds cbiz.value so the
+  ComboBox tracks the icon-size reset.
+- Retired the restore shell trio: scripts/restore_dpi.sh,
+  tps/restore_dpr.sh and tps/restore_iz.sh are deleted.
+  ThemePack::restoreIZ (sole consumer of restore_iz.sh) is gone too.
+  tps/ocr.sh and the spec %preun replace the deleted invocations with
+  inline `su - defaultuser -c "dconf reset ..."` lines for DPR and
+  icon size. %pretrans neutralisation list drops restore_dpr.sh /
+  restore_iz.sh (no longer shipped, nothing to neutralise).
+- Version bumped to 2.5.6; AboutPage shows UI Themer 2.5.6.
+
+* Sun May 10 2026 2.5.5-1
+- Device model: dropped the /usr/share/sailfishos-uithemer/device-model
+  file end-to-end. %post no longer seeds it via `ssu mo`; the
+  harbour-themepacksupport -> sailfishos-uithemer migration loop no
+  longer carries it across; %post rm's any stale copy on upgrade.
+- C++/QML: removed ThemePack::readDeviceModel(), Settings.qml's
+  deviceModel switch, and Settings.qml's isXA2 helper (all hung off
+  the device-model file). GuidePage.qml drops the XA2-specific
+  "full restart may be needed" LabelText that depended on isXA2;
+  the generic homescreen-restart hint above it is unchanged.
+- TPS: deleted tps/apply_adpi.sh, tps/restore_adpi.sh, and the
+  surviving tps/enable-dpi.sh (all relied on device-model and on
+  Aliendalvik DPI plumbing that was removed in 2.5.4). Trimmed
+  tps/ddensity-menu.sh down to the device pixel ratio + icon size
+  branches and tps/ocr.sh to the still-meaningful steps (drop the
+  font fontconfig conf inline + restore_dpr + restore_iz + dconf
+  resets). The remaining bash entry points are still expected to
+  go away when TPS is replaced wholesale by C++/QML.
+- Spec hygiene: %pretrans neutralisation list drops restore_adpi.sh
+  (no longer shipped). %preun no longer invokes the deleted
+  restore_adpi.sh.
+- scripts/restore_dpi.sh is now DPR-only: drops the second `adpi`
+  argument and the /opt/alien -> restore_adpi.sh branch, matching
+  ThemePackModel::restoreDpi(bool) which already passes a single
+  flag.
+- Version bumped to 2.5.5; AboutPage shows UI Themer 2.5.5.
+
+* Sun May 10 2026 2.5.4-1
+- Density: dropped the showDensity opt-in. The "Display density" pulley
+  entry on MainPage and the D keyboard shortcut on every page are
+  always available now (previously gated on a dconf bool that had no
+  user-facing toggle anymore). GuidePage's density section is always
+  visible; the XA2 LabelText keeps its hasAndroidSupport && isXA2 gate.
+- Density: dropped the densityEnabled opt-in. Density customizations
+  are always enabled. The user-facing "Enable display density settings"
+  IconTextSwitch on DensityPage is gone, and the inner Grid is no
+  longer gated. Settings.qml drops the densityEnabled property + alias;
+  the legacy /desktop/lipstick/sailfishos-uithemer/densityEnabled key
+  is left in dconf (harmless: nothing reads it anymore).
+- Density: ported tps/enable-dpi.sh to a new C++ class DensityEnabler
+  (src/densityenabler.{h,cpp}). ensureEnabled() is idempotent: it
+  moves /etc/dconf/db/vendor.d/locks/{silica,ui}-configs.txt into
+  /usr/share/sailfishos-uithemer/backup/dlocks/<name>.bk (skipping
+  files already moved), runs `dconf update`, and snapshots
+  defaultuser's /desktop/sailfish/silica/icon_size_launcher into
+  /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed (only
+  when the seed key is empty, never clobbers user-edited values).
+  Serialises on the same FileLock sentinel as IconApplier /
+  FontApplier. Called from DensityPage's Component.onCompleted so
+  the lock-relocation self-heals on app open.
+- Spec: %post mirrors DensityEnabler::ensureEnabled() inline so the
+  bootstrap also runs on package install / upgrade. %preun replaces
+  the disable-dpi.sh call with the inverse inline shell that puts
+  the .bk locks back and refreshes dconf. tps/enable-dpi.sh and
+  tps/disable-dpi.sh are removed from the source tree. The legacy
+  $main/icon-z file produced by enable-dpi.sh is rm'd on upgrade
+  (icon_size_launcher now lives in dconf instead).
+- Spec hygiene: dropped disable-dpi.sh from the harbour-themepacksupport
+  %pretrans neutralisation list (no longer shipped). Dropped the
+  `touch -a droiddpi-current` from %post and droiddpi-current from
+  the harbour-themepacksupport -> sailfishos-uithemer migration loop.
+- Aliendalvik DPI: dropped the entire Android-DPI plumbing from the
+  C++/QML surface. ThemePack loses droidDPI / getDroidDPI() /
+  enableddensity() / disableddensity(); ThemePackModel loses
+  applyADPI() and the adpi argument of restoreDpi(); DensityPage
+  loses the Android DPI Slider Section and the XA2 LabelText;
+  RestoreDDPage loses the "Default Android DPI" IconTextSwitch
+  (canAccept now depends only on Default DPR) and the XA2
+  LabelText. hasAndroidSupport stays since other consumers still
+  rely on it. apply_adpi.sh / restore_adpi.sh remain on disk per
+  the standing "TPS scripts are out of scope" rule and continue to
+  back the legacy themepacksupport CLI; restore_dpi.sh is invoked
+  with a single argument from C++.
+- Note: tps/ocr.sh and tps/ddensity-menu.sh still reference the
+  dropped enable-dpi.sh / disable-dpi.sh paths and write the legacy
+  /desktop/lipstick/sailfishos-uithemer/densityEnabled key; per the
+  standing TPS rule they will silently no-op until they are replaced.
+- Version bumped to 2.5.4; AboutPage shows UI Themer 2.5.4.
+
 * Sun May 10 2026 2.5.3-1
 - Cover: removed the optional "Show active theme" switch from
   Options > Cover. The cover always shows the active icon / font

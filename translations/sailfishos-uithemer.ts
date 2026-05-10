@@ -170,27 +170,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enable display density settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Device pixel ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change the display pixel ratio. To a smaller value corresponds an higher density.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Android DPI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Android DPI value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the Android DPI value. To a smaller value corresponds an higher density.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -203,10 +187,6 @@
     </message>
     <message>
         <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -592,19 +572,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Default Android DPI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Remember to restart the homescreen right after.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -13,6 +13,8 @@ ThemePackModel::ThemePackModel(QObject *parent) : QAbstractListModel(parent)
     // until applied/restored/recovered actually fires.
     QObject::connect(&_fonts, &FontApplier::error,
                      this, [](const QString& m) { qWarning() << "FontApplier error:" << m; });
+    QObject::connect(&_density, &DensityEnabler::error,
+                     this, [](const QString& m) { qWarning() << "DensityEnabler error:" << m; });
 
     this->reloadAll();
 }
@@ -74,14 +76,16 @@ void ThemePackModel::restoreTheme(bool font)
     _fonts.restoreFonts();
 }
 
-void ThemePackModel::applyADPI(const QString& adpi)
+void ThemePackModel::restoreDpi(bool dpr, bool iconSize)
 {
-    Spawner::executeSync("/usr/share/sailfishos-uithemer/apply_adpi.sh " + adpi);
-}
-
-void ThemePackModel::restoreDpi(bool dpr, bool adpi)
-{
-    Spawner::execute("/usr/share/sailfishos-uithemer/restore_dpi.sh", SPAWN_ARGS(QString::number(dpr) << QString::number(adpi)), [this]() { emit dpiRestored(); });
+    QMetaObject::Connection* conn = new QMetaObject::Connection;
+    *conn = QObject::connect(&_density, &DensityEnabler::restored, this,
+                             [this, conn]() {
+        emit dpiRestored();
+        QObject::disconnect(*conn);
+        delete conn;
+    });
+    _density.restoreDensity(dpr, iconSize);
 }
 
 void ThemePackModel::ocr() 

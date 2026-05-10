@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QStringList>
 #include "fontapplier.h"
+#include "densityenabler.h"
 
 class ThemePackModel : public QAbstractListModel
 {
@@ -24,8 +25,7 @@ class ThemePackModel : public QAbstractListModel
         void applyTheme(int index, bool font, const QString& weight);
         void restoreTheme(bool font);
         void uninstall(int index);
-        void applyADPI(const QString& adpi);
-        void restoreDpi(bool dpr, bool adpi);
+        void restoreDpi(bool dpr, bool iconSize);
         void ocr();
         void recoveryTheme(bool font);
 
@@ -57,6 +57,7 @@ class ThemePackModel : public QAbstractListModel
         QStringList _packlist;
         QStringList _packnames;
         FontApplier _fonts;
+        DensityEnabler _density;
 };
 
 #endif // THEMEPACKMODEL_H

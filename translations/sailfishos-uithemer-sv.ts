@@ -171,28 +171,12 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Skärmupplösning</translation>
     </message>
     <message>
-        <source>Enable display density settings</source>
-        <translation>Aktivera skärmupplösningsinställningar</translation>
-    </message>
-    <message>
         <source>Device pixel ratio</source>
         <translation>Enhetens bildpunktsförhållande</translation>
     </message>
     <message>
         <source>Change the display pixel ratio. To a smaller value corresponds an higher density.</source>
         <translation>Ändra skärmens bildpunktsförhållande. Ett lägre värde motsvarar en högre täthet.</translation>
-    </message>
-    <message>
-        <source>Android DPI</source>
-        <translation>Android DPI</translation>
-    </message>
-    <message>
-        <source>Android DPI value</source>
-        <translation>Android DPI-värde</translation>
-    </message>
-    <message>
-        <source>Change the Android DPI value. To a smaller value corresponds an higher density.</source>
-        <translation>Ändra Android DPI-värde. Ett lägre värde motsvarar en högre täthet.</translation>
     </message>
     <message>
         <source>Icon size</source>
@@ -205,10 +189,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
     <message>
         <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
         <translation>Kom ihåg att starta om hemskärmen (från &lt;i&gt;Alternativ&lt;/i&gt;-menyn), direkt efter att du har ändrat inställningarna på denna sida.</translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
-        <translation>Om du har en Xperia XA2, kanske du måste starta om telefonen för att tillämpa Android-inställningarna.</translation>
     </message>
 </context>
 <context>
@@ -593,20 +573,12 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Enhetens normala bildpunktsförhållande</translation>
     </message>
     <message>
-        <source>Default Android DPI</source>
-        <translation>Standard Android-DPI</translation>
-    </message>
-    <message>
         <source>Remember to restart the homescreen right after.</source>
         <translation>Kom ihåg att starta om hemskärmen direkt efteråt.</translation>
     </message>
     <message>
         <source>Restart homescreen</source>
         <translation>Starta om hemskärmen</translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
-        <translation>Om du har en Xperia XA2, kanske du måste starta om telefonen för att tillämpa Android-inställningarna.</translation>
     </message>
 </context>
 <context>

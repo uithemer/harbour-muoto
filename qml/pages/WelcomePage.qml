@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import harbour.uithemer 1.0
-import org.nemomobile.notifications 1.0
 import "../components"
 
 Page
@@ -9,12 +8,9 @@ Page
     id: welcomepage
     focus: true
 
-    property bool vDep: false
     property bool vDon: false
 
     ThemePack { id: themepack }
-    BusyState { id: busyindicator }
-    Notification { id: notification }
 
     Keys.onPressed: {
         handleKeyPressed(event);
@@ -47,22 +43,6 @@ Page
             event.accepted = true;
         }
 
-    }
-
-    Connections
-    {
-        function notify() {
-            settings.isRunning = false;
-            notification.publish();
-        }
-
-        target: themepack
-        onDependenciesInstalled: {
-            vDep = true
-            installdep.enabled = false
-            itsdep.enabled = false
-            notify()
-        }
     }
 
     SilicaFlickable
@@ -125,47 +105,6 @@ Page
             {
                 width: isLandscape ? parent.width/2 : parent.width
 
-            SectionHeader { text: qsTr("Dependencies") }
-
-            LabelText {
-                text: qsTr("UI Themer needs some additional dependencies in order to function properly. Install them now if you haven't already.")
-            }
-
-            LabelText {
-                text: qsTr("It may take a while, do not quit.")
-            }
-
-            LabelSpacer { }
-
-             Button {
-                  id: installdep
-                  anchors.horizontalCenter: parent.horizontalCenter
-                  enabled: true
-                  text: qsTr("Install dependencies")
-                  onClicked: {
-                      settings.isRunning = true;
-                      themepack.installDependencies();
-                  }
-              }
-
-            IconTextSwitch {
-                id: itsdep
-                enabled: true
-                automaticCheck: true
-                text: qsTr("I have already installed the dependencies")
-                checked: false
-
-                onClicked: {
-                    if (itsdep.checked) {
-                        installdep.enabled = false;
-                        vDep = true;
-                    } else {
-                        installdep.enabled = true;
-                        vDep = false;
-                    }
-                }
-            }
-
             SectionHeader { text: qsTr("Support") }
 
             LabelText {
@@ -211,7 +150,6 @@ Page
              Button {
                   id: startuit
                   anchors.horizontalCenter: parent.horizontalCenter
-                  // enabled: vDep && vDon
                   text: qsTr("Start UI Themer")
                   onClicked: {
                       settings.wizardDone = true;

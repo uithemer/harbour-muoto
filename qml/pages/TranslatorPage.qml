@@ -46,7 +46,7 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_D && settings.showDensity === true) {
+        if (event.key === Qt.Key_D) {
             pageStack.replace(Qt.resolvedUrl("DensityPage.qml"));
             event.accepted = true;
         }
