@@ -1,3 +1,30 @@
+* Sun May 10 2026 2.5.5-1
+- Device model: dropped the /usr/share/sailfishos-uithemer/device-model
+  file end-to-end. %post no longer seeds it via `ssu mo`; the
+  harbour-themepacksupport -> sailfishos-uithemer migration loop no
+  longer carries it across; %post rm's any stale copy on upgrade.
+- C++/QML: removed ThemePack::readDeviceModel(), Settings.qml's
+  deviceModel switch, and Settings.qml's isXA2 helper (all hung off
+  the device-model file). GuidePage.qml drops the XA2-specific
+  "full restart may be needed" LabelText that depended on isXA2;
+  the generic homescreen-restart hint above it is unchanged.
+- TPS: deleted tps/apply_adpi.sh, tps/restore_adpi.sh, and the
+  surviving tps/enable-dpi.sh (all relied on device-model and on
+  Aliendalvik DPI plumbing that was removed in 2.5.4). Trimmed
+  tps/ddensity-menu.sh down to the device pixel ratio + icon size
+  branches and tps/ocr.sh to the still-meaningful steps (drop the
+  font fontconfig conf inline + restore_dpr + restore_iz + dconf
+  resets). The remaining bash entry points are still expected to
+  go away when TPS is replaced wholesale by C++/QML.
+- Spec hygiene: %pretrans neutralisation list drops restore_adpi.sh
+  (no longer shipped). %preun no longer invokes the deleted
+  restore_adpi.sh.
+- scripts/restore_dpi.sh is now DPR-only: drops the second `adpi`
+  argument and the /opt/alien -> restore_adpi.sh branch, matching
+  ThemePackModel::restoreDpi(bool) which already passes a single
+  flag.
+- Version bumped to 2.5.5; AboutPage shows UI Themer 2.5.5.
+
 * Sun May 10 2026 2.5.4-1
 - Density: dropped the showDensity opt-in. The "Display density" pulley
   entry on MainPage and the D keyboard shortcut on every page are

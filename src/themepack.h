@@ -13,7 +13,6 @@ class ThemePack : public QObject
         explicit ThemePack(QObject* parent = 0);
 
     public slots:
-        QString readDeviceModel() const;
         bool hasAndroidSupport() const;
         bool hasStoremanInstalled() const;
         QString whoami() const;                         // function to test what user runs app

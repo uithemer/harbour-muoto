@@ -132,10 +132,6 @@ Page
             LabelText {
                 text: qsTr("An homescreen restart may be needed to apply your settings. You can do that from the <i>Options</i> page.")
             }
-            LabelText {
-                visible: themepack.hasAndroidSupport && settings.isXA2
-                text: qsTr("If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.")
-            }
 
             SectionHeader { text: qsTr("One-click restore") }
 

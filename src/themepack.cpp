@@ -9,15 +9,6 @@ ThemePack::ThemePack(QObject* parent): QObject(parent)
 
 }
 
-QString ThemePack::readDeviceModel() const
-{
-    QFile file("/usr/share/sailfishos-uithemer/device-model");
-    file.open(QFile::ReadOnly);
-    QString s = file.readAll().simplified();
-    file.close();
-    return s;
-}
-
 bool ThemePack::hasAndroidSupport() const
 {
     bool res = QFileInfo("/vendor/build.prop").exists() || QFileInfo("/opt/alien/system/build.prop").exists();

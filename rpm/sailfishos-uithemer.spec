@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.5.4
+Version:        2.5.5
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -53,7 +53,7 @@ default theme can always be restored.
 %pretrans -p /bin/sh
 if [ -d /usr/share/harbour-themepacksupport ]; then
     for s in icon-restore.sh \
-             restore_dpr.sh restore_adpi.sh restore_iz.sh disable-autoupdate.sh; do
+             restore_dpr.sh restore_iz.sh disable-autoupdate.sh; do
         f="/usr/share/harbour-themepacksupport/$s"
         if [ -e "$f" ]; then
             printf '#!/bin/sh\nexit 0\n' > "$f" || :
@@ -129,8 +129,6 @@ systemctl enable sailfishos-uithemer-reassert.service
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
-ssu mo 2>/dev/null | sed 's/.*: //' > %{_datadir}/%{name}/device-model || true
-
 # Seed an empty icon backup manifest if one does not exist yet.
 if [ ! -e %{_datadir}/%{name}/icon-backup.json ]; then
     printf '{"version":1,"active_icon_pack":null,"entries":{}}\n' > %{_datadir}/%{name}/icon-backup.json
@@ -153,7 +151,7 @@ if [ -d "$old" ]; then
             mv "$old/$d" "$new/$d" || true
         fi
     done
-    for f in device-model config.cfg; do
+    for f in config.cfg; do
         if [ -e "$old/$f" ] && [ ! -e "$new/$f" ]; then
             mv "$old/$f" "$new/$f" || true
         fi
@@ -209,6 +207,10 @@ fi
 # into a plain file at $main/icon-z. The C++ port stores it in dconf instead.
 rm -f %{_datadir}/%{name}/icon-z
 
+# 2.5.5: device-model file is no longer produced or read. Drop it on upgrade
+# so it does not linger. Settings.qml's deviceModel/isXA2 derivation is gone.
+rm -f %{_datadir}/%{name}/device-model
+
 %preun
 if [ $1 -eq 0 ]; then
     rm -rf /home/defaultuser/.local/share/%{name}
@@ -230,7 +232,6 @@ if [ $1 -eq 0 ]; then
     fi
 
     %{_datadir}/%{name}/restore_dpr.sh || true
-    %{_datadir}/%{name}/restore_adpi.sh || true
     %{_datadir}/%{name}/restore_iz.sh || true
 
     # 2.5.4: enable-dpi.sh / disable-dpi.sh were dropped; the equivalent

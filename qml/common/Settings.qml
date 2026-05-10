@@ -44,20 +44,4 @@ Item
     Component.onCompleted: {
         conf.sync();
     }
-
-    property string deviceModel: switch (themepack.readDeviceModel()) {
-      case "h3113" || "h3123" || "h3133":
-          return "XA2";
-      case "h4113" || "h4133":
-          return "XA2 Dual";
-      case "h3413":
-          return "XA2 Plus";
-      case "h4413" || "h4493":
-          return "XA2 Plus Dual";
-      case "h3213" || "h3223":
-          return "XA2 Ultra";
-      case "h4213" || "h4233":
-          return "XA2 Ultra Dual";
-      }
-    property bool isXA2: (deviceModel === "XA2" || deviceModel === "XA2 Dual" || deviceModel === "XA2 Plus" || deviceModel === "XA2 Plus Dual" || deviceModel === "XA2 Ultra" || deviceModel === "XA2 Ultra Dual") ? true : false
 }
