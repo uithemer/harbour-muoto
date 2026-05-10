@@ -164,12 +164,17 @@ Page
                     dlgrestore.accepted.connect(function() {
                         settings.isRunning = true;
 
+                        // Same ordering rule as the apply path: write dconf
+                        // BEFORE the synchronous restoreTheme call so the
+                        // cover sees activeFontPack="default" by the time
+                        // FontApplier::restored fires inside the call.
                         if(dlgrestore.restoreIcons) {
-                            iconapplier.restoreIcons();
                             settings.deactivateIcon();
+                            iconapplier.restoreIcons();
                         }
 
                         if(dlgrestore.restoreFonts) {
+                            settings.deactivateFont();
                             themepackmodel.restoreTheme(dlgrestore.restoreFonts);
                         } else if(dlgrestore.restoreIcons) {
                             settings.isRunning = false;
@@ -177,9 +182,6 @@ Page
                             if(settings.homeRefresh === true)
                                 themepack.restartHomescreen();
                         }
-
-                        if(dlgrestore.restoreFonts)
-                            settings.deactivateFont();
                     });
                 }
             }
@@ -217,12 +219,19 @@ Page
                 dlgconfirm.accepted.connect(function() {
                     settings.isRunning = true;
 
+                    // Write dconf BEFORE the C++ apply calls. FontApplier is
+                    // synchronous in 2.5.0, so themeApplied (which clears
+                    // settings.isRunning via MainPage.applyDone) fires
+                    // inside applyTheme(...). If activeFontPack were written
+                    // afterwards the cover would re-render once with the
+                    // stale value and leave the font CoverLabel empty.
                     if(dlgconfirm.iconsSelected) {
-                        iconapplier.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
                         settings.activeIconPack = model.packName;
+                        iconapplier.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
                     }
 
                     if(dlgconfirm.fontsSelected) {
+                        settings.activeFontPack = model.packName;
                         themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont)
                     } else if(dlgconfirm.iconsSelected) {
                         // Icons-only: applyIcons is synchronous, finalise here.
@@ -231,9 +240,6 @@ Page
                         if(settings.homeRefresh === true)
                             themepack.restartHomescreen();
                     }
-
-                    if(dlgconfirm.fontsSelected)
-                        settings.activeFontPack = model.packName;
                 });
             }
 

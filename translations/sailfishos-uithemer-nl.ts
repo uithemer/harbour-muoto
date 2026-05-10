@@ -530,14 +530,6 @@
         <translation>Herstelt de standaardpictogrammen, lettertypen en pixeldichtheidsinstellingen voorafgaand aan een systeemupdate, zodat je het niet meer handmatig hoeft te doen.</translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation>Actieve thema tonen</translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation>Toon het huidige thema op de omslag.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Over UI Themer</translation>
     </message>

@@ -530,14 +530,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation type="unfinished"></translation>
     </message>

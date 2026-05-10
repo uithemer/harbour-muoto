@@ -257,15 +257,6 @@ SilicaFlickable
 
             SectionHeader { text: qsTr("Cover") }
 
-            IconTextSwitch {
-                id: itscoveractivetheme
-                automaticCheck: true
-                text: qsTr("Show active theme")
-                description: qsTr("Show the current theme on the cover.")
-                checked: settings.coverActiveTheme
-                onCheckedChanged: settings.coverActiveTheme = checked
-            }
-
             ComboBox {
                 function saveCoverAction(action) {
                     settings.coverAction1 = action;
@@ -327,20 +318,24 @@ SilicaFlickable
                 dlgrecovery.accepted.connect(function() {
                     settings.isRunning = true;
 
+                    // Mirror the ordering rule from MainPage's apply /
+                    // restore callbacks: write dconf BEFORE the synchronous
+                    // recoveryTheme call, otherwise FontApplier::restored
+                    // (which clears settings.isRunning via themeRecovered)
+                    // fires inside the call and the cover re-renders with a
+                    // stale activeFontPack value.
                     if(dlgrecovery.reinstallIcons) {
-                        iconapplier.restoreIcons();
                         settings.deactivateIcon();
+                        iconapplier.restoreIcons();
                     }
 
                     if(dlgrecovery.reinstallFonts) {
+                        settings.deactivateFont();
                         themepackmodel.recoveryTheme(dlgrecovery.reinstallFonts);
                     } else if(dlgrecovery.reinstallIcons) {
                         settings.isRunning = false;
                         notification.publish();
                     }
-
-                    if(dlgrecovery.reinstallFonts)
-                        settings.deactivateFont();
                 });
             }
         }

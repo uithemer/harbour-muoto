@@ -530,14 +530,6 @@
         <translation>Stellt die Standardicons, Schriftarten, und Pixeldichte wieder her bevor ein Systemupdate durchgeführt wird, so dass du es nicht manuell machen musst.</translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation>Zeige aktives Theme</translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation>Zeige das aktuelle Theme auf dem Cover.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Über UI Themer </translation>
     </message>

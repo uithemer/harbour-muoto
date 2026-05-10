@@ -531,14 +531,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Återställer standardikoner, teckensnitt och skärmupplösning innan en systemuppdatering utförs, så att du slipper göra det manuellt.</translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation>Visa aktivt tema</translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation>Visa nuvarande tema på programminiatyren.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Om UI Themer</translation>
     </message>

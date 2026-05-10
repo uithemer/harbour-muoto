@@ -530,14 +530,6 @@
         <translation>Восстановите значки по умолчанию, шрифты и настройки плотности отображения перед обновлением системы, поэтому вам не нужно делать это вручную.</translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation>Показать активную тему</translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation>Показать текущую тему на обложке.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>О программе UI Themer</translation>
     </message>

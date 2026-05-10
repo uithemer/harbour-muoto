@@ -530,14 +530,6 @@
         <translation>Ripristina icone, font e impostazioni di densità del display prima di un aggiornamento di sistema, così da non doverlo fare manualmente.</translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation>Mostra tema attivo</translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation>Mostra il tema corrente sulla cover.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Info su UI Themer</translation>
     </message>

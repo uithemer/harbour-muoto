@@ -530,14 +530,6 @@
         <translation>Vklop možnosti poskrbi za samodejno obnovitev privzetih ikon, pisav in vrednost gostote zaslona pred vsako nadgradnjo sistema.</translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation>Prikaži aktivno temo</translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation>Prikaži trenutno temo na naslovnici</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>O programu UI Themer</translation>
     </message>

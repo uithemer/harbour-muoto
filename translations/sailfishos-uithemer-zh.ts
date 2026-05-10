@@ -530,14 +530,6 @@
         <translation>在执行系统更新之前，恢复默认图标、字体和显示密度设置，你不必手动执行。</translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation>显示启用主题</translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation>在软件封面显示当前使用的主题</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>关于 UI Themer</translation>
     </message>

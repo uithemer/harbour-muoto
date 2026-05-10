@@ -530,14 +530,6 @@
         <translation>Επαναφορά των προεπιλεγμένων εικονιδίων, γραμματοσειρών και ρυθμίσεων πυκνότητας προβολής πριν την εκτέλεση ενημέρωσης συστήματος, οπότε δεν χρειάζεται να το κάνετε χειροκίνητα.</translation>
     </message>
     <message>
-        <source>Show active theme</source>
-        <translation>Εμφάνιση ενεργού θέματος</translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation>Εμφάνιση τρέχοντως θέματος στο κάλυμα.</translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation>Σχετικά με το UI Themer</translation>
     </message>

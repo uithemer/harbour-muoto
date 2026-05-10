@@ -1,3 +1,48 @@
+* Sun May 10 2026 2.5.3-1
+- Cover: removed the optional "Show active theme" switch from
+  Options > Cover. The cover always shows the active icon / font
+  labels now; per-row visibility is still tied to activeIconPack /
+  activeFontPack not being default, so no rows appear when no theme
+  is applied. Drops one indirection that hid the labels behind a
+  dconf opt-in.
+- Settings: dropped the coverActiveTheme dconf alias from
+  qml/common/Settings.qml. The legacy key under
+  /desktop/lipstick/sailfishos-uithemer/coverActiveTheme is left in
+  the dconf db (harmless: nothing reads it anymore).
+- Version bumped to 2.5.3; AboutPage shows UI Themer 2.5.3.
+
+* Sun May 10 2026 2.5.2-1
+- Cover: fix regression from 2.5.1 where icon and font active-theme rows
+  disappeared entirely. Rows were gated on a non-empty
+  readThemePackName(...) result; when /usr/share/harbour-themepack-<id>/package
+  is missing or empty, that call returns "" and hid the whole CoverLabel
+  (glyph + text). Visibility is again tied only to activeIconPack /
+  activeFontPack not being default; the label prefers readThemePackName
+  and falls back to a readable bare pack id (hyphens to spaces). Added
+  shareDirPackId() so dconf values that already include the
+  harbour-themepack- prefix are not doubled when opening package.
+- Version bumped to 2.5.2; AboutPage shows UI Themer 2.5.2.
+
+* Sun May 10 2026 2.5.1-1
+- Cover: fix font CoverLabel being empty after applying / restoring /
+  recovering a font theme. 2.5.0 made FontApplier synchronous, so the
+  themeApplied / themeRestored / themeRecovered signals now fire
+  inside the corresponding ThemePackModel call and clear
+  settings.isRunning before the QML callback wrote settings.activeFontPack
+  (or called settings.deactivateFont()). The cover therefore re-rendered
+  the labels Column with a stale activeFontPack value. Reordered the
+  dconf writes in qml/pages/MainPage.qml (apply + restore callbacks) and
+  qml/pages/OptionsPage.qml (recovery callback) so they precede the
+  C++ call. settings.activeIconPack / deactivateIcon() were reordered the
+  same way for symmetry (icons apply is sync but does not clear
+  isRunning, so the previous order was harmless there).
+- Cover: tightened CoverPage.qml so the icon and font CoverLabel rows
+  hide entirely when the resolved pack display name is empty, instead
+  of showing a blank row with just the icon (covers the edge case
+  where activeIconPack/activeFontPack is undefined or the pack's
+  /usr/share/harbour-themepack-<pack>/package file is missing).
+- Version bumped to 2.5.1; AboutPage label updated.
+
 * Sun May 10 2026 2.5.0-1
 - Font theming reimplemented in C++/QML on top of fontconfig:
   - New FontApplier class (src/fontapplier.{h,cpp}) writes a single

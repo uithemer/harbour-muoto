@@ -6,6 +6,36 @@ import "../components"
 
 CoverBackground
 {
+    id: coverRoot
+
+    // Normalise /usr/share/<dir>/package lookup: accept bare pack ids
+    // (what dconf stores) or full harbour-themepack-* dir names so we
+    // never double-prefix when calling readThemePackName.
+    function shareDirPackId(packId) {
+        if (!packId || packId === "" || packId === "default")
+            return "";
+        var pref = "harbour-themepack-";
+        if (packId.indexOf(pref) === 0)
+            return packId;
+        return pref + packId;
+    }
+
+    // Prefer the human name from the theme pack's package file; if that
+    // file is missing or empty, fall back to a readable bare id so the
+    // cover row is never blank while a non-default theme is active.
+    function coverPackLabel(packId) {
+        var dir = shareDirPackId(packId);
+        if (!dir || dir === "")
+            return "";
+        var n = themepackmodel.readThemePackName(dir);
+        if (n && n !== "")
+            return n;
+        var pref = "harbour-themepack-";
+        if (dir.indexOf(pref) === 0)
+            return dir.substring(pref.length).replace(/-/g, " ");
+        return dir;
+    }
+
      Notification { id: notification }
      ThemePackModel {
          function notifyDone() {
@@ -41,7 +71,7 @@ CoverBackground
             if (settings.isRunning)
                0.1
             else
-               (settings.coverActiveTheme) && ((settings.activeIconPack !== 'default') || (settings.activeFontPack !== 'default')) ? 0.1 : 0.3
+               ((settings.activeIconPack !== 'default') || (settings.activeFontPack !== 'default')) ? 0.1 : 0.3
         }
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
@@ -77,20 +107,16 @@ CoverBackground
         anchors.rightMargin: Theme.paddingSmall
         anchors.top: parent.top
         anchors.topMargin: Theme.paddingLarge
-        visible: (settings.coverActiveTheme && !settings.isRunning)
+        visible: !settings.isRunning
         CoverLabel {
-            visible: (settings.activeIconPack !== 'default')
+            visible: (settings.activeIconPack && settings.activeIconPack !== 'default')
             icon: isLightTheme ? "../../images/icon.png" : "../../images/icon-light.png"
-            label: (settings.activeIconPack && settings.activeIconPack !== 'default')
-                   ? themepackmodel.readThemePackName("harbour-themepack-" + settings.activeIconPack)
-                   : ""
+            label: coverRoot.coverPackLabel(settings.activeIconPack)
         }
         CoverLabel {
-            visible: (settings.activeFontPack !== 'default')
+            visible: (settings.activeFontPack && settings.activeFontPack !== 'default')
             icon: isLightTheme ? "../../images/font.png" : "../../images/font-light.png"
-            label: (settings.activeFontPack && settings.activeFontPack !== 'default')
-                   ? themepackmodel.readThemePackName("harbour-themepack-" + settings.activeFontPack)
-                   : ""
+            label: coverRoot.coverPackLabel(settings.activeFontPack)
         }
     }
 
