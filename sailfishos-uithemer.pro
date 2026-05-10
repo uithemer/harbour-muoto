@@ -20,7 +20,12 @@ SOURCES += src/sailfishos-uithemer.cpp \
     src/spawner.cpp \
     src/themepackmodel.cpp \
     src/fontweightmodel.cpp \
-    src/themepack.cpp
+    src/themepack.cpp \
+    src/desktopfile.cpp \
+    src/iconmanifest.cpp \
+    src/imageutil.cpp \
+    src/iconapplier.cpp \
+    src/filelock.cpp
 
 OTHER_FILES += \
     qml/sailfishos-uithemer.qml \
@@ -61,4 +66,9 @@ HEADERS += \
     src/spawner.h \
     src/themepackmodel.h \
     src/fontweightmodel.h \
-    src/themepack.h
+    src/themepack.h \
+    src/desktopfile.h \
+    src/iconmanifest.h \
+    src/imageutil.h \
+    src/iconapplier.h \
+    src/filelock.h

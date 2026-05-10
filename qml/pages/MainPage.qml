@@ -163,10 +163,20 @@ Page
 
                     dlgrestore.accepted.connect(function() {
                         settings.isRunning = true;
-                        themepackmodel.restoreTheme(dlgrestore.restoreIcons, dlgrestore.restoreFonts, dlgrestore.restoreSounds);
 
-                        if(dlgrestore.restoreIcons)
+                        if(dlgrestore.restoreIcons) {
+                            iconapplier.restoreIcons();
                             settings.deactivateIcon();
+                        }
+
+                        if(dlgrestore.restoreFonts || dlgrestore.restoreSounds) {
+                            themepackmodel.restoreTheme(dlgrestore.restoreFonts, dlgrestore.restoreSounds);
+                        } else if(dlgrestore.restoreIcons) {
+                            settings.isRunning = false;
+                            notification.publish();
+                            if(settings.homeRefresh === true)
+                                themepack.restartHomescreen();
+                        }
 
                         if(dlgrestore.restoreFonts)
                             settings.deactivateFont();
@@ -211,10 +221,20 @@ Page
                 dlgconfirm.accepted.connect(function() {
                     settings.isRunning = true;
 
-                    themepackmodel.applyTheme(model.index, dlgconfirm.iconsSelected, dlgconfirm.iconOverlaySelected, dlgconfirm.fontsSelected, dlgconfirm.selectedFont, dlgconfirm.soundsSelected)
-
-                    if(dlgconfirm.iconsSelected)
+                    if(dlgconfirm.iconsSelected) {
+                        iconapplier.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
                         settings.activeIconPack = model.packName;
+                    }
+
+                    if(dlgconfirm.fontsSelected || dlgconfirm.soundsSelected) {
+                        themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont, dlgconfirm.soundsSelected)
+                    } else if(dlgconfirm.iconsSelected) {
+                        // Icons-only: applyIcons is synchronous, finalise here.
+                        settings.isRunning = false;
+                        notification.publish();
+                        if(settings.homeRefresh === true)
+                            themepack.restartHomescreen();
+                    }
 
                     if(dlgconfirm.fontsSelected)
                         settings.activeFontPack = model.packName;
@@ -227,10 +247,16 @@ Page
             onUninstallRequested: {
                 remorseAction(qsTr("Uninstalling %1").arg(model.packName), function() {
                     settings.isRunning = true;
-                    themepackmodel.uninstall(model.index);
 
-                    if(iconInstalled)
+                    if(iconInstalled) {
+                        // Restore originals BEFORE rpm removes the pack, otherwise
+                        // every themed Icon= ends up pointing at a path that is
+                        // about to vanish and Lipstick falls back to placeholders.
+                        iconapplier.restoreIcons();
                         settings.deactivateIcon();
+                    }
+
+                    themepackmodel.uninstall(model.index);
 
                     if(fontInstalled)
                         settings.deactivateFont();

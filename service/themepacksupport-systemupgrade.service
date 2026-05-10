@@ -1,10 +1,11 @@
 [Unit]
-Description=Restore default theme before system update
+Description=Restore default UI Themer icons before system update
 Before=sailfish-upgrade-ui.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/share/sailfishos-uithemer/ocr_su.sh
+ExecStart=/usr/bin/sailfishos-uithemer-reassert --restore
+ExecStartPost=/usr/share/sailfishos-uithemer/ocr_su.sh
 
 [Install]
 WantedBy=system-update.target

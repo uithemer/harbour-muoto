@@ -46,12 +46,13 @@ Dialog
 
     Component.onCompleted: {
         if (hasIcons || hasIconOverlay)
-                themePackModel.iconsPreview(themePackIndex)
+                iconapplier.buildPreview(packName)
     }
 
     Connections {
-        target: themePackModel
-        onIconsPreviewed: {
+        target: iconapplier
+        onPreviewReady: {
+            imgpreview.source = ""
             imgpreview.source = "/usr/share/sailfishos-uithemer/tmp/iconspreview.png"
             busyimg.running = false
         }

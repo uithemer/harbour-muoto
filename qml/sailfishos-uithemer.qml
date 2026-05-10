@@ -20,10 +20,13 @@ ApplicationWindow
 }
 
     ThemePack { id: themepack }
-    property bool vIM: themepack.hasImageMagickInstalled()
+    IconApplier {
+        id: iconapplier
+        Component.onCompleted: enableAutoTheming(true)
+    }
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
 
-    initialPage: (settings.wizardDone && vIM ) ? mainpage : welcomepage
+    initialPage: settings.wizardDone ? mainpage : welcomepage
     cover: switch (app.coverMode) {
            case "confirmDialog":
                return Qt.resolvedUrl("cover/CoverConfirm.qml");

@@ -20,31 +20,24 @@ class ThemePackModel : public QAbstractListModel
         bool hasCapability(int index, const QString& capability) const;
 
     public slots:
-        void applyTheme(int index, bool icon, bool overlay, bool font, const QString& weight, bool sound);
-        void iconsPreview(int index);
-        void restoreTheme(bool icon, bool font, bool sound);
+        void applyTheme(int index, bool font, const QString& weight, bool sound);
+        void restoreTheme(bool font, bool sound);
         void uninstall(int index);
-        void reapplyIcons();
         void applyADPI(const QString& adpi);
         void restoreDpi(bool dpr, bool adpi);
         void ocr();
-        void recoveryTheme(bool icon, bool font, bool sound);
-        void toolsBackupIcons();
-        void toolsRestoreIcons(const QString& filename);
+        void recoveryTheme(bool font, bool sound);
 
     public slots:
         QString packName(int index) const;
         QString packDisplayName(int index) const;
         bool hasIcons(int index) const;
-        bool hasJolla(int index) const;
         bool hasNative(int index) const;
         bool hasApk(int index) const;
         bool hasIconOverlay(int index) const;
         bool hasFont(int index) const;
         bool hasSound(int index) const;
         bool hasFontNonLatin(int index) const;
-        bool hasDynClock(int index) const;
-        bool hasDynCal(int index) const;
         void reloadAll();
 
     public:
@@ -54,14 +47,11 @@ class ThemePackModel : public QAbstractListModel
 
     signals:
         void themeApplied();
-        void iconReapplied();
-        void iconsPreviewed();
         void themeRestored();
         void uninstallCompleted();
         void dpiRestored();
         void ocrRestored();
         void themeRecovered();
-        void toolsApplied();
 
     private:
         QStringList _packlist;

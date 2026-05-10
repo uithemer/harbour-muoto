@@ -1,3 +1,30 @@
+* Sun May 10 2026 2.4.1-1
+- Race fixes:
+  - flock(2) on /usr/share/sailfishos-uithemer/icon-backup.lock serialises
+    GUI apply / restore / reassert / refresh against the helper binary and
+    the systemupgrade.service.
+  - applyIcons commits each manifest entry BEFORE rewriting the .desktop
+    file, so a crash mid-apply no longer poisons original_icon snapshots.
+  - reassertCurrentTheme self-heals: snapshots a drifted Icon= as the new
+    original before re-clobbering, and falls back to original_icon (and
+    drops the entry) when themed_icon vanished.
+- New auto-theming: QFileSystemWatcher on /usr/share/applications and
+  /home/defaultuser/.local/share/applications themes any newly-installed
+  app while a theme is active (no manual re-apply needed).
+- Uninstalling the active icon pack now restores originals first so
+  .desktop files do not end up pointing at a path that is about to vanish.
+
+* Sun May 10 2026 2.4.0-1
+- Icons applied by rewriting Icon= in .desktop files; no more PNG copies.
+- Drop ImageMagick dependency; overlays and previews rendered with Qt.
+- New JSON manifest /usr/share/sailfishos-uithemer/icon-backup.json tracks originals.
+- New helper /usr/bin/sailfishos-uithemer-reassert (--reassert/--restore/--refresh-originals).
+- New oneshot sailfishos-uithemer-reassert.service re-asserts the active theme at boot.
+- systemupgrade.service now restores originals via the helper before system updates.
+- autoupdate.service / timer driven by the helper; legacy run.sh becomes a thin shim.
+- Drop Jolla ambient (z*), DynCal and DynClock support.
+- Drop Tools backup/restore icons UI; covered by the manifest now.
+
 * Sat May 10 2026 2.3.1-1
 - APK launcher icons: /home/defaultuser/.local/share/apkd-bridge/launcherIcon (flat).
 - Remove aliendalvik.service drop-in; APK refresh in autoupdate service/run.sh.

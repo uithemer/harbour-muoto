@@ -14,8 +14,12 @@ CoverBackground
              notification.publish();
          }
          id: themepackmodel
-         onIconReapplied: notifyDone()
          onOcrRestored: notifyDone()
+     }
+     Connections {
+         target: iconapplier
+         onReasserted: { settings.isRunning = false; notification.publish(); }
+         onRestored: { settings.isRunning = false; notification.publish(); }
      }
      ThemePack {
          function notifyDone() {

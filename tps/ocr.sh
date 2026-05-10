@@ -6,7 +6,8 @@ echo "Starting one-click restore"
 
 $main/disable-autoupdate.sh
 
-$main/icon-restore.sh
+/usr/bin/sailfishos-uithemer-reassert --restore || true
+
 $main/graphic-restore.sh
 $main/font-restore.sh
 $main/sound-restore.sh

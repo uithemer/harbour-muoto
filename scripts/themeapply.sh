@@ -1,11 +1,9 @@
 #!/bin/bash
 
 theme=$1
-icon=$2
-overlay=$3
-font=$4
-weight=$5
-sound=$6
+font=$2
+weight=$3
+sound=$4
 main=/usr/share/sailfishos-uithemer
 source $main/config.shlib
 
@@ -30,19 +28,6 @@ function font-changer {
         fi
     fi
 }
-
-if [ "$icon" = 1 ]; then
-    echo "applying icons" $theme
-    $main/icon-restore.sh
-    $main/icon-backup.sh
-    $main/icon-run.sh $theme
-    config_write iconoverlay 0
-    if [ "$overlay" = 1 ]; then
-        echo "applying overlay" $theme
-        $main/icon-overlay.sh $theme
-	config_write iconoverlay 1
-    fi
-fi
 
 if [ "$font" = 1 ]; then
     echo "applying font" $theme $weight

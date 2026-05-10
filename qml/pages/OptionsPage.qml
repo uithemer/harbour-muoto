@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import Sailfish.Pickers 1.0
 import harbour.uithemer 1.0
 import org.nemomobile.notifications 1.0
 import "../components"
@@ -15,8 +14,6 @@ Page
     RemorsePopup { id: remorsepopup }
     BusyState { id: busyindicator }
     Notification { id: notification }
-    property string selectedBackupFile
-    property string selectedBackupFilePath
 
     Keys.onPressed: {
         handleKeyPressed(event);
@@ -129,7 +126,6 @@ SilicaFlickable
                     } else
                         console.log("no homescreen restart");
                 }
-                onToolsApplied: applyDone()
             }
 
     PullDownMenu
@@ -376,72 +372,24 @@ SilicaFlickable
                 var dlgrecovery = pageStack.push("RecoveryPage.qml", { "settings": settings });
                 dlgrecovery.accepted.connect(function() {
                     settings.isRunning = true;
-                    themepackmodel.recoveryTheme(dlgrecovery.reinstallIcons, dlgrecovery.reinstallFonts, dlgrecovery.reinstallSounds);
 
-                    if(dlgrecovery.reinstallIcons)
+                    if(dlgrecovery.reinstallIcons) {
+                        iconapplier.restoreIcons();
                         settings.deactivateIcon();
+                    }
+
+                    if(dlgrecovery.reinstallFonts || dlgrecovery.reinstallSounds) {
+                        themepackmodel.recoveryTheme(dlgrecovery.reinstallFonts, dlgrecovery.reinstallSounds);
+                    } else if(dlgrecovery.reinstallIcons) {
+                        settings.isRunning = false;
+                        notification.publish();
+                    }
 
                     if(dlgrecovery.reinstallFonts)
                         settings.deactivateFont();
 
                     if(dlgrecovery.reinstallSounds)
                         settings.deactivateSound();
-                });
-            }
-        }
-
-        SectionHeader { visible: settings.guimode === 2; text: qsTr("Backup icons") }
-
-        LabelText {
-            visible: settings.guimode === 2
-            text: qsTr("From here you can backup all the default icons into a compressed archive. The archive will be saved into <i>/home/nemo/</i>.")
-        }
-
-        LabelSpacer { }
-
-        Button {
-            visible: settings.guimode === 2
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: qsTr("Backup")
-            onClicked: {
-                remorsepopup.execute(qsTr("Backuping"), function() {
-                    settings.isRunning = true;
-                    themepackmodel.toolsBackupIcons();
-                });
-            }
-        }
-
-        SectionHeader { visible: settings.guimode === 2; text: qsTr("Restore icons") }
-
-        ValueButton {
-            visible: settings.guimode === 2
-            label: qsTr("File")
-            description: qsTr("Select and restore an archive previously saved via UI Themer. You will still need to perform a <i>Restore theme</i> from the <i>Themes</i> page in order to restore the icons in your system.")
-            value: selectedBackupFile ? selectedBackupFile : qsTr("None")
-            onClicked: pageStack.push(backupFilePickerPage)
-        }
-
-        Component {
-            id: backupFilePickerPage
-            FilePickerPage {
-                nameFilters: [ '*tar.gz' ]
-                title: qsTr("Select backup")
-                onSelectedContentPropertiesChanged: {
-                    optionspage.selectedBackupFile = selectedContentProperties.fileName
-                    optionspage.selectedBackupFilePath = selectedContentProperties.filePath
-                }
-            }
-        }
-
-        Button {
-            visible: settings.guimode === 2
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: qsTr("Restore")
-            enabled: selectedBackupFile ? true : false
-            onClicked: {
-                remorsepopup.execute(qsTr("Restoring backup"), function() {
-                    settings.isRunning = true;
-                    themepackmodel.toolsRestoreIcons(optionspage.selectedBackupFilePath);
                 });
             }
         }

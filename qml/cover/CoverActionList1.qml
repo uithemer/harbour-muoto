@@ -17,7 +17,7 @@ CoverActionList {
             settings.isRunning = true
             switch (settings.coverAction1) {
             case 0:
-                return themepackmodel.reapplyIcons();
+                return iconapplier.reassertCurrentTheme();
             case 1:
                 return themepack.restartHomescreen();
             case 2:

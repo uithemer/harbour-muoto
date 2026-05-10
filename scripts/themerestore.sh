@@ -1,16 +1,9 @@
 #!/bin/bash
 
-icons=$1
-fonts=$2
-sounds=$3
+fonts=$1
+sounds=$2
 
 main=/usr/share/sailfishos-uithemer
-
-if [ "$icons" = 1 ]; then
-    echo "restoring icons"
-    $main/icon-restore.sh
-    touch /usr/share/applications/*.desktop
-fi
 
 if [ "$fonts" = 1 ]; then
     echo "restoring fonts"

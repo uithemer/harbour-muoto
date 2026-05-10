@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.3.1
+Version:        2.4.1
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -22,13 +22,14 @@ URL:            https://github.com/uithemer/sailfishos-uithemer
 Source0:        %{name}-%{version}.tar.bz2
 Source100:      sailfishos-uithemer.yaml
 
-Requires:       sailfish-version >= 2.1.4, rsync
+Requires:       sailfish-version >= 2.1.4
 Obsoletes:      harbour-themepacksupport < 0.8.14
 Provides:       harbour-themepacksupport = 0.8.14
 Conflicts:      harbour-iconpacksupport
 
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Gui)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
@@ -36,6 +37,9 @@ BuildRequires:  desktop-file-utils
 %description
 Enables customization of icons, fonts, sounds and pixel density in Sailfish OS.
 Includes the former Theme pack support engine and CLI (themepacksupport).
+Icons are applied by rewriting the Icon= entries in .desktop files (no PNG
+replacement). Original Icon= values are tracked in a JSON manifest so the
+default theme can always be restored.
 
 
 %prep
@@ -56,6 +60,11 @@ if [ -d /usr/share/harbour-themepacksupport ]; then
         fi
     done
 fi
+# Same for the previous sailfishos-uithemer (<= 2.3.x) which still shipped icon-restore.sh.
+old=/usr/share/sailfishos-uithemer/icon-restore.sh
+if [ -e "$old" ]; then
+    printf '#!/bin/sh\nexit 0\n' > "$old" || :
+fi
 
 %build
 # >> build pre
@@ -64,6 +73,11 @@ fi
 %qtc_qmake5
 
 %qtc_make %{?_smp_mflags}
+
+# Build the headless reassert helper from its sibling .pro in a separate
+# subdirectory to keep Makefiles independent.
+mkdir -p _helper
+( cd _helper && qmake5 ../sailfishos-uithemer-reassert.pro && make %{?_smp_mflags} )
 
 # >> build post
 # << build post
@@ -74,6 +88,8 @@ rm -rf %{buildroot}
 # << install pre
 %qmake5_install
 
+( cd _helper && make INSTALL_ROOT=%{buildroot} install )
+
 # >> install post
 # << install post
 
@@ -82,8 +98,9 @@ desktop-file-install --delete-original       \
    %{buildroot}%{_datadir}/applications/*.desktop
 
 %files
-%defattr(4755,root,root,-)
-%{_bindir}
+%defattr(-,root,root,-)
+%attr(4755,root,root) %{_bindir}/%{name}
+%attr(4755,root,root) %{_bindir}/sailfishos-uithemer-reassert
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
@@ -96,22 +113,28 @@ chmod +x %{_datadir}/%{name}/*.sh
 chmod +x %{_datadir}/%{name}/service/*.sh
 mkdir -p %{_datadir}/%{name}/backup
 mkdir -p %{_datadir}/%{name}/tmp
-mkdir -p /home/nemo/.themepack
+
 mv -f %{_datadir}/%{name}/service/themepacksupport-systemupgrade.service /lib/systemd/system/
 mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.service /etc/systemd/system/
 mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.timer /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-reassert.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable themepacksupport-systemupgrade.service
+systemctl enable sailfishos-uithemer-reassert.service
 
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
-touch -a %{_datadir}/%{name}/icon-current
 touch -a %{_datadir}/%{name}/font-current
 touch -a %{_datadir}/%{name}/sound-current
 touch -a %{_datadir}/%{name}/graphic-current
 touch -a %{_datadir}/%{name}/droiddpi-current
 ssu mo 2>/dev/null | sed 's/.*: //' > %{_datadir}/%{name}/device-model || true
+
+# Seed an empty icon backup manifest if one does not exist yet.
+if [ ! -e %{_datadir}/%{name}/icon-backup.json ]; then
+    printf '{"version":1,"active_icon_pack":null,"entries":{}}\n' > %{_datadir}/%{name}/icon-backup.json
+fi
 
 mv -f %{_datadir}/%{name}/sailfishos-uithemer.txt /etc/dconf/db/vendor.d/
 dconf update
@@ -126,22 +149,30 @@ if [ -d "$old" ]; then
             mv "$old/$d" "$new/$d" || true
         fi
     done
-    for f in icon-current font-current sound-current graphic-current droiddpi-current device-model config.cfg; do
+    for f in font-current sound-current graphic-current droiddpi-current device-model config.cfg; do
         if [ -e "$old/$f" ] && [ ! -e "$new/$f" ]; then
             mv "$old/$f" "$new/$f" || true
         fi
     done
 fi
 
+# 2.3.x left an icon-current pointer file behind; it is no longer used.
+rm -f %{_datadir}/%{name}/icon-current
+
 %preun
 if [ $1 -eq 0 ]; then
     rm -rf /home/defaultuser/.local/share/%{name}
+    rm -rf /home/defaultuser/.cache/%{name}
     rm -f /etc/dconf/db/vendor.d/%{name}.txt
     dconf update
 
     systemctl disable themepacksupport-systemupgrade.service || true
+    systemctl disable sailfishos-uithemer-reassert.service || true
     %{_datadir}/%{name}/disable-autoupdate.sh || true
-    %{_datadir}/%{name}/icon-restore.sh || true
+
+    # Restore original Icon= for every themed .desktop file via the helper.
+    /usr/bin/sailfishos-uithemer-reassert --restore || true
+
     %{_datadir}/%{name}/graphic-restore.sh || true
     %{_datadir}/%{name}/font-restore.sh || true
     %{_datadir}/%{name}/sound-restore.sh || true
@@ -157,6 +188,6 @@ if [ $1 -eq 0 ]; then
     rm -f /lib/systemd/system/themepacksupport-systemupgrade.service
     rm -f /etc/systemd/system/themepacksupport-autoupdate.timer
     rm -f /etc/systemd/system/themepacksupport-autoupdate.service
+    rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
     systemctl daemon-reload
-    rm -rf /home/nemo/.themepack
 fi

@@ -15,6 +15,7 @@
 #include "themepack.h"
 #include "themepackmodel.h"
 #include "fontweightmodel.h"
+#include "iconapplier.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ThemePack>("harbour.uithemer", 1, 0, "ThemePack");
     qmlRegisterType<ThemePackModel>("harbour.uithemer", 1, 0, "ThemePackModel");
     qmlRegisterType<FontWeightModel>("harbour.uithemer", 1, 0, "FontWeightModel");
+    qmlRegisterType<IconApplier>("harbour.uithemer", 1, 0, "IconApplier");
 
     view->setSource(SailfishApp::pathTo(qml));
     view->show();

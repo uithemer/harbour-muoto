@@ -45,14 +45,12 @@ do
 
  Please enter your choice:
  ----------------------------------
-   (I)con theme
    (F)ont theme
    (G)raphic theme
    (S)ound theme
    (D)isplay density
    (L)ipstick refresh
    (O)ne-click restore
-   (T)ools
    (H)elp / UI Themer info
    (U)ninstall themes
    (M)anual
@@ -62,12 +60,10 @@ do
 EOF
     read -n1 -s
     case "$REPLY" in
-    "I"|"i")  $main/icon-menu.sh ;;
     "G"|"g")  $main/graphic-menu.sh ;;
     "F"|"f")  $main/font-menu.sh ;;
     "S"|"s")  $main/sound-menu.sh ;;
     "D"|"d")  $main/ddensity-menu.sh ;;
-    "T"|"t")  $main/tools-menu.sh ;;
     "L"|"l")  echo "Refresh the homescreen? y/N? "
 		read -n1 -s choice
 		case "$choice" in 

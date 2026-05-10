@@ -7,109 +7,109 @@ nav_order: 1
 
 # Icon pack guidelines
 
-Here you'll find info on how to create icons compatible with Theme pack support.
+How to create icons compatible with UI Themer.
 
-## Icon paths in Sailfish OS
+## How icons are applied
 
-Icons are located in three places:
-* `/usr/share/themes/sailfish-default/meegotouch` for Jolla stock icons.
-* `/usr/share/icons/hicolor` for native icons.
-* `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/` for Android app launcher icons (flat directory: one PNG per app, typically named like `<package>.png`; modern Sailfish OS no longer mirrors APK icons under `/var/lib/apkd` size subfolders).
+Starting from UI Themer 2.4, icons are applied by **rewriting the `Icon=` entry
+inside `.desktop` files** (no PNG copies). UI Themer scans:
 
-## Create your icons
+* `/usr/share/applications/*.desktop` for native apps.
+* `/home/defaultuser/.local/share/applications/apkd_launcher_*.desktop` for
+  Android launcher entries.
 
-1. Create icons with the image editor of your choice. 
-2. Icons go in `jolla` if they are Jolla stock icons, `native` if they are 3rd party icons or `apk` if they are Android apps icons. Size and place them accordingly with the folder, so icons 86x86px will go in `86x86/apps`; for Jolla stock icons, 86x86px in `z1.0/icons`, 129x129px in `z1.5/icons` and 172x172px in `z2.0/icons`; Android ones in the theme pack still use `apk/192x192/`, `apk/128x128/`, and `apk/86x86/` — prefer **`apk/192x192/`** when possible, since apkd-bridge does not downscale to smaller buckets; smaller sizes remain for backward compatibility and are only used when `192x192` is missing in the theme.
+For each `.desktop` whose name (or, for APK entries, whose `Icon=` value) matches
+a PNG inside the theme pack, UI Themer:
 
-### Jolla Ambient
+1. Records the original `Icon=` value in
+   `/usr/share/sailfishos-uithemer/icon-backup.json`.
+2. Replaces the `Icon=` line with the absolute path of the matching PNG inside
+   the theme pack (no copies, no overwrites of system files).
 
-Theme pack support also enables theming Jolla Ambient icons.
+A boot-time oneshot service (`sailfishos-uithemer-reassert.service`)
+re-asserts the active theme, so package updates that overwrite a `.desktop`
+file are transparently re-themed at the next boot. A pre-system-update service
+(`themepacksupport-systemupgrade.service`) restores all `Icon=` entries to
+their originals before the upgrade runs, so RPM never sees modified files.
 
-They are a set of icons displayed in applications that use default components, so theming Jolla Ambient would have effect on all native apps.
+> Jolla ambient icons (`jolla/z1.0`, `z1.5`, `z2.0` ...), `dyncal/` and
+> `dynclock/` directories shipped by older themes are **ignored**: they are
+> still allowed inside the theme pack but no longer applied. Themes can drop
+> them safely.
 
-As for Jolla stock apps, they are stored in `/usr/share/themes/sailfish-default/meegotouch`, conveniently divided into:
+## Theme pack layout
 
-* *graphic-* general icons, from regular controls (like busy indicators, pulley menu handles and poweroff/lock icons) to stock apps graphics (banners, cover graphics and weather icons).
-* *graphic-service-*, *icon-m-service-*, *icon-s-service-*: icons for account settings.
-* *icon-camera-*: icons used in the camera app (focus, flash, etc).
-* *icon-cover-*: icons used in cover actions (pause, play, new message).
-* *icon-direction-*: icons used in Jolla Maps app.
-* *icon-l-*, *icon-m-*, *icon-s-*: general-purpose icons, used throughout the OS.
-* *icon-launcher-*: apart from Jolla stock app icons, there are the canvas for folder icons.
-* *icon-lock-*: notification icon showed in the lockscreen.
-* *icon-lock-emergency-call*/*icon-lockscreen-emergency-call*: for the emergency call button in numeric pad.
-* *icon-status-*/*icon-system-*: icons showed in the status bar (airplane mode, signal, bluetooth, alarm, gps, etc).
+Inside `/usr/share/harbour-themepack-<name>/` UI Themer looks for:
 
-#### z1.0
+```
+native/
+  256x256/apps/<base>.png
+  172x172/apps/<base>.png
+  128x128/apps/<base>.png
+  108x108/apps/<base>.png
+   86x86/apps/<base>.png
 
-Jolla Ambient icons placed in `z1.0/icons` will be sized:
+apk/
+  192x192/<launcher_id>.png
+  128x128/<launcher_id>.png
+   86x86/<launcher_id>.png
 
-* *graphic-* general icon of various dimensions.
-* *graphic-service-*: 135x135px. Other sizes: *icon-m-service-* (64x64px) and *icon-s-service-* (32x32px).
-* *icon-camera-*: mostly 48x48px, except for the shutter icon, 64x64px.
-* *icon-cover-*: 32x32px.
-* *icon-direction-*: 128x128px.
-* *icon-l-*: 96x96px. The same icons are available also as *icon-m-* (64x64px, except *icon-m-incoming-call* and *icon-m-missed-call*, which are 42x42px) and *icon-s-* (32x32px).
-* *icon-launcher-*: 86x86px.
-* *icon-lock-* 32x32px.
-* *icon-lock-emergency-call*/*icon-lockscreen-emergency-call*: 64x64px.
-* *icon-status-*/*icon-system-*: 24x24px.
+overlay/
+  *.png    # one or more 512x512 overlay base images (optional)
+```
 
-#### z1.5
+Where:
 
-Jolla Ambient icons placed in `z1.5/icons` will be sized:
+* `<base>` is the basename of a system `.desktop` file (e.g.
+  `harbour-storeman.desktop` -> `harbour-storeman.png`).
+* `<launcher_id>` is the literal value of `Icon=` inside an APK
+  `apkd_launcher_*.desktop` file (e.g.
+  `apkd_launcher_org.example.bar.png`).
 
-* *graphic-* general icon of various dimensions. Their size in pixels from `z1.0/icons` is a multiple of 1.5.
-* *graphic-service-*: 203x203px. Other sizes: *icon-m-service-* (96x96px) and *icon-s-service-* (48x48px).
-* *icon-camera-*: mostly 72x72px, except for the shutter icon, 96x96px.
-* *icon-cover-*: 48x48px.
-* *icon-direction-*: 192x192px.
-* *icon-l-*: 144x144px. The same icons are available also as *icon-m-* (96x96px, except *icon-m-incoming-call* and *icon-m-missed-call*, which are 63x63px) and *icon-s-* (48x48px).
-* *icon-launcher-*: 129x129px.
-* *icon-lock-* 48x48px.
-* *icon-lock-emergency-call*/*icon-lockscreen-emergency-call*: 96x96px.
-* *icon-status-*/*icon-system-*: 36x36px.
+For each matched app UI Themer picks the **largest** size present and points
+`Icon=` at that absolute path. Smaller buckets are still useful to support
+displays that pick a smaller icon natively.
 
-#### z2.0
-
-Jolla Ambient icons placed in `z1.0/icons` will be sized:
-
-* *graphic-* general icon of various dimensions. Their size in pixels from `z1.0/icons` is a multiple of 2.
-* *graphic-service-*: 270x270px. Other sizes: *icon-m-service-* (128x128px) and *icon-s-service-* (64x64px).
-* *icon-camera-*: mostly 96x96px, except for the shutter icon, 128x128px.
-* *icon-cover-*: 64x64px.
-* *icon-direction-*: 256x256px.
-* *icon-l-*: 192x192px. The same icons are available also as *icon-m-* (128x128px, except *icon-m-incoming-call* and *icon-m-missed-call*, which are 84x84px) and *icon-s-* (48x48px).
-* *icon-launcher-*: 172x172px.
-* *icon-lock-* 64x64px.
-* *icon-lock-emergency-call*/*icon-lockscreen-emergency-call*: 128x128px.
-* *icon-status-*/*icon-system-*: 48x48px.
-
-#### References
-
-* Additional info are available in the [Sailfish Documentation](https://sailfishos.org/develop/docs/jolla-ambient/). 
-* Some nice alternative icon sets are available [here](http://www.flaticon.com/).
-
-### DynCal
-
-[DynCal](https://github.com/fravaccaro/harbour-dyncal)-skinning support built-in. To add it, place your icons in the `dyncal/256x256` folder, renaming icons as `dd.png` where `dd` is the day (from 01 to 31) or as `mmdd.png` where `mm` is the month for holiday icons.
-
-The theme pack support will check automatically if DynCal is installed.
-
-### DynClock
-
-[DynClock](https://github.com/fravaccaro/harbour-dynclock)-skinning support is built-in. To add it:
-
-1. Download `bg.png` `hour.png` and `minute.png` from [here](https://github.com/fravaccaro/harbour-dynclock/tree/master/harbour-dynclock/usr/share/harbour-dynclock).
-2. Edit them as you like.
-3. Put them in the `dynclock/256x256` folder.
-
-The theme pack support will check automatically if DynClock is installed.
+For APK icons: prefer **`apk/192x192/`**, since modern apkd-bridge does not
+downscale to smaller buckets; `128x128`/`86x86` remain only as fallbacks when
+`192x192` is missing.
 
 ## Overlays
 
-If your theme sports regular icon shape, you can create an overlay, that can be applied automatically for icons missing from you theme. Create a png sized 512x512px and place it into the 'overlay' folder.
+If your theme ships an `overlay/` folder, UI Themer can use it to fill in apps
+that do not have a dedicated icon in the pack. When the user enables
+"Apply icon overlay" in the confirm dialog, UI Themer:
 
-### Android apps
+1. Picks one random `*.png` from `overlay/` as the base.
+2. Scales the original app icon down (122x122 for APK on a 192x192 canvas;
+   60% of the size for native).
+3. Composites them with QPainter and stores the result under
+   `~/.cache/sailfishos-uithemer/overlay/<pack>/`.
+4. Points `Icon=` at that cached PNG.
 
-If you want to apply an overlay to Android apps only, place in the root folder of your theme a file named 'type', containing a single line with the text 'android' (without apices). Note: this works with themes containing ONLY overlays.
+Overlay PNGs should be sized 192x192 for best APK results; native uses up to
+172x172.
+
+### Android-only overlays
+
+If your theme contains **only** overlays (no `apk/` or `native/`), drop a
+file named `type` at the root of the theme pack containing the single line
+`android` to indicate it should only target APK apps. Without this file
+overlay also applies to native apps.
+
+## Restore
+
+`Restore theme` (or the helper `sailfishos-uithemer-reassert --restore`)
+walks `icon-backup.json` and writes each entry's `original_icon` back into
+its `.desktop` file, then drops the entry. Apps whose `.desktop` was deleted
+in the meantime are silently dropped from the manifest.
+
+## Icon file size hints
+
+For reference, common SailfishOS sizes:
+
+| Asset       | Recommended size  |
+| ----------- | ----------------- |
+| Native app  | 172x172 (preferred), down to 86x86 |
+| APK app     | 192x192 (preferred), down to 86x86 |
+| Overlay     | 192x192 base canvas |

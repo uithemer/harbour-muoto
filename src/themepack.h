@@ -17,13 +17,11 @@ class ThemePack : public QObject
         QString readDeviceModel() const;
         bool hasAndroidSupport() const;
         bool hasStoremanInstalled() const;
-        bool hasImageMagickInstalled() const;
         QString whoami() const;                         // function to test what user runs app
         QString getTimer() const;                       // gets hours from timer
         double droidDPI() const;
         qint64 getFileSize(const QString& file);
         void installDependencies();
-        void installImageMagick();
         void restartHomescreen();
         void applyHours(const QString& hours);
         void enableddensity();
@@ -40,7 +38,6 @@ class ThemePack : public QObject
 
     signals:
         void dependenciesInstalled();
-        void imageMagickInstalled();
         void homescreenRestarted();
         void droidDPIChanged();
         void serviceChanged();

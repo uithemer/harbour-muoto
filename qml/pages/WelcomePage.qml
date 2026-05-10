@@ -11,7 +11,6 @@ Page
 
     property bool vDep: false
     property bool vDon: false
-    property bool vIM: themepack.hasImageMagickInstalled()
 
     ThemePack { id: themepack }
     BusyState { id: busyindicator }
@@ -62,12 +61,6 @@ Page
             vDep = true
             installdep.enabled = false
             itsdep.enabled = false
-            notify()
-        }
-
-        onImageMagickInstalled: {
-            vIM = true
-            imagemagick.enabled = false
             notify()
         }
     }
@@ -173,25 +166,6 @@ Page
                 }
             }
 
-            SectionHeader { text: qsTr("ImageMagick") }
-
-            LabelText {
-                text: qsTr("ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.")
-            }
-
-            LabelSpacer { }
-
-            Button {
-                id: imagemagick
-                anchors.horizontalCenter: parent.horizontalCenter
-                enabled: vIM ? false : true
-                text: vIM ? qsTr("ImageMagick installed") : qsTr("Install ImageMagick")
-                onClicked: {
-                    settings.isRunning = true;
-                    themepack.installImageMagick();
-                }
-            }
-
             SectionHeader { text: qsTr("Support") }
 
             LabelText {
@@ -237,7 +211,7 @@ Page
              Button {
                   id: startuit
                   anchors.horizontalCenter: parent.horizontalCenter
-                  // enabled: vDep && vDon && vIM
+                  // enabled: vDep && vDon
                   text: qsTr("Start UI Themer")
                   onClicked: {
                       settings.wizardDone = true;
