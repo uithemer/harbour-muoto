@@ -53,12 +53,6 @@ void ThemePack::installDependencies()
     Spawner::execute("/usr/share/sailfishos-uithemer/install_dependencies.sh", [this]() mutable { emit dependenciesInstalled(); });
 }
 
-void ThemePack::restoreIZ()
-{
-    setuid_ex(0);
-    Spawner::executeSync("/usr/share/sailfishos-uithemer/restore_iz.sh");
-}
-
 void ThemePack::enableserviceautoupdate()
 {
     Spawner::execute("/usr/share/sailfishos-uithemer/enable-autoupdate.sh", [this]() { });

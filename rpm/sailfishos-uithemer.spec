@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.5.5
+Version:        2.5.6
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -52,8 +52,7 @@ default theme can always be restored.
 # restore scripts so the user's theme is not reset mid-transaction.
 %pretrans -p /bin/sh
 if [ -d /usr/share/harbour-themepacksupport ]; then
-    for s in icon-restore.sh \
-             restore_dpr.sh restore_iz.sh disable-autoupdate.sh; do
+    for s in icon-restore.sh disable-autoupdate.sh; do
         f="/usr/share/harbour-themepacksupport/$s"
         if [ -e "$f" ]; then
             printf '#!/bin/sh\nexit 0\n' > "$f" || :
@@ -183,10 +182,8 @@ rm -rf %{_datadir}/%{name}/backup/font-nonlatin
 
 # 2.5.4: density customizations are now always enabled. Mirror
 # DensityEnabler::ensureEnabled() at install time so the vendor dconf locks
-# for silica-configs.txt / ui-configs.txt are moved out of the way and the
-# user's current icon_size_launcher is snapshotted. Idempotent: per-file
-# move is skipped when the .bk already exists; the seed key is only written
-# when missing, so user-edited values are never clobbered.
+# for silica-configs.txt / ui-configs.txt are moved out of the way.
+# Idempotent: per-file move is skipped when the .bk already exists.
 mkdir -p %{_datadir}/%{name}/backup/dlocks
 for f in silica-configs.txt ui-configs.txt; do
     src=/etc/dconf/db/vendor.d/locks/$f
@@ -196,16 +193,12 @@ for f in silica-configs.txt ui-configs.txt; do
     fi
 done
 dconf update || :
-seed=$(su - defaultuser -c "dconf read /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed" 2>/dev/null | tr -d '\n')
-if [ -z "$seed" ]; then
-    v=$(su - defaultuser -c "dconf read /desktop/sailfish/silica/icon_size_launcher" 2>/dev/null | tr -d '\n')
-    if [ -n "$v" ]; then
-        su - defaultuser -c "dconf write /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed $v" || :
-    fi
-fi
 # 2.5.4: tps/enable-dpi.sh used to drop the captured icon_size_launcher
-# into a plain file at $main/icon-z. The C++ port stores it in dconf instead.
+# into a plain file at $main/icon-z. The C++ port (2.5.4-2.5.5) stored it
+# in dconf as iconSizeLauncherSeed; 2.5.6 retired the seed entirely (restore
+# now resets icon_size_launcher to vendor default). Drop both leftovers.
 rm -f %{_datadir}/%{name}/icon-z
+su - defaultuser -c "dconf reset /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed" 2>/dev/null || :
 
 # 2.5.5: device-model file is no longer produced or read. Drop it on upgrade
 # so it does not linger. Settings.qml's deviceModel/isXA2 derivation is gone.
@@ -231,8 +224,11 @@ if [ $1 -eq 0 ]; then
         su - defaultuser -c "fc-cache -f" || true
     fi
 
-    %{_datadir}/%{name}/restore_dpr.sh || true
-    %{_datadir}/%{name}/restore_iz.sh || true
+    # 2.5.6: scripts/restore_dpi.sh + tps/restore_dpr.sh + tps/restore_iz.sh
+    # were retired in favour of two inline dconf resets so uninstall still
+    # brings DPR + icon_size_launcher back to the vendor default.
+    su - defaultuser -c "dconf reset /desktop/sailfish/silica/theme_pixel_ratio" || true
+    su - defaultuser -c "dconf reset /desktop/sailfish/silica/icon_size_launcher" || true
 
     # 2.5.4: enable-dpi.sh / disable-dpi.sh were dropped; the equivalent
     # uninstall step (restore vendor dconf locks moved by %post) now runs

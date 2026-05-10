@@ -1,3 +1,31 @@
+* Sun May 10 2026 2.5.6-1
+- icon_size_launcher: dropped the iconSizeLauncherSeed snapshot key.
+  The "Restore display density" dialog now resets the live
+  /desktop/sailfish/silica/icon_size_launcher key to the vendor default
+  (Option B), matching how DPR is restored. DensityEnabler::ensureEnabled
+  no longer captures or writes a seed; %post drops the legacy seed key
+  via `dconf reset` on upgrade so it does not linger in user dconf.
+- RestoreDDPage gains a second IconTextSwitch "Default icon size"
+  (default checked) so the user can pick DPR-only, icon-size-only, or
+  both. canAccept ORs the two switches.
+- C++: new DensityEnabler::restoreDensity(bool dpr, bool iconSize) slot
+  runs the dconf resets directly as defaultuser under FileLock, emits
+  restored() unconditionally so the QML busy spinner drains. The seed
+  helpers (kIconSizeSeedKey + read/writeDefaultUserDconf) were replaced
+  by a single runDefaultUserDconf(cmd) wrapper.
+- ThemePackModel::restoreDpi(bool, bool) forwards to
+  DensityEnabler::restoreDensity via a one-shot signal connection. No
+  more shell out; QML's onDpiRestored also rebinds cbiz.value so the
+  ComboBox tracks the icon-size reset.
+- Retired the restore shell trio: scripts/restore_dpi.sh,
+  tps/restore_dpr.sh and tps/restore_iz.sh are deleted.
+  ThemePack::restoreIZ (sole consumer of restore_iz.sh) is gone too.
+  tps/ocr.sh and the spec %preun replace the deleted invocations with
+  inline `su - defaultuser -c "dconf reset ..."` lines for DPR and
+  icon size. %pretrans neutralisation list drops restore_dpr.sh /
+  restore_iz.sh (no longer shipped, nothing to neutralise).
+- Version bumped to 2.5.6; AboutPage shows UI Themer 2.5.6.
+
 * Sun May 10 2026 2.5.5-1
 - Device model: dropped the /usr/share/sailfishos-uithemer/device-model
   file end-to-end. %post no longer seeds it via `ssu mo`; the

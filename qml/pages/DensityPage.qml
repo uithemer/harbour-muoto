@@ -39,6 +39,7 @@ Page
                 onDpiRestored: {
                     silica.sync();
                     sldpr.value = silica.theme_pixel_ratio;
+                    cbiz.value = silica.icon_size_launcher;
                     applyDone()
                 }
             }
@@ -152,7 +153,7 @@ Page
 
                     dlgrestore.accepted.connect(function() {
                         settings.isRunning = true;
-                        themepackmodel.restoreDpi(dlgrestore.restoreDPR);
+                        themepackmodel.restoreDpi(dlgrestore.restoreDPR, dlgrestore.restoreIconSize);
                     });
                 }
             }

@@ -16,8 +16,12 @@ if [ -f "$f" ]; then
     su - defaultuser -c "fc-cache -f" || true
 fi
 
-$main/restore_dpr.sh
-$main/restore_iz.sh
+# 2.5.6: restore_dpr.sh / restore_iz.sh were retired together with
+# scripts/restore_dpi.sh; the equivalent dconf resets now run inline as
+# defaultuser. icon_size_launcher had no real seed/snapshot anyway, so
+# resetting it brings the launcher icon back to the vendor default.
+su - defaultuser -c "dconf reset /desktop/sailfish/silica/theme_pixel_ratio" || true
+su - defaultuser -c "dconf reset /desktop/sailfish/silica/icon_size_launcher" || true
 
 if [ -d /usr/share/sailfishos-uithemer ]; then
 	dconf write /desktop/lipstick/sailfishos-uithemer/activeIconPack "'default'"

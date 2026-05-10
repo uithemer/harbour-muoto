@@ -7,10 +7,11 @@ Dialog
 {
     property Settings settings
     property alias restoreDPR: itsrestoredpr.checked
+    property alias restoreIconSize: itsrestoreis.checked
 
     id: dlgrestore
     focus: true
-    canAccept: itsrestoredpr.checked
+    canAccept: itsrestoredpr.checked || itsrestoreis.checked
 
     BusyState { id: busyindicator }
 
@@ -90,7 +91,18 @@ Dialog
                 checked: true
 
                 onClicked: {
-                    dlgrestore.canAccept = itsrestoredpr.checked
+                    dlgrestore.canAccept = itsrestoredpr.checked || itsrestoreis.checked
+                }
+            }
+
+            IconTextSwitch {
+                id: itsrestoreis
+                automaticCheck: true
+                text: qsTr("Default icon size")
+                checked: true
+
+                onClicked: {
+                    dlgrestore.canAccept = itsrestoredpr.checked || itsrestoreis.checked
                 }
             }
 

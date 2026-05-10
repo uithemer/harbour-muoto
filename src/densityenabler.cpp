@@ -15,10 +15,10 @@ const char* DensityEnabler::kVendorLocksDir =
     "/etc/dconf/db/vendor.d/locks";
 const char* DensityEnabler::kBackupDir =
     "/usr/share/sailfishos-uithemer/backup/dlocks";
+const char* DensityEnabler::kThemePixelRatioKey =
+    "/desktop/sailfish/silica/theme_pixel_ratio";
 const char* DensityEnabler::kIconSizeLauncherKey =
     "/desktop/sailfish/silica/icon_size_launcher";
-const char* DensityEnabler::kIconSizeSeedKey =
-    "/desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed";
 
 DensityEnabler::DensityEnabler(QObject* parent) : QObject(parent)
 {
@@ -49,22 +49,7 @@ void DensityEnabler::runDconfUpdate()
     Spawner::executeSync(QStringLiteral("dconf update"));
 }
 
-QString DensityEnabler::readDefaultUserDconf(const QString& key)
-{
-    QProcess p;
-    p.start(QStringLiteral("su"),
-            QStringList()
-                << QStringLiteral("-")
-                << QStringLiteral("defaultuser")
-                << QStringLiteral("-c")
-                << (QStringLiteral("dconf read ") + key));
-    p.waitForStarted();
-    p.waitForFinished(15000);
-    return QString::fromUtf8(p.readAllStandardOutput()).trimmed();
-}
-
-void DensityEnabler::writeDefaultUserDconf(const QString& key,
-                                          const QString& value)
+void DensityEnabler::runDefaultUserDconf(const QString& cmd)
 {
     QProcess p;
     p.setProcessChannelMode(QProcess::ForwardedChannels);
@@ -73,10 +58,14 @@ void DensityEnabler::writeDefaultUserDconf(const QString& key,
                 << QStringLiteral("-")
                 << QStringLiteral("defaultuser")
                 << QStringLiteral("-c")
-                << (QStringLiteral("dconf write ") + key
-                    + QLatin1Char(' ') + value));
+                << (QStringLiteral("dconf ") + cmd));
     p.waitForStarted();
     p.waitForFinished(15000);
+    if(p.exitStatus() != QProcess::NormalExit || p.exitCode() != 0)
+    {
+        qWarning() << "DensityEnabler: dconf" << cmd
+                   << "failed with exit" << p.exitCode();
+    }
 }
 
 void DensityEnabler::ensureEnabled()
@@ -104,23 +93,34 @@ void DensityEnabler::ensureEnabled()
     if(!ok)
     {
         emit error(QStringLiteral("failed to relocate one or more vendor locks"));
-        // continue: still refresh dconf and try to seed
+        // continue: still refresh dconf
     }
 
     runDconfUpdate();
 
-    const QString existingSeed = readDefaultUserDconf(
-        QString::fromLatin1(kIconSizeSeedKey));
-    if(existingSeed.isEmpty())
+    emit enabled();
+}
+
+void DensityEnabler::restoreDensity(bool dpr, bool iconSize)
+{
+    FileLock lk;
+    if(!lk.isHeld())
     {
-        const QString launcherValue = readDefaultUserDconf(
-            QString::fromLatin1(kIconSizeLauncherKey));
-        if(!launcherValue.isEmpty())
-        {
-            writeDefaultUserDconf(
-                QString::fromLatin1(kIconSizeSeedKey), launcherValue);
-        }
+        emit error(QStringLiteral("could not acquire lock"));
+        emit restored();
+        return;
     }
 
-    emit enabled();
+    if(dpr)
+    {
+        runDefaultUserDconf(QStringLiteral("reset ")
+                            + QString::fromLatin1(kThemePixelRatioKey));
+    }
+    if(iconSize)
+    {
+        runDefaultUserDconf(QStringLiteral("reset ")
+                            + QString::fromLatin1(kIconSizeLauncherKey));
+    }
+
+    emit restored();
 }

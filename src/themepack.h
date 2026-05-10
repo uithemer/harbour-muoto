@@ -21,7 +21,6 @@ class ThemePack : public QObject
         void installDependencies();
         void restartHomescreen();
         void applyHours(const QString& hours);
-        void restoreIZ();
         void enableserviceautoupdate();
         void disableserviceautoupdate();
         void enableservicesu();
