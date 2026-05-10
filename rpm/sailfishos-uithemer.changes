@@ -1,3 +1,55 @@
+* Sun May 10 2026 2.5.0-1
+- Font theming reimplemented in C++/QML on top of fontconfig:
+  - New FontApplier class (src/fontapplier.{h,cpp}) writes a single
+    per-user fontconfig conf file at
+    /home/defaultuser/.config/fontconfig/conf.d/99-uithemer.conf that
+    re-aliases `Sail Sans Pro Light` and `Sail Sans Pro` to the family
+    exposed by the user-selected TTF inside
+    /usr/share/harbour-themepack-<pack>/font/<weight>.ttf, then runs
+    `fc-cache -f` as defaultuser. Restore = remove the conf file and
+    refresh the cache. Recovery is identical to restore (nothing to
+    reinstall: stock fonts under /usr/share/fonts are never modified).
+  - Family name is read from the TTF via QRawFont so the alias matches
+    Qt's lookup at runtime regardless of the file basename.
+  - Non-latin packs: each `<pack>/font-nonlatin/<Lang>.ttf|.ttc` whose
+    name is in the well-known set (Arabic, Devanagari, Chinese,
+    Japanese, Hebrew, Thai) is added as a `lang`-tagged
+    `<match target="pattern">` block so the right font is used per
+    locale, instead of overwriting Jolla's DroidSans*.ttf.
+  - Operations serialise on the same FileLock sentinel as IconApplier
+    so font and icon jobs never race.
+- ThemePackModel: applyTheme / restoreTheme / recoveryTheme now route
+  through FontApplier instead of spawning bash. One-shot connections
+  fire the corresponding themeApplied / themeRestored / themeRecovered
+  signal exactly once per call (recovery does NOT also fire
+  themeRestored, so MainPage's onThemeRestored handler does not run
+  while OptionsPage is on top of the page stack).
+- Aliendalvik (/opt/alien/system/fonts) font theming dropped: the
+  Android runtime ignores fontconfig and we no longer overwrite stock
+  files there.
+- Removed shell scripts:
+  - scripts/themeapply.sh
+  - scripts/themerestore.sh
+  - scripts/themerecovery.sh
+  - tps/font-backup.sh
+  - tps/font-restore.sh
+  - tps/font-run.sh
+  - tps/font-reinstall.sh
+  - tps/font-menu.sh
+  tps/themepacksupport.sh and tps/ocr.sh still reference some of these
+  but the TPS interactive layer is going to be replaced separately and
+  is left untouched here.
+- RPM spec:
+  - %preun: replaced the font-restore.sh call with an inline `rm` of
+    the per-user fontconfig conf + `fc-cache -f` as defaultuser.
+  - %post: dropped `touch -a font-current` and the corresponding
+    migration entry; added cleanup of `font-current` and the legacy
+    `backup/font*` directories on upgrade.
+  - %pretrans: dropped `font-restore.sh` from the
+    harbour-themepacksupport neutralisation loop (the file no longer
+    exists on our side; the old TPS one is harmless).
+- Version bumped to 2.5.0; AboutPage label updated.
+
 * Sun May 10 2026 2.4.9-1
 - Dialog layout: pulled `DialogHeader` out of the inner
   `SilicaFlickable` / `Column` and made it a direct child of the

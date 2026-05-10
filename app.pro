@@ -27,7 +27,8 @@ SOURCES += src/sailfishos-uithemer.cpp \
     src/iconapplier.cpp \
     src/iconpreviewcache.cpp \
     src/iconpreviewprovider.cpp \
-    src/filelock.cpp
+    src/filelock.cpp \
+    src/fontapplier.cpp
 
 OTHER_FILES += \
     qml/sailfishos-uithemer.qml \
@@ -75,4 +76,5 @@ HEADERS += \
     src/iconapplier.h \
     src/iconpreviewcache.h \
     src/iconpreviewprovider.h \
-    src/filelock.h
+    src/filelock.h \
+    src/fontapplier.h
