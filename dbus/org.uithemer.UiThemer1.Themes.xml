@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+    org.uithemer.UiThemer1.Themes
+    -----------------------------
+    Privileged icon-theme operations exposed by sailfishos-uithemer-helperd
+    on the system bus. All methods are gated by the "manage-themes" polkit
+    action (auth_admin_keep). Methods return immediately; completion and
+    progress are broadcast via the per-interface signals so the GUI's busy
+    spinner can clear independently of the D-Bus reply.
+-->
+<node>
+  <interface name="org.uithemer.UiThemer1.Themes">
+    <method name="ApplyIcons">
+      <arg name="pack" direction="in" type="s"/>
+      <arg name="overlay" direction="in" type="b"/>
+    </method>
+    <method name="RestoreIcons"/>
+    <method name="ReassertIcons"/>
+    <method name="RefreshOriginals"/>
+    <method name="ThemeNewDesktops"/>
+    <method name="DensityEnable"/>
+    <signal name="OperationCompleted">
+      <arg name="op" type="s"/>
+      <arg name="ok" type="b"/>
+      <arg name="message" type="s"/>
+    </signal>
+    <signal name="Progress">
+      <arg name="op" type="s"/>
+      <arg name="done" type="i"/>
+      <arg name="total" type="i"/>
+    </signal>
+  </interface>
+</node>

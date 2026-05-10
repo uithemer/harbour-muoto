@@ -16,10 +16,13 @@ CoverBackground
          id: themepackmodel
          onOcrRestored: notifyDone()
      }
+     // 2.6.0: icon ops route through HelperClient and the daemon, so
+     // listen for its bridged signals instead of iconapplier's local
+     // ones.
      Connections {
-         target: iconapplier
-         onReasserted: { settings.isRunning = false; notification.publish(); }
-         onRestored: { settings.isRunning = false; notification.publish(); }
+         target: helper
+         onIconsReasserted: { settings.isRunning = false; notification.publish(); }
+         onIconsRestored: { settings.isRunning = false; notification.publish(); }
      }
      ThemePack {
          function notifyDone() {

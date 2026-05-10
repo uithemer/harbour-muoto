@@ -17,7 +17,7 @@ CoverActionList {
             settings.isRunning = true
             switch (settings.coverAction1) {
             case 0:
-                return iconapplier.reassertCurrentTheme();
+                return helper.reassertIcons();
             case 1:
                 return themepack.restartHomescreen();
             case 2:
@@ -38,7 +38,7 @@ CoverActionList {
             settings.isRunning = true
             switch (settings.coverAction2) {
             case 0:
-                return iconapplier.reassertCurrentTheme();
+                return helper.reassertIcons();
             case 1:
                 return themepack.restartHomescreen();
             case 2:

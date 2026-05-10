@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.5.8
+Version:        2.6.1
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -23,6 +23,13 @@ Source0:        %{name}-%{version}.tar.bz2
 Source100:      sailfishos-uithemer.yaml
 
 Requires:       sailfish-version >= 2.1.4
+# 2.6.0 routes every privileged op through the new
+# sailfishos-uithemer-helperd D-Bus system service. Lipstick already
+# bundles a polkit auth agent on stock SFOS; on community ports a
+# missing agent makes the prompt fail and the GUI surfaces an error
+# notification rather than crashing.
+Requires:       polkit
+Requires:       polkit-qt5-1
 Obsoletes:      harbour-themepacksupport < 0.8.14
 Provides:       harbour-themepacksupport = 0.8.14
 Conflicts:      harbour-iconpacksupport
@@ -32,6 +39,8 @@ BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Gui)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(Qt5DBus)
+BuildRequires:  pkgconfig(polkit-qt5-1)
 BuildRequires:  desktop-file-utils
 
 %description
@@ -103,27 +112,54 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(-,root,root,-)
-%attr(4755,root,root) %{_bindir}/%{name}
-%attr(4755,root,root) %{_bindir}/sailfishos-uithemer-reassert
+# 2.6.0: GUI + headless icond helper lose the setuid bit. Privilege now comes via
+# the dbus-activated /usr/libexec/sailfishos-uithemer-helperd daemon
+# (also packaged here, owned root:root, plain 0755 -- it elevates by
+# being launched as root by dbus-daemon, not by the binary itself).
+%attr(0755,root,root) %{_bindir}/%{name}
+%attr(0755,root,root) %{_bindir}/sailfishos-uithemer-icond
+%attr(0755,root,root) /usr/libexec/sailfishos-uithemer-helperd
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-%ghost %{_bindir}/themepacksupport
+# Daemon plumbing: D-Bus name policy + activation file, polkit policy,
+# systemd unit. Installed by the gui sub-pro's INSTALLS list.
+%config /etc/dbus-1/system.d/org.uithemer.UiThemer1.conf
+/usr/share/dbus-1/system-services/org.uithemer.UiThemer1.service
+/usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.Themes.xml
+/usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.Packs.xml
+/usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.SystemServices.xml
+/usr/share/polkit-1/actions/org.uithemer.policy
+# Note: sailfishos-uithemer-helperd.service ships under
+# %{_datadir}/%{name}/service/ and is mv'd to /etc/systemd/system in %post,
+# matching the pattern used by themepacksupport-* and icond.service.
+# %postun removes the moved unit explicitly.
 # >> files
 # << files
 
 %post
-chmod +x %{_datadir}/%{name}/*.sh
+# 2.6.0: only the service helpers under service/ are shell scripts now;
+# the legacy tps/ + scripts/ shell suite is gone (every privileged op
+# lives in the daemon). Keep the +x for the systemd ExecStart helpers.
 chmod +x %{_datadir}/%{name}/service/*.sh
 mkdir -p %{_datadir}/%{name}/backup
 
 mv -f %{_datadir}/%{name}/service/themepacksupport-systemupgrade.service /lib/systemd/system/
 mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.service /etc/systemd/system/
 mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.timer /etc/systemd/system/
-mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-reassert.service /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-icond.service /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-helperd.service /etc/systemd/system/
+# 2.6.1: drop the old boot unit + binary name (reassert -> icond).
+systemctl disable --now sailfishos-uithemer-reassert.service 2>/dev/null || :
+rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
+rm -f %{_bindir}/sailfishos-uithemer-reassert
+# 2.6.0: pick up the new helper unit + dbus / polkit policy. Best-effort
+# reloads (older systemd / community ports may not honour reload dbus).
 systemctl daemon-reload
+systemctl reload dbus            2>/dev/null || :
+systemctl reload polkit          2>/dev/null || :
 systemctl enable themepacksupport-systemupgrade.service
-systemctl enable sailfishos-uithemer-reassert.service
+systemctl enable sailfishos-uithemer-icond.service
 
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
@@ -140,22 +176,10 @@ if [ -f /etc/dconf/db/vendor.d/sailfishos-uithemer.txt ]; then
     dconf update || :
 fi
 
-ln -sf %{_datadir}/%{name}/themepacksupport.sh %{_bindir}/themepacksupport
-
-old=/usr/share/harbour-themepacksupport
-new=%{_datadir}/%{name}
-if [ -d "$old" ]; then
-    for d in backup; do
-        if [ -d "$old/$d" ] && [ ! -d "$new/$d" ]; then
-            mv "$old/$d" "$new/$d" || true
-        fi
-    done
-    for f in config.cfg; do
-        if [ -e "$old/$f" ] && [ ! -e "$new/$f" ]; then
-            mv "$old/$f" "$new/$f" || true
-        fi
-    done
-fi
+# 2.6.0: the themepacksupport CLI symlink and the harbour-themepacksupport
+# backup/config.cfg migration are gone. The new daemon owns the same ops
+# over D-Bus and the legacy backup/ tree (PNG-replacement era) is no longer
+# read by anything we ship.
 
 # 2.3.x left an icon-current pointer file behind; it is no longer used.
 rm -f %{_datadir}/%{name}/icon-current
@@ -206,11 +230,22 @@ if [ $1 -eq 0 ]; then
     rm -rf /home/defaultuser/.cache/%{name}
 
     systemctl disable themepacksupport-systemupgrade.service || true
-    systemctl disable sailfishos-uithemer-reassert.service || true
-    %{_datadir}/%{name}/disable-autoupdate.sh || true
+    systemctl disable sailfishos-uithemer-icond.service || true
+    # Legacy unit name (<= 2.6.0); harmless no-op on fresh installs.
+    systemctl disable sailfishos-uithemer-reassert.service 2>/dev/null || :
+    rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
+    # 2.6.0: stop the privileged helper before files vanish so it does
+    # not race the rest of %preun on a dbus-activated re-spawn.
+    systemctl stop sailfishos-uithemer-helperd.service 2>/dev/null || :
+    # 2.6.0: tps/disable-autoupdate.sh is gone; inline the handful of
+    # systemctl calls the script used to do.
+    systemctl disable themepacksupport-autoupdate.timer   2>/dev/null || :
+    systemctl stop    themepacksupport-autoupdate.timer   2>/dev/null || :
+    systemctl disable themepacksupport-autoupdate.service 2>/dev/null || :
+    systemctl stop    themepacksupport-autoupdate.service 2>/dev/null || :
 
     # Restore original Icon= for every themed .desktop file via the helper.
-    /usr/bin/sailfishos-uithemer-reassert --restore || true
+    /usr/bin/sailfishos-uithemer-icond --restore || true
 
     # 2.5.0 font theming is just a per-user fontconfig conf file; revert by
     # removing it and refreshing the cache as defaultuser. No-op if absent.
@@ -241,10 +276,15 @@ fi
 
 %postun
 if [ $1 -eq 0 ]; then
-    rm -f %{_bindir}/themepacksupport
     rm -f /lib/systemd/system/themepacksupport-systemupgrade.service
     rm -f /etc/systemd/system/themepacksupport-autoupdate.timer
     rm -f /etc/systemd/system/themepacksupport-autoupdate.service
+    rm -f /etc/systemd/system/sailfishos-uithemer-icond.service
     rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
+    rm -f /etc/systemd/system/sailfishos-uithemer-helperd.service
     systemctl daemon-reload
+    # 2.6.0: refresh dbus + polkit so the just-removed system bus name
+    # / action ids drop from their respective registries.
+    systemctl reload dbus    2>/dev/null || :
+    systemctl reload polkit  2>/dev/null || :
 fi

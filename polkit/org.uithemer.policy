@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
+<!--
+    Polkit actions for sailfishos-uithemer-helperd.
+
+    All three actions use auth_admin_keep so the user is prompted once
+    (~5 minute retention) per action and subsequent calls inside the
+    same session are silent. Lipstick on Sailfish OS already runs an
+    authentication agent; no extra runtime piece is needed beyond
+    polkit + polkit-qt5-1.
+-->
+<policyconfig>
+  <vendor>UI Themer</vendor>
+  <vendor_url>https://github.com/uithemer/sailfishos-uithemer</vendor_url>
+
+  <action id="org.uithemer.manage-themes">
+    <description>Apply, restore or recover UI themes (icons, density)</description>
+    <message>Authentication is required to change UI themes.</message>
+    <defaults>
+      <allow_any>auth_admin_keep</allow_any>
+      <allow_inactive>auth_admin_keep</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.uithemer.manage-packs">
+    <description>Uninstall theme packs</description>
+    <message>Authentication is required to uninstall a theme pack.</message>
+    <defaults>
+      <allow_any>auth_admin_keep</allow_any>
+      <allow_inactive>auth_admin_keep</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.uithemer.manage-system-services">
+    <description>Manage UI Themer system services and helper apps</description>
+    <message>Authentication is required to change UI Themer services.</message>
+    <defaults>
+      <allow_any>auth_admin_keep</allow_any>
+      <allow_inactive>auth_admin_keep</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+</policyconfig>

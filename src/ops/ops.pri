@@ -1,0 +1,36 @@
+# Shared "ops" sources. Included by every binary that needs a subset of
+# the privileged-or-pure code (GUI, helperd daemon, icond helper). Each
+# binary just `include('../ops/ops.pri')` and gets the full set of
+# sources + headers + INCLUDEPATH onto its own search path. Linker
+# garbage collection drops anything a given binary does not actually
+# call (e.g. the daemon never invokes IconApplier::buildPreview, so
+# IconPreviewCache is unused there but still cheap to compile in).
+#
+# The static-library route (TEMPLATE=lib + STATICLIB) was rejected to
+# keep the qmake graph and SDK build simple: SailfishApp's qmake plugin
+# does not love mixed lib+app templates inside a subdirs project, and
+# recompiling these few files three times costs <1 s.
+
+INCLUDEPATH += $$PWD
+
+HEADERS += \
+    $$PWD/iconapplier.h \
+    $$PWD/iconmanifest.h \
+    $$PWD/iconpreviewcache.h \
+    $$PWD/desktopfile.h \
+    $$PWD/imageutil.h \
+    $$PWD/filelock.h \
+    $$PWD/spawner.h \
+    $$PWD/densityenabler.h \
+    $$PWD/themepack-ops.h
+
+SOURCES += \
+    $$PWD/iconapplier.cpp \
+    $$PWD/iconmanifest.cpp \
+    $$PWD/iconpreviewcache.cpp \
+    $$PWD/desktopfile.cpp \
+    $$PWD/imageutil.cpp \
+    $$PWD/filelock.cpp \
+    $$PWD/spawner.cpp \
+    $$PWD/densityenabler.cpp \
+    $$PWD/themepack-ops.cpp

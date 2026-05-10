@@ -1,5 +1,7 @@
 [Unit]
-Description=Re-apply UI Themer icons (timer-driven autoupdate).
+Description=Re-apply UI Themer icon theme at boot
+After=lipstick.service systemd-tmpfiles-setup.service
+Wants=lipstick.service
 
 [Service]
 Type=oneshot

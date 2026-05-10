@@ -32,7 +32,7 @@ match the pack: e.g. `jolla-camera.desktop` ships `Icon=icon-launcher-camera`,
 so the pack only needs to provide `icon-launcher-camera.png` (no
 `jolla-camera.png` required).
 
-A boot-time oneshot service (`sailfishos-uithemer-reassert.service`)
+A boot-time oneshot service (`sailfishos-uithemer-icond.service`)
 re-asserts the active theme, so package updates that overwrite a `.desktop`
 file are transparently re-themed at the next boot. A pre-system-update service
 (`themepacksupport-systemupgrade.service`) restores all `Icon=` entries to
@@ -136,7 +136,7 @@ overlay also applies to native apps.
 
 ## Restore
 
-`Restore theme` (or the helper `sailfishos-uithemer-reassert --restore`)
+`Restore theme` (or the helper `sailfishos-uithemer-icond --restore`)
 walks `icon-backup.json` and writes each entry's `original_icon` back into
 its `.desktop` file, then drops the entry. Apps whose `.desktop` was deleted
 in the meantime are silently dropped from the manifest.

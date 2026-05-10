@@ -1,16 +1,27 @@
 TEMPLATE = subdirs
 
-# Build the GUI app and the headless reassert helper as one project.
-# Each subdir entry uses subdir.file (no per-target subdirectory required),
-# so qmake creates per-target Makefiles in the project root and the wrapper
-# orchestrates them. This lets %qtc_qmake5 in the RPM spec build everything
-# in a single invocation, instead of cd'ing into a build subdirectory and
-# fighting whatever %_builddir / %qtc_source_path injection the macro does.
-SUBDIRS = main helper
+# Build the GUI app, the bus-activated privileged daemon, and the
+# headless icond helper as one project. Each child .pro lives next
+# to its sources under src/<role>/, so qmake creates per-target
+# Makefiles in matching build subdirectories. %qtc_qmake5 in the RPM
+# spec drives all four (gui, daemon, icond + the implicit ops.pri
+# include) in a single invocation.
+#
+# Naming note: src/daemon/ produces the privileged D-Bus
+# /usr/libexec/sailfishos-uithemer-helperd; src/icond/ produces the
+# one-shot CLI /usr/bin/sailfishos-uithemer-icond. Two different
+# binaries, two different lifecycles -- only the former is actually
+# a daemon despite the latter's -d suffix.
+SUBDIRS = gui daemon icond
 
-main.file   = app.pro
-helper.file = sailfishos-uithemer-reassert.pro
+gui.subdir     = src/gui
+daemon.subdir  = src/daemon
+icond.subdir   = src/icond
 
-# The helper reuses headers from the main app's src/ tree, but does not link
-# against the GUI binary, so no build-order dependency is required between
-# the two SUBDIRS entries.
+# All three binaries pull in src/ops/ops.pri at compile-time, so there
+# is no inter-subdir build-order dependency. Listing the depends here
+# anyway makes the topological order explicit if a future ops/ change
+# does require a rebuild ordering.
+gui.depends     =
+daemon.depends  =
+icond.depends   =

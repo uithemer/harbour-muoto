@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.uithemer.UiThemer1
+Exec=/usr/libexec/sailfishos-uithemer-helperd --bus
+User=root
+SystemdService=sailfishos-uithemer-helperd.service

@@ -169,7 +169,7 @@ Page
                         // FontApplier::restored fires inside the call.
                         if(dlgrestore.restoreIcons) {
                             settings.deactivateIcon();
-                            iconapplier.restoreIcons();
+                            helper.restoreIcons();
                         }
 
                         if(dlgrestore.restoreFonts) {
@@ -226,7 +226,7 @@ Page
                     // stale value and leave the font CoverLabel empty.
                     if(dlgconfirm.iconsSelected) {
                         settings.activeIconPack = model.packName;
-                        iconapplier.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
+                        helper.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
                     }
 
                     if(dlgconfirm.fontsSelected) {
@@ -250,7 +250,7 @@ Page
                         // Restore originals BEFORE rpm removes the pack, otherwise
                         // every themed Icon= ends up pointing at a path that is
                         // about to vanish and Lipstick falls back to placeholders.
-                        iconapplier.restoreIcons();
+                        helper.restoreIcons();
                         settings.deactivateIcon();
                     }
 

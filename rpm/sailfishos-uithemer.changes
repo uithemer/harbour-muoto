@@ -1,3 +1,113 @@
+* Sun May 10 2026 2.6.1-1
+- Renamed the headless helper from sailfishos-uithemer-reassert to
+  sailfishos-uithemer-icond. Boot unit is now
+  sailfishos-uithemer-icond.service; themepacksupport-autoupdate.service
+  and themepacksupport-systemupgrade.service ExecStart paths updated.
+  Note: despite the -d suffix this is still a one-shot CLI; the actual
+  long-lived privileged service remains /usr/libexec/sailfishos-uithemer
+  -helperd over D-Bus.
+- qmake: src/reassert/ replaced by src/icond/ (icond.pro, main source
+  sailfishos-uithemer-icond.cpp).
+- Spec: %post disables/removes the legacy reassert unit and stale binary
+  before enabling the new service; %preun/%postun track icond and
+  best-effort-clean the old unit name on uninstall.
+- themepacksupport-systemupgrade.service: dropped ExecStartPost to the
+  removed ocr_su.sh (leftover from the shell retirement).
+- docs/icons.md and AboutPage updated to 2.6.1.
+
+* Sun May 10 2026 2.6.0-1
+- Architecture: GUI no longer runs as root. /usr/bin/sailfishos-uithemer
+  drops its setuid bit (was 4755, now 0755) and removes setuid(0) from
+  main(); it now runs as defaultuser like every other Silica app.
+- New privileged D-Bus system service org.uithemer.UiThemer1, owned by
+  /usr/libexec/sailfishos-uithemer-helperd (root, dbus-activated, 30s
+  idle timeout). Three interfaces -- Themes (apply / restore / reassert
+  / refresh-originals / theme-new-desktops / density-enable), Packs
+  (uninstall), SystemServices (hide-icon / set-autoupdate /
+  set-service-su / apply-hours) -- each gated by a polkit action,
+  manage-themes / manage-packs / manage-system-services, all
+  auth_admin_keep so the user is prompted once per ~5 minutes.
+- New runtime dependencies: polkit, polkit-qt5-1.
+- New build dependencies: pkgconfig(Qt5DBus), pkgconfig(polkit-qt5-1).
+- Source layout: split into a subdirs qmake project. src/ops/
+  (iconapplier, densityenabler, manifest, desktopfile, image util,
+  file lock, spawner, themepack-ops) is shared via ops.pri by
+  src/gui/, src/daemon/ and src/reassert/. FontApplier stays GUI-only
+  because it is fully unprivileged once the GUI runs as defaultuser
+  (writes ~/.config/fontconfig/conf.d, runs fc-cache as the current
+  user).
+- HelperClient (src/gui/helperclient.{h,cpp}, qmlRegisterType
+  HelperClient): thin QDBusInterface-based proxy. Demuxes the
+  daemon's per-interface OperationCompleted / Progress broadcasts
+  into Qt signals matching the existing IconApplier /
+  DensityEnabler / ThemePack / ThemePackModel surface so QML
+  callbacks (onThemeApplied, onIconsRestored, onServiceChanged,
+  onDpiRestored, onPackUninstalled, ...) keep working.
+- ThemePack: privileged slots (hideIcon, enable/disable autoupdate,
+  enable/disable servicesu, applyHours) forward to HelperClient and
+  relay its signals; restartHomescreen drops scripts/homescreen.sh and
+  becomes a single QProcess::startDetached("systemctl", "--user",
+  "restart", "lipstick.service").
+- ThemePackModel::ocr is now a pure GUI-side state machine: two
+  daemon calls (SetAutoupdate(false), RestoreIcons) followed by three
+  in-process steps (FontApplier::restoreFonts,
+  DensityEnabler::restoreDensity(true,true), and dconf writes for
+  /desktop/lipstick/sailfishos-uithemer/{activeIconPack,activeFontPack,
+  autoUpdate}). No OneClickRestore D-Bus method.
+- ThemePackModel::uninstall routes through Packs.UninstallPack(rpmName)
+  and rebuilds the row list on the daemon's success broadcast.
+- DensityEnabler: setuid(0) escalation in ensureEnabled() removed
+  (only the daemon ever calls it, already root via systemd unit).
+  restoreDensity drops the `su - defaultuser dconf` wrapper -- direct
+  dconf calls work now that the GUI is defaultuser.
+- FontApplier: chownToDefaultUser is gone (defaultuser already owns
+  its $HOME). runFcCache drops `su - defaultuser` and runs fc-cache
+  -f directly. confDir / confPath now derive from QStandardPaths so
+  no more hard-coded /home/defaultuser/ assumption.
+- src/ops/themepack-ops.{h,cpp}: extracted hideIcon, setAutoupdate,
+  setServiceSu, applyHours bodies into a daemon-callable QObject
+  matching the bash scripts they replace (timer unit text matches the
+  retired apply_hours.sh case/esac verbatim).
+- IconApplier stays a QML type for the read-only buildPreview /
+  enableAutoTheming flows; QML's iconapplier.applyIcons /
+  restoreIcons / reassertCurrentTheme calls migrate to helper.*.
+  IconApplier::newDesktopsThemed signal in the GUI process triggers a
+  helper.themeNewDesktops() round-trip when the watcher fires.
+- DensityEnabler is no longer registered as a QML type; DensityPage's
+  DensityEnabler { id: ... } block is removed, ensureEnabled is now
+  helper.densityEnable(). The in-process restoreDensity instance
+  stays as ThemePackModel::_density.
+- /usr/bin/sailfishos-uithemer-reassert loses its setuid bit (was
+  4755, now 0755). The 3 systemd units that drive it (themepacksupport
+  -systemupgrade.service, themepacksupport-autoupdate.service,
+  sailfishos-uithemer-reassert.service) already run as root by virtue
+  of being system units, so the binary no longer needs the bit.
+- spawner.h: setuid_ex macro removed.
+- Spec: drop scripts/homescreen.sh, scripts/apply_hours.sh, tps/ocr.sh,
+  tps/ocr_su.sh, tps/enable-autoupdate.sh, tps/disable-autoupdate.sh,
+  tps/enable-servicesu.sh, tps/disable-servicesu.sh. %post tries
+  reload dbus + reload polkit best-effort. %preun stops helperd and
+  inlines the disable/stop systemctl calls the deleted
+  disable-autoupdate.sh used to do. %postun reloads dbus + polkit.
+- Legacy tps/ retired wholesale: deleted tps/themepacksupport.sh,
+  tps/autoupdate-menu.sh, tps/systemupgrade-service.sh, tps/config.cfg,
+  tps/config.shlib (and the now-empty scripts/, tps/ directories).
+  Every privileged op the CLI used to drive lives behind the daemon's
+  D-Bus interface. gui.pro drops the scripts/+tps/ INSTALL list; the
+  spec drops `chmod +x %{_datadir}/%{name}/*.sh`, the `ln -sf
+  themepacksupport.sh %{_bindir}/themepacksupport` symlink, the
+  `%ghost %{_bindir}/themepacksupport` line, the harbour-
+  themepacksupport backup/config.cfg migration block, and the matching
+  `rm -f %{_bindir}/themepacksupport` from %postun. ThemePackOps
+  loses the writeConfig() helper (no consumer survives); applyHours
+  always daemon-reloads + restarts the timer instead of consulting
+  config.cfg.
+- Cover: CoverPage / CoverConfirm Connections target switches from
+  iconapplier to helper (onIconsReasserted / onIconsRestored).
+  CoverActionList1 / CoverActionList2 reassert paths call
+  helper.reassertIcons() instead of iconapplier.reassertCurrentTheme().
+- Version bumped to 2.6.0; AboutPage shows UI Themer 2.6.0.
+
 * Sun May 10 2026 2.5.8-1
 - Retired tps/install_dependencies.sh: it was a leftover from the
   removed graphic-theming / PNG-overwriting icon era (pkcon refresh +

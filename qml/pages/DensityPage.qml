@@ -17,9 +17,12 @@ Page
     BusyState { id: busyindicator }
     Notification { id: notification }
 
-    DensityEnabler { id: densityEnabler }
-
-    Component.onCompleted: densityEnabler.ensureEnabled();
+    // 2.6.0: DensityEnabler is no longer a QML type. The vendor
+    // dconf-locks relocation requires root, so it goes through the
+    // daemon via helper.densityEnable(); restoreDensity (the inverse
+    // operation) is unprivileged and stays in-process inside
+    // ThemePackModel::restoreDpi.
+    Component.onCompleted: helper.densityEnable();
 
     ThemePackModel {
                 function applyDone() {
