@@ -59,4 +59,5 @@ Roadmap and features will be tracked on the [Trello dashboard](https://trello.co
 - Thanks to Dax89 for helping with C++ and QML code, this app would not exist without him.
 - Thanks to Eugenio_g7 for helping with the *One-click restore* service.
 - Thanks to LQS for helping with the Android DPI on the Xperia XA2.
+- Thanks to [dt.iki.fi/sailfish-os-change-default-font](https://dt.iki.fi/sailfish-os-change-default-font) for a modern approach to font configuration.
 - Thanks to all the testers for being brave and patient.

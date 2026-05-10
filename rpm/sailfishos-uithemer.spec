@@ -13,7 +13,7 @@ Name:       sailfishos-uithemer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
-Version:        2.4.9
+Version:        2.5.0
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -52,7 +52,7 @@ default theme can always be restored.
 # restore scripts so the user's theme is not reset mid-transaction.
 %pretrans -p /bin/sh
 if [ -d /usr/share/harbour-themepacksupport ]; then
-    for s in icon-restore.sh font-restore.sh \
+    for s in icon-restore.sh \
              restore_dpr.sh restore_adpi.sh restore_iz.sh disable-dpi.sh disable-autoupdate.sh; do
         f="/usr/share/harbour-themepacksupport/$s"
         if [ -e "$f" ]; then
@@ -129,7 +129,6 @@ systemctl enable sailfishos-uithemer-reassert.service
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
-touch -a %{_datadir}/%{name}/font-current
 touch -a %{_datadir}/%{name}/droiddpi-current
 ssu mo 2>/dev/null | sed 's/.*: //' > %{_datadir}/%{name}/device-model || true
 
@@ -155,7 +154,7 @@ if [ -d "$old" ]; then
             mv "$old/$d" "$new/$d" || true
         fi
     done
-    for f in font-current droiddpi-current device-model config.cfg; do
+    for f in droiddpi-current device-model config.cfg; do
         if [ -e "$old/$f" ] && [ ! -e "$new/$f" ]; then
             mv "$old/$f" "$new/$f" || true
         fi
@@ -177,6 +176,13 @@ rm -rf %{_datadir}/%{name}/backup/sound
 # via a QQuickImageProvider; drop the leftover file and the (now unused) dir.
 rm -f %{_datadir}/%{name}/tmp/iconspreview.png
 rmdir --ignore-fail-on-non-empty %{_datadir}/%{name}/tmp 2>/dev/null || :
+# 2.4.x and earlier kept a font-current pointer + backup/font* trees from
+# the bash-based font theming. 2.5.0 switched to fontconfig aliasing under
+# ~/.config/fontconfig/conf.d, so neither is used anymore. Drop them.
+rm -f %{_datadir}/%{name}/font-current
+rm -rf %{_datadir}/%{name}/backup/font
+rm -rf %{_datadir}/%{name}/backup/font-droid
+rm -rf %{_datadir}/%{name}/backup/font-nonlatin
 
 %preun
 if [ $1 -eq 0 ]; then
@@ -190,7 +196,14 @@ if [ $1 -eq 0 ]; then
     # Restore original Icon= for every themed .desktop file via the helper.
     /usr/bin/sailfishos-uithemer-reassert --restore || true
 
-    %{_datadir}/%{name}/font-restore.sh || true
+    # 2.5.0 font theming is just a per-user fontconfig conf file; revert by
+    # removing it and refreshing the cache as defaultuser. No-op if absent.
+    f=/home/defaultuser/.config/fontconfig/conf.d/99-uithemer.conf
+    if [ -f "$f" ]; then
+        rm -f "$f"
+        su - defaultuser -c "fc-cache -f" || true
+    fi
+
     %{_datadir}/%{name}/restore_dpr.sh || true
     %{_datadir}/%{name}/restore_adpi.sh || true
     %{_datadir}/%{name}/restore_iz.sh || true

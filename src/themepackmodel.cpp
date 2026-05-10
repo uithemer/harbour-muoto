@@ -9,6 +9,11 @@
 
 ThemePackModel::ThemePackModel(QObject *parent) : QAbstractListModel(parent)
 {
+    // Errors are best-effort logged; the busy spinner in QML stays on
+    // until applied/restored/recovered actually fires.
+    QObject::connect(&_fonts, &FontApplier::error,
+                     this, [](const QString& m) { qWarning() << "FontApplier error:" << m; });
+
     this->reloadAll();
 }
 
@@ -37,12 +42,36 @@ bool ThemePackModel::hasCapability(int index, const QString &capability) const
 
 void ThemePackModel::applyTheme(int index, bool font, const QString& weight)
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/themeapply.sh", SPAWN_ARGS(RAW_PACK_NAME(this->_packlist[index]) << QString::number(font) << weight), [this]() { emit themeApplied(); });
+    if(!font)
+    {
+        emit themeApplied();
+        return;
+    }
+    QMetaObject::Connection* conn = new QMetaObject::Connection;
+    *conn = QObject::connect(&_fonts, &FontApplier::applied, this,
+                             [this, conn](const QString&) {
+        emit themeApplied();
+        QObject::disconnect(*conn);
+        delete conn;
+    });
+    _fonts.applyFromPack(RAW_PACK_NAME(this->_packlist[index]), weight);
 }
 
 void ThemePackModel::restoreTheme(bool font)
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/themerestore.sh", SPAWN_ARGS(QString::number(font)), [this]() { emit themeRestored(); });
+    if(!font)
+    {
+        emit themeRestored();
+        return;
+    }
+    QMetaObject::Connection* conn = new QMetaObject::Connection;
+    *conn = QObject::connect(&_fonts, &FontApplier::restored, this,
+                             [this, conn]() {
+        emit themeRestored();
+        QObject::disconnect(*conn);
+        delete conn;
+    });
+    _fonts.restoreFonts();
 }
 
 void ThemePackModel::applyADPI(const QString& adpi)
@@ -62,7 +91,23 @@ void ThemePackModel::ocr()
 
 void ThemePackModel::recoveryTheme(bool font)
 {
-    Spawner::execute("/usr/share/sailfishos-uithemer/themerecovery.sh", SPAWN_ARGS(QString::number(font)), [this]() { emit themeRecovered(); });
+    if(!font)
+    {
+        emit themeRecovered();
+        return;
+    }
+    // FontApplier::recoveryFonts() emits restored(); map that to
+    // themeRecovered() (not themeRestored, otherwise MainPage's
+    // onThemeRestored handler would also fire while OptionsPage is on top
+    // of the page stack).
+    QMetaObject::Connection* conn = new QMetaObject::Connection;
+    *conn = QObject::connect(&_fonts, &FontApplier::restored, this,
+                             [this, conn]() {
+        emit themeRecovered();
+        QObject::disconnect(*conn);
+        delete conn;
+    });
+    _fonts.recoveryFonts();
 }
 
 void ThemePackModel::uninstall(int index)

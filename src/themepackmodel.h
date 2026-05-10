@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStringList>
+#include "fontapplier.h"
 
 class ThemePackModel : public QAbstractListModel
 {
@@ -55,6 +56,7 @@ class ThemePackModel : public QAbstractListModel
     private:
         QStringList _packlist;
         QStringList _packnames;
+        FontApplier _fonts;
 };
 
 #endif // THEMEPACKMODEL_H
