@@ -158,10 +158,6 @@
         <translation>Priročnik za uporabo</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
-    </message>
-    <message>
         <source>Restore display density</source>
         <translation>Obnovi gostoto zaslona</translation>
     </message>
@@ -344,10 +340,6 @@
         <translation>Priročnik za uporabo</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>Gostota zaslona</translation>
     </message>
@@ -359,198 +351,24 @@
         <source>Themes</source>
         <translation>Teme</translation>
     </message>
+    <message>
+        <source>About UI Themer</source>
+        <translation type="unfinished">O programu UI Themer</translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">Ponovno zaženi čarovnika za prvi zagon</translation>
+    </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Notification</name>
     <message>
         <source>Settings applied.</source>
         <translation>Nastavitve so uveljavljene</translation>
-    </message>
-</context>
-<context>
-    <name>OptionsPage</name>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation>Ponovno zaženi čarovnika za prvi zagon</translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation>Priročnik za uporabo</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Obnovitev</translation>
-    </message>
-    <message>
-        <source>Icon updater</source>
-        <translation>Posodobilnik ikon</translation>
-    </message>
-    <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time.</source>
-        <translation>Po vsaki posodobitvi aplikacije je potrebno znova naložiti temo, da se uveljavijo ikone po meri.  &lt;i&gt;Posodobilnik ikon&lt;/i&gt; lahko to delo opravi samodejno in posodobi ikone ob izbranem času.</translation>
-    </message>
-    <message>
-        <source>Update icons</source>
-        <translation>Posodobi ikone</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Onemogočeno</translation>
-    </message>
-    <message>
-        <source>30 minutes</source>
-        <translation>30 minut</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 ura</translation>
-    </message>
-    <message>
-        <source>2 hours</source>
-        <translation>2 uri</translation>
-    </message>
-    <message>
-        <source>3 hours</source>
-        <translation>3 ure</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 ur</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 ur</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>Dnevno</translation>
-    </message>
-    <message>
-        <source>One-click restore</source>
-        <translation>Obnovitev z enim klikom</translation>
-    </message>
-    <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
-        <translation>Pred vsako nadgradnjo sistema je potrebno vse prilagoditve aplikacije UI Themer povrniti na privzete nastavitve. Z možnostjo &lt;i&gt;Obnovitev z enim klikom&lt;/i&gt; lahko ta proces poenostavite in obnovite nastavitve po meri za ikone,  pisave ter gostoto zaslona z le enim klikom.</translation>
-    </message>
-    <message>
-        <source>Restore</source>
-        <translation>Obnovi</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
-    </message>
-    <message>
-        <source>Cover</source>
-        <translation>Naslovnica</translation>
-    </message>
-    <message>
-        <source>Cover action</source>
-        <translation>Primarno dejanje naslovnice</translation>
-    </message>
-    <message>
-        <source>refresh current theme</source>
-        <translation>osveži trenutno temo</translation>
-    </message>
-    <message>
-        <source>restart homescreen</source>
-        <translation>ponovni zagon domačega zaslona</translation>
-    </message>
-    <message>
-        <source>one-click restore</source>
-        <translation>obnovitev z enim klikom</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>nič</translation>
-    </message>
-    <message>
-        <source>Second cover action</source>
-        <translation>Sekundarno dejanje naslovnice</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Ponovno zaženi domači zaslon</translation>
-    </message>
-    <message>
-        <source>Restart</source>
-        <translation>Ponovni zagon</translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation>Ponovni zagon domačega zaslona</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen, to make your modifications effective. Your currently opened apps will be closed.</source>
-        <translation>Za uveljavitev nedavnih sprememb ponovno zaženite domači zaslon. Vse vaše trenutno zagnane aplikacije se bodo zaprle.</translation>
-    </message>
-    <message>
-        <source>Restoring</source>
-        <translation>Obnavljanje</translation>
-    </message>
-    <message>
-        <source>Choose the action to be shown on the UI Themer cover, for a quick access when the app is minimized on the homescreen.</source>
-        <translation>Ko je aplikacija pomanjšana na domačem zaslonu, lahko na naslovnici določite dejanje</translation>
-    </message>
-    <message>
-        <source>Optionally, you can choose to display a second action on the cover.</source>
-        <translation>Če želite, lahko določite prikaz dodatnega dejanja na naslovnici.</translation>
-    </message>
-    <message>
-        <source>Run before system updates</source>
-        <translation>Zaženi pred posodobitvami sistema</translation>
-    </message>
-    <message>
-        <source>Restore the default icons, fonts and display density settings before performing a system update, so you don&apos;t need to manually do it.</source>
-        <translation>Vklop možnosti poskrbi za samodejno obnovitev privzetih ikon, pisav in vrednost gostote zaslona pred vsako nadgradnjo sistema.</translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation>O programu UI Themer</translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RecoveryPage</name>
-    <message>
-        <source>Continue</source>
-        <translation>Nadaljuj</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Prekliči</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Obnovitev</translation>
-    </message>
-    <message>
-        <source>Reinstall icons</source>
-        <translation>Ponovna namestitev ikon</translation>
-    </message>
-    <message>
-        <source>If any error occurs during themes applying/restoring, you can end up with messed up icons. From here, you can reinstall default Jolla app icons while, for thirdy party apps, you may need to reinstall/update apps to restore the default look.</source>
-        <translation>Če med uveljavljanjem ali obnavljanjem sprememb pride do težav z ikonami, lahko tu ponovno namestite privzete Jolla ikone. Pri težavah z aplikacijami drugih ponudnikov poskusite le-te ponovno namestiti oziroma nadgraditi.</translation>
-    </message>
-    <message>
-        <source>Reinstall fonts</source>
-        <translation>Ponovno namesti pisave</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Ne pozabite na ponovi zagon domačega zaslona po zaključku sprememb.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Ponovni zagon domačega zaslona</translation>
-    </message>
-    <message>
-        <source>Reinstall default fonts, if fonts applying/restoring fails.</source>
-        <translation>Če je uveljavitev ali obnovitev pisav neuspešna, poskusite ponovno namestiti privzete pisave.</translation>
     </message>
 </context>
 <context>

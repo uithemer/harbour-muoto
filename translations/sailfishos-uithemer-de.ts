@@ -158,10 +158,6 @@
         <translation>Anleitung</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Optionen</translation>
-    </message>
-    <message>
         <source>Restore display density</source>
         <translation>Pixeldichte wiederherstellen</translation>
     </message>
@@ -344,10 +340,6 @@
         <translation>Bedienungsanleitung</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Optionen</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>Pixeldichte</translation>
     </message>
@@ -359,198 +351,24 @@
         <source>Themes</source>
         <translation>Themen</translation>
     </message>
+    <message>
+        <source>About UI Themer</source>
+        <translation type="unfinished">Über UI Themer </translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">Start-Assistent neustarten</translation>
+    </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished">Startbildschirm neu starten</translation>
+    </message>
 </context>
 <context>
     <name>Notification</name>
     <message>
         <source>Settings applied.</source>
         <translation>Einstellungen übernommen.</translation>
-    </message>
-</context>
-<context>
-    <name>OptionsPage</name>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation>Start-Assistent neustarten</translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation>Anleitung</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Wiederherstellung</translation>
-    </message>
-    <message>
-        <source>Icon updater</source>
-        <translation>Symbol-Updater</translation>
-    </message>
-    <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time.</source>
-        <translation>Nach jedem App Update muss du dein gewünschtes Theme neu installieren. Der &lt;i&gt;Icon Updater&lt;/i&gt; nimmt dir diese Arbeit ab. Aktiviere dazu einfach den Updater. Wähle dazu den gewünschten Zeitraum oder lege eine eigene Uhrzeit fest. </translation>
-    </message>
-    <message>
-        <source>Update icons</source>
-        <translation>Aktualisiere Icons </translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Deaktiviert</translation>
-    </message>
-    <message>
-        <source>30 minutes</source>
-        <translation>30 Minuten</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 Stunde</translation>
-    </message>
-    <message>
-        <source>2 hours</source>
-        <translation>2 Stunden</translation>
-    </message>
-    <message>
-        <source>3 hours</source>
-        <translation>3 Stunden</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 Stunden</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 Stunden</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>Täglich</translation>
-    </message>
-    <message>
-        <source>One-click restore</source>
-        <translation>Sofort-Wiederherstellung</translation>
-    </message>
-    <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
-        <translation>Die UI Themer Einstellungen sollten vor jedem System Update zurückgesetzt werden. Mit der &lt;i&gt;One-click restore&lt;/i&gt; setzt du mit einem Klick die Icons, Schriften und Pixeldichte auf die Standardwerte zurück. </translation>
-    </message>
-    <message>
-        <source>Restore</source>
-        <translation>Wiederherstellen</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Optionen</translation>
-    </message>
-    <message>
-        <source>Cover</source>
-        <translation>Cover</translation>
-    </message>
-    <message>
-        <source>Cover action</source>
-        <translation>Coverbefehl</translation>
-    </message>
-    <message>
-        <source>refresh current theme</source>
-        <translation>Aktuelles Theme neu laden</translation>
-    </message>
-    <message>
-        <source>restart homescreen</source>
-        <translation>Startbildschirm neu starten</translation>
-    </message>
-    <message>
-        <source>one-click restore</source>
-        <translation>Schnell-Wiederherstellung</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>keine</translation>
-    </message>
-    <message>
-        <source>Second cover action</source>
-        <translation>Zweiter Coverbefehl</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Startbildschirm neu starten</translation>
-    </message>
-    <message>
-        <source>Restart</source>
-        <translation>Neustart</translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation>Startbildschirm neu starten</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen, to make your modifications effective. Your currently opened apps will be closed.</source>
-        <translation>Starte den Startbildschirm neu, um die Änderungen anzuwenden. Alle offenen Apps werden geschlossen.</translation>
-    </message>
-    <message>
-        <source>Restoring</source>
-        <translation>Wiederherstellung</translation>
-    </message>
-    <message>
-        <source>Choose the action to be shown on the UI Themer cover, for a quick access when the app is minimized on the homescreen.</source>
-        <translation>Wähle die Befehle aus, welche auf dem UI Themer Cover angezeigt werden sollen, wenn die App minimiert auf dem Startbildschirm liegt.</translation>
-    </message>
-    <message>
-        <source>Optionally, you can choose to display a second action on the cover.</source>
-        <translation>Optional kann ein zweiter Befehl auf dem Cover angezeigt werden.</translation>
-    </message>
-    <message>
-        <source>Run before system updates</source>
-        <translation>Vor Systemupdates ausführen</translation>
-    </message>
-    <message>
-        <source>Restore the default icons, fonts and display density settings before performing a system update, so you don&apos;t need to manually do it.</source>
-        <translation>Stellt die Standardicons, Schriftarten, und Pixeldichte wieder her bevor ein Systemupdate durchgeführt wird, so dass du es nicht manuell machen musst.</translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation>Über UI Themer </translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RecoveryPage</name>
-    <message>
-        <source>Continue</source>
-        <translation>Fortfahren</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Abbrechen</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Wiederherstellung</translation>
-    </message>
-    <message>
-        <source>Reinstall icons</source>
-        <translation>Icons neu installieren</translation>
-    </message>
-    <message>
-        <source>If any error occurs during themes applying/restoring, you can end up with messed up icons. From here, you can reinstall default Jolla app icons while, for thirdy party apps, you may need to reinstall/update apps to restore the default look.</source>
-        <translation>Falls einmal alle Wiederherstellungsfunktionen im UI Themer versagen und deine Icons falsch dargestellt werden, bleibt dir nichts anderes übrig, als alle Apps neu zu installieren, um die Icons wieder korrekt anzuzeigen. </translation>
-    </message>
-    <message>
-        <source>Reinstall fonts</source>
-        <translation>Schriften neu installieren</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Denken Sie daran, den Startbildschirm sofort danach neu zu starten. </translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Startbildschirm neu starten</translation>
-    </message>
-    <message>
-        <source>Reinstall default fonts, if fonts applying/restoring fails.</source>
-        <translation>Installiere die Default Schrift neu, falls das Zurücksetzen fehlschlägt.</translation>
     </message>
 </context>
 <context>

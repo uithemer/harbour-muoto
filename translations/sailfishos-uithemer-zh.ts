@@ -158,10 +158,6 @@
         <translation>使用指导</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>操作</translation>
-    </message>
-    <message>
         <source>Restore display density</source>
         <translation>恢复显示密度</translation>
     </message>
@@ -344,10 +340,6 @@
         <translation>使用指导</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>操作</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>显示密度</translation>
     </message>
@@ -359,198 +351,24 @@
         <source>Themes</source>
         <translation>主题</translation>
     </message>
+    <message>
+        <source>About UI Themer</source>
+        <translation type="unfinished">关于 UI Themer</translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">重启首次运行向导</translation>
+    </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished">重启主屏幕</translation>
+    </message>
 </context>
 <context>
     <name>Notification</name>
     <message>
         <source>Settings applied.</source>
         <translation>设置已应用</translation>
-    </message>
-</context>
-<context>
-    <name>OptionsPage</name>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation>重启首次运行向导</translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation>使用指导</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>恢复</translation>
-    </message>
-    <message>
-        <source>Icon updater</source>
-        <translation>图标更新程序</translation>
-    </message>
-    <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time.</source>
-        <translation>每次软件更新，你都需要重新应用主题以激活定制的图标。&lt;i&gt;图标更新程序&lt;/i&gt;会自动进行此过程，在给定的时间能自动更新图标。你可以选择预设的一天中的某个时间或选定的时间。</translation>
-    </message>
-    <message>
-        <source>Update icons</source>
-        <translation>更新图标</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>取消</translation>
-    </message>
-    <message>
-        <source>30 minutes</source>
-        <translation>30分钟</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1小时</translation>
-    </message>
-    <message>
-        <source>2 hours</source>
-        <translation>2小时</translation>
-    </message>
-    <message>
-        <source>3 hours</source>
-        <translation>3小时</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6小时</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12小时</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>每日</translation>
-    </message>
-    <message>
-        <source>One-click restore</source>
-        <translation>一键恢复</translation>
-    </message>
-    <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
-        <translation>在系统更新之前必须将 UI Themer 个性化定制恢复到默认。通过&lt;i&gt;一键恢复&lt;/i&gt;你只需点击一次就能自动执行此项操作，恢复默认的图标、字体和显示密度设置。</translation>
-    </message>
-    <message>
-        <source>Restore</source>
-        <translation>恢复</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>操作</translation>
-    </message>
-    <message>
-        <source>Cover</source>
-        <translation>封面</translation>
-    </message>
-    <message>
-        <source>Cover action</source>
-        <translation>封面操作</translation>
-    </message>
-    <message>
-        <source>refresh current theme</source>
-        <translation>刷新当前主题</translation>
-    </message>
-    <message>
-        <source>restart homescreen</source>
-        <translation>重启主屏幕</translation>
-    </message>
-    <message>
-        <source>one-click restore</source>
-        <translation>一键恢复</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>无操作</translation>
-    </message>
-    <message>
-        <source>Second cover action</source>
-        <translation>间接封面操作</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>重启主屏幕</translation>
-    </message>
-    <message>
-        <source>Restart</source>
-        <translation>重启</translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation>重启主屏幕中</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen, to make your modifications effective. Your currently opened apps will be closed.</source>
-        <translation>为使你的修改生效，请重启主屏幕。你目前开启的软件将被关闭。</translation>
-    </message>
-    <message>
-        <source>Restoring</source>
-        <translation>恢复中</translation>
-    </message>
-    <message>
-        <source>Choose the action to be shown on the UI Themer cover, for a quick access when the app is minimized on the homescreen.</source>
-        <translation>选择显示在 UI Themer 封面上的操作，当软件以最小化形式显示在主屏幕上时，你可以进行的快捷操作。</translation>
-    </message>
-    <message>
-        <source>Optionally, you can choose to display a second action on the cover.</source>
-        <translation>可供选择：你可以选择显示在软件封面的间接操作。</translation>
-    </message>
-    <message>
-        <source>Run before system updates</source>
-        <translation>在系统更新之前运行。</translation>
-    </message>
-    <message>
-        <source>Restore the default icons, fonts and display density settings before performing a system update, so you don&apos;t need to manually do it.</source>
-        <translation>在执行系统更新之前，恢复默认图标、字体和显示密度设置，你不必手动执行。</translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation>关于 UI Themer</translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RecoveryPage</name>
-    <message>
-        <source>Continue</source>
-        <translation>继续</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>取消</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>恢复</translation>
-    </message>
-    <message>
-        <source>Reinstall icons</source>
-        <translation>重装图标</translation>
-    </message>
-    <message>
-        <source>If any error occurs during themes applying/restoring, you can end up with messed up icons. From here, you can reinstall default Jolla app icons while, for thirdy party apps, you may need to reinstall/update apps to restore the default look.</source>
-        <translation>如果在应用或恢复主题过程中发生任何错误, 可能会发生图标混乱。你可以在此重新应用默认的 jolla 软件图标, 对于第三方应用, 你可能需要重新安装或更新软件以恢复默认图标</translation>
-    </message>
-    <message>
-        <source>Reinstall fonts</source>
-        <translation>重装字体</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>记住之后立即重启主屏幕。</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>重启主屏幕</translation>
-    </message>
-    <message>
-        <source>Reinstall default fonts, if fonts applying/restoring fails.</source>
-        <translation>如果应用或恢复字体失败，请重装默认的字体。</translation>
     </message>
 </context>
 <context>

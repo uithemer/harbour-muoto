@@ -239,6 +239,11 @@ Page
                         // FontApplier::restored fires inside the call.
                         if(dlgrestore.restoreIcons) {
                             settings.deactivateIcon();
+                            // Clear the persisted overlay flag so a watcher
+                            // fire after restore (e.g. a package update)
+                            // doesn't generate stale overlays for a theme
+                            // the user just turned off.
+                            settings.iconOverlay = false;
                             Helper.restoreIcons();
                         }
                         if(dlgrestore.restoreFonts) {
@@ -300,6 +305,10 @@ Page
                     // stale value and leave the font CoverLabel empty.
                     if(dlgconfirm.iconsSelected) {
                         settings.activeIconPack = model.packName;
+                        // Persist the overlay choice in dconf so the GUI's
+                        // auto-theming watcher can pass it to the daemon
+                        // when a new app shows up later.
+                        settings.iconOverlay = dlgconfirm.iconOverlaySelected;
                         Helper.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
                     }
                     if(dlgconfirm.fontsSelected) {
@@ -319,6 +328,9 @@ Page
                         // about to vanish and Lipstick falls back to placeholders.
                         Helper.restoreIcons();
                         settings.deactivateIcon();
+                        // Same as the explicit restore path: don't let the
+                        // overlay flag survive a pack uninstall.
+                        settings.iconOverlay = false;
                     }
 
                     themepackmodel.uninstall(model.index);

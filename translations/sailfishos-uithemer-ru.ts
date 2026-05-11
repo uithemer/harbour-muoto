@@ -158,10 +158,6 @@
         <translation>Руководство по использованию</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Параметры</translation>
-    </message>
-    <message>
         <source>Restore display density</source>
         <translation>Восстановить плотность изображения</translation>
     </message>
@@ -344,10 +340,6 @@
         <translation>Руководство по использованию</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Параметры</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>Плотность изображения</translation>
     </message>
@@ -359,198 +351,24 @@
         <source>Themes</source>
         <translation>Темы</translation>
     </message>
+    <message>
+        <source>About UI Themer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">Перезапуск мастера первого запуска</translation>
+    </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished">Перезагрузить домашний экран</translation>
+    </message>
 </context>
 <context>
     <name>Notification</name>
     <message>
         <source>Settings applied.</source>
         <translation>Настройки применены.</translation>
-    </message>
-</context>
-<context>
-    <name>OptionsPage</name>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation>Перезапуск мастера первого запуска</translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation>Руководство по использованию</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Восстановление</translation>
-    </message>
-    <message>
-        <source>Icon updater</source>
-        <translation>Обновление значка</translation>
-    </message>
-    <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time.</source>
-        <translation>Каждый раз, когда приложение обновляется, вам нужно повторно применять тему, чтобы вернуть пользовательский значок. &lt;i&gt;Обновление значка&lt;/i&gt; автоматизирует этот процесс, позволяя автоматически обновлять иконки в определенный момент времени.</translation>
-    </message>
-    <message>
-        <source>Update icons</source>
-        <translation>Обновить значки</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Отключено</translation>
-    </message>
-    <message>
-        <source>30 minutes</source>
-        <translation>30 минут</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 час</translation>
-    </message>
-    <message>
-        <source>2 hours</source>
-        <translation>2 часа</translation>
-    </message>
-    <message>
-        <source>3 hours</source>
-        <translation>3 часа</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 часов</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 часов</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>Ежедневно</translation>
-    </message>
-    <message>
-        <source>One-click restore</source>
-        <translation>Восстановить в один клик</translation>
-    </message>
-    <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
-        <translation>Настройки UI Themer должны быть отменены перед выполнением обновления системы.  С помощью одного щелчка мыши&lt;i&gt;Восстановить в один клик&lt;/i&gt; вы можете автоматизировать этот процесс и восстановить значки, шрифты и настройки плотности изображения.</translation>
-    </message>
-    <message>
-        <source>Restore</source>
-        <translation>Восстановить</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Параметры</translation>
-    </message>
-    <message>
-        <source>Cover</source>
-        <translation>Обложка</translation>
-    </message>
-    <message>
-        <source>Cover action</source>
-        <translation>Действие на обложке</translation>
-    </message>
-    <message>
-        <source>refresh current theme</source>
-        <translation>обновить текущую тему</translation>
-    </message>
-    <message>
-        <source>restart homescreen</source>
-        <translation>перезагрузить домашний экран</translation>
-    </message>
-    <message>
-        <source>one-click restore</source>
-        <translation>восстановить в один клик</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>не выбрано</translation>
-    </message>
-    <message>
-        <source>Second cover action</source>
-        <translation>Второе действие на обложке</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Перезагрузить домашний экран</translation>
-    </message>
-    <message>
-        <source>Restart</source>
-        <translation>Перезагрузка</translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation>Перезагрузка домашнего экрана</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen, to make your modifications effective. Your currently opened apps will be closed.</source>
-        <translation>Перезагрузите домашний экран, чтобы изменения вступили в силу. Ваши приложения, открытые в настоящий момент, будут закрыты.</translation>
-    </message>
-    <message>
-        <source>Restoring</source>
-        <translation>Восстановление</translation>
-    </message>
-    <message>
-        <source>Choose the action to be shown on the UI Themer cover, for a quick access when the app is minimized on the homescreen.</source>
-        <translation>Выберите действие для быстрого доступа, которое будет отображаться на обложке UI Themer, когда приложение свернуто на рабочем столе.</translation>
-    </message>
-    <message>
-        <source>Optionally, you can choose to display a second action on the cover.</source>
-        <translation>При желании вы можете выбрать отображение второго действия на обложке.</translation>
-    </message>
-    <message>
-        <source>Run before system updates</source>
-        <translation>Запустить до обновления системы</translation>
-    </message>
-    <message>
-        <source>Restore the default icons, fonts and display density settings before performing a system update, so you don&apos;t need to manually do it.</source>
-        <translation>Восстановите значки по умолчанию, шрифты и настройки плотности отображения перед обновлением системы, поэтому вам не нужно делать это вручную.</translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation>О программе UI Themer</translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RecoveryPage</name>
-    <message>
-        <source>Continue</source>
-        <translation>Продолжить</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Отменить</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Восстановить</translation>
-    </message>
-    <message>
-        <source>Reinstall icons</source>
-        <translation>Переустановить значки</translation>
-    </message>
-    <message>
-        <source>If any error occurs during themes applying/restoring, you can end up with messed up icons. From here, you can reinstall default Jolla app icons while, for thirdy party apps, you may need to reinstall/update apps to restore the default look.</source>
-        <translation>Если во время применения/восстановления тем возникает какая-либо ошибка, вы можете получить испорченные значки. Отсюда вы можете переустановить значки по умолчанию приложений Jolla, в то время как сторонним приложениям может потребоваться переустановить/обновить приложения, чтобы восстановить внешний вид по умолчанию.</translation>
-    </message>
-    <message>
-        <source>Reinstall fonts</source>
-        <translation>Переустановить шрифты</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Не забудьте сразу после изменений перезагрузить домашний экран.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Перезагрузить домашний экран</translation>
-    </message>
-    <message>
-        <source>Reinstall default fonts, if fonts applying/restoring fails.</source>
-        <translation>Переустановить шрифты по умолчанию, если не удается применить/восстановить шрифты.</translation>
     </message>
 </context>
 <context>

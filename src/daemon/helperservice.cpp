@@ -3,11 +3,17 @@
 #include <QProcess>
 #include <QStringList>
 #include <QMetaObject>
+#include <QDBusConnection>
 #include <QDebug>
 
 namespace
 {
     const int kIdleTimeoutMs = 30 * 1000;
+    const int kShutdownDrainMs = 150;
+
+    const char *kLogin1Service = "org.freedesktop.login1";
+    const char *kLogin1Path    = "/org/freedesktop/login1";
+    const char *kLogin1Manager = "org.freedesktop.login1.Manager";
 }
 
 // =====================================================================
@@ -21,6 +27,27 @@ HelperBackend::HelperBackend(QObject *parent) : QObject(parent)
     connect(&_idleTimer, &QTimer::timeout,
             this, &HelperBackend::onIdleTimeout);
     _idleTimer.start();
+
+    // Subscribe to systemd-logind's pre-shutdown / pre-reboot broadcast.
+    // When the kernel is moments away from killing every process,
+    // accepting a new ApplyIcons that we cannot complete would leave
+    // the manifest and the .desktop files out of sync. The slot flips
+    // _shuttingDown so adaptor methods refuse new work, then schedules
+    // QCoreApplication::quit() after a short drain window so any in-
+    // flight OperationCompleted broadcasts make it onto the bus before
+    // we go away.
+    QDBusConnection bus = QDBusConnection::systemBus();
+    if(!bus.connect(QString::fromLatin1(kLogin1Service),
+                    QString::fromLatin1(kLogin1Path),
+                    QString::fromLatin1(kLogin1Manager),
+                    QStringLiteral("PrepareForShutdown"),
+                    this,
+                    SLOT(onPrepareForShutdown(bool))))
+    {
+        qWarning() << "uithemer-helperd: could not subscribe to"
+                   << "login1.Manager.PrepareForShutdown:"
+                   << bus.lastError().message();
+    }
 }
 
 void HelperBackend::resetIdleTimer()
@@ -32,6 +59,28 @@ void HelperBackend::onIdleTimeout()
 {
     qInfo() << "uithemer-helperd: idle timeout, quitting";
     emit idleQuit();
+}
+
+void HelperBackend::onPrepareForShutdown(bool active)
+{
+    if(!active)
+    {
+        // logind also fires PrepareForShutdown(false) when a shutdown
+        // is cancelled. We never re-arm because by the time we get
+        // here new clients would have already given up.
+        return;
+    }
+    if(_shuttingDown)
+        return;
+    _shuttingDown = true;
+    qInfo() << "uithemer-helperd: PrepareForShutdown received, draining";
+    _idleTimer.stop();
+    // Quit via the same idleQuit signal main() already wires to
+    // QCoreApplication::quit, with a small drain so any pending
+    // OperationCompleted("...", false, "shutting down") broadcasts
+    // dispatched from adaptor methods reach subscribers.
+    QTimer::singleShot(kShutdownDrainMs, this,
+                       [this]() { emit idleQuit(); });
 }
 
 // =====================================================================
@@ -68,12 +117,19 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
     _backend->resetIdleTimer();
     IconApplier &applier = _backend->iconApplier();
 
+    // Bump the in-process busy counter so a watcher-triggered
+    // ThemeNewDesktops fired from the GUI cannot race with this op.
+    // The matching leaveHeavyOp() lives inside the per-op completion
+    // lambda below.
+    _backend->enterHeavyOp();
+
     auto *conn = new QMetaObject::Connection;
     *conn = connect(&applier, doneSignal, this, [this, op, conn]()
                     {
         emit OperationCompleted(op, true, QString());
         QObject::disconnect(*conn);
         delete conn;
+        _backend->leaveHeavyOp();
         _backend->resetIdleTimer(); });
 
     auto *progressConn = new QMetaObject::Connection;
@@ -102,6 +158,11 @@ void ThemesAdaptor::ApplyIcons(const QString &pack, bool overlay,
                                const QDBusMessage &message)
 {
     const QString op = QStringLiteral("ApplyIcons");
+    if (_backend->shuttingDown())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        return;
+    }
     if (!authorize(message, op))
         return;
     runIconOpVoid(op, [pack, overlay](IconApplier &a)
@@ -111,6 +172,11 @@ void ThemesAdaptor::ApplyIcons(const QString &pack, bool overlay,
 void ThemesAdaptor::RestoreIcons(const QDBusMessage &message)
 {
     const QString op = QStringLiteral("RestoreIcons");
+    if (_backend->shuttingDown())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        return;
+    }
     if (!authorize(message, op))
         return;
     runIconOpVoid(op, [](IconApplier &a)
@@ -120,6 +186,11 @@ void ThemesAdaptor::RestoreIcons(const QDBusMessage &message)
 void ThemesAdaptor::ReassertIcons(const QDBusMessage &message)
 {
     const QString op = QStringLiteral("ReassertIcons");
+    if (_backend->shuttingDown())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        return;
+    }
     if (!authorize(message, op))
         return;
     runIconOpVoid(op, [](IconApplier &a)
@@ -129,19 +200,42 @@ void ThemesAdaptor::ReassertIcons(const QDBusMessage &message)
 void ThemesAdaptor::RefreshOriginals(const QDBusMessage &message)
 {
     const QString op = QStringLiteral("RefreshOriginals");
+    if (_backend->shuttingDown())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        return;
+    }
     if (!authorize(message, op))
         return;
     runIconOpVoid(op, [](IconApplier &a)
                   { a.refreshOriginals(); }, &IconApplier::originalsRefreshed);
 }
 
-void ThemesAdaptor::ThemeNewDesktops(const QDBusMessage &message)
+void ThemesAdaptor::ThemeNewDesktops(bool overlay,
+                                     const QDBusMessage &message)
 {
     const QString op = QStringLiteral("ThemeNewDesktops");
+    if (_backend->shuttingDown())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        return;
+    }
     if (!authorize(message, op))
         return;
+    // Drop the call if a heavy op is in flight (apply / restore /
+    // reassert / refreshOriginals / densityEnable). The watcher in the
+    // GUI fires on every directoryChanged, including ones our own
+    // ApplyIcons triggers via touchDesktopFiles(); without this gate
+    // we would chase our own writes and overwrite the freshly-applied
+    // theme with a stale rescan.
+    if (_backend->busyHeavy() > 0)
+    {
+        emit OperationCompleted(op, false, QStringLiteral("busy"));
+        return;
+    }
     // newDesktopsThemed(int count) is the completion signal here.
     _backend->resetIdleTimer();
+    _backend->enterHeavyOp();
     IconApplier &applier = _backend->iconApplier();
     auto *conn = new QMetaObject::Connection;
     *conn = connect(&applier, &IconApplier::newDesktopsThemed, this,
@@ -151,17 +245,24 @@ void ThemesAdaptor::ThemeNewDesktops(const QDBusMessage &message)
                                                 QString::number(count));
                         QObject::disconnect(*conn);
                         delete conn;
+                        _backend->leaveHeavyOp();
                         _backend->resetIdleTimer();
                     });
-    applier.themeNewDesktops();
+    applier.themeNewDesktops(overlay);
 }
 
 void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
 {
     const QString op = QStringLiteral("DensityEnable");
+    if (_backend->shuttingDown())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        return;
+    }
     if (!authorize(message, op))
         return;
     _backend->resetIdleTimer();
+    _backend->enterHeavyOp();
     DensityEnabler &density = _backend->densityEnabler();
     auto *conn = new QMetaObject::Connection;
     *conn = connect(&density, &DensityEnabler::enabled, this, [this, op, conn]()
@@ -169,6 +270,7 @@ void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
         emit OperationCompleted(op, true, QString());
         QObject::disconnect(*conn);
         delete conn;
+        _backend->leaveHeavyOp();
         _backend->resetIdleTimer(); });
     density.ensureEnabled();
 }
@@ -194,8 +296,12 @@ bool PacksAdaptor::authorize(const QDBusMessage &message, const QString &op)
 void PacksAdaptor::UninstallPack(const QString &rpmName,
                                  const QDBusMessage &message)
 {
-    Q_UNUSED(_backend);
     const QString op = QStringLiteral("UninstallPack");
+    if (_backend->shuttingDown())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        return;
+    }
     if (!authorize(message, op))
         return;
 

@@ -158,10 +158,6 @@
         <translation>Εγχειρίδιο χρήσης</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Επιλογές</translation>
-    </message>
-    <message>
         <source>Restore display density</source>
         <translation>Επαναφορά πυκνότητας εμφάνισης</translation>
     </message>
@@ -344,10 +340,6 @@
         <translation>Εγχειρίδιο χρήσης</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Επιλογές</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>Πυκνότητα εμφάνισης</translation>
     </message>
@@ -359,198 +351,24 @@
         <source>Themes</source>
         <translation>Θέματα</translation>
     </message>
+    <message>
+        <source>About UI Themer</source>
+        <translation type="unfinished">Σχετικά με το UI Themer</translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">Επανεκκίνηση οδηγού πρώτης χρήσης</translation>
+    </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished">Επανεκκίνηση αρχικής οθόνης</translation>
+    </message>
 </context>
 <context>
     <name>Notification</name>
     <message>
         <source>Settings applied.</source>
         <translation>Οι ρυθμίσεις εφαρμόστηκαν.</translation>
-    </message>
-</context>
-<context>
-    <name>OptionsPage</name>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation>Επανεκκίνηση οδηγού πρώτης χρήσης</translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation>Εγχειρίδιο χρήσης</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Επαναφορά</translation>
-    </message>
-    <message>
-        <source>Icon updater</source>
-        <translation>Ενημερωτής εικονιδίων</translation>
-    </message>
-    <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time.</source>
-        <translation>Κάθε φορά που μια εφαρμογή ενημερώνεται, θα πρέπει να εφαρμόσετε ξανά το θέμα για να εμφανιστεί το προσαρμοσμένο εικονίδιο. Ο &lt;i&gt;Ενημερωτής εικονιδίων&lt;/i&gt; θα αυτοματοποιήσει αυτή τη διαδικασία, επιτρέποντας την αυτόματη ενημέρωση των εικονιδίων σε μια δεδομένη στιγμή.</translation>
-    </message>
-    <message>
-        <source>Update icons</source>
-        <translation>Ενημέρωση εικονιδίων</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Απενεργοποιημένο</translation>
-    </message>
-    <message>
-        <source>30 minutes</source>
-        <translation>30 λεπτά</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 ώρα</translation>
-    </message>
-    <message>
-        <source>2 hours</source>
-        <translation>2 ώρες</translation>
-    </message>
-    <message>
-        <source>3 hours</source>
-        <translation>3 ώρες</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 ώρες</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 ώρες</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>Καθημερινά</translation>
-    </message>
-    <message>
-        <source>One-click restore</source>
-        <translation>Επαναφορά με ένα κλικ</translation>
-    </message>
-    <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
-        <translation>Οι προσαρμογές του UI Themer πρέπει να επανέλθουν στις προεπιλεγμένες ρυθμίσεις πριν εκτελέσετε μια ενημέρωση συστήματος. Με την &lt;i&gt;Επαναφορά ενός κλικ&lt;/i&gt; μπορείτε να αυτοματοποιήσετε αυτήν τη διαδικασία και να επαναφέρετε τα εικονίδια, τις γραμματοσειρές και τις ρυθμίσεις πυκνότητας εμφάνισης με ένα μόνο κλικ.  </translation>
-    </message>
-    <message>
-        <source>Restore</source>
-        <translation>Επαναφορά</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Επιλογές</translation>
-    </message>
-    <message>
-        <source>Cover</source>
-        <translation>Κάλυμα</translation>
-    </message>
-    <message>
-        <source>Cover action</source>
-        <translation>Δράση καλύματος</translation>
-    </message>
-    <message>
-        <source>refresh current theme</source>
-        <translation>ανανέωση τρέχοντος θέματος</translation>
-    </message>
-    <message>
-        <source>restart homescreen</source>
-        <translation>επανεκκίνηση αρχικής οθόνης</translation>
-    </message>
-    <message>
-        <source>one-click restore</source>
-        <translation>επαναφορά με ένα κλικ</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>κανένα</translation>
-    </message>
-    <message>
-        <source>Second cover action</source>
-        <translation>Δεύτερη δράση καλύματος</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Επανεκκίνηση αρχικής οθόνης</translation>
-    </message>
-    <message>
-        <source>Restart</source>
-        <translation>Επανεκκίνηση</translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation>Επανεκκίνηση αρχικής οθόνης</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen, to make your modifications effective. Your currently opened apps will be closed.</source>
-        <translation>Κάντε επανεκκίνηση της αρχικής οθόνης, για να εφαρμόσετε τις τροποποιήσεις σας. Οι εφαρμογές που είναι ανοιχτές αυτήν τη στιγμή θα κλείσουν.</translation>
-    </message>
-    <message>
-        <source>Restoring</source>
-        <translation>Επαναφορά</translation>
-    </message>
-    <message>
-        <source>Choose the action to be shown on the UI Themer cover, for a quick access when the app is minimized on the homescreen.</source>
-        <translation>Επιλέξτε την ενέργεια που θα εμφανίζεται στο κάλυμμα του UI Themer, για γρήγορη πρόσβαση όταν η εφαρμογή είναι ελαχιστοποιημένη στην αρχική οθόνη.</translation>
-    </message>
-    <message>
-        <source>Optionally, you can choose to display a second action on the cover.</source>
-        <translation>Προαιρετικά, μπορείτε να επιλέξετε να εμφανίσετε μια δεύτερη ενέργεια στο κάλυμμα.</translation>
-    </message>
-    <message>
-        <source>Run before system updates</source>
-        <translation>Εκτέλεση πριν απο τις ενημερώσεις συστήματος</translation>
-    </message>
-    <message>
-        <source>Restore the default icons, fonts and display density settings before performing a system update, so you don&apos;t need to manually do it.</source>
-        <translation>Επαναφορά των προεπιλεγμένων εικονιδίων, γραμματοσειρών και ρυθμίσεων πυκνότητας προβολής πριν την εκτέλεση ενημέρωσης συστήματος, οπότε δεν χρειάζεται να το κάνετε χειροκίνητα.</translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation>Σχετικά με το UI Themer</translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RecoveryPage</name>
-    <message>
-        <source>Continue</source>
-        <translation>Συνέχεια</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Ακύρωση</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Επαναφορά</translation>
-    </message>
-    <message>
-        <source>Reinstall icons</source>
-        <translation>Επανεγκατάσταση εικονιδίων</translation>
-    </message>
-    <message>
-        <source>If any error occurs during themes applying/restoring, you can end up with messed up icons. From here, you can reinstall default Jolla app icons while, for thirdy party apps, you may need to reinstall/update apps to restore the default look.</source>
-        <translation>Αν παρουσιαστεί κάποιο σφάλμα κατά τη διάρκεια της εφαρμογής / αποκατάστασης θεμάτων, μπορείτε να καταλήξετε με προβληματικά εικονίδια. Από εδώ, μπορείτε να επανεγκαταστήσετε τα προεπιλεγμένα εικονίδια εφαρμογών της Jolla ενώ, για εφαρμογές τρίτων, ίσως χρειαστεί να εγκαταστήσετε ξανά / ενημερώσετε τις εφαρμογές για να επαναφέρετε την προεπιλεγμένη εμφάνιση.</translation>
-    </message>
-    <message>
-        <source>Reinstall fonts</source>
-        <translation>Επανεγκατάσταση γραμματοσειρών</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Θυμηθείτε να επανεκκινήσετε την αρχική οθόνη αμέσως μετά.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Επανεκκίνηση αρχικής οθόνης</translation>
-    </message>
-    <message>
-        <source>Reinstall default fonts, if fonts applying/restoring fails.</source>
-        <translation>Επανεγκατασστήστε τις προκαθορισμένες γραμματοσειρές σε περίπτωση αποτυχίας εφαρμογής/επαναφοράς.</translation>
     </message>
 </context>
 <context>

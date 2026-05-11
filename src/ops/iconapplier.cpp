@@ -484,26 +484,16 @@ void IconApplier::restoreIcons()
     emit restored();
 }
 
-void IconApplier::reassertCurrentTheme()
+void IconApplier::reassertWithinLock(IconManifest& manifest,
+                                     int& reasserted, int& removed)
 {
-    FileLock lk;
-    Q_UNUSED(lk);
-
-    IconManifest manifest(manifestPath());
-    if(!manifest.load())
-    {
-        emit reasserted();
-        return;
-    }
+    reasserted = 0;
+    removed = 0;
 
     const QString pack = manifest.activeIconPack();
     if(pack.isEmpty())
-    {
-        emit reasserted();
         return;
-    }
 
-    bool changed = false;
     const QHash<QString, IconManifest::Entry> entries = manifest.entries();
 
     for(auto it = entries.begin(); it != entries.end(); ++it)
@@ -514,8 +504,9 @@ void IconApplier::reassertCurrentTheme()
         DesktopFile df(dpath);
         if(!df.exists())
         {
+            // Uninstall cleanup: .desktop is gone (app uninstalled).
             manifest.removeEntry(dpath);
-            changed = true;
+            ++removed;
             continue;
         }
         if(!df.load())
@@ -530,7 +521,6 @@ void IconApplier::reassertCurrentTheme()
         {
             e.originalIcon = cur;
             manifest.setEntry(dpath, e);
-            changed = true;
         }
 
         // (b) Theme pack uninstalled / themed PNG vanished: write the
@@ -543,7 +533,7 @@ void IconApplier::reassertCurrentTheme()
                 if(e.kind == QStringLiteral("apk"))
                     chownToDefaultUser(dpath);
                 manifest.removeEntry(dpath);
-                changed = true;
+                ++removed;
             }
             continue;
         }
@@ -557,15 +547,32 @@ void IconApplier::reassertCurrentTheme()
         {
             if(e.kind == QStringLiteral("apk"))
                 chownToDefaultUser(dpath);
-            changed = true;
+            ++reasserted;
         }
     }
 
     // If every themed_icon vanished, the active pack is effectively gone.
     if(manifest.entries().isEmpty())
         manifest.setActiveIconPack(QString());
+}
 
-    if(changed)
+void IconApplier::reassertCurrentTheme()
+{
+    FileLock lk;
+    Q_UNUSED(lk);
+
+    IconManifest manifest(manifestPath());
+    if(!manifest.load())
+    {
+        emit reasserted();
+        return;
+    }
+
+    int reassertedCount = 0;
+    int removedCount = 0;
+    reassertWithinLock(manifest, reassertedCount, removedCount);
+
+    if(reassertedCount > 0 || removedCount > 0)
     {
         manifest.save();
         touchDesktopFiles();
@@ -613,7 +620,7 @@ void IconApplier::refreshOriginals()
     emit originalsRefreshed();
 }
 
-void IconApplier::themeNewDesktops()
+void IconApplier::themeNewDesktops(bool overlay)
 {
     FileLock lk;
     Q_UNUSED(lk);
@@ -628,6 +635,26 @@ void IconApplier::themeNewDesktops()
     const QString pack = manifest.activeIconPack();
     if(pack.isEmpty())
     {
+        emit newDesktopsThemed(0);
+        return;
+    }
+
+    // First: drift reassert + uninstall cleanup. Fixes entries whose
+    // Icon= was rewritten by an RPM update, rolls back entries whose
+    // themed PNG vanished, and prunes entries whose .desktop is gone.
+    int reassertedCount = 0;
+    int removedCount = 0;
+    reassertWithinLock(manifest, reassertedCount, removedCount);
+
+    // If the helper pruned the last entry, reassertWithinLock cleared
+    // the active pack -- bail before themeing anything new.
+    if(manifest.activeIconPack().isEmpty())
+    {
+        if(reassertedCount > 0 || removedCount > 0)
+        {
+            manifest.save();
+            touchDesktopFiles();
+        }
         emit newDesktopsThemed(0);
         return;
     }
@@ -651,12 +678,20 @@ void IconApplier::themeNewDesktops()
         if(isApk && original.isEmpty())
             return;
 
-        // APK still keys off baseForApk(Icon=); native keys off Icon= directly so
-        // built-in Jolla apps with Icon=icon-launcher-* match the pack.
-        const QString base = isApk ? baseForApk(original) : QString();
+        // `base` is the filesystem-safe key for the overlay cache.
+        // Native uses the .desktop basename; APK uses baseForApk(Icon=).
+        // Native pack lookup uses Icon= directly so jolla-* matches.
+        const QString base = isApk ? baseForApk(original) : baseForNative(dpath);
 
-        const QString themedPath = isApk ? findApkIcon(pack, base)
-                                         : findNativeIcon(pack, original);
+        QString themedPath = isApk ? findApkIcon(pack, base)
+                                   : findNativeIcon(pack, original);
+        // Overlay-on-new: when the user picked the overlay at apply
+        // time (passed in via the dconf flag the GUI mirrors), generate
+        // a composited icon for any new .desktop the pack has no
+        // direct asset for. Mirrors the apply path.
+        if(themedPath.isEmpty() && overlay)
+            themedPath = makeOverlayIcon(pack, base, kind,
+                                         resolveSourceIcon(original, kind));
         if(themedPath.isEmpty())
             return;
 
@@ -686,8 +721,11 @@ void IconApplier::themeNewDesktops()
     for(const QString& dpath : apkDesktops())
         processOne(dpath, QStringLiteral("apk"), true);
 
-    if(themed > 0)
+    if(themed > 0 || reassertedCount > 0 || removedCount > 0)
+    {
+        manifest.save();
         touchDesktopFiles();
+    }
 
     emit newDesktopsThemed(themed);
 }
@@ -731,7 +769,12 @@ void IconApplier::onWatchedDirChanged(const QString& /*path*/)
 
 void IconApplier::debouncedRescan()
 {
-    themeNewDesktops();
+    // The GUI's IconApplier runs as defaultuser and has no privilege
+    // to rewrite /usr/share/applications/*.desktop or the system
+    // manifest, so calling themeNewDesktops() locally would just emit
+    // newDesktopsThemed(0). QML hooks watcherFired and dispatches the
+    // call to the daemon via Helper.themeNewDesktops(overlay).
+    emit watcherFired();
 }
 
 void IconApplier::buildPreview(const QString& packName)

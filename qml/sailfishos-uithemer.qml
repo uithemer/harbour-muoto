@@ -24,11 +24,27 @@ ApplicationWindow
         id: iconapplier
         // The QFileSystemWatcher itself runs as defaultuser and only
         // observes paths under /usr/share/applications and
-        // /home/defaultuser/.local/share/apkd-bridge/launcherIcon, so
-        // turning it on is unprivileged. When it fires it calls
-        // Helper.themeNewDesktops() (privileged via the daemon).
-        Component.onCompleted: enableAutoTheming(true)
-        onNewDesktopsThemed: Helper.themeNewDesktops()
+        // /home/defaultuser/.local/share/applications, so turning it
+        // on is unprivileged. When the debounced rescan fires it
+        // emits watcherFired() (see Connections below); the actual
+        // rescan -- drift reassert + uninstall cleanup + new-theming
+        // -- runs in the daemon, which is the only side with the
+        // privilege to rewrite /usr/share/applications/*.desktop and
+        // the system manifest. On startup we also fire one catch-up
+        // call so apps installed while the GUI was closed get themed.
+        Component.onCompleted: {
+            enableAutoTheming(true);
+            Helper.themeNewDesktops(settings.iconOverlay);
+        }
+    }
+    Connections {
+        target: iconapplier
+        // Watcher fired => ask the daemon to rescan, passing the
+        // user's last-known overlay preference (settings.iconOverlay
+        // is set on ApplyIcons and cleared on RestoreIcons/uninstall).
+        // The daemon's busy gate self-drops the call if a heavy op is
+        // already in flight, so we don't worry about racing with it.
+        onWatcherFired: Helper.themeNewDesktops(settings.iconOverlay)
     }
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
 

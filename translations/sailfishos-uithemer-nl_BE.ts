@@ -158,10 +158,6 @@
         <translation>Instructies voor gebruik</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opties</translation>
-    </message>
-    <message>
         <source>Restore display density</source>
         <translation>Pixeldichtheid herstellen</translation>
     </message>
@@ -344,10 +340,6 @@
         <translation>Instructies voor gebruik</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opties</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>Pixeldichtheid</translation>
     </message>
@@ -359,198 +351,24 @@
         <source>Themes</source>
         <translation>Thema’s</translation>
     </message>
+    <message>
+        <source>About UI Themer</source>
+        <translation type="unfinished">Over UI Themer</translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">Eerste-start-wizard herstarten</translation>
+    </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished">Startscherm herstarten</translation>
+    </message>
 </context>
 <context>
     <name>Notification</name>
     <message>
         <source>Settings applied.</source>
         <translation>Instellingen toegepast.</translation>
-    </message>
-</context>
-<context>
-    <name>OptionsPage</name>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation>Eerste-start-wizard herstarten</translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation>Instructies voor gebruik</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Herstel</translation>
-    </message>
-    <message>
-        <source>Icon updater</source>
-        <translation>Pictogrambijwerker</translation>
-    </message>
-    <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time.</source>
-        <translation>Telkens dat nen app wordt bijgewerkt moet ge ’t thema terug toepassen voor ’t aangepast pictogram terug te krijgen. De &lt;i&gt;pictogrambijwerker&lt;/i&gt; automatiseert dit proces en laat u toe van uw pictogrammen op een gegeven tijdstip automatisch bij te werken.</translation>
-    </message>
-    <message>
-        <source>Update icons</source>
-        <translation>Pictogrammen bijwerken</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Uitgeschakeld</translation>
-    </message>
-    <message>
-        <source>30 minutes</source>
-        <translation>30 minuten</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 uur</translation>
-    </message>
-    <message>
-        <source>2 hours</source>
-        <translation>2 uur</translation>
-    </message>
-    <message>
-        <source>3 hours</source>
-        <translation>3 uur</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 uur</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 uur</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>Dagelijks</translation>
-    </message>
-    <message>
-        <source>One-click restore</source>
-        <translation>Enen-tik-herstel</translation>
-    </message>
-    <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
-        <translation>Voorafgaand aan ne systeemupdate moeten aanpassingen door UI Themer teruggedraaid worden. Met &lt;i&gt;Enen-tik-herstel&lt;/i&gt; kunt ge dit proces automatiseren, en met enen tik uw pictogrammen, lettertypen en pixeldichtheidsinstellingen herstellen.</translation>
-    </message>
-    <message>
-        <source>Restore</source>
-        <translation>Herstellen</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Opties</translation>
-    </message>
-    <message>
-        <source>Cover</source>
-        <translation>Omslag</translation>
-    </message>
-    <message>
-        <source>Cover action</source>
-        <translation>Omslagactie</translation>
-    </message>
-    <message>
-        <source>refresh current theme</source>
-        <translation>huidig thema vernieuwen</translation>
-    </message>
-    <message>
-        <source>restart homescreen</source>
-        <translation>startscherm herstarten</translation>
-    </message>
-    <message>
-        <source>one-click restore</source>
-        <translation>enen-tik-herstel</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>geen</translation>
-    </message>
-    <message>
-        <source>Second cover action</source>
-        <translation>Tweede omslagactie</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Startscherm herstarten</translation>
-    </message>
-    <message>
-        <source>Restart</source>
-        <translation>Herstarten</translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation>Startscherm wordt herstart</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen, to make your modifications effective. Your currently opened apps will be closed.</source>
-        <translation>Herstart ’t startscherm voor uw wijzigingen toe te passen. De apps die dat ge momenteel hebt geopend, gaan gesloten worden.</translation>
-    </message>
-    <message>
-        <source>Restoring</source>
-        <translation>Wordt hersteld</translation>
-    </message>
-    <message>
-        <source>Choose the action to be shown on the UI Themer cover, for a quick access when the app is minimized on the homescreen.</source>
-        <translation>Kiest de actie die dat op den omslag van UI Themer wordt weergegeven voor snelle toegang tot bepaalde functie.</translation>
-    </message>
-    <message>
-        <source>Optionally, you can choose to display a second action on the cover.</source>
-        <translation>Ge kunt ook een tweede actie op den omslag weergeven.</translation>
-    </message>
-    <message>
-        <source>Run before system updates</source>
-        <translation>Uitvoeren vóór systeemupdates</translation>
-    </message>
-    <message>
-        <source>Restore the default icons, fonts and display density settings before performing a system update, so you don&apos;t need to manually do it.</source>
-        <translation>Herstelt de standaardpictogrammen, lettertypen en pixeldichtheidsinstellingen voorafgaand aan een systeemupdate, zodat ge ’t niet meer handmatig moet doen.</translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation>Over UI Themer</translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RecoveryPage</name>
-    <message>
-        <source>Continue</source>
-        <translation>Verdergaan</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleren</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Herstel</translation>
-    </message>
-    <message>
-        <source>Reinstall icons</source>
-        <translation>Pictogrammen herinstalleren</translation>
-    </message>
-    <message>
-        <source>If any error occurs during themes applying/restoring, you can end up with messed up icons. From here, you can reinstall default Jolla app icons while, for thirdy party apps, you may need to reinstall/update apps to restore the default look.</source>
-        <translation>Indien dat der een fout optreedt bij ’t toepassen/herstellen van thema’s kunnen uw pictogrammen verprutst worden. Van hieruit kunt ge de standaardpictogrammen van Jolla herinstalleren. Voor apps van derde partijen moet ge mogelijks de apps bijwerken of herinstalleren voor de standaardpictogrammen te herstellen.</translation>
-    </message>
-    <message>
-        <source>Reinstall fonts</source>
-        <translation>Lettertypen herinstalleren</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Vergeet niet van ’t startscherm nadien te herstarten.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Startscherm herstarten</translation>
-    </message>
-    <message>
-        <source>Reinstall default fonts, if fonts applying/restoring fails.</source>
-        <translation>Herinstalleert de standaardlettertypen indien dat ’t toepassen/herstellen van lettertypen mislukt.</translation>
     </message>
 </context>
 <context>

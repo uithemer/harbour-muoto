@@ -166,9 +166,10 @@ void HelperClient::refreshOriginals()
     asyncCall(themesIface(), QStringLiteral("RefreshOriginals"), QVariantList());
 }
 
-void HelperClient::themeNewDesktops()
+void HelperClient::themeNewDesktops(bool overlay)
 {
-    asyncCall(themesIface(), QStringLiteral("ThemeNewDesktops"), QVariantList());
+    asyncCall(themesIface(), QStringLiteral("ThemeNewDesktops"),
+              QVariantList() << overlay);
 }
 
 void HelperClient::densityEnable()

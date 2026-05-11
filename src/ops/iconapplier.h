@@ -7,6 +7,7 @@
 #include <QTimer>
 
 class QFileSystemWatcher;
+class IconManifest;
 
 class IconApplier : public QObject
 {
@@ -42,11 +43,21 @@ public slots:
     // themed value. Manual escape hatch; reassertCurrentTheme also self-heals.
     void refreshOriginals();
 
-    // Theme any .desktop files in the watched dirs that are NOT yet in the
-    // manifest, using the active pack from the manifest. Called from the
-    // QFileSystemWatcher slot when a new app is installed or apkd-bridge drops
-    // a new launcher entry. Safe no-op when no theme is active.
-    void themeNewDesktops();
+    // Unified rescan triggered by the GUI's QFileSystemWatcher on every
+    // change under /usr/share/applications and
+    // /home/defaultuser/.local/share/applications. In one FileLock pass:
+    //   - drift reassert: any manifest entry whose .desktop's Icon= drifted
+    //     (RPM update rewrote it) is snapshotted as the new original then
+    //     re-themed; entries pointing at a now-missing themed PNG are rolled
+    //     back to original_icon.
+    //   - uninstall cleanup: any manifest entry whose .desktop has vanished
+    //     is dropped.
+    //   - new-theming: any .desktop NOT in the manifest gets themed via the
+    //     active pack. If `overlay` is true (mirrors the apply-time choice
+    //     the GUI passes in from settings.iconOverlay), an overlay PNG is
+    //     composited for entries the pack has no direct icon for.
+    // Safe no-op when no theme is active.
+    void themeNewDesktops(bool overlay);
 
     // Enable the QFileSystemWatcher (off by default; the GUI turns it on).
     void enableAutoTheming(bool enable);
@@ -69,6 +80,12 @@ signals:
     void originalsRefreshed();
     void previewReady(const QString& packName, bool ok);
     void newDesktopsThemed(int count);
+    // Fired from the debounced QFileSystemWatcher slot in the GUI's
+    // IconApplier instance. QML hooks this to call
+    // Helper.themeNewDesktops(settings.iconOverlay) on the daemon. The
+    // local pass would have no privilege to write the system manifest
+    // or /usr/share/applications/*.desktop, so we don't even try here.
+    void watcherFired();
 
 private slots:
     void onWatchedDirChanged(const QString& path);
@@ -108,6 +125,14 @@ private:
     QString cacheOverlayDir() const;
 
     void chownToDefaultUser(const QString& path) const;
+
+    // Drift reassert + uninstall cleanup pass. Caller must hold the
+    // FileLock and own the `mf` IconManifest; this helper does not
+    // load or save. Returns the number of entries it rewrote
+    // (`reasserted`) and the number it dropped (`removed`) so callers
+    // can decide whether to touchDesktopFiles().
+    void reassertWithinLock(IconManifest& mf,
+                            int& reasserted, int& removed);
 
     QFileSystemWatcher* _watcher;
     QTimer _watchDebounce;

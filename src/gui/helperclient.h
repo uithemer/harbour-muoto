@@ -43,7 +43,12 @@ public slots:
     void restoreIcons();
     void reassertIcons();
     void refreshOriginals();
-    void themeNewDesktops();
+    // ThemeNewDesktops is the unified rescan: drift reassert +
+    // uninstall cleanup + new-theming in one daemon-side pass. The
+    // GUI's watcher passes settings.iconOverlay so newly-installed
+    // apps that don't match the pack still get an overlay when the
+    // user opted in at apply time.
+    void themeNewDesktops(bool overlay);
     void densityEnable();
 
     // -- Packs interface (manage-packs) --

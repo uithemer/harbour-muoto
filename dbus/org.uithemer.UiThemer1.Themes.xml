@@ -19,7 +19,9 @@
     <method name="RestoreIcons"/>
     <method name="ReassertIcons"/>
     <method name="RefreshOriginals"/>
-    <method name="ThemeNewDesktops"/>
+    <method name="ThemeNewDesktops">
+      <arg name="overlay" direction="in" type="b"/>
+    </method>
     <method name="DensityEnable"/>
     <signal name="OperationCompleted">
       <arg name="op" type="s"/>

@@ -33,16 +33,39 @@ public:
     // on the next call.
     void resetIdleTimer();
 
+    // True once login1.Manager.PrepareForShutdown(true) has fired. The
+    // adaptors check this gate at method entry and refuse to dispatch
+    // new work; the broadcast OperationCompleted(op, false, "shutting
+    // down") still goes out so the GUI's busy state drains. We quit
+    // the QCoreApplication ~150 ms later (chained off idleQuit()) so
+    // the broadcast has room to flush.
+    bool shuttingDown() const { return _shuttingDown; }
+
+    // In-process counter incremented while a "heavy" op (ApplyIcons,
+    // RestoreIcons, ReassertIcons, RefreshOriginals, DensityEnable) is
+    // running, decremented in the per-op completion lambda. ThemeNew-
+    // Desktops checks this and self-drops if non-zero so the watcher's
+    // rescan cannot race with a user-initiated theme change or with
+    // the cover's refresh action. Complements FileLock: flock would
+    // just queue the rescan to run *after* the apply, which is the
+    // exact stale-overwrite race we want to avoid.
+    int  busyHeavy() const { return _busyHeavy; }
+    void enterHeavyOp()    { ++_busyHeavy; }
+    void leaveHeavyOp()    { if(_busyHeavy > 0) --_busyHeavy; }
+
 signals:
     void idleQuit();
 
 private slots:
     void onIdleTimeout();
+    void onPrepareForShutdown(bool active);
 
 private:
     IconApplier    _iconApplier;
     DensityEnabler _densityEnabler;
     QTimer         _idleTimer;
+    bool           _shuttingDown = false;
+    int            _busyHeavy = 0;
 };
 
 // One QDBusAbstractAdaptor per logical interface. Each adaptor exposes
@@ -62,7 +85,12 @@ public slots:
     void RestoreIcons(const QDBusMessage& message);
     void ReassertIcons(const QDBusMessage& message);
     void RefreshOriginals(const QDBusMessage& message);
-    void ThemeNewDesktops(const QDBusMessage& message);
+    // ThemeNewDesktops now takes an `overlay` flag: the GUI's auto-
+    // theming watcher passes the user's last apply-time choice
+    // (settings.iconOverlay in dconf), so newly-installed apps that
+    // don't have a direct pack match still get an overlay-composited
+    // icon when the user opted in.
+    void ThemeNewDesktops(bool overlay, const QDBusMessage& message);
     void DensityEnable(const QDBusMessage& message);
 
 signals:
