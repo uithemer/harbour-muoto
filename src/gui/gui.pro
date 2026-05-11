@@ -173,8 +173,9 @@ dbusxml.files = \
     $$ROOT/dbus/org.uithemer.UiThemer1.SystemServices.xml
 dbusxml.path  = /usr/share/dbus-1/interfaces
 
-polkit.files  = $$ROOT/polkit/org.uithemer.policy
-polkit.path   = /usr/share/polkit-1/actions
+# No polkit hand-off. See dbus/org.uithemer.UiThemer1.conf
+# for the new policy and src/daemon/helperservice.cpp for the
+# matching no-op authorize() stubs.
 
 # helperd.service ships under service/ alongside the other systemd
 # units; %post moves it into /etc/systemd/system/ together with the
@@ -185,5 +186,5 @@ polkit.path   = /usr/share/polkit-1/actions
 # and our own asset rules here.
 INSTALLS += service images \
             icon86 icon108 icon128 icon172 icon256 \
-            dbusconf dbusservice dbusxml polkit \
+            dbusconf dbusservice dbusxml \
             qm

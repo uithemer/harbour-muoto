@@ -15,28 +15,18 @@ include(../ops/ops.pri)
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/auth.h \
     $$PWD/helperservice.h
 
 SOURCES += \
     $$PWD/main.cpp \
-    $$PWD/auth.cpp \
     $$PWD/helperservice.cpp
 
-# Qt5DBus is exposed via QT += dbus above; no extra pkgconfig needed.
-#
-# polkit-qt-core-1 is the GUI-less core of polkit-qt (just Authority,
-# Subject, ...) and is what's packaged for the SailfishOS SDK target.
-# Its .pc file ships but does not export a usable Cflags: line on the
-# SFOS-5.0.0.62 target, so PKGCONFIG += polkit-qt-core-1 silently
-# produces no -I and the build fails with
-#   fatal error: PolkitQt1/Authority: No such file or directory
-# Hardcode the include + lib instead. Paths are resolved against the
-# qmake target sysroot at build time:
-#   /usr/include/polkit-qt-1/PolkitQt1/Authority   (verified to exist)
-#   libpolkit-qt-core-1                            (matches BuildRequires)
-INCLUDEPATH += /usr/include/polkit-qt-1
-LIBS        += -lpolkit-qt-core-1
+# The bus policy (/etc/dbus-1/system.d/org.uithemer.UiThemer1.conf) is the
+# only gate. Once a method call has cleared dbus-daemon it is
+# trusted, no PolkitQt1::checkAuthorizationSync round-trip. This
+# removes the dependency on a polkit auth-agent being present in
+# the user session (which lipstick does not always provide on
+# community ports, and which appeared to silently deny our calls).
 
 target.path = /usr/libexec
 INSTALLS += target

@@ -23,18 +23,6 @@ Source0:        %{name}-%{version}.tar.bz2
 Source100:      sailfishos-uithemer.yaml
 
 Requires:       sailfish-version >= 2.1.4
-# 2.6.0 routes every privileged op through the new
-# sailfishos-uithemer-helperd D-Bus system service. Lipstick already
-# bundles a polkit auth agent on stock SFOS; on community ports a
-# missing agent makes the prompt fail and the GUI surfaces an error
-# notification rather than crashing.
-Requires:       polkit
-# polkit-qt is pulled in automatically via the auto-detected SONAME
-# requirement libpolkit-qt-core-1.so.1 (resolved on-device through
-# libpolkit-qt-1-1, the package name Jolla uses). No explicit
-# `Requires: polkit-qt-core-1` -- that name does not exist in the
-# device's repos and `zypper` rejects the install with
-#   nothing provides 'polkit-qt-core-1'
 Obsoletes:      harbour-themepacksupport < 0.8.14
 Provides:       harbour-themepacksupport = 0.8.14
 Conflicts:      harbour-iconpacksupport
@@ -45,7 +33,6 @@ BuildRequires:  pkgconfig(Qt5Gui)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5DBus)
-BuildRequires:  pkgconfig(polkit-qt-core-1)
 BuildRequires:  desktop-file-utils
 
 %description
@@ -127,14 +114,16 @@ desktop-file-install --delete-original       \
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-# Daemon plumbing: D-Bus name policy + activation file, polkit policy,
-# systemd unit. Installed by the gui sub-pro's INSTALLS list.
+# Daemon plumbing: D-Bus name policy + activation file + interface
+# introspection XMLs, plus the systemd unit (moved into place from
+# /usr/share/sailfishos-uithemer/service/ in %post). The polkit
+# policy file shipped in 2.6.0-2.6.1 is gone in 2.6.2 -- auth is now
+# enforced exclusively by the bus policy below.
 %config /etc/dbus-1/system.d/org.uithemer.UiThemer1.conf
 /usr/share/dbus-1/system-services/org.uithemer.UiThemer1.service
 /usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.Themes.xml
 /usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.Packs.xml
 /usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.SystemServices.xml
-/usr/share/polkit-1/actions/org.uithemer.policy
 
 # >> files
 # << files
@@ -155,13 +144,17 @@ mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-helperd.service /etc/syste
 systemctl disable --now sailfishos-uithemer-reassert.service 2>/dev/null || :
 rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
 rm -f %{_bindir}/sailfishos-uithemer-reassert
-# 2.6.0: pick up the new helper unit + dbus / polkit policy. Best-effort
-# reloads (older systemd / community ports may not honour reload dbus).
+# 2.6.0: pick up the new helper unit + dbus policy. 2.6.2: polkit
+# reload dropped along with the policy file. Best-effort reloads
+# (older systemd / community ports may not honour reload dbus).
 systemctl daemon-reload
 systemctl reload dbus            2>/dev/null || :
-systemctl reload polkit          2>/dev/null || :
 systemctl enable themepacksupport-systemupgrade.service
 systemctl enable sailfishos-uithemer-icond.service
+# 2.6.2: the helperd is now always-on (Before=systemd-user-sessions
+# and Restart=always). Enable + start it so
+# the GUI's first call after install does not race bus-activation.
+systemctl enable --now sailfishos-uithemer-helperd.service 2>/dev/null || :
 
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
@@ -285,8 +278,7 @@ if [ $1 -eq 0 ]; then
     rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
     rm -f /etc/systemd/system/sailfishos-uithemer-helperd.service
     systemctl daemon-reload
-    # 2.6.0: refresh dbus + polkit so the just-removed system bus name
-    # / action ids drop from their respective registries.
+    # 2.6.0: refresh dbus so the just-removed system bus name drops
+    # from the registry. 2.6.2: polkit reload dropped.
     systemctl reload dbus    2>/dev/null || :
-    systemctl reload polkit  2>/dev/null || :
 fi

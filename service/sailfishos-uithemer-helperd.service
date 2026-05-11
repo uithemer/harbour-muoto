@@ -1,16 +1,20 @@
 [Unit]
-Description=Sailfish OS UI Themer privileged helper (D-Bus activated)
+Description=Sailfish OS UI Themer privileged helper
 Documentation=https://github.com/uithemer/sailfishos-uithemer
-# The unit is bus-activated; we still hint at network ordering for the
-# rare case where polkit / dconf paths need DNS at first auth prompt.
-After=dbus.service polkit.service
+Requires=dbus.service
+After=dbus.service
+# Start the daemon before user sessions come up so the GUI's very first
+# D-Bus method call never races bus-activation. 
+Before=systemd-user-sessions.service
 
 [Service]
 Type=dbus
 BusName=org.uithemer.UiThemer1
-ExecStart=/usr/libexec/sailfishos-uithemer-helperd --bus
-# The daemon self-quits after 30 s idle so it does not pin RAM.
-Restart=on-failure
+User=root
+ExecStart=/usr/libexec/sailfishos-uithemer-helperd
+# Auto-restart on any exit (the daemon may quit on idle; systemd will
+# bring it back as soon as the next D-Bus call arrives).
+Restart=always
 RestartSec=2
 
 # Hardening: the daemon legitimately writes to /usr/share/applications/
@@ -20,7 +24,7 @@ RestartSec=2
 # keep it off and lean on the smaller set of restrictions below.
 NoNewPrivileges=yes
 ProtectHome=no
-PrivateTmp=yes
+PrivateTmp=no
 RestrictAddressFamilies=AF_UNIX AF_NETLINK
 RestrictNamespaces=yes
 RestrictRealtime=yes
@@ -30,5 +34,4 @@ MemoryDenyWriteExecute=yes
 SystemCallArchitectures=native
 
 [Install]
-# bus-activated, but we keep an alias so service-list tools see it.
 WantedBy=multi-user.target
