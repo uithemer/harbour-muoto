@@ -318,10 +318,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Om du arbetar på ett tema och vill ha standardikonerna på en säker plats, kan du säkerhetskopiera dem. Ett komprimerat arkiv skapas och sparas i &lt;i&gt;/home/nemo/&lt;/i&gt;. Du kan också återställa en tidigare säkerhetskopia.</translation>
     </message>
     <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.</source>
-        <translation>Om du har en Xperia XA2, kanske du måste starta om telefonen för att tillämpa Android-inställningarna.</translation>
-    </message>
-    <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -580,6 +576,10 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <source>Restart homescreen</source>
         <translation>Starta om hemskärmen</translation>
     </message>
+    <message>
+        <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RestorePage</name>
@@ -645,14 +645,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Välkommen till UI Themer</translation>
     </message>
     <message>
-        <source>Install dependencies</source>
-        <translation>Installera beroenden</translation>
-    </message>
-    <message>
-        <source>I have already installed the dependencies</source>
-        <translation>Jag har redan installerat alla beroenden</translation>
-    </message>
-    <message>
         <source>Donate</source>
         <translation>Donera</translation>
     </message>
@@ -677,20 +669,8 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Support</translation>
     </message>
     <message>
-        <source>UI Themer needs some additional dependencies in order to function properly. Install them now if you haven&apos;t already.</source>
-        <translation>UI Themer kräver några ytterligare beroenden för att fungera korrekt. Installera dem nu, om du inte redan gjort det.</translation>
-    </message>
-    <message>
-        <source>It may take a while, do not quit.</source>
-        <translation>Det kan ta en stund, avsluta inte.</translation>
-    </message>
-    <message>
         <source>Usage guide</source>
         <translation>Användningsguide</translation>
-    </message>
-    <message>
-        <source>Dependencies</source>
-        <translation>Beroenden</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

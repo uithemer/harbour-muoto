@@ -317,10 +317,6 @@
         <translation>Если вы работаете над темой или хотите, чтобы значки по умолчанию находились в безопасном месте, вы можете сделать их резервную копию. Сжатый архив будет создан и сохранен в &lt;i&gt;/home/nemo/&lt;/i&gt;. Вы также можете восстановить предыдущую резервную копию.</translation>
     </message>
     <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.</source>
-        <translation>Если у вас устройство серии Xperia XA2, может потребоваться полный перезапуск, чтобы применить настройки Android.</translation>
-    </message>
-    <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -579,6 +575,10 @@
         <source>Restart homescreen</source>
         <translation>Перезагрузить домашний экран</translation>
     </message>
+    <message>
+        <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RestorePage</name>
@@ -644,14 +644,6 @@
         <translation>Добро пожаловать в UI Themer</translation>
     </message>
     <message>
-        <source>Install dependencies</source>
-        <translation>Установить зависимости</translation>
-    </message>
-    <message>
-        <source>I have already installed the dependencies</source>
-        <translation>Я уже установил зависимости</translation>
-    </message>
-    <message>
         <source>Donate</source>
         <translation>Пожертвовать</translation>
     </message>
@@ -676,20 +668,8 @@
         <translation>Поддержка</translation>
     </message>
     <message>
-        <source>UI Themer needs some additional dependencies in order to function properly. Install them now if you haven&apos;t already.</source>
-        <translation>UI Themer нужны некоторые дополнительные зависимости для правильной работы. Установите их сейчас, если вы еще этого не сделали.</translation>
-    </message>
-    <message>
-        <source>It may take a while, do not quit.</source>
-        <translation>Это может занять некоторое время, не выходите.</translation>
-    </message>
-    <message>
         <source>Usage guide</source>
         <translation>Руководство по использованию</translation>
-    </message>
-    <message>
-        <source>Dependencies</source>
-        <translation>Зависимости</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

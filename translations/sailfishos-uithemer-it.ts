@@ -317,10 +317,6 @@
         <translation>Se stai lavorando ad un tema o vuoi tenere le icone predefinite in un luogo sicuro, puoi effettuare un backup. Un archivio compresso sarà creato e salvato in &lt;i&gt;/home/nemo/&lt;/i&gt;. Puoi anche ripristinare un backup precedente.</translation>
     </message>
     <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.</source>
-        <translation>Se hai un dispositivo della serie Xperia XA2, un riavvio completo potrebbe essere necessario per applicare le impostazioni Android.</translation>
-    </message>
-    <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -579,6 +575,10 @@
         <source>Restart homescreen</source>
         <translation>Riavvia schermata home</translation>
     </message>
+    <message>
+        <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RestorePage</name>
@@ -644,14 +644,6 @@
         <translation>Benvenuto in UI Themer</translation>
     </message>
     <message>
-        <source>Install dependencies</source>
-        <translation>Installa dipendenze</translation>
-    </message>
-    <message>
-        <source>I have already installed the dependencies</source>
-        <translation>Ho già installato le dipendenze</translation>
-    </message>
-    <message>
         <source>Donate</source>
         <translation>Dona</translation>
     </message>
@@ -676,20 +668,8 @@
         <translation>Supporta</translation>
     </message>
     <message>
-        <source>UI Themer needs some additional dependencies in order to function properly. Install them now if you haven&apos;t already.</source>
-        <translation>UI Themer ha bisogno di alcune dipendenze per funzionare correttamente. Installale adesso se non lo hai già fatto.</translation>
-    </message>
-    <message>
-        <source>It may take a while, do not quit.</source>
-        <translation>Potrebbe volerci un po&apos;, non uscire dall&apos;app.</translation>
-    </message>
-    <message>
         <source>Usage guide</source>
         <translation>Manuale d&apos;uso</translation>
-    </message>
-    <message>
-        <source>Dependencies</source>
-        <translation>Dipendenze</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

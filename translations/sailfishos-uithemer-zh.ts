@@ -317,10 +317,6 @@
         <translation>如果你正在开发新的主题或是想要将默认图标储存到安全位置，可以备份它们。这将会创建一个压缩文档并储存到&lt;i&gt;home/nemo/&lt;/i&gt;，你也可以恢复之前的备份。</translation>
     </message>
     <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.</source>
-        <translation>如果你拥有一台索尼 Xperia  XA2 系列设备，可能需要一次完全重启以应用 Android 设置</translation>
-    </message>
-    <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -579,6 +575,10 @@
         <source>Restart homescreen</source>
         <translation>重启主屏幕</translation>
     </message>
+    <message>
+        <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RestorePage</name>
@@ -644,14 +644,6 @@
         <translation>欢迎使用 UI Themer</translation>
     </message>
     <message>
-        <source>Install dependencies</source>
-        <translation>安装附属软件</translation>
-    </message>
-    <message>
-        <source>I have already installed the dependencies</source>
-        <translation>我已经安装附属软件</translation>
-    </message>
-    <message>
         <source>Donate</source>
         <translation>捐赠</translation>
     </message>
@@ -676,20 +668,8 @@
         <translation>支持</translation>
     </message>
     <message>
-        <source>UI Themer needs some additional dependencies in order to function properly. Install them now if you haven&apos;t already.</source>
-        <translation>UI Themer 需要一些附属软件以正常工作。如果你还未安装，请立刻安装。</translation>
-    </message>
-    <message>
-        <source>It may take a while, do not quit.</source>
-        <translation>可能需要一会儿，请勿退出</translation>
-    </message>
-    <message>
         <source>Usage guide</source>
         <translation>使用指导</translation>
-    </message>
-    <message>
-        <source>Dependencies</source>
-        <translation>附属软件</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

@@ -547,11 +547,11 @@
 - Drop Jolla ambient (z*), DynCal and DynClock support.
 - Drop Tools backup/restore icons UI; covered by the manifest now.
 
-* Sat May 10 2026 2.3.1-1
+* Sun May 10 2026 2.3.1-1
 - APK launcher icons: /home/defaultuser/.local/share/apkd-bridge/launcherIcon (flat).
 - Remove aliendalvik.service drop-in; APK refresh in autoupdate service/run.sh.
 
-* Fri May 09 2026 2.3.0-1
+* Sat May 09 2026 2.3.0-1
 - Merge Theme pack support engine into UI Themer; obsolete harbour-themepacksupport.
 - Single install root under /usr/share/sailfishos-uithemer/; keep themepacksupport CLI.
 

@@ -29,6 +29,12 @@ Requires:       sailfish-version >= 2.1.4
 # missing agent makes the prompt fail and the GUI surfaces an error
 # notification rather than crashing.
 Requires:       polkit
+# polkit-qt is pulled in automatically via the auto-detected SONAME
+# requirement libpolkit-qt-core-1.so.1 (resolved on-device through
+# libpolkit-qt-1-1, the package name Jolla uses). No explicit
+# `Requires: polkit-qt-core-1` -- that name does not exist in the
+# device's repos and `zypper` rejects the install with
+#   nothing provides 'polkit-qt-core-1'
 Obsoletes:      harbour-themepacksupport < 0.8.14
 Provides:       harbour-themepacksupport = 0.8.14
 Conflicts:      harbour-iconpacksupport
@@ -129,10 +135,7 @@ desktop-file-install --delete-original       \
 /usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.Packs.xml
 /usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.SystemServices.xml
 /usr/share/polkit-1/actions/org.uithemer.policy
-# Note: sailfishos-uithemer-helperd.service ships under
-# %{_datadir}/%{name}/service/ and is mv'd to /etc/systemd/system in %post,
-# matching the pattern used by themepacksupport-* and icond.service.
-# %postun removes the moved unit explicitly.
+
 # >> files
 # << files
 

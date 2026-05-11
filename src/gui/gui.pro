@@ -2,7 +2,23 @@ TARGET = sailfishos-uithemer
 TEMPLATE = app
 
 CONFIG += sailfishapp c++11
-CONFIG += sailfishapp_i18n
+
+# qmake feature .prfs added via `CONFIG += <name>` are auto-loaded at the end
+# of .pro processing (default_post.prf phase). That means any qml/desktop/icon
+# install variables we set later in this file would be silently overwritten by
+# sailfishapp.prf's defaults (qml.files = qml, desktop.files = $${TARGET}.desktop)
+# resolved relative to src/gui/, where those files do not exist -- qmake then
+# omits install_qml / install_desktop entirely and rpmbuild trips on
+# `desktop-file-install ... /usr/share/applications/*.desktop`.
+# Force the .prf to load NOW so our overrides further down are the last word.
+load(sailfishapp)
+# sailfishapp_i18n.prf is intentionally NOT loaded: it assumes the .ts files
+# live at $${_PRO_FILE_PWD_}/translations/ (next to the .pro), which after the
+# 2.6.0 subdirs refactor is wrong -- they're at $$ROOT/translations/. The prf
+# would build lupdate / cp / lrelease paths like
+#   /.../src/gui//home/.../translations/foo.ts
+# (double absolute prefix) and silently fail to ship any .qm. We replicate
+# its flow further down with proper $$ROOT-rooted paths.
 
 QT += dbus
 
@@ -64,7 +80,38 @@ OTHER_FILES += \
     $$ROOT/rpm/* \
     $$ROOT/sailfishos-uithemer.desktop
 
-TRANSLATIONS += $$files($$ROOT/translations/*.ts)
+# --- translations (manual; replaces sailfishapp_i18n.prf) ---
+# We don't use sailfishapp_i18n.prf (see comment near `load(sailfishapp)`).
+# Instead replicate its lupdate -> cp -> lrelease -> install_qm flow with
+# explicit $$ROOT-rooted paths so the .ts files at the project root are
+# picked up correctly and the generated .qm files actually ship.
+#
+# Flow:
+#   1. lupdate scans $$ROOT/src + $$ROOT/qml for tr() and updates every
+#      .ts in $$ROOT/translations/ in place (matches the prf's behaviour
+#      of refreshing .ts on every build).
+#   2. The .ts files are copied into $$OUT_PWD/translations/ so a shadow
+#      build (rpmbuild, sfdk) doesn't write .qm into the source tree.
+#   3. lrelease compiles every .ts in that dir into a sibling .qm.
+#   4. install_qm picks the .qm files up and drops them under
+#      /usr/share/<TARGET>/translations.
+TS_SOURCES   = $$files($$ROOT/translations/*.ts)
+QM_OUT_DIR   = $$OUT_PWD/translations
+TR_SCAN_DIRS = $$ROOT/src $$ROOT/qml
+
+qm.path     = /usr/share/$${TARGET}/translations
+qm.CONFIG  += no_check_exist
+qm.commands = mkdir -p $$QM_OUT_DIR && \
+              lupdate -noobsolete $$TR_SCAN_DIRS -ts $$TS_SOURCES && \
+              cp -af $$TS_SOURCES $$QM_OUT_DIR/ && \
+              lrelease -nounfinished $$QM_OUT_DIR/*.ts
+
+# Build the matching .qm path for every .ts source (basename + .qm).
+for(ts_path, TS_SOURCES) {
+    bn       = $$basename(ts_path)
+    bn_noext = $$section(bn, ".", 0, -2)
+    qm.files += $$QM_OUT_DIR/$${bn_noext}.qm
+}
 
 # --- non-source asset installs ---
 # 2.6.0: legacy tps/ + scripts/ shells were retired (the daemon owns
@@ -77,8 +124,39 @@ service.path  = /usr/share/$$TARGET/service
 images.files = $$files($$ROOT/images/*)
 images.path  = /usr/share/$$TARGET/images
 
-appicons.files = $$files($$ROOT/appicons/*)
-appicons.path  = /usr/share/icons/hicolor/
+# sailfishapp.prf assumes the .pro file lives at the project root and
+# resolves qml/desktop/icon sources relative to it. After the 2.6.0
+# split this .pro lives in src/gui/, so override the inherited defaults
+# to point at the real, $$ROOT-relative locations. Without this qmake
+# silently skips them and rpmbuild then trips on
+#   desktop-file-install ... %{buildroot}/usr/share/applications/*.desktop
+# because the glob has nothing to match. The QML tree and the per-size
+# app icons would be missing too.
+
+# QML tree at <root>/qml -> /usr/share/sailfishos-uithemer/qml
+qml.files = $$ROOT/qml
+
+# .desktop at <root>/sailfishos-uithemer.desktop -> /usr/share/applications
+desktop.files = $$ROOT/sailfishos-uithemer.desktop
+
+# Replace sailfishapp.prf's default `icon` rule (which would look for
+# sailfishos-uithemer.png next to gui.pro) with explicit per-size rules
+# pulling from <root>/appicons/<size>/apps/. The earlier `appicons` rule
+# (non-recursive $$files() over a subdir-only tree) was a no-op, so app
+# icons never made it into the buildroot.
+INSTALLS  -= icon
+icon.files =
+
+icon86.files  = $$ROOT/appicons/86x86/apps/$${TARGET}.png
+icon86.path   = /usr/share/icons/hicolor/86x86/apps
+icon108.files = $$ROOT/appicons/108x108/apps/$${TARGET}.png
+icon108.path  = /usr/share/icons/hicolor/108x108/apps
+icon128.files = $$ROOT/appicons/128x128/apps/$${TARGET}.png
+icon128.path  = /usr/share/icons/hicolor/128x128/apps
+icon172.files = $$ROOT/appicons/172x172/apps/$${TARGET}.png
+icon172.path  = /usr/share/icons/hicolor/172x172/apps
+icon256.files = $$ROOT/appicons/256x256/apps/$${TARGET}.png
+icon256.path  = /usr/share/icons/hicolor/256x256/apps
 
 # --- daemon plumbing assets ---
 # Shipped here (not in daemon.pro) so the GUI subproject owns the package
@@ -102,5 +180,10 @@ polkit.path   = /usr/share/polkit-1/actions
 # units; %post moves it into /etc/systemd/system/ together with the
 # autoupdate / icond units.
 
-INSTALLS += service images appicons \
-            dbusconf dbusservice dbusxml polkit
+# `target`, `qml` and `desktop` are already on INSTALLS via sailfishapp.prf
+# (we only redirected their .files above). Add the per-size icon* rules
+# and our own asset rules here.
+INSTALLS += service images \
+            icon86 icon108 icon128 icon172 icon256 \
+            dbusconf dbusservice dbusxml polkit \
+            qm

@@ -317,10 +317,6 @@
         <translation>Als ge aan een thema aan ’t werken zijt of als ge de standaardpictogrammen ergens veilig wilt opslaan, kunt ge der nen back-up van maken. Der gaat een gecomprimeerd archief worden aangemaakt in &lt;i&gt;/home/nemo/&lt;/i&gt;. Ge kunt ook ne vorigen back-up herstellen.</translation>
     </message>
     <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.</source>
-        <translation>Als ge nen Xperia XA2 gebruikt, moet ge ’t toestel mogelijks herstarten voor de Android-instellingen toe te passen.</translation>
-    </message>
-    <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -579,6 +575,10 @@
         <source>Restart homescreen</source>
         <translation>Startscherm herstarten</translation>
     </message>
+    <message>
+        <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RestorePage</name>
@@ -644,14 +644,6 @@
         <translation>Welkom bij UI Themer</translation>
     </message>
     <message>
-        <source>Install dependencies</source>
-        <translation>Afhankelijkheden installeren</translation>
-    </message>
-    <message>
-        <source>I have already installed the dependencies</source>
-        <translation>Ik heb de afhankelijkheden al geïnstalleerd</translation>
-    </message>
-    <message>
         <source>Donate</source>
         <translation>Doneren</translation>
     </message>
@@ -676,20 +668,8 @@
         <translation>Hulp</translation>
     </message>
     <message>
-        <source>UI Themer needs some additional dependencies in order to function properly. Install them now if you haven&apos;t already.</source>
-        <translation>UI Themer heeft enkele extra afhankelijkheden nodig voor correct te kunnen werken. Installeert ze nu als ge dit nog niet zoudt gedaan hebben.</translation>
-    </message>
-    <message>
-        <source>It may take a while, do not quit.</source>
-        <translation>Dit kan efkes duren, sluit de toepassing niet af.</translation>
-    </message>
-    <message>
         <source>Usage guide</source>
         <translation>Instructies voor gebruik</translation>
-    </message>
-    <message>
-        <source>Dependencies</source>
-        <translation>Afhankelijkheden</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

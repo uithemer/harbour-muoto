@@ -317,10 +317,6 @@
         <translation>Εάν εργάζεστε σε ένα θέμα ή θέλετε να έχετε τα προεπιλεγμένα εικονίδια σε ασφαλές μέρος, μπορείτε να δημιουργήσετε αντίγραφα ασφαλείας αυτών. Ένα συμπιεσμένο αρχείο θα δημιουργηθεί και θα αποθηκευτεί στο &lt;i&gt;/home/nemo/&lt;/i&gt;.  Μπορείτε επίσης να επαναφέρετε ένα προηγούμενο αντίγραφο ασφαλείας.</translation>
     </message>
     <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.</source>
-        <translation>Εάν διαθέτετε συσκευή της σειράς Xperia XA2, ίσως χρειαστεί να κάνετε πλήρη επανεκκίνηση για να εφαρμόσετε τις ρυθμίσεις Android.</translation>
-    </message>
-    <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -579,6 +575,10 @@
         <source>Restart homescreen</source>
         <translation>Επανεκκίνηση αρχικής οθόνης</translation>
     </message>
+    <message>
+        <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RestorePage</name>
@@ -644,14 +644,6 @@
         <translation>Καλώς ορίσατε στο UI Themer</translation>
     </message>
     <message>
-        <source>Install dependencies</source>
-        <translation>Εγκατάσταση εξαρτομένων εφαρμογών</translation>
-    </message>
-    <message>
-        <source>I have already installed the dependencies</source>
-        <translation>Έχω ήδη εγκαταστήσει τις εξαρτόμενες εφαρμογές</translation>
-    </message>
-    <message>
         <source>Donate</source>
         <translation>Δωρεά</translation>
     </message>
@@ -676,20 +668,8 @@
         <translation>Υποστήριξη</translation>
     </message>
     <message>
-        <source>UI Themer needs some additional dependencies in order to function properly. Install them now if you haven&apos;t already.</source>
-        <translation>Το UI Themer χρειάζεται κάποιες επιπλέον εξαρτήσεις για να λειτουργήσει σωστά. Εγκαταστήστε τα τώρα αν δεν το έχετε ήδη κάνει.</translation>
-    </message>
-    <message>
-        <source>It may take a while, do not quit.</source>
-        <translation>Μπορεί να χρειαστεί λίγος χρόνος, μην κλείσετε την εφαρμογή.</translation>
-    </message>
-    <message>
         <source>Usage guide</source>
         <translation>Εγχειρίδιο χρήσης</translation>
-    </message>
-    <message>
-        <source>Dependencies</source>
-        <translation>Εξαρτόμενες εφαρμογές</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

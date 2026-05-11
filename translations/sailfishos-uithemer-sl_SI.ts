@@ -317,10 +317,6 @@
         <translation>Če ustvarjate novo temo ali pa le želite imeti shranjene privzete ikone na varnem mestu, ustvarite varnostno kopijo. Kompresirana datoteka se bo ustvarila v &lt;i&gt;/home/nemo/&lt;/i&gt;. Prav tako lahko obnovite datoteke iz obstoječe varnostne kopije.</translation>
     </message>
     <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.</source>
-        <translation>Če uporabljate Sony Xperia XA2 je po spremembah nastavitev za Android potreben ponoveni zagon.</translation>
-    </message>
-    <message>
         <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -579,6 +575,10 @@
         <source>Restart homescreen</source>
         <translation>Ponovni zagon domačega zaslona</translation>
     </message>
+    <message>
+        <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RestorePage</name>
@@ -644,14 +644,6 @@
         <translation>Dobrodošli v aplikaciji UI Themer</translation>
     </message>
     <message>
-        <source>Install dependencies</source>
-        <translation>Namesti odvisnosti</translation>
-    </message>
-    <message>
-        <source>I have already installed the dependencies</source>
-        <translation>Vse odvisnosti že imam nameščene</translation>
-    </message>
-    <message>
         <source>Donate</source>
         <translation>Doniraj</translation>
     </message>
@@ -676,20 +668,8 @@
         <translation>Podpora</translation>
     </message>
     <message>
-        <source>UI Themer needs some additional dependencies in order to function properly. Install them now if you haven&apos;t already.</source>
-        <translation>UI Themer potrebuje za pravilno delovanje nekaj dodatnih odvisnosti. Če jih še niste namestili storite to zdaj.</translation>
-    </message>
-    <message>
-        <source>It may take a while, do not quit.</source>
-        <translation>To lahko traja nekaj časa, ne zapuščajte programa.</translation>
-    </message>
-    <message>
         <source>Usage guide</source>
         <translation>Priročnik za uporabo</translation>
-    </message>
-    <message>
-        <source>Dependencies</source>
-        <translation>Odvisnosti</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

@@ -23,13 +23,20 @@ SOURCES += \
     $$PWD/auth.cpp \
     $$PWD/helperservice.cpp
 
-# Qt5DBus + polkit-qt-core-1 are runtime-required. polkit-qt-core-1 is
-# the GUI-less core of polkit-qt (just Authority, Subject, ...); it is
-# what is packaged for the SailfishOS SDK target. We never need the
-# Agent / GUI sub-libraries because lipstick already runs the user-side
-# auth agent.
-CONFIG += link_pkgconfig
-PKGCONFIG += polkit-qt-core-1 Qt5DBus
+# Qt5DBus is exposed via QT += dbus above; no extra pkgconfig needed.
+#
+# polkit-qt-core-1 is the GUI-less core of polkit-qt (just Authority,
+# Subject, ...) and is what's packaged for the SailfishOS SDK target.
+# Its .pc file ships but does not export a usable Cflags: line on the
+# SFOS-5.0.0.62 target, so PKGCONFIG += polkit-qt-core-1 silently
+# produces no -I and the build fails with
+#   fatal error: PolkitQt1/Authority: No such file or directory
+# Hardcode the include + lib instead. Paths are resolved against the
+# qmake target sysroot at build time:
+#   /usr/include/polkit-qt-1/PolkitQt1/Authority   (verified to exist)
+#   libpolkit-qt-core-1                            (matches BuildRequires)
+INCLUDEPATH += /usr/include/polkit-qt-1
+LIBS        += -lpolkit-qt-core-1
 
 target.path = /usr/libexec
 INSTALLS += target
