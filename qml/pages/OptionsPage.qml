@@ -107,25 +107,59 @@ SilicaFlickable
                 onServiceChanged: itsservicesu.busy = false;
             }
 
+    // 2.6.0 D-Bus refactor: same gate as MainPage. The recovery
+    // dialog can fire Helper.restoreIcons() AND
+    // themepackmodel.recoveryTheme() in parallel; the former is async
+    // over D-Bus, the latter runs FontApplier in-process and
+    // synchronously, so themeRecovered would fire before the daemon
+    // had finished re-writing .desktop files. Without this gate the
+    // homescreen restart at the end of the recovery would race the
+    // daemon. ocrRestored is *already* the C++-side aggregator (it
+    // chains Helper.setAutoupdate → Helper.restoreIcons →
+    // FontApplier → DensityEnabler before emitting), so the ocr path
+    // doesn't need the gate.
+    property int _pendingOps: 0
+    property bool _waitForFinalise: false
+
+    function _armRecovery(nOps) {
+        _waitForFinalise = true;
+        _pendingOps = nOps;
+    }
+    function _opDone() {
+        if(!_waitForFinalise)
+            return;
+        if(_pendingOps > 0)
+            _pendingOps -= 1;
+        if(_pendingOps === 0) {
+            _waitForFinalise = false;
+            settings.isRunning = false;
+            notification.publish();
+            if(settings.homeRefresh === true)
+                themepack.restartHomescreen();
+        }
+    }
+
+    // Connections.enabled needs QtQuick 2.4+; the page imports 2.0,
+    // so guard inside the slots via _opDone(), which already
+    // short-circuits when _waitForFinalise is false.
+    Connections {
+        target: Helper
+        onIconsRestored: optionspage._opDone()
+        onError: {
+            if(op === "RestoreIcons")
+                optionspage._opDone();
+        }
+    }
+
     ThemePackModel {
-                function applyDone() {
-                    notifyDone();
-                }
                 function notifyDone() {
                     settings.isRunning = false;
                     notification.publish();
                 }
 
                 id: themepackmodel
-                onOcrRestored: applyDone()
-                onThemeRecovered: {
-                    applyDone();
-                    if(settings.homeRefresh === true) {
-                        themepack.restartHomescreen();
-                        console.log("homescreen restart");
-                    } else
-                        console.log("no homescreen restart");
-                }
+                onOcrRestored: notifyDone()
+                onThemeRecovered: optionspage._opDone()
             }
 
     PullDownMenu
@@ -316,7 +350,13 @@ SilicaFlickable
             onClicked: {
                 var dlgrecovery = pageStack.push("RecoveryPage.qml", { "settings": settings });
                 dlgrecovery.accepted.connect(function() {
+                    var nOps = (dlgrecovery.reinstallIcons ? 1 : 0)
+                             + (dlgrecovery.reinstallFonts ? 1 : 0);
+                    if(nOps === 0)
+                        return;
+
                     settings.isRunning = true;
+                    optionspage._armRecovery(nOps);
 
                     // Mirror the ordering rule from MainPage's apply /
                     // restore callbacks: write dconf BEFORE the synchronous
@@ -328,13 +368,9 @@ SilicaFlickable
                         settings.deactivateIcon();
                         Helper.restoreIcons();
                     }
-
                     if(dlgrecovery.reinstallFonts) {
                         settings.deactivateFont();
                         themepackmodel.recoveryTheme(dlgrecovery.reinstallFonts);
-                    } else if(dlgrecovery.reinstallIcons) {
-                        settings.isRunning = false;
-                        notification.publish();
                     }
                 });
             }

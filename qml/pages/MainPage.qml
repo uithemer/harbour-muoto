@@ -17,23 +17,69 @@ Page
     BusyState { id: busyindicator }
     Notification { id: notification }
 
+    // 2.6.0 D-Bus refactor: every Helper.X call is now an async D-Bus
+    // dispatch (~1-2 s round-trip), while FontApplier remains
+    // in-process and synchronous. Before this gate the QML treated
+    // Helper.applyIcons as if it had already finished and called
+    // themepack.restartHomescreen() before the daemon had rewritten
+    // any .desktop file — classic race that left lipstick half-themed.
+    //
+    // _pendingOps counts how many of the user's selected ops are
+    // still in flight; _waitForFinalise is the "arm" flag so stray
+    // signals (auto-theming watcher's ThemeNewDesktops, the cover's
+    // ocr flow, uninstall's restoreIcons preamble) don't trigger our
+    // finalise. _finalise() is the single chokepoint that clears the
+    // busy indicator, fires the notification, and (optionally)
+    // restarts lipstick — exactly once, exactly when every selected
+    // op has reported completion.
+    property int _pendingOps: 0
+    property bool _waitForFinalise: false
+
+    function _armApply(nOps) {
+        _waitForFinalise = true;
+        _pendingOps = nOps;
+    }
+    function _opDone() {
+        if(!_waitForFinalise)
+            return;
+        if(_pendingOps > 0)
+            _pendingOps -= 1;
+        if(_pendingOps === 0) {
+            _waitForFinalise = false;
+            _finalise();
+        }
+    }
+    function _finalise() {
+        settings.isRunning = false;
+        notification.publish();
+        if(settings.homeRefresh === true)
+            themepack.restartHomescreen();
+    }
+
+    // Connections.enabled needs QtQuick 2.4+; MainPage still imports
+    // 2.0, so guard inside the slots via _opDone(), which already
+    // short-circuits when _waitForFinalise is false. Stray signals
+    // (cover's ocr flow, uninstall's restoreIcons preamble, the
+    // auto-theming watcher) just no-op here.
+    Connections {
+        target: Helper
+        onIconsApplied: mainpage._opDone()
+        onIconsRestored: mainpage._opDone()
+        onError: {
+            if(op === "ApplyIcons" || op === "RestoreIcons")
+                mainpage._opDone();
+        }
+    }
+
     ThemePackModel {
-                function applyDone() {
-                    notifyDone();
-                    if(settings.homeRefresh === true) {
-                        themepack.restartHomescreen();
-                        console.log("homescreen restart");
-                    } else
-                        console.log("no homescreen restart");
-                }
                 function notifyDone() {
                     settings.isRunning = false;
                     notification.publish();
                 }
 
                 id: themepackmodel
-                onThemeApplied: applyDone()
-                onThemeRestored: applyDone()
+                onThemeApplied: mainpage._opDone()
+                onThemeRestored: mainpage._opDone()
                 onUninstallCompleted: notifyDone()
             }
 
@@ -161,7 +207,17 @@ Page
                     var dlgrestore = pageStack.push("RestorePage.qml", { "settings": settings });
 
                     dlgrestore.accepted.connect(function() {
+                        // Pre-count the user's selections so we can arm the
+                        // finalise gate BEFORE kicking the first op — a
+                        // synchronous FontApplier::restored would otherwise
+                        // re-enter _opDone() before _pendingOps is set.
+                        var nOps = (dlgrestore.restoreIcons ? 1 : 0)
+                                 + (dlgrestore.restoreFonts ? 1 : 0);
+                        if(nOps === 0)
+                            return;
+
                         settings.isRunning = true;
+                        mainpage._armApply(nOps);
 
                         // Same ordering rule as the apply path: write dconf
                         // BEFORE the synchronous restoreTheme call so the
@@ -171,15 +227,9 @@ Page
                             settings.deactivateIcon();
                             Helper.restoreIcons();
                         }
-
                         if(dlgrestore.restoreFonts) {
                             settings.deactivateFont();
                             themepackmodel.restoreTheme(dlgrestore.restoreFonts);
-                        } else if(dlgrestore.restoreIcons) {
-                            settings.isRunning = false;
-                            notification.publish();
-                            if(settings.homeRefresh === true)
-                                themepack.restartHomescreen();
                         }
                     });
                 }
@@ -216,28 +266,31 @@ Page
                 var dlgconfirm = pageStack.push("ConfirmPage.qml", { "settings": settings, "themePackModel": themepackmodel, "themePackIndex": model.index });
 
                 dlgconfirm.accepted.connect(function() {
+                    // Pre-count the user's selections so we can arm the
+                    // finalise gate BEFORE kicking the first op —
+                    // FontApplier is synchronous, so themepackmodel
+                    // .applyTheme() would re-enter _opDone() before
+                    // _pendingOps was set if we counted lazily.
+                    var nOps = (dlgconfirm.iconsSelected ? 1 : 0)
+                             + (dlgconfirm.fontsSelected ? 1 : 0);
+                    if(nOps === 0)
+                        return;
+
                     settings.isRunning = true;
+                    mainpage._armApply(nOps);
 
                     // Write dconf BEFORE the C++ apply calls. FontApplier is
-                    // synchronous in 2.5.0, so themeApplied (which clears
-                    // settings.isRunning via MainPage.applyDone) fires
-                    // inside applyTheme(...). If activeFontPack were written
+                    // synchronous, so themeApplied fires inside
+                    // applyTheme(...). If activeFontPack were written
                     // afterwards the cover would re-render once with the
                     // stale value and leave the font CoverLabel empty.
                     if(dlgconfirm.iconsSelected) {
                         settings.activeIconPack = model.packName;
                         Helper.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
                     }
-
                     if(dlgconfirm.fontsSelected) {
                         settings.activeFontPack = model.packName;
-                        themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont)
-                    } else if(dlgconfirm.iconsSelected) {
-                        // Icons-only: applyIcons is synchronous, finalise here.
-                        settings.isRunning = false;
-                        notification.publish();
-                        if(settings.homeRefresh === true)
-                            themepack.restartHomescreen();
+                        themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont);
                     }
                 });
             }
