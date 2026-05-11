@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.uithemer 1.0
 
 CoverActionList {
     iconBackground: true
@@ -17,7 +18,7 @@ CoverActionList {
             settings.isRunning = true
             switch (settings.coverAction1) {
             case 0:
-                return helper.reassertIcons();
+                return Helper.reassertIcons();
             case 1:
                 return themepack.restartHomescreen();
             case 2:

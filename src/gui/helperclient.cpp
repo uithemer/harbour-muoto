@@ -9,6 +9,8 @@
 #include <QDBusError>
 #include <QVariantList>
 #include <QDebug>
+#include <QQmlEngine>
+#include <QJSEngine>
 
 namespace
 {
@@ -19,8 +21,8 @@ namespace
     const char* kIfaceSystem  = "org.uithemer.UiThemer1.SystemServices";
 }
 
-HelperClient::HelperClient(QObject* parent)
-    : QObject(parent)
+HelperClient::HelperClient()
+    : QObject(nullptr)
     , _themes(nullptr)
     , _packs(nullptr)
     , _systemServices(nullptr)
@@ -36,6 +38,26 @@ HelperClient::~HelperClient()
     delete _themes;
     delete _packs;
     delete _systemServices;
+}
+
+HelperClient* HelperClient::instance()
+{
+    // GUI is strictly single-threaded (Qt main thread), so plain static
+    // initialisation is sufficient — no Q_GLOBAL_STATIC needed.
+    static HelperClient* s_instance = new HelperClient();
+    return s_instance;
+}
+
+QObject* HelperClient::qmlSingleton(QQmlEngine* engine, QJSEngine* scriptEngine)
+{
+    Q_UNUSED(engine);
+    Q_UNUSED(scriptEngine);
+    HelperClient* h = instance();
+    // The QML engine must not own / GC the singleton — we share it
+    // with C++ peers (ThemePackModel, ThemePack) and its lifetime is
+    // the whole process.
+    QQmlEngine::setObjectOwnership(h, QQmlEngine::CppOwnership);
+    return h;
 }
 
 QDBusInterface* HelperClient::themesIface()

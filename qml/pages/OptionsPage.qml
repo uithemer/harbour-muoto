@@ -326,7 +326,7 @@ SilicaFlickable
                     // stale activeFontPack value.
                     if(dlgrecovery.reinstallIcons) {
                         settings.deactivateIcon();
-                        helper.restoreIcons();
+                        Helper.restoreIcons();
                     }
 
                     if(dlgrecovery.reinstallFonts) {

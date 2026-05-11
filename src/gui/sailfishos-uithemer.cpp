@@ -26,7 +26,7 @@
 // IconApplier stays a QML type so ConfirmPage can call buildPreview()
 // directly (read-only, in-process). DensityEnabler is no longer
 // registered: the only QML caller (DensityPage) was the
-// ensureEnabled() path, which now goes through helper.densityEnable().
+// ensureEnabled() path, which now goes through Helper.densityEnable().
 int main(int argc, char *argv[])
 {
     QGuiApplication *app = SailfishApp::application(argc, argv);
@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<FontWeightModel>("harbour.uithemer", 1, 0, "FontWeightModel");
     qmlRegisterType<IconApplier>("harbour.uithemer", 1, 0, "IconApplier");
     qmlRegisterType<FontApplier>("harbour.uithemer", 1, 0, "FontApplier");
-    qmlRegisterType<HelperClient>("harbour.uithemer", 1, 0, "HelperClient");
+    qmlRegisterSingletonType<HelperClient>("harbour.uithemer", 1, 0, "Helper",
+                                           &HelperClient::qmlSingleton);
 
     // image://uithemer/preview/<packName>?t=<ts> serves the in-memory
     // icon pack preview built by IconApplier::buildPreview. Engine

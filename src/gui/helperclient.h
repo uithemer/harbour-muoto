@@ -6,14 +6,16 @@
 
 class QDBusInterface;
 class QDBusMessage;
+class QQmlEngine;
+class QJSEngine;
 
-// HelperClient: Q_OBJECT facade around the org.uithemer.UiThemer1
-// system-bus service. The QML side instantiates a single `HelperClient
-// { id: helper }` and calls one slot per privileged op; HelperClient
-// forwards over D-Bus to the daemon and demuxes the broadcast
-// OperationCompleted / Progress signals back into one Qt signal per
-// logical event so the existing QML connections (`onThemeApplied`,
-// `onDpiRestored`, etc.) keep working with minimal rewiring.
+// HelperClient: process-wide Q_OBJECT facade around the
+// org.uithemer.UiThemer1 system-bus service. Exposed to QML as the
+// `Helper` singleton (registered via qmlRegisterSingletonType in
+// main()), and shared with C++ peers (ThemePackModel, ThemePack) via
+// HelperClient::instance(). Singleton because each instance opens its
+// own match rule on the system bus, and we used to create up to six
+// of them (one per QML element instantiation) — wasteful and noisy.
 //
 // All slots return immediately. Real success / failure / progress
 // comes through the matching Qt signal; if the daemon is not
@@ -24,7 +26,15 @@ class HelperClient : public QObject
     Q_OBJECT
 
 public:
-    explicit HelperClient(QObject* parent = nullptr);
+    // Process-wide accessor. Lazily constructs on first call; the
+    // returned pointer is owned by the C++ side and outlives every
+    // QObject parent (callers MUST NOT delete it).
+    static HelperClient* instance();
+
+    // Factory for qmlRegisterSingletonType. Forwards to instance()
+    // and pins QQmlEngine::CppOwnership so the engine cannot GC us.
+    static QObject* qmlSingleton(QQmlEngine* engine, QJSEngine* scriptEngine);
+
     ~HelperClient() override;
 
 public slots:
@@ -95,6 +105,11 @@ private:
     // Subscribe to the per-interface OperationCompleted (and Themes
     // Progress) broadcast signals once, before any method is invoked.
     void hookBroadcastSignals();
+
+    // Private: callers go through HelperClient::instance() or the
+    // QML `Helper` singleton.
+    HelperClient();
+    Q_DISABLE_COPY(HelperClient)
 
     QDBusInterface* _themes;
     QDBusInterface* _packs;

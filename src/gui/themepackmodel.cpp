@@ -11,7 +11,7 @@
 
 ThemePackModel::ThemePackModel(QObject *parent)
     : QAbstractListModel(parent)
-    , _helper(new HelperClient(this))
+    , _helper(HelperClient::instance())
 {
     // Errors are best-effort logged; the busy spinner in QML stays on
     // until applied/restored/recovered actually fires.

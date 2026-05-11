@@ -20,7 +20,7 @@ CoverBackground
      // listen for its bridged signals instead of iconapplier's local
      // ones.
      Connections {
-         target: helper
+         target: Helper
          onIconsReasserted: { settings.isRunning = false; notification.publish(); }
          onIconsRestored: { settings.isRunning = false; notification.publish(); }
      }

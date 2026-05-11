@@ -20,16 +20,15 @@ ApplicationWindow
 }
 
     ThemePack { id: themepack }
-    HelperClient { id: helper }
     IconApplier {
         id: iconapplier
         // The QFileSystemWatcher itself runs as defaultuser and only
         // observes paths under /usr/share/applications and
         // /home/defaultuser/.local/share/apkd-bridge/launcherIcon, so
         // turning it on is unprivileged. When it fires it calls
-        // helper.themeNewDesktops() (privileged via the daemon).
+        // Helper.themeNewDesktops() (privileged via the daemon).
         Component.onCompleted: enableAutoTheming(true)
-        onNewDesktopsThemed: helper.themeNewDesktops()
+        onNewDesktopsThemed: Helper.themeNewDesktops()
     }
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
 

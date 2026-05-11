@@ -9,7 +9,7 @@
 
 ThemePack::ThemePack(QObject* parent)
     : QObject(parent)
-    , _helper(new HelperClient(this))
+    , _helper(HelperClient::instance())
 {
     // The daemon's SystemServicesAdaptor broadcasts a single Qt-level
     // serviceChanged signal (via HelperClient demux) for the four

@@ -20,8 +20,8 @@ class HelperClient;
 //     and the icon legs that ocr() chains together.
 //
 // ocr() is a pure GUI-side state machine:
-//   helper.setAutoupdate(false)     [System-bus, manage-system-services]
-//   -> helper.restoreIcons()        [System-bus, manage-themes]
+//   Helper.setAutoupdate(false)     [System-bus, manage-system-services]
+//   -> Helper.restoreIcons()        [System-bus, manage-themes]
 //   -> _fonts.restoreFonts()        [in-process]
 //   -> _density.restoreDensity(t,t) [in-process]
 //   -> dconf writes to              [in-process; defaultuser owns]

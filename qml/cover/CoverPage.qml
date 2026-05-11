@@ -51,7 +51,7 @@ CoverBackground
      // anymore, so its `reasserted` / `restored` signals would never
      // fire from the privileged path).
      Connections {
-         target: helper
+         target: Helper
          onIconsReasserted: { settings.isRunning = false; notification.publish(); }
          onIconsRestored: { settings.isRunning = false; notification.publish(); }
      }
