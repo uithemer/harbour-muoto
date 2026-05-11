@@ -1,0 +1,24 @@
+[Unit]
+Description=UI Themer auto-theming watcher
+Documentation=https://github.com/uithemer/sailfishos-uithemer
+After=dbus.service
+
+# Fires sailfishos-uithemer-rescan.service whenever the .desktop tree
+# changes under either the system applications dir or defaultuser's
+# private one (where apkd-bridge writes APK launcher entries). The
+# triggering service is a oneshot that just issues a D-Bus call into
+# helperd's Themes.ThemeNewDesktops; helperd already has a busy gate
+# that drops concurrent rescans, so this path unit can coexist with
+# the GUI's QFileSystemWatcher without fighting it.
+[Path]
+PathChanged=/usr/share/applications
+PathChanged=/home/defaultuser/.local/share/applications
+# Coalesce bursts of writes (RPM transactions, apkd-bridge batch
+# updates) into at most one trigger every 3s. Without this systemd
+# would re-fire the service for every modify event the kernel
+# delivers, which can easily be dozens during a single app install.
+TriggerLimitIntervalSec=3s
+TriggerLimitBurst=1
+
+[Install]
+WantedBy=multi-user.target

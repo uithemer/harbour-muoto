@@ -1,0 +1,15 @@
+[Unit]
+Description=UI Themer auto-theming rescan (oneshot)
+Documentation=https://github.com/uithemer/sailfishos-uithemer
+After=dbus.service sailfishos-uithemer-helperd.service
+
+# Triggered by sailfishos-uithemer-rescan.path. Runs as defaultuser
+# so dconf reads the user's iconOverlay setting; the bus policy at
+# /etc/dbus-1/system.d/org.uithemer.UiThemer1.conf already allows
+# non-root callers on the Themes interface. Type=oneshot keeps
+# systemd from forking dbus-send into the background.
+[Service]
+Type=oneshot
+User=defaultuser
+Environment=HOME=/home/defaultuser
+ExecStart=/usr/share/sailfishos-uithemer/service/rescan.sh

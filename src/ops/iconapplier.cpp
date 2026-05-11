@@ -142,6 +142,29 @@ QString IconApplier::findApkIcon(const QString& packName, const QString& base) c
         if(QFileInfo::exists(p))
             return p;
     }
+
+    // Legacy fallback: older packs (pre underscore-style apkd-bridge)
+    // shipped apkd_launcher_org.fdroid.fdroid.png, i.e. they kept the
+    // dotted Android package name in the filename. Try that variant
+    // by swapping underscores after "apkd_launcher_" back to dots.
+    static const QString kPrefix = QStringLiteral("apkd_launcher_");
+    if(base.startsWith(kPrefix))
+    {
+        QString legacyTail = base.mid(kPrefix.size());
+        legacyTail.replace(QLatin1Char('_'), QLatin1Char('.'));
+        const QString legacy = kPrefix + legacyTail;
+        if(legacy != base)
+        {
+            for(const QString& s : sizes)
+            {
+                const QString p = root + QStringLiteral("/apk/") + s
+                                  + QStringLiteral("/") + legacy
+                                  + QStringLiteral(".png");
+                if(QFileInfo::exists(p))
+                    return p;
+            }
+        }
+    }
     return QString();
 }
 
@@ -178,14 +201,30 @@ QString IconApplier::baseForNative(const QString& desktopPath) const
 
 QString IconApplier::baseForApk(const QString& iconValue) const
 {
-    // For APK .desktops, the existing convention is `Icon=apkd_launcher_<launcher_id>`
-    // (without extension). The pack ships PNGs named exactly that.
-    // Strip a directory prefix and `.png` suffix if some package set an absolute path.
+    // Normalise the .desktop's Icon= value to the pack-side lookup key.
+    // Modern apkd-bridge writes an absolute path inside its per-user
+    // launcherIcon dir, of the form:
+    //   /home/defaultuser/.local/share/apkd-bridge/launcherIcon/
+    //   apkd_launcher_<pkg>-<ActivityClass>.png
+    // The "<pkg>" portion uses underscores in place of dots (e.g.
+    // org_fdroid_fdroid for org.fdroid.fdroid). Theme packs ship one
+    // PNG per package, keyed apkd_launcher_<pkg>.png, so we drop the
+    // "-<ActivityClass>" tail before looking up. Older apkd-bridge
+    // wrote just the bare apkd_launcher_<launcher_id> string with no
+    // path, which still works the same way after the strip below.
     QString v = iconValue;
     if(v.contains(QLatin1Char('/')))
         v = QFileInfo(v).completeBaseName();
     if(v.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
         v.chop(4);
+
+    static const QString kPrefix = QStringLiteral("apkd_launcher_");
+    if(v.startsWith(kPrefix))
+    {
+        const int dash = v.indexOf(QLatin1Char('-'), kPrefix.size());
+        if(dash > 0)
+            v = v.left(dash);
+    }
     return v;
 }
 
@@ -727,7 +766,12 @@ void IconApplier::themeNewDesktops(bool overlay)
         touchDesktopFiles();
     }
 
-    emit newDesktopsThemed(themed);
+    // Count semantic: number of entries whose Icon= changed in this
+    // pass (new theming + drift reassert). Excludes removedCount,
+    // which is uninstall cleanup -- the .desktop is gone so the
+    // launcher prunes it on its own; no lipstick refresh hint needed.
+    // QML uses this to decide whether to restart the homescreen.
+    emit newDesktopsThemed(themed + reassertedCount);
 }
 
 void IconApplier::enableAutoTheming(bool enable)

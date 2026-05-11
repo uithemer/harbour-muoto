@@ -136,6 +136,17 @@ chmod +x %{_datadir}/%{name}/service/*.sh
 mkdir -p %{_datadir}/%{name}/backup
 
 mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-helperd.service /etc/systemd/system/
+# 2.7.1: rescan path+service for background auto-theming. The .path
+# unit watches /usr/share/applications and
+# /home/defaultuser/.local/share/applications and triggers the .service,
+# which runs as defaultuser, reads iconOverlay from dconf, and asks
+# helperd over the system bus to run a unified rescan. This is what
+# themes APK icons after apkd-bridge installs/updates an app while the
+# GUI is closed.
+mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-rescan.path /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-rescan.service /etc/systemd/system/
+# rescan.sh stays under %{_datadir}/%{name}/service/ -- the chmod +x
+# at the top of %post (chmod +x .../service/*.sh) already armed it.
 # 2.6.1: drop the old boot unit + binary name (reassert -> icond).
 systemctl disable --now sailfishos-uithemer-reassert.service 2>/dev/null || :
 rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
@@ -161,6 +172,10 @@ systemctl reload dbus            2>/dev/null || :
 # and Restart=always). Enable + start it so
 # the GUI's first call after install does not race bus-activation.
 systemctl enable --now sailfishos-uithemer-helperd.service 2>/dev/null || :
+# 2.7.1: enable the rescan .path so apkd-bridge installs trigger an
+# auto-theming pass even when the GUI is closed. Failure is non-fatal
+# on community ports that lack systemd path units.
+systemctl enable --now sailfishos-uithemer-rescan.path 2>/dev/null || :
 
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
@@ -236,6 +251,11 @@ if [ $1 -eq 0 ]; then
     # 2.6.0: stop the privileged helper before files vanish so it does
     # not race the rest of %preun on a dbus-activated re-spawn.
     systemctl stop sailfishos-uithemer-helperd.service 2>/dev/null || :
+    # 2.7.1: stop the rescan path unit too -- otherwise the in-flight
+    # %preun would tick it (we remove files under
+    # /home/defaultuser/.local/share/sailfishos-uithemer below) and
+    # systemd would retry a service whose binary is about to vanish.
+    systemctl disable --now sailfishos-uithemer-rescan.path 2>/dev/null || :
     # 2.7.0: OptionsPage retirement dropped the headless icond binary
     # plus the autoupdate/systemupgrade units; the on-uninstall
     # auto-restore of themed .desktop files went with them. Users
@@ -272,6 +292,10 @@ fi
 if [ $1 -eq 0 ]; then
     rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
     rm -f /etc/systemd/system/sailfishos-uithemer-helperd.service
+    # 2.7.1: drop the rescan path+service we placed in %post. Files
+    # under %{_datadir}/%{name} are removed by RPM automatically.
+    rm -f /etc/systemd/system/sailfishos-uithemer-rescan.path
+    rm -f /etc/systemd/system/sailfishos-uithemer-rescan.service
     systemctl daemon-reload
     # 2.6.0: refresh dbus so the just-removed system bus name drops
     # from the registry. 2.6.2: polkit reload dropped.

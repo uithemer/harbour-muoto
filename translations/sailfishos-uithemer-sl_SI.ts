@@ -361,7 +361,7 @@
     </message>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ponovni zagon domačega zaslona</translation>
     </message>
 </context>
 <context>

@@ -172,10 +172,12 @@ dbusxml.path  = /usr/share/dbus-1/interfaces
 # for the new policy and src/daemon/helperservice.cpp for the
 # matching no-op authorize() stubs.
 
-# helperd.service ships under service/ and is moved into
-# /etc/systemd/system/ by the RPM %post. 2.7.0: it's the only unit
-# left after the OptionsPage retirement dropped the autoupdate /
-# systemupgrade / icond units.
+# helperd.service and the rescan .path/.service/.sh trio ship under
+# service/ and are moved into /etc/systemd/system/ (units) or kept in
+# /usr/share/sailfishos-uithemer/service/ (the shell helper) by the RPM
+# %post. 2.7.1: rescan.path watches /usr/share/applications and
+# /home/defaultuser/.local/share/applications so APK installs/updates
+# get themed even when the GUI is not running.
 
 # `target`, `qml` and `desktop` are already on INSTALLS via sailfishapp.prf
 # (we only redirected their .files above). Add the per-size icon* rules

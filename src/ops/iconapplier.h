@@ -79,6 +79,11 @@ signals:
     void reasserted();
     void originalsRefreshed();
     void previewReady(const QString& packName, bool ok);
+    // count is "entries whose Icon= changed in this pass" (newly
+    // themed + drift reasserted). Uninstall cleanups are NOT counted
+    // -- the .desktop is gone, no lipstick refresh required. QML's
+    // top-level Helper.onNewDesktopsThemed handler uses this to
+    // decide whether to debounce-restart the homescreen.
     void newDesktopsThemed(int count);
     // Fired from the debounced QFileSystemWatcher slot in the GUI's
     // IconApplier instance. QML hooks this to call

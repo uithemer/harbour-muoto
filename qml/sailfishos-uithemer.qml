@@ -46,6 +46,27 @@ ApplicationWindow
         // already in flight, so we don't worry about racing with it.
         onWatcherFired: Helper.themeNewDesktops(settings.iconOverlay)
     }
+    // Debounce a burst of watcher fires (one APK update can trigger
+    // several directoryChanged events on apkd-bridge's behalf, and
+    // the systemd path unit may pile on its own call) so we only
+    // restart lipstick once per quiet window.
+    Timer {
+        id: rescanRestart
+        interval: 2000
+        repeat: false
+        onTriggered: themepack.restartHomescreen()
+    }
+    Connections {
+        target: Helper
+        // Daemon emits count = themed + reasserted (entries whose
+        // Icon= changed). settings.isRunning guard: an explicit apply
+        // calls themepack.restartHomescreen() from MainPage._finalise()
+        // already; we skip here to avoid a double-restart.
+        onNewDesktopsThemed: {
+            if(count > 0 && settings.homeRefresh && !settings.isRunning)
+                rescanRestart.restart();
+        }
+    }
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
 
     initialPage: settings.wizardDone ? mainpage : welcomepage

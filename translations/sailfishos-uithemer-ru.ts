@@ -353,7 +353,7 @@
     </message>
     <message>
         <source>About UI Themer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">О приложении UI Themer</translation>
     </message>
     <message>
         <source>Restart first run wizard</source>
