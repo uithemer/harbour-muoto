@@ -8,14 +8,6 @@ CoverBackground
 {
     id: root
      Notification { id: notification }
-     ThemePackModel {
-         function notifyDone() {
-             settings.isRunning = false;
-             notification.publish();
-         }
-         id: themepackmodel
-         onOcrRestored: notifyDone()
-     }
      // 2.6.0: icon ops route through HelperClient and the daemon, so
      // listen for its bridged signals instead of iconapplier's local
      // ones.

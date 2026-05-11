@@ -3,27 +3,13 @@
 
 #include <QObject>
 
-class HelperClient;
-
-// ThemePack: small QML-facing facade for "stuff the GUI used to do as
-// root via Spawner / setuid_ex". 2.6.0 splits its surface in half:
-//   - Read-only convenience (whoami, getTimer, getFileSize,
-//     hasAndroidSupport, hasStoremanInstalled): unchanged, runs
-//     in-process as defaultuser.
-//   - restartHomescreen: was setuid + a homescreen.sh shell that
-//     ran `systemctl --user restart lipstick.service` against
-//     defaultuser's session bus. With the GUI itself now running as
-//     defaultuser, this collapses to a single
-//     QProcess::startDetached("systemctl", "--user", "restart",
-//     "lipstick.service") -- the shell script is gone.
-//   - hideIcon, enable/disable autoupdate + servicesu, applyHours:
-//     wrap the system bus org.uithemer.UiThemer1.SystemServices
-//     methods, gated by the manage-system-services polkit action.
-//
-// Each privileged slot just forwards to a private HelperClient
-// instance; the helper's matching success signal is relayed to
-// ThemePack's existing serviceChanged signal so QML callers
-// (`onServiceChanged: ...`) keep working without editing the page.
+// ThemePack: small QML-facing facade for the few non-privileged
+// helpers the GUI still needs. 2.7.0 trimmed every SystemServices-
+// related slot (autoupdate timer, servicesu, hideIcon, applyHours,
+// getTimer) along with the OptionsPage that used them; what remains
+// is read-only environment introspection plus the user-bus
+// `systemctl --user restart lipstick.service` shim used by the
+// homescreen-restart dialog.
 class ThemePack : public QObject
 {
     Q_PROPERTY(bool hasAndroidSupport READ hasAndroidSupport CONSTANT FINAL)
@@ -37,22 +23,11 @@ class ThemePack : public QObject
         bool hasAndroidSupport() const;
         bool hasStoremanInstalled() const;
         QString whoami() const;
-        QString getTimer() const;
         qint64 getFileSize(const QString& file);
         void restartHomescreen();
-        void applyHours(const QString& hours);
-        void enableserviceautoupdate();
-        void disableserviceautoupdate();
-        void enableservicesu();
-        void disableservicesu();
-        void hideIcon();
 
     signals:
         void homescreenRestarted();
-        void serviceChanged();
-
-    private:
-        HelperClient* _helper;
 };
 
 #endif // THEMEPACK_H

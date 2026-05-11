@@ -139,11 +139,6 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_O) {
-            pageStack.push(Qt.resolvedUrl("OptionsPage.qml"));
-            event.accepted = true;
-        }
-
         if (event.key === Qt.Key_G) {
             pageStack.push(Qt.resolvedUrl("GuidePage.qml"));
             event.accepted = true;
@@ -190,9 +185,28 @@ Page
                 text: qsTr("Usage guide")
                 onClicked: pageStack.push(Qt.resolvedUrl("GuidePage.qml"))
             }
+
             MenuItem {
-                text: qsTr("Options")
-                onClicked: pageStack.push(Qt.resolvedUrl("OptionsPage.qml"))
+                text: qsTr("About UI Themer")
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+            }
+
+            MenuItem {
+                text: qsTr("Restart first run wizard")
+                onClicked: {
+                    settings.wizardDone = false
+                    pageStack.replaceAbove(null, Qt.resolvedUrl("WelcomePage.qml"))
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Restart homescreen")
+                onClicked: {
+                    var dlgrestart = pageStack.push("RestartHSPage.qml");
+                    dlgrestart.accepted.connect(function() {
+                        themepack.restartHomescreen();
+                    });
+                }
             }
 
             MenuItem {

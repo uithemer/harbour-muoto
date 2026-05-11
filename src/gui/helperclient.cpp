@@ -18,14 +18,12 @@ namespace
     const char* kObjectPath  = "/org/uithemer/UiThemer1";
     const char* kIfaceThemes  = "org.uithemer.UiThemer1.Themes";
     const char* kIfacePacks   = "org.uithemer.UiThemer1.Packs";
-    const char* kIfaceSystem  = "org.uithemer.UiThemer1.SystemServices";
 }
 
 HelperClient::HelperClient()
     : QObject(nullptr)
     , _themes(nullptr)
     , _packs(nullptr)
-    , _systemServices(nullptr)
     , _hooked(false)
 {
     // Subscribe to the daemon's broadcast signals as early as possible
@@ -37,7 +35,6 @@ HelperClient::~HelperClient()
 {
     delete _themes;
     delete _packs;
-    delete _systemServices;
 }
 
 HelperClient* HelperClient::instance()
@@ -80,16 +77,6 @@ QDBusInterface* HelperClient::packsIface()
     return _packs;
 }
 
-QDBusInterface* HelperClient::systemServicesIface()
-{
-    if(!_systemServices)
-        _systemServices = new QDBusInterface(QString::fromLatin1(kServiceName),
-                                             QString::fromLatin1(kObjectPath),
-                                             QString::fromLatin1(kIfaceSystem),
-                                             QDBusConnection::systemBus(), this);
-    return _systemServices;
-}
-
 void HelperClient::hookBroadcastSignals()
 {
     if(_hooked)
@@ -123,13 +110,6 @@ void HelperClient::hookBroadcastSignals()
                 QStringLiteral("OperationCompleted"),
                 this,
                 SLOT(onPacksOperationCompleted(QString, bool, QString)));
-
-    bus.connect(QString::fromLatin1(kServiceName),
-                QString::fromLatin1(kObjectPath),
-                QString::fromLatin1(kIfaceSystem),
-                QStringLiteral("OperationCompleted"),
-                this,
-                SLOT(onSystemServicesOperationCompleted(QString, bool, QString)));
 }
 
 void HelperClient::asyncCall(QDBusInterface* iface, const QString& op,
@@ -204,31 +184,6 @@ void HelperClient::uninstallPack(const QString& rpmName)
               QVariantList() << rpmName);
 }
 
-// ---- SystemServices -------------------------------------------------------
-
-void HelperClient::hideIcon()
-{
-    asyncCall(systemServicesIface(), QStringLiteral("HideIcon"), QVariantList());
-}
-
-void HelperClient::setAutoupdate(bool enabled)
-{
-    asyncCall(systemServicesIface(), QStringLiteral("SetAutoupdate"),
-              QVariantList() << enabled);
-}
-
-void HelperClient::setServiceSu(bool enabled)
-{
-    asyncCall(systemServicesIface(), QStringLiteral("SetServiceSu"),
-              QVariantList() << enabled);
-}
-
-void HelperClient::applyHours(const QString& hours)
-{
-    asyncCall(systemServicesIface(), QStringLiteral("ApplyHours"),
-              QVariantList() << hours);
-}
-
 // ---- Demux of broadcast signals -------------------------------------------
 
 void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
@@ -273,24 +228,4 @@ void HelperClient::onPacksOperationCompleted(const QString& op, bool ok,
         emit packUninstalled(message);
     else
         qWarning() << "HelperClient: unknown Packs op" << op;
-}
-
-void HelperClient::onSystemServicesOperationCompleted(const QString& op,
-                                                      bool ok,
-                                                      const QString& message)
-{
-    if(!ok)
-    {
-        emit error(op, message);
-        return;
-    }
-    if(op == QLatin1String("HideIcon"))
-        emit hideIconDone();
-    else if(op == QLatin1String("SetAutoupdate")
-         || op == QLatin1String("SetServiceSu"))
-        emit serviceChanged();
-    else if(op == QLatin1String("ApplyHours"))
-        emit hoursApplied(message);
-    else
-        qWarning() << "HelperClient: unknown SystemServices op" << op;
 }

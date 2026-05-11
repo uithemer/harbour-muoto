@@ -49,12 +49,6 @@ public slots:
     // -- Packs interface (manage-packs) --
     void uninstallPack(const QString& rpmName);
 
-    // -- SystemServices interface (manage-system-services) --
-    void hideIcon();
-    void setAutoupdate(bool enabled);
-    void setServiceSu(bool enabled);
-    void applyHours(const QString& hours);
-
 signals:
     // Bridged 1:1 from the daemon's per-interface OperationCompleted
     // broadcast (via demux on the op string). Each signal mirrors
@@ -68,9 +62,6 @@ signals:
     void newDesktopsThemed(int count);
     void densityEnabled();
     void packUninstalled(const QString& rpmName);
-    void serviceChanged();
-    void hideIconDone();
-    void hoursApplied(const QString& hours);
 
     void progress(int done, int total);
 
@@ -88,14 +79,11 @@ private slots:
     void onThemesProgress(const QString& op, int done, int total);
     void onPacksOperationCompleted(const QString& op, bool ok,
                                    const QString& message);
-    void onSystemServicesOperationCompleted(const QString& op, bool ok,
-                                            const QString& message);
 
 private:
     // Lazy-construct a per-interface QDBusInterface on the system bus.
     QDBusInterface* themesIface();
     QDBusInterface* packsIface();
-    QDBusInterface* systemServicesIface();
 
     // Wrap a fire-and-forget D-Bus method call. On transport failure
     // emit error(op, ...) so the GUI's busy state drains.
@@ -113,7 +101,6 @@ private:
 
     QDBusInterface* _themes;
     QDBusInterface* _packs;
-    QDBusInterface* _systemServices;
     bool            _hooked;
 };
 

@@ -53,11 +53,6 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_O && settings.wizardDone === true) {
-            pageStack.replace(Qt.resolvedUrl("OptionsPage.qml"));
-            event.accepted = true;
-        }
-
         if (event.key === Qt.Key_W && settings.wizardDone === true) {
             settings.wizardDone = false
             pageStack.replaceAbove(null, Qt.resolvedUrl("WelcomePage.qml"));

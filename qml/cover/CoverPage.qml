@@ -37,14 +37,11 @@ CoverBackground
     }
 
      Notification { id: notification }
-     ThemePackModel {
-         function notifyDone() {
-             settings.isRunning = false;
-             notification.publish();
-         }
-         id: themepackmodel
-         onOcrRestored: notifyDone()
-     }
+     // 2.7.0: cover ops collapse to a single "refresh current theme"
+     // action that always calls Helper.reassertIcons(). ThemePackModel
+     // is still needed because coverPackLabel() resolves the active
+     // pack's display name via readThemePackName().
+     ThemePackModel { id: themepackmodel }
      // 2.6.0: icon ops route through HelperClient and the daemon, so
      // listen for its bridged signals instead of iconapplier's local
      // ones (the GUI's IconApplier never does the privileged write
@@ -54,14 +51,6 @@ CoverBackground
          target: Helper
          onIconsReasserted: { settings.isRunning = false; notification.publish(); }
          onIconsRestored: { settings.isRunning = false; notification.publish(); }
-     }
-     ThemePack {
-         function notifyDone() {
-             settings.isRunning = false;
-             notification.publish();
-         }
-         id: themepack
-         onHomescreenRestarted: notifyDone()
      }
 
     Rectangle {
@@ -125,12 +114,15 @@ CoverBackground
         }
     }
 
-    Loader {
-        source: {
-            if (settings.coverAction1 !== 3 && settings.coverAction2 !== 3)
-            return Qt.resolvedUrl("CoverActionList2.qml")
-            else
-            Qt.resolvedUrl("CoverActionList1.qml")
+    CoverActionList {
+        iconBackground: true
+        enabled: (settings.activeIconPack !== 'default') && !settings.isRunning
+        CoverAction {
+            iconSource: "image://theme/icon-cover-sync"
+            onTriggered: {
+                settings.isRunning = true;
+                Helper.reassertIcons();
+            }
         }
     }
 

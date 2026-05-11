@@ -1,26 +1,13 @@
 #include "themepack.h"
-#include "helperclient.h"
 
 #include <QFileInfo>
-#include <QFile>
 #include <QProcess>
 #include <QStringList>
 #include <QDebug>
 
 ThemePack::ThemePack(QObject* parent)
     : QObject(parent)
-    , _helper(HelperClient::instance())
 {
-    // The daemon's SystemServicesAdaptor broadcasts a single Qt-level
-    // serviceChanged signal (via HelperClient demux) for the four
-    // privileged service tweaks. Relay it 1:1 so existing QML
-    // `onServiceChanged` handlers fire as before.
-    connect(_helper, &HelperClient::serviceChanged,
-            this, &ThemePack::serviceChanged);
-    connect(_helper, &HelperClient::hideIconDone,
-            this, &ThemePack::serviceChanged);
-    connect(_helper, &HelperClient::hoursApplied,
-            this, [this](const QString&) { emit serviceChanged(); });
 }
 
 bool ThemePack::hasAndroidSupport() const
@@ -64,44 +51,4 @@ void ThemePack::restartHomescreen()
                       << QStringLiteral("restart")
                       << QStringLiteral("lipstick.service"));
     emit homescreenRestarted();
-}
-
-void ThemePack::enableserviceautoupdate()
-{
-    _helper->setAutoupdate(true);
-}
-
-void ThemePack::disableserviceautoupdate()
-{
-    _helper->setAutoupdate(false);
-}
-
-void ThemePack::enableservicesu()
-{
-    _helper->setServiceSu(true);
-}
-
-void ThemePack::disableservicesu()
-{
-    _helper->setServiceSu(false);
-}
-
-QString ThemePack::getTimer() const
-{
-    QFile f(QStringLiteral("/usr/share/sailfishos-uithemer/service/hours"));
-    if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
-        return QString();
-    const QString s = QString::fromUtf8(f.readAll()).trimmed();
-    f.close();
-    return s;
-}
-
-void ThemePack::applyHours(const QString& hours)
-{
-    _helper->applyHours(hours);
-}
-
-void ThemePack::hideIcon()
-{
-    _helper->hideIcon();
 }

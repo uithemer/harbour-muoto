@@ -10,27 +10,14 @@
 class HelperClient;
 
 // ThemePackModel: list-model of installed harbour-themepack-* packs +
-// the orchestration glue used by MainPage / OptionsPage / DensityPage.
+// the orchestration glue used by MainPage / DensityPage.
 //
-// 2.6.0 split:
-//   - In-process (defaultuser): applyTheme / restoreTheme / recoveryTheme
-//     (font-only steps), restoreDpi (dconf reset), reloadAll, list/role
-//     queries. These never touch root.
-//   - Through HelperClient (system-bus + polkit): uninstall (rpm -e),
-//     and the icon legs that ocr() chains together.
-//
-// ocr() is a pure GUI-side state machine:
-//   Helper.setAutoupdate(false)     [System-bus, manage-system-services]
-//   -> Helper.restoreIcons()        [System-bus, manage-themes]
-//   -> _fonts.restoreFonts()        [in-process]
-//   -> _density.restoreDensity(t,t) [in-process]
-//   -> dconf writes to              [in-process; defaultuser owns]
-//        /desktop/lipstick/sailfishos-uithemer/{activeIconPack,
-//                                               activeFontPack,
-//                                               autoUpdate}
-//   -> emit ocrRestored()
-// No OneClickRestore D-Bus method exists; the daemon never sees the
-// orchestration logic.
+// 2.7.0: the OCR (one-click-restore) state machine and the Recovery
+// dialog are retired together with OptionsPage; the surface here is
+// now just apply/restore/uninstall/density and the read-only
+// list/role queries. Privileged work (icon writes, rpm -e) is
+// forwarded to the helper daemon via HelperClient; everything else
+// runs in-process as defaultuser.
 class ThemePackModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -50,8 +37,6 @@ class ThemePackModel : public QAbstractListModel
         void restoreTheme(bool font);
         void uninstall(int index);
         void restoreDpi(bool dpr, bool iconSize);
-        void ocr();
-        void recoveryTheme(bool font);
 
     public slots:
         QString packName(int index) const;
@@ -74,8 +59,6 @@ class ThemePackModel : public QAbstractListModel
         void themeRestored();
         void uninstallCompleted();
         void dpiRestored();
-        void ocrRestored();
-        void themeRecovered();
 
     private:
         // Look up the rpm (package) name that owns a given pack

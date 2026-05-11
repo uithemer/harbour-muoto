@@ -104,12 +104,13 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(-,root,root,-)
-# 2.6.0: GUI + headless icond helper lose the setuid bit. Privilege now comes via
-# the dbus-activated /usr/libexec/sailfishos-uithemer-helperd daemon
+# 2.6.0: GUI loses the setuid bit. Privilege now comes via the
+# dbus-activated /usr/libexec/sailfishos-uithemer-helperd daemon
 # (also packaged here, owned root:root, plain 0755 -- it elevates by
 # being launched as root by dbus-daemon, not by the binary itself).
+# 2.7.0: the headless sailfishos-uithemer-icond binary is retired
+# (the auto-theming watcher in helperd covers the same ground).
 %attr(0755,root,root) %{_bindir}/%{name}
-%attr(0755,root,root) %{_bindir}/sailfishos-uithemer-icond
 %attr(0755,root,root) /usr/libexec/sailfishos-uithemer-helperd
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
@@ -123,7 +124,6 @@ desktop-file-install --delete-original       \
 /usr/share/dbus-1/system-services/org.uithemer.UiThemer1.service
 /usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.Themes.xml
 /usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.Packs.xml
-/usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.SystemServices.xml
 
 # >> files
 # << files
@@ -135,22 +135,28 @@ desktop-file-install --delete-original       \
 chmod +x %{_datadir}/%{name}/service/*.sh
 mkdir -p %{_datadir}/%{name}/backup
 
-mv -f %{_datadir}/%{name}/service/themepacksupport-systemupgrade.service /lib/systemd/system/
-mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.service /etc/systemd/system/
-mv -f %{_datadir}/%{name}/service/themepacksupport-autoupdate.timer /etc/systemd/system/
-mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-icond.service /etc/systemd/system/
 mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-helperd.service /etc/systemd/system/
 # 2.6.1: drop the old boot unit + binary name (reassert -> icond).
 systemctl disable --now sailfishos-uithemer-reassert.service 2>/dev/null || :
 rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
 rm -f %{_bindir}/sailfishos-uithemer-reassert
+# 2.7.0: retire the headless icond + the autoupdate/systemupgrade
+# units. Stop + disable them on upgrade from <= 2.6.x; the matching
+# unit files were removed from the package and the binary is gone.
+systemctl disable --now themepacksupport-autoupdate.timer    2>/dev/null || :
+systemctl disable --now themepacksupport-autoupdate.service  2>/dev/null || :
+systemctl disable --now themepacksupport-systemupgrade.service 2>/dev/null || :
+systemctl disable --now sailfishos-uithemer-icond.service    2>/dev/null || :
+rm -f /etc/systemd/system/themepacksupport-autoupdate.timer
+rm -f /etc/systemd/system/themepacksupport-autoupdate.service
+rm -f /lib/systemd/system/themepacksupport-systemupgrade.service
+rm -f /etc/systemd/system/sailfishos-uithemer-icond.service
+rm -f %{_bindir}/sailfishos-uithemer-icond
 # 2.6.0: pick up the new helper unit + dbus policy. 2.6.2: polkit
 # reload dropped along with the policy file. Best-effort reloads
 # (older systemd / community ports may not honour reload dbus).
 systemctl daemon-reload
 systemctl reload dbus            2>/dev/null || :
-systemctl enable themepacksupport-systemupgrade.service
-systemctl enable sailfishos-uithemer-icond.service
 # 2.6.2: the helperd is now always-on (Before=systemd-user-sessions
 # and Restart=always). Enable + start it so
 # the GUI's first call after install does not race bus-activation.
@@ -224,23 +230,16 @@ if [ $1 -eq 0 ]; then
     rm -rf /home/defaultuser/.local/share/%{name}
     rm -rf /home/defaultuser/.cache/%{name}
 
-    systemctl disable themepacksupport-systemupgrade.service || true
-    systemctl disable sailfishos-uithemer-icond.service || true
     # Legacy unit name (<= 2.6.0); harmless no-op on fresh installs.
     systemctl disable sailfishos-uithemer-reassert.service 2>/dev/null || :
     rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
     # 2.6.0: stop the privileged helper before files vanish so it does
     # not race the rest of %preun on a dbus-activated re-spawn.
     systemctl stop sailfishos-uithemer-helperd.service 2>/dev/null || :
-    # 2.6.0: tps/disable-autoupdate.sh is gone; inline the handful of
-    # systemctl calls the script used to do.
-    systemctl disable themepacksupport-autoupdate.timer   2>/dev/null || :
-    systemctl stop    themepacksupport-autoupdate.timer   2>/dev/null || :
-    systemctl disable themepacksupport-autoupdate.service 2>/dev/null || :
-    systemctl stop    themepacksupport-autoupdate.service 2>/dev/null || :
-
-    # Restore original Icon= for every themed .desktop file via the helper.
-    /usr/bin/sailfishos-uithemer-icond --restore || true
+    # 2.7.0: OptionsPage retirement dropped the headless icond binary
+    # plus the autoupdate/systemupgrade units; the on-uninstall
+    # auto-restore of themed .desktop files went with them. Users
+    # should run "Restore theme" from the app before uninstalling.
 
     # 2.5.0 font theming is just a per-user fontconfig conf file; revert by
     # removing it and refreshing the cache as defaultuser. No-op if absent.
@@ -271,10 +270,6 @@ fi
 
 %postun
 if [ $1 -eq 0 ]; then
-    rm -f /lib/systemd/system/themepacksupport-systemupgrade.service
-    rm -f /etc/systemd/system/themepacksupport-autoupdate.timer
-    rm -f /etc/systemd/system/themepacksupport-autoupdate.service
-    rm -f /etc/systemd/system/sailfishos-uithemer-icond.service
     rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
     rm -f /etc/systemd/system/sailfishos-uithemer-helperd.service
     systemctl daemon-reload

@@ -63,20 +63,16 @@ OTHER_FILES += \
     $$ROOT/qml/components/themepacklistview/ThemePackItem.qml \
     $$ROOT/qml/cover/CoverPage.qml \
     $$ROOT/qml/cover/CoverConfirm.qml \
-    $$ROOT/qml/cover/CoverActionList1.qml \
-    $$ROOT/qml/cover/CoverActionList2.qml \
     $$ROOT/qml/cover/CoverLabel.qml \
     $$ROOT/qml/cover/FontPreviewCover.qml \
     $$ROOT/qml/pages/ConfirmPage.qml \
     $$ROOT/qml/pages/DensityPage.qml \
     $$ROOT/qml/pages/MainPage.qml \
-    $$ROOT/qml/pages/OptionsPage.qml \
     $$ROOT/qml/pages/RestorePage.qml \
     $$ROOT/qml/pages/RestoreDDPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
     $$ROOT/qml/pages/GuidePage.qml \
-    $$ROOT/qml/pages/RecoveryPage.qml \
     $$ROOT/rpm/* \
     $$ROOT/sailfishos-uithemer.desktop
 
@@ -169,17 +165,17 @@ dbusservice.path  = /usr/share/dbus-1/system-services
 
 dbusxml.files = \
     $$ROOT/dbus/org.uithemer.UiThemer1.Themes.xml \
-    $$ROOT/dbus/org.uithemer.UiThemer1.Packs.xml \
-    $$ROOT/dbus/org.uithemer.UiThemer1.SystemServices.xml
+    $$ROOT/dbus/org.uithemer.UiThemer1.Packs.xml
 dbusxml.path  = /usr/share/dbus-1/interfaces
 
 # No polkit hand-off. See dbus/org.uithemer.UiThemer1.conf
 # for the new policy and src/daemon/helperservice.cpp for the
 # matching no-op authorize() stubs.
 
-# helperd.service ships under service/ alongside the other systemd
-# units; %post moves it into /etc/systemd/system/ together with the
-# autoupdate / icond units.
+# helperd.service ships under service/ and is moved into
+# /etc/systemd/system/ by the RPM %post. 2.7.0: it's the only unit
+# left after the OptionsPage retirement dropped the autoupdate /
+# systemupgrade / icond units.
 
 # `target`, `qml` and `desktop` are already on INSTALLS via sailfishapp.prf
 # (we only redirected their .files above). Add the per-size icon* rules

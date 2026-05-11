@@ -43,12 +43,6 @@ public slots:
     // Remove the conf file (no-op if missing) and refresh fc-cache.
     void restoreFonts();
 
-    // Symmetric API for OptionsPage's recovery flow. Identical to
-    // restoreFonts(): with the fontconfig approach there is nothing to
-    // reinstall (no system files were ever overwritten), so "recovery"
-    // collapses to "restore".
-    void recoveryFonts();
-
 signals:
     void applied(const QString& packName);
     void restored();

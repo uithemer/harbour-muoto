@@ -261,11 +261,3 @@ void FontApplier::restoreFonts()
     runFcCache();
     emit restored();
 }
-
-void FontApplier::recoveryFonts()
-{
-    // With the fontconfig approach there is nothing to reinstall: stock
-    // fonts under /usr/share/fonts are never modified. Recovery is
-    // equivalent to restore.
-    restoreFonts();
-}

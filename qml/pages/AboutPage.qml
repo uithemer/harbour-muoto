@@ -51,11 +51,6 @@ Page
             event.accepted = true;
         }
 
-        if (event.key === Qt.Key_O) {
-            pageStack.replace(Qt.resolvedUrl("OptionsPage.qml"));
-            event.accepted = true;
-        }
-
         if (event.key === Qt.Key_G) {
             pageStack.push(Qt.resolvedUrl("GuidePage.qml"));
             event.accepted = true;

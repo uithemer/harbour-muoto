@@ -5,9 +5,8 @@
 
 // RAII wrapper around POSIX flock(2) on a sentinel file.
 // Used to serialise concurrent UI Themer operations across processes:
-//   - GUI applyIcons/restoreIcons/reassertCurrentTheme/refreshOriginals
-//   - sailfishos-uithemer-icond helper invocations
-//   - themepacksupport-systemupgrade.service
+//   - helperd applyIcons/restoreIcons/reassertCurrentTheme/refreshOriginals
+//   - helperd themeNewDesktops auto-theming watcher
 //
 // All paths use a single lock sentinel sibling to the manifest:
 //   /usr/share/sailfishos-uithemer/icon-backup.lock

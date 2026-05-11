@@ -1,8 +1,9 @@
 // sailfishos-uithemer-helperd
 // ---------------------------
 // Privileged D-Bus system service that owns org.uithemer.UiThemer1 and
-// exposes the 3 polkit-gated interfaces (Themes, Packs, SystemServices)
-// via QDBusAbstractAdaptor subclasses.
+// exposes the 2 bus-policy-gated interfaces (Themes, Packs) via
+// QDBusAbstractAdaptor subclasses. (2.7.0 retired SystemServices
+// together with OptionsPage's autoupdate timer / one-click-restore.)
 //
 // Lifecycle:
 //   1. systemd or dbus-daemon launches us via the .service activation
@@ -49,7 +50,6 @@ int main(int argc, char* argv[])
     // ExportAdaptors) finds them via the parent/child chain.
     new ThemesAdaptor(&backend, &backend);
     new PacksAdaptor(&backend, &backend);
-    new SystemServicesAdaptor(&backend, &backend);
 
     QDBusConnection bus = QDBusConnection::systemBus();
     if(!bus.isConnected())

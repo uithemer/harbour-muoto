@@ -11,7 +11,6 @@
 
 #include "iconapplier.h"
 #include "densityenabler.h"
-#include "themepack-ops.h"
 
 // HelperBackend owns the heavy worker objects + the idle-quit timer.
 // The adaptor classes below hold a borrowed pointer to this backend
@@ -27,7 +26,6 @@ public:
 
     IconApplier& iconApplier()       { return _iconApplier; }
     DensityEnabler& densityEnabler() { return _densityEnabler; }
-    ThemePackOps& themePackOps()     { return _themePackOps; }
 
     // Re-arm the 30 s idle timer on every method dispatch. When the
     // timer fires, the daemon emits idleQuit() and main() asks the
@@ -44,7 +42,6 @@ private slots:
 private:
     IconApplier    _iconApplier;
     DensityEnabler _densityEnabler;
-    ThemePackOps   _themePackOps;
     QTimer         _idleTimer;
 };
 
@@ -104,29 +101,6 @@ public:
 
 public slots:
     void UninstallPack(const QString& rpmName, const QDBusMessage& message);
-
-signals:
-    void OperationCompleted(const QString& op, bool ok,
-                            const QString& message);
-
-private:
-    bool authorize(const QDBusMessage& message, const QString& op);
-    HelperBackend* _backend;
-};
-
-class SystemServicesAdaptor : public QDBusAbstractAdaptor
-{
-    Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.uithemer.UiThemer1.SystemServices")
-
-public:
-    SystemServicesAdaptor(HelperBackend* backend, QObject* parent);
-
-public slots:
-    void HideIcon(const QDBusMessage& message);
-    void SetAutoupdate(bool enabled, const QDBusMessage& message);
-    void SetServiceSu(bool enabled, const QDBusMessage& message);
-    void ApplyHours(const QString& hours, const QDBusMessage& message);
 
 signals:
     void OperationCompleted(const QString& op, bool ok,
