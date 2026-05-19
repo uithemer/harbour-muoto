@@ -126,6 +126,60 @@ QString IconApplier::findNativeIcon(const QString& packName, const QString& icon
     return QString();
 }
 
+static QString nativePackLookupKey(const QString& iconValue)
+{
+    static const QString overlayTag = QStringLiteral("sailfishos-uithemer/overlay");
+    static const QString kindSep = QStringLiteral("__");
+
+    if(iconValue.contains(overlayTag))
+    {
+        const int sep = iconValue.indexOf(kindSep);
+        if(sep > 0)
+        {
+            QString key = iconValue.mid(sep + kindSep.size());
+            if(key.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
+                key.chop(4);
+            if(!key.isEmpty())
+                return key;
+        }
+    }
+    return iconValue;
+}
+
+QString IconApplier::findNativeIconForDesktop(const QString& packName,
+                                              const QString& iconValue,
+                                              const QString& desktopPath) const
+{
+    const QString lookup = nativePackLookupKey(iconValue);
+    QString themed = findNativeIcon(packName, lookup);
+    if(!themed.isEmpty())
+        return themed;
+
+    const QString base = baseForNative(desktopPath);
+    if(lookup != base)
+        themed = findNativeIcon(packName, base);
+    return themed;
+}
+
+QString IconApplier::snapshotNativeOriginalIcon(const QString& iconValue,
+                                                const QString& desktopPath) const
+{
+    static const QString kThemedPack = QStringLiteral("harbour-themepack-");
+    static const QString kOverlay = QStringLiteral("sailfishos-uithemer/overlay");
+
+    if(!iconValue.contains(kThemedPack) && !iconValue.contains(kOverlay))
+        return iconValue;
+
+    QString key = nativePackLookupKey(iconValue);
+    if(key.contains(QLatin1Char('/')))
+    {
+        key = QFileInfo(key).completeBaseName();
+        if(key.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
+            key.chop(4);
+    }
+    return key.isEmpty() ? iconValue : key;
+}
+
 QString IconApplier::findApkIcon(const QString& packName, const QString& base) const
 {
     static const QStringList sizes = {
@@ -395,8 +449,8 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
                 {
                     if(e.kind == QStringLiteral("apk"))
                         chownToDefaultUser(dpath);
+                    mfRestore.removeEntry(dpath);
                 }
-                mfRestore.removeEntry(dpath);
             }
             mfRestore.setActiveIconPack(QString());
             mfRestore.save();
@@ -431,7 +485,7 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         const QString base = isApk ? baseForApk(original) : baseForNative(dpath);
 
         QString themed = isApk ? findApkIcon(packName, base)
-                               : findNativeIcon(packName, original);
+                               : findNativeIconForDesktop(packName, original, dpath);
         if(themed.isEmpty() && overlay)
             themed = makeOverlayIcon(packName, base, kind,
                                      resolveSourceIcon(original, kind));
@@ -444,7 +498,7 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         // crash before the manifest write, no harm done — .desktop is
         // unchanged.
         IconManifest::Entry e;
-        e.originalIcon = original;
+        e.originalIcon = isApk ? original : snapshotNativeOriginalIcon(original, dpath);
         e.themedIcon = themed;
         e.kind = kind;
         manifest.setEntry(dpath, e);
@@ -723,7 +777,7 @@ void IconApplier::themeNewDesktops(bool overlay)
         const QString base = isApk ? baseForApk(original) : baseForNative(dpath);
 
         QString themedPath = isApk ? findApkIcon(pack, base)
-                                   : findNativeIcon(pack, original);
+                                   : findNativeIconForDesktop(pack, original, dpath);
         // Overlay-on-new: when the user picked the overlay at apply
         // time (passed in via the dconf flag the GUI mirrors), generate
         // a composited icon for any new .desktop the pack has no
@@ -736,7 +790,7 @@ void IconApplier::themeNewDesktops(bool overlay)
 
         // Same per-entry commit order as applyIcons: manifest first, then file.
         IconManifest::Entry e;
-        e.originalIcon = original;
+        e.originalIcon = isApk ? original : snapshotNativeOriginalIcon(original, dpath);
         e.themedIcon = themedPath;
         e.kind = kind;
         manifest.setEntry(dpath, e);

@@ -107,6 +107,14 @@ private:
     // <pack>/.../icon-launcher-camera.png. Searches <pack>/native/<size>/apps/
     // first, then falls back to the pre-3.0 <pack>/jolla/<zSize>/icons/ subtree.
     QString findNativeIcon(const QString& packName, const QString& iconValue) const;
+    // findNativeIcon keyed off Icon=, with overlay-cache and .desktop-basename
+    // fallbacks when a prior theme left a non-lookup-friendly Icon= path.
+    QString findNativeIconForDesktop(const QString& packName,
+                                     const QString& iconValue,
+                                     const QString& desktopPath) const;
+    // Value to store as original_icon so a later restore returns a restorable Icon=.
+    QString snapshotNativeOriginalIcon(const QString& iconValue,
+                                     const QString& desktopPath) const;
     QString findApkIcon(const QString& packName, const QString& base) const;
 
     // Generate (or reuse from cache) an overlay-composited PNG and return its path.
