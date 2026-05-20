@@ -12,11 +12,10 @@ Item
         property string activeIconPack
         property string activeFontPack
         // Mirror of the user's "apply icon overlay" choice at the last
-        // ApplyIcons call. The GUI's auto-theming watcher passes this
-        // to Helper.themeNewDesktops(overlay) so newly-installed apps
-        // that the pack has no asset for still get an overlay-
-        // composited icon when the user opted in. Cleared on restore
-        // so it cannot leak across theme generations.
+        // ApplyIcons call. Cover sync and main-page apply pass this to
+        // Helper.applyIcons so overlay-composited icons are included when
+        // the user opted in. Cleared on restore so it cannot leak across
+        // theme generations.
         property bool iconOverlay
     }
 

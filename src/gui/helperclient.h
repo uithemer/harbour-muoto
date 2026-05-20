@@ -41,14 +41,7 @@ public slots:
     // -- Themes interface (manage-themes) --
     void applyIcons(const QString& pack, bool overlay);
     void restoreIcons();
-    void reassertIcons();
     void refreshOriginals();
-    // ThemeNewDesktops is the unified rescan: drift reassert +
-    // uninstall cleanup + new-theming in one daemon-side pass. The
-    // GUI's watcher passes settings.iconOverlay so newly-installed
-    // apps that don't match the pack still get an overlay when the
-    // user opted in at apply time.
-    void themeNewDesktops(bool overlay);
     void densityEnable();
 
     // -- Packs interface (manage-packs) --
@@ -62,9 +55,7 @@ signals:
     // when the work was still done in-process.
     void iconsApplied();
     void iconsRestored();
-    void iconsReasserted();
     void originalsRefreshed();
-    void newDesktopsThemed(int count);
     void densityEnabled();
     void packUninstalled(const QString& rpmName);
 
@@ -99,6 +90,8 @@ private:
     // Progress) broadcast signals once, before any method is invoked.
     void hookBroadcastSignals();
 
+    bool acceptIconOpEpoch(const QString& message) const;
+
     // Private: callers go through HelperClient::instance() or the
     // QML `Helper` singleton.
     HelperClient();
@@ -107,6 +100,7 @@ private:
     QDBusInterface* _themes;
     QDBusInterface* _packs;
     bool            _hooked;
+    int             _iconOpEpoch = 0;
 };
 
 #endif // HELPERCLIENT_H

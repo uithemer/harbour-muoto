@@ -63,11 +63,12 @@ UI Themer does **not** copy icons into `apkd-bridge/launcherIcon/`.
 
 After UI Themer writes a new `Icon=` and saves the `.desktop`, Lipstick's
 `QFileSystemWatcher` reloads that launcher entry within about a second. A full
-`systemctl --user restart lipstick.service` is **not** required for normal apply,
-restore, or auto-theming.
+`systemctl --user restart lipstick.service` is **not** required for normal apply
+or restore.
 
-Auto-theming uses the GUI watcher plus `sailfishos-uithemer-rescan.path` to
-re-assert the active theme when `.desktop` files change (e.g. after app updates).
+To theme apps installed or updated after the last apply, use the **cover sync**
+action: it re-runs `ApplyIcons` for the active pack using the overlay flag saved
+in dconf at apply time (`settings.iconOverlay`).
 
 > Graphic theming for Sailfish system widgets (the old PNG-replacement
 > pipeline) has been **removed** in 2.4.2.

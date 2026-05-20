@@ -13,7 +13,6 @@ CoverBackground
      // ones.
      Connections {
          target: Helper
-         onIconsReasserted: { settings.isRunning = false; notification.publish(); }
          onIconsRestored: { settings.isRunning = false; notification.publish(); }
      }
      ThemePack {

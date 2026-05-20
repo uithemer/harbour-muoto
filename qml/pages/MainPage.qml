@@ -26,8 +26,7 @@ Page
     //
     // _pendingOps counts how many of the user's selected ops are
     // still in flight; _waitForFinalise is the "arm" flag so stray
-    // signals (auto-theming watcher's ThemeNewDesktops, the cover's
-    // ocr flow, uninstall's restoreIcons preamble) don't trigger our
+    // signals (cover sync, uninstall's restoreIcons preamble) don't trigger our
     // finalise. _finalise() is the single chokepoint that clears the
     // busy indicator, fires the notification, and (optionally)
     // restarts lipstick — exactly once, exactly when every selected
@@ -59,8 +58,7 @@ Page
     // Connections.enabled needs QtQuick 2.4+; MainPage still imports
     // 2.0, so guard inside the slots via _opDone(), which already
     // short-circuits when _waitForFinalise is false. Stray signals
-    // (cover's ocr flow, uninstall's restoreIcons preamble, the
-    // auto-theming watcher) just no-op here.
+    // (cover sync, uninstall's restoreIcons preamble) just no-op here.
     Connections {
         target: Helper
         onIconsApplied: mainpage._opDone()
@@ -239,10 +237,8 @@ Page
                         // FontApplier::restored fires inside the call.
                         if(dlgrestore.restoreIcons) {
                             settings.deactivateIcon();
-                            // Clear the persisted overlay flag so a watcher
-                            // fire after restore (e.g. a package update)
-                            // doesn't generate stale overlays for a theme
-                            // the user just turned off.
+                            // Clear overlay dconf so a later cover sync
+                            // cannot apply overlays after restore.
                             settings.iconOverlay = false;
                             Helper.restoreIcons();
                         }
@@ -305,9 +301,7 @@ Page
                     // stale value and leave the font CoverLabel empty.
                     if(dlgconfirm.iconsSelected) {
                         settings.activeIconPack = model.packName;
-                        // Persist the overlay choice in dconf so the GUI's
-                        // auto-theming watcher can pass it to the daemon
-                        // when a new app shows up later.
+                        // Persist overlay in dconf for cover sync re-apply.
                         settings.iconOverlay = dlgconfirm.iconOverlaySelected;
                         Helper.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
                     }

@@ -6,9 +6,7 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QTimer>
 
-class QFileSystemWatcher;
 class IconManifest;
 
 class IconApplier : public QObject
@@ -24,25 +22,15 @@ public slots:
 
     void applyIcons(const QString& packName, bool overlay);
     void restoreIcons();
-    void reassertCurrentTheme();
     void refreshOriginals();
-    void themeNewDesktops(bool overlay);
-    void enableAutoTheming(bool enable);
     void buildPreview(const QString& packName);
 
 signals:
     void progress(int done, int total);
     void applied();
     void restored();
-    void reasserted();
     void originalsRefreshed();
     void previewReady(const QString& packName, bool ok);
-    void newDesktopsThemed(int count);
-    void watcherFired();
-
-private slots:
-    void onWatchedDirChanged(const QString& path);
-    void debouncedRescan();
 
 private:
     QString manifestPath() const;
@@ -59,7 +47,6 @@ private:
     QString nativeIconKey(const QString& iconValue, const QString& desktopPath) const;
     QString themedIconId(const QString& packName, const QString& iconKey) const;
     bool hicolorHasIcon(const QString& packShort, const QString& iconKey) const;
-    bool themedIconExists(const QString& packName, const QString& themedIcon) const;
 
     QImage makeOverlayImage(const QString& packName, const QString& base,
                             const QString& kind, const QString& sourceIcon) const;
@@ -79,12 +66,7 @@ private:
     void removePackHicolorBridge(const QString& packName);
     void publishOverlayIconsToHicolor(const QString& packName);
 
-    void reassertWithinLock(IconManifest& manifest, int& reasserted, int& removed);
-
     void chownToDefaultUser(const QString& path) const;
-
-    QFileSystemWatcher* _watcher;
-    QTimer _watchDebounce;
 };
 
 #endif // ICONAPPLIER_H

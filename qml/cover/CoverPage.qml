@@ -8,6 +8,10 @@ CoverBackground
 {
     id: coverRoot
 
+    // Set when the cover sync action starts an icon op; MainPage also
+    // listens for iconsApplied and publishes from _finalise().
+    property bool iconOpFromCover: false
+
     // Normalise /usr/share/<dir>/package lookup: accept bare pack ids
     // (what dconf stores) or full harbour-themepack-* dir names so we
     // never double-prefix when calling readThemePackName.
@@ -37,20 +41,32 @@ CoverBackground
     }
 
      Notification { id: notification }
-     // 2.7.0: cover ops collapse to a single "refresh current theme"
-     // action that always calls Helper.reassertIcons(). ThemePackModel
+     // Cover sync re-runs ApplyIcons for the active pack (same as main UI
+     // apply), using the overlay flag saved at last apply. ThemePackModel
      // is still needed because coverPackLabel() resolves the active
      // pack's display name via readThemePackName().
      ThemePackModel { id: themepackmodel }
      // 2.6.0: icon ops route through HelperClient and the daemon, so
      // listen for its bridged signals instead of iconapplier's local
      // ones (the GUI's IconApplier never does the privileged write
-     // anymore, so its `reasserted` / `restored` signals would never
+     // anymore, so its local apply/restore signals would never
      // fire from the privileged path).
      Connections {
          target: Helper
-         onIconsReasserted: { settings.isRunning = false; notification.publish(); }
-         onIconsRestored: { settings.isRunning = false; notification.publish(); }
+         onIconsApplied: {
+             settings.isRunning = false;
+             if (coverRoot.iconOpFromCover) {
+                 coverRoot.iconOpFromCover = false;
+                 notification.publish();
+             }
+         }
+         onIconsRestored: {
+             settings.isRunning = false;
+             if (coverRoot.iconOpFromCover) {
+                 coverRoot.iconOpFromCover = false;
+                 notification.publish();
+             }
+         }
      }
 
     Rectangle {
@@ -120,8 +136,9 @@ CoverBackground
         CoverAction {
             iconSource: "image://theme/icon-cover-sync"
             onTriggered: {
+                coverRoot.iconOpFromCover = true;
                 settings.isRunning = true;
-                Helper.reassertIcons();
+                Helper.applyIcons(settings.activeIconPack, settings.iconOverlay);
             }
         }
     }

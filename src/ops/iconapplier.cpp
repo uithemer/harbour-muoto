@@ -10,7 +10,6 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QImage>
-#include <QFileSystemWatcher>
 #include <QSet>
 
 #include <pwd.h>
@@ -82,12 +81,8 @@ namespace
 }
 
 IconApplier::IconApplier(QObject* parent)
-    : QObject(parent), _watcher(nullptr)
+    : QObject(parent)
 {
-    _watchDebounce.setSingleShot(true);
-    _watchDebounce.setInterval(750);
-    QObject::connect(&_watchDebounce, &QTimer::timeout,
-                     this, &IconApplier::debouncedRescan);
 }
 
 QString IconApplier::manifestPath() const
@@ -358,21 +353,6 @@ QString IconApplier::themedIconId(const QString& packName, const QString& iconKe
     if(iconKey.isEmpty())
         return QString();
     return packShortName(packName) + QLatin1Char('/') + iconKey;
-}
-
-bool IconApplier::themedIconExists(const QString& packName, const QString& themedIcon) const
-{
-    if(themedIcon.startsWith(QLatin1Char('/')))
-        return QFileInfo::exists(themedIcon);
-
-    const int slash = themedIcon.indexOf(QLatin1Char('/'));
-    if(slash <= 0)
-        return false;
-
-    if(themedIcon.left(slash) != packShortName(packName))
-        return false;
-
-    return hicolorHasIcon(themedIcon.left(slash), themedIcon.mid(slash + 1));
 }
 
 QString IconApplier::findNativeIcon(const QString& packName, const QString& iconValue) const
@@ -802,91 +782,6 @@ void IconApplier::restoreIcons()
     emit restored();
 }
 
-void IconApplier::reassertWithinLock(IconManifest& manifest, int& reasserted, int& removed)
-{
-    const QString pack = manifest.activeIconPack();
-    const QHash<QString, IconManifest::Entry> entries = manifest.entries();
-
-    for(auto it = entries.begin(); it != entries.end(); ++it)
-    {
-        const QString dpath = it.key();
-        const IconManifest::Entry& e = it.value();
-
-        DesktopFile df(dpath);
-        if(!df.exists())
-        {
-            manifest.removeEntry(dpath);
-            ++removed;
-            continue;
-        }
-        if(!df.load())
-            continue;
-
-        const QString cur = df.value(QStringLiteral("Icon"));
-
-        if(cur == e.originalIcon)
-            continue;
-
-        if(!themedIconExists(pack, e.themedIcon))
-        {
-            df.setValue(QStringLiteral("Icon"), stripUiThemerSuffix(e.originalIcon));
-            if(df.save())
-            {
-                if(e.kind == QStringLiteral("apk"))
-                    chownToDefaultUser(dpath);
-                manifest.removeEntry(dpath);
-                ++removed;
-            }
-            continue;
-        }
-
-        if(cur == e.themedIcon)
-            continue;
-
-        df.setValue(QStringLiteral("Icon"), e.themedIcon);
-        if(df.save())
-        {
-            if(e.kind == QStringLiteral("apk"))
-                chownToDefaultUser(dpath);
-            ++reasserted;
-        }
-    }
-
-    if(manifest.entries().isEmpty())
-        manifest.setActiveIconPack(QString());
-}
-
-void IconApplier::reassertCurrentTheme()
-{
-    FileLock lk;
-    Q_UNUSED(lk);
-
-    IconManifest manifest(manifestPath());
-    if(!manifest.load())
-    {
-        emit reasserted();
-        return;
-    }
-
-    const QString pack = manifest.activeIconPack();
-    if(pack.isEmpty())
-    {
-        emit reasserted();
-        return;
-    }
-
-    installPackHicolorBridge(pack);
-
-    int reassertedCount = 0;
-    int removedCount = 0;
-    reassertWithinLock(manifest, reassertedCount, removedCount);
-
-    if(reassertedCount > 0 || removedCount > 0)
-        manifest.save();
-
-    emit reasserted();
-}
-
 void IconApplier::refreshOriginals()
 {
     FileLock lk;
@@ -924,148 +819,6 @@ void IconApplier::refreshOriginals()
         manifest.save();
 
     emit originalsRefreshed();
-}
-
-void IconApplier::themeNewDesktops(bool overlay)
-{
-    FileLock lk;
-    Q_UNUSED(lk);
-
-    IconManifest manifest(manifestPath());
-    if(!manifest.load())
-    {
-        emit newDesktopsThemed(0);
-        return;
-    }
-
-    const QString pack = manifest.activeIconPack();
-    if(pack.isEmpty())
-    {
-        emit newDesktopsThemed(0);
-        return;
-    }
-
-    installPackHicolorBridge(pack);
-
-    if(overlay)
-        publishOverlayIconsToHicolor(pack);
-
-    int reassertedCount = 0;
-    int removedCount = 0;
-    reassertWithinLock(manifest, reassertedCount, removedCount);
-
-    if(manifest.activeIconPack().isEmpty())
-    {
-        if(reassertedCount > 0 || removedCount > 0)
-            manifest.save();
-        emit newDesktopsThemed(0);
-        return;
-    }
-
-    QSet<QString> known;
-    const QHash<QString, IconManifest::Entry> entries = manifest.entries();
-    for(auto it = entries.begin(); it != entries.end(); ++it)
-        known.insert(it.key());
-
-    const QString shortName = packShortName(pack);
-    int themed = 0;
-
-    auto processOne = [&](const QString& dpath, const QString& kind, bool isApk) {
-        if(known.contains(dpath))
-            return;
-
-        DesktopFile df(dpath);
-        if(!df.load())
-            return;
-
-        const QString original = df.value(QStringLiteral("Icon"));
-        if(isApk && original.isEmpty())
-            return;
-
-        const QString iconKey = isApk ? baseForApk(original) : nativeIconKey(original, dpath);
-
-        const bool hasPack = isApk
-                                 ? !findApkIcon(pack, iconKey).isEmpty()
-                                 : !findNativeIconForDesktop(pack, original, dpath).isEmpty();
-        const bool hasOverlay = overlay && hicolorHasIcon(shortName, iconKey);
-
-        if(!hasPack && !hasOverlay)
-            return;
-
-        const QString themedIcon = themedIconId(pack, iconKey);
-        if(themedIcon.isEmpty())
-            return;
-
-        IconManifest::Entry e;
-        e.originalIcon = original;
-        e.themedIcon = themedIcon;
-        e.kind = kind;
-        manifest.setEntry(dpath, e);
-        manifest.save();
-
-        df.setValue(QStringLiteral("Icon"), themedIcon);
-        if(!df.save())
-        {
-            manifest.removeEntry(dpath);
-            manifest.save();
-            return;
-        }
-        if(isApk)
-            chownToDefaultUser(dpath);
-        ++themed;
-    };
-
-    for(const QString& dpath : nativeDesktops())
-        processOne(dpath, QStringLiteral("native"), false);
-
-    for(const QString& dpath : apkDesktops())
-        processOne(dpath, QStringLiteral("apk"), true);
-
-    if(themed > 0 || reassertedCount > 0 || removedCount > 0)
-        manifest.save();
-
-    emit newDesktopsThemed(themed + reassertedCount);
-}
-
-void IconApplier::enableAutoTheming(bool enable)
-{
-    if(enable)
-    {
-        if(_watcher)
-            return;
-
-        _watcher = new QFileSystemWatcher(this);
-        const QStringList dirs = {
-            QStringLiteral("/usr/share/applications"),
-            QStringLiteral("/home/defaultuser/.local/share/applications"),
-        };
-        for(const QString& d : dirs)
-        {
-            if(QFileInfo::exists(d))
-                _watcher->addPath(d);
-        }
-
-        QObject::connect(_watcher, &QFileSystemWatcher::directoryChanged,
-                         this, &IconApplier::onWatchedDirChanged);
-    }
-    else
-    {
-        if(!_watcher)
-            return;
-        _watchDebounce.stop();
-        _watcher->deleteLater();
-        _watcher = nullptr;
-    }
-}
-
-void IconApplier::onWatchedDirChanged(const QString& /*path*/)
-{
-    _watchDebounce.start();
-}
-
-void IconApplier::debouncedRescan()
-{
-    emit watcherFired();
 }
 
 void IconApplier::buildPreview(const QString& packName)

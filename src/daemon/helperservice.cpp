@@ -117,19 +117,13 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
     _backend->resetIdleTimer();
     IconApplier &applier = _backend->iconApplier();
 
-    // Bump the in-process busy counter so a watcher-triggered
-    // ThemeNewDesktops fired from the GUI cannot race with this op.
-    // The matching leaveHeavyOp() lives inside the per-op completion
-    // lambda below.
-    _backend->enterHeavyOp();
-
+    const int epoch = _backend->nextIconOpEpoch();
     auto *conn = new QMetaObject::Connection;
-    *conn = connect(&applier, doneSignal, this, [this, op, conn]()
+    *conn = connect(&applier, doneSignal, this, [this, op, epoch, conn]()
                     {
-        emit OperationCompleted(op, true, QString());
+        emit OperationCompleted(op, true, QString::number(epoch));
         QObject::disconnect(*conn);
         delete conn;
-        _backend->leaveHeavyOp();
         _backend->resetIdleTimer(); });
 
     auto *progressConn = new QMetaObject::Connection;
@@ -183,20 +177,6 @@ void ThemesAdaptor::RestoreIcons(const QDBusMessage &message)
                   { a.restoreIcons(); }, &IconApplier::restored);
 }
 
-void ThemesAdaptor::ReassertIcons(const QDBusMessage &message)
-{
-    const QString op = QStringLiteral("ReassertIcons");
-    if (_backend->shuttingDown())
-    {
-        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
-        return;
-    }
-    if (!authorize(message, op))
-        return;
-    runIconOpVoid(op, [](IconApplier &a)
-                  { a.reassertCurrentTheme(); }, &IconApplier::reasserted);
-}
-
 void ThemesAdaptor::RefreshOriginals(const QDBusMessage &message)
 {
     const QString op = QStringLiteral("RefreshOriginals");
@@ -211,46 +191,6 @@ void ThemesAdaptor::RefreshOriginals(const QDBusMessage &message)
                   { a.refreshOriginals(); }, &IconApplier::originalsRefreshed);
 }
 
-void ThemesAdaptor::ThemeNewDesktops(bool overlay,
-                                     const QDBusMessage &message)
-{
-    const QString op = QStringLiteral("ThemeNewDesktops");
-    if (_backend->shuttingDown())
-    {
-        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
-        return;
-    }
-    if (!authorize(message, op))
-        return;
-    // Drop the call if a heavy op is in flight (apply / restore /
-    // reassert / refreshOriginals / densityEnable). The watcher in the
-    // GUI fires on every directoryChanged, including ones our own
-    // ApplyIcons triggers via touchDesktopFiles(); without this gate
-    // we would chase our own writes and overwrite the freshly-applied
-    // theme with a stale rescan.
-    if (_backend->busyHeavy() > 0)
-    {
-        emit OperationCompleted(op, false, QStringLiteral("busy"));
-        return;
-    }
-    // newDesktopsThemed(int count) is the completion signal here.
-    _backend->resetIdleTimer();
-    _backend->enterHeavyOp();
-    IconApplier &applier = _backend->iconApplier();
-    auto *conn = new QMetaObject::Connection;
-    *conn = connect(&applier, &IconApplier::newDesktopsThemed, this,
-                    [this, op, conn](int count)
-                    {
-                        emit OperationCompleted(op, true,
-                                                QString::number(count));
-                        QObject::disconnect(*conn);
-                        delete conn;
-                        _backend->leaveHeavyOp();
-                        _backend->resetIdleTimer();
-                    });
-    applier.themeNewDesktops(overlay);
-}
-
 void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
 {
     const QString op = QStringLiteral("DensityEnable");
@@ -262,7 +202,6 @@ void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
     if (!authorize(message, op))
         return;
     _backend->resetIdleTimer();
-    _backend->enterHeavyOp();
     DensityEnabler &density = _backend->densityEnabler();
     auto *conn = new QMetaObject::Connection;
     *conn = connect(&density, &DensityEnabler::enabled, this, [this, op, conn]()
@@ -270,7 +209,6 @@ void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
         emit OperationCompleted(op, true, QString());
         QObject::disconnect(*conn);
         delete conn;
-        _backend->leaveHeavyOp();
         _backend->resetIdleTimer(); });
     density.ensureEnabled();
 }

@@ -14,7 +14,7 @@ Name:       sailfishos-uithemer
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        UI Themer
 Version:        2.7.1
-Release:        1
+Release:        5
 Group:          Qt/Qt
 License:        GPLv3
 Packager:       fravaccaro <fravaccaro@jollacommunity.it>
@@ -108,8 +108,7 @@ desktop-file-install --delete-original       \
 # dbus-activated /usr/libexec/sailfishos-uithemer-helperd daemon
 # (also packaged here, owned root:root, plain 0755 -- it elevates by
 # being launched as root by dbus-daemon, not by the binary itself).
-# 2.7.0: the headless sailfishos-uithemer-icond binary is retired
-# (the auto-theming watcher in helperd covers the same ground).
+# 2.7.0: the headless sailfishos-uithemer-icond binary is retired.
 %attr(0755,root,root) %{_bindir}/%{name}
 %attr(0755,root,root) /usr/libexec/sailfishos-uithemer-helperd
 %{_datadir}/%{name}
@@ -129,24 +128,9 @@ desktop-file-install --delete-original       \
 # << files
 
 %post
-# 2.6.0: only the service helpers under service/ are shell scripts now;
-# the legacy tps/ + scripts/ shell suite is gone (every privileged op
-# lives in the daemon). Keep the +x for the systemd ExecStart helpers.
-chmod +x %{_datadir}/%{name}/service/*.sh
 mkdir -p %{_datadir}/%{name}/backup
 
 mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-helperd.service /etc/systemd/system/
-# 2.7.1: rescan path+service for background auto-theming. The .path
-# unit watches /usr/share/applications and
-# /home/defaultuser/.local/share/applications and triggers the .service,
-# which runs as defaultuser, reads iconOverlay from dconf, and asks
-# helperd over the system bus to run a unified rescan. This is what
-# themes APK icons after apkd-bridge installs/updates an app while the
-# GUI is closed.
-mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-rescan.path /etc/systemd/system/
-mv -f %{_datadir}/%{name}/service/sailfishos-uithemer-rescan.service /etc/systemd/system/
-# rescan.sh stays under %{_datadir}/%{name}/service/ -- the chmod +x
-# at the top of %post (chmod +x .../service/*.sh) already armed it.
 # 2.6.1: drop the old boot unit + binary name (reassert -> icond).
 systemctl disable --now sailfishos-uithemer-reassert.service 2>/dev/null || :
 rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
@@ -172,17 +156,12 @@ systemctl reload dbus            2>/dev/null || :
 # and Restart=always). Enable + start it so
 # the GUI's first call after install does not race bus-activation.
 systemctl enable --now sailfishos-uithemer-helperd.service 2>/dev/null || :
-# 2.7.1: enable the rescan .path so apkd-bridge installs trigger an
-# auto-theming pass even when the GUI is closed. Failure is non-fatal
-# on community ports that lack systemd path units.
-systemctl enable --now sailfishos-uithemer-rescan.path 2>/dev/null || :
-
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
 # Seed an empty icon backup manifest if one does not exist yet.
 if [ ! -e %{_datadir}/%{name}/icon-backup.json ]; then
-    printf '{"version":1,"active_icon_pack":null,"entries":{}}\n' > %{_datadir}/%{name}/icon-backup.json
+    printf '{"version":2,"active_icon_pack":null,"entries":{}}\n' > %{_datadir}/%{name}/icon-backup.json
 fi
 
 # 2.4.5: the vendor dconf defaults file is no longer shipped. If it was

@@ -147,29 +147,26 @@ void HelperClient::asyncCall(QDBusInterface* iface, const QString& op,
 
 void HelperClient::applyIcons(const QString& pack, bool overlay)
 {
+    ++_iconOpEpoch;
     asyncCall(themesIface(), QStringLiteral("ApplyIcons"),
               QVariantList() << pack << overlay);
 }
 
 void HelperClient::restoreIcons()
 {
+    ++_iconOpEpoch;
     asyncCall(themesIface(), QStringLiteral("RestoreIcons"), QVariantList());
-}
-
-void HelperClient::reassertIcons()
-{
-    asyncCall(themesIface(), QStringLiteral("ReassertIcons"), QVariantList());
 }
 
 void HelperClient::refreshOriginals()
 {
+    ++_iconOpEpoch;
     asyncCall(themesIface(), QStringLiteral("RefreshOriginals"), QVariantList());
 }
 
-void HelperClient::themeNewDesktops(bool overlay)
+bool HelperClient::acceptIconOpEpoch(const QString& message) const
 {
-    asyncCall(themesIface(), QStringLiteral("ThemeNewDesktops"),
-              QVariantList() << overlay);
+    return message.toInt() == _iconOpEpoch;
 }
 
 void HelperClient::densityEnable()
@@ -196,15 +193,24 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
         return;
     }
     if(op == QLatin1String("ApplyIcons"))
+    {
+        const bool accepted = acceptIconOpEpoch(message);
+        if(!accepted)
+            return;
         emit iconsApplied();
+    }
     else if(op == QLatin1String("RestoreIcons"))
+    {
+        if(!acceptIconOpEpoch(message))
+            return;
         emit iconsRestored();
-    else if(op == QLatin1String("ReassertIcons"))
-        emit iconsReasserted();
+    }
     else if(op == QLatin1String("RefreshOriginals"))
+    {
+        if(!acceptIconOpEpoch(message))
+            return;
         emit originalsRefreshed();
-    else if(op == QLatin1String("ThemeNewDesktops"))
-        emit newDesktopsThemed(message.toInt());
+    }
     else if(op == QLatin1String("DensityEnable"))
         emit densityEnabled();
     else
