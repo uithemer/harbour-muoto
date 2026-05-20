@@ -115,14 +115,6 @@
         <translation>Schriftschnitt</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Vergiss nicht, den Startbildschirm neu zu starten.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Startbildschirm neu starten</translation>
-    </message>
-    <message>
         <source>Icons</source>
         <translation>Icons</translation>
     </message>
@@ -148,6 +140,14 @@
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -360,8 +360,8 @@
         <translation type="unfinished">Start-Assistent neustarten</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished">Startbildschirm neu starten</translation>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -386,15 +386,15 @@
         <translation>Standard DPI</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Denken Sie daran, den Startbildschirm sofort danach neu zu starten.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Startbildschirm neu starten</translation>
-    </message>
-    <message>
         <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -409,20 +409,20 @@
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation>Startbildschirm neu starten</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Vergiss nicht, den Startbildschirm neu zu starten.</translation>
-    </message>
-    <message>
         <source>Default icons</source>
         <translation>Standardicons</translation>
     </message>
     <message>
         <source>Default fonts</source>
         <translation>Standardschrift</translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -25,7 +25,9 @@ Item
     property alias activeFontPack: conf.activeFontPack
     property alias iconOverlay: conf.iconOverlay
 
-    property bool homeRefresh: true
+    // Off by default: icon apply/restore triggers launcher refresh via
+    // Optional full homescreen restart fallback (default off).
+    property bool homeRefresh: false
     property bool isRunning: false
 
     function deactivateIcon() { activeIconPack = "default"; }

@@ -331,11 +331,11 @@ Dialog
             } // grid
 
                 LabelText {
-                    text: "<br>" + qsTr("Remember to restart the homescreen right after.")
+                    text: "<br>" + qsTr("Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).")
                 }
 
                 TextSwitch { id: tshomerefresh
-                    text: qsTr("Restart homescreen")
+                    text: qsTr("Restart homescreen (fallback)")
                     checked: settings.homeRefresh
                 }
 

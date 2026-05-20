@@ -200,7 +200,7 @@ Page
             }
 
             MenuItem {
-                text: qsTr("Restart homescreen")
+                text: qsTr("Restart homescreen (fallback)")
                 onClicked: {
                     var dlgrestart = pageStack.push("RestartHSPage.qml");
                     dlgrestart.accepted.connect(function() {

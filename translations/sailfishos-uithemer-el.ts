@@ -115,14 +115,6 @@
         <translation>Βάρος γραμματοσειράς</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Θυμηθείτε να επανεκκινήσετε την αρχική οθόνη αμέσως μετά.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Επανεκκίνηση αρχικής οθόνης</translation>
-    </message>
-    <message>
         <source>Icons</source>
         <translation>Εικονίδια</translation>
     </message>
@@ -148,6 +140,14 @@
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -360,8 +360,8 @@
         <translation type="unfinished">Επανεκκίνηση οδηγού πρώτης χρήσης</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished">Επανεκκίνηση αρχικής οθόνης</translation>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -386,15 +386,15 @@
         <translation>Προεπιλεγμένη αναλογία εικονοστοιχείων συσκευής</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Θυμηθείτε να επανεκκινήσετε την αρχική οθόνη αμέσως μετά.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Επανεκκίνηση αρχικής οθόνης</translation>
-    </message>
-    <message>
         <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -409,20 +409,20 @@
         <translation>Ακύρωση</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation>Επανεκκίνηση αρχικής οθόνης</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Θυμηθείτε να επανεκκινήσετε την αρχική οθόνη αμέσως μετά.</translation>
-    </message>
-    <message>
         <source>Default icons</source>
         <translation>Προκαθορισμένα εικονίδια</translation>
     </message>
     <message>
         <source>Default fonts</source>
         <translation>Προκαθορισμένες γραμματοσειρές</translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

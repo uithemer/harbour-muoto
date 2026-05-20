@@ -13,9 +13,6 @@
 #include <QFileSystemWatcher>
 #include <QSet>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <pwd.h>
 #include <unistd.h>
 
@@ -23,12 +20,70 @@ static const char* kManifestPath = "/usr/share/sailfishos-uithemer/icon-backup.j
 static const char* kNativeAppsDir = "/usr/share/applications";
 static const char* kApkAppsDir = "/home/defaultuser/.local/share/applications";
 static const char* kPackPrefix = "/usr/share/harbour-themepack-";
+static const char* kHicolorRoot = "/usr/share/icons/hicolor";
+
+namespace
+{
+    const QStringList kNativeHicolorSizes = {
+        QStringLiteral("256x256"),
+        QStringLiteral("172x172"),
+        QStringLiteral("128x128"),
+        QStringLiteral("108x108"),
+        QStringLiteral("86x86"),
+    };
+
+    const QStringList kJollaSizes = {
+        QStringLiteral("z2.0"),
+        QStringLiteral("z1.75"),
+        QStringLiteral("z1.5-large"),
+        QStringLiteral("z1.5"),
+        QStringLiteral("z1.25"),
+        QStringLiteral("z1.0"),
+    };
+
+    const QStringList kApkPackSizes = {
+        QStringLiteral("192x192"),
+        QStringLiteral("128x128"),
+        QStringLiteral("86x86"),
+    };
+
+    QString stripUiThemerSuffix(QString icon)
+    {
+        static const QString suffixA = QStringLiteral("-uithemer-a");
+        static const QString suffixB = QStringLiteral("-uithemer-b");
+        if(icon.endsWith(suffixA))
+            return icon.left(icon.size() - suffixA.size());
+        if(icon.endsWith(suffixB))
+            return icon.left(icon.size() - suffixB.size());
+        return icon;
+    }
+
+    QString iconKeyFromValue(const QString& iconValue)
+    {
+        QString key = iconValue;
+        if(key.contains(QLatin1Char('/')))
+            key = QFileInfo(key).completeBaseName();
+        if(key.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
+            key.chop(4);
+        return key;
+    }
+
+    bool parseSize(const QString& size, int& w, int& h)
+    {
+        const int x = size.indexOf(QLatin1Char('x'));
+        if(x <= 0)
+            return false;
+        bool okW = false;
+        bool okH = false;
+        w = size.left(x).toInt(&okW);
+        h = size.mid(x + 1).toInt(&okH);
+        return okW && okH && w > 0 && h > 0;
+    }
+}
 
 IconApplier::IconApplier(QObject* parent)
     : QObject(parent), _watcher(nullptr)
 {
-    // Debounce: filesystem watchers can fire multiple events per logical
-    // change (e.g. RPM doing several link/rename ops). Coalesce them.
     _watchDebounce.setSingleShot(true);
     _watchDebounce.setInterval(750);
     QObject::connect(&_watchDebounce, &QTimer::timeout,
@@ -42,24 +97,22 @@ QString IconApplier::manifestPath() const
 
 QString IconApplier::packDir(const QString& packName) const
 {
-    // Tolerate either the bare pack name ("numix-circle") or the full RPM /
-    // directory name ("harbour-themepack-numix-circle"). MainPage feeds
-    // applyIcons() the role-data form (already stripped) while ConfirmPage
-    // passes ThemePackModel::packName(int) which keeps the prefix; strip any
-    // leading "harbour-themepack-" so we never double up the prefix.
+    return QString::fromLatin1(kPackPrefix) + packShortName(packName);
+}
+
+QString IconApplier::packShortName(const QString& packName) const
+{
     static const QString kBarePrefix = QStringLiteral("harbour-themepack-");
     QString name = packName;
     if(name.startsWith(kBarePrefix))
         name = name.mid(kBarePrefix.size());
-
-    return QString::fromLatin1(kPackPrefix) + name;
+    return name;
 }
 
-QString IconApplier::cacheOverlayDir() const
+QString IconApplier::hicolorAppsDir(const QString& packShort, const QString& size) const
 {
-    // Per-user cache for generated overlay PNGs.
-    const QString home = QString::fromLatin1("/home/defaultuser");
-    return home + QStringLiteral("/.cache/sailfishos-uithemer/overlay");
+    return QString::fromLatin1(kHicolorRoot) + QStringLiteral("/") + size
+           + QStringLiteral("/apps/") + packShort + QLatin1Char('/');
 }
 
 void IconApplier::chownToDefaultUser(const QString& path) const
@@ -71,43 +124,266 @@ void IconApplier::chownToDefaultUser(const QString& path) const
         qDebug() << "chown failed:" << path;
 }
 
+QString IconApplier::nativeAppsSourceDir(const QString& packName, const QString& size) const
+{
+    const QString apps = packDir(packName) + QStringLiteral("/native/") + size
+                         + QStringLiteral("/apps");
+    const QFileInfo fi(apps);
+    if(!fi.exists())
+        return QString();
+
+    if(fi.isSymLink())
+    {
+        const QString canonical = QFileInfo(fi.canonicalFilePath()).absoluteFilePath();
+        return canonical.isEmpty() ? QString() : canonical;
+    }
+
+    if(fi.isDir())
+        return apps;
+
+    return QString();
+}
+
+bool IconApplier::publishPngToAllHicolorSizes(const QString& packShort,
+                                             const QString& iconKey,
+                                             const QImage& image) const
+{
+    if(packShort.isEmpty() || iconKey.isEmpty() || image.isNull())
+        return false;
+
+    bool any = false;
+    for(const QString& size : kNativeHicolorSizes)
+    {
+        int w = 0;
+        int h = 0;
+        if(!parseSize(size, w, h))
+            continue;
+
+        const QString dir = hicolorAppsDir(packShort, size);
+        QDir().mkpath(dir);
+
+        const QString path = dir + iconKey + QStringLiteral(".png");
+        const QImage scaled = image.scaled(w, h, Qt::IgnoreAspectRatio,
+                                           Qt::SmoothTransformation);
+        if(QFile::exists(path))
+            QFile::remove(path);
+        if(scaled.save(path, "PNG"))
+            any = true;
+    }
+
+    return any;
+}
+
+bool IconApplier::hicolorHasIcon(const QString& packShort, const QString& iconKey) const
+{
+    for(const QString& size : kNativeHicolorSizes)
+    {
+        if(QFileInfo::exists(hicolorAppsDir(packShort, size) + iconKey
+                             + QStringLiteral(".png")))
+            return true;
+    }
+    return false;
+}
+
+bool IconApplier::publishApkKeyToHicolor(const QString& packName, const QString& base) const
+{
+    const QString shortName = packShortName(packName);
+    const QString packPng = findApkIcon(packName, base);
+    if(packPng.isEmpty())
+        return false;
+
+    bool any = false;
+    const QString root = packDir(packName);
+
+    for(const QString& size : kNativeHicolorSizes)
+    {
+        const QString dir = hicolorAppsDir(shortName, size);
+        QDir().mkpath(dir);
+        const QString dest = dir + base + QStringLiteral(".png");
+
+        const QString packSized = root + QStringLiteral("/apk/") + size + QLatin1Char('/')
+                                  + base + QStringLiteral(".png");
+        if(QFileInfo::exists(packSized))
+        {
+            if(QFile::exists(dest))
+                QFile::remove(dest);
+            if(QFile::copy(packSized, dest))
+                any = true;
+            continue;
+        }
+
+        QImage master(packPng);
+        if(master.isNull())
+            continue;
+
+        int w = 0;
+        int h = 0;
+        if(!parseSize(size, w, h))
+            continue;
+
+        const QImage scaled = master.scaled(w, h, Qt::IgnoreAspectRatio,
+                                            Qt::SmoothTransformation);
+        if(QFile::exists(dest))
+            QFile::remove(dest);
+        if(scaled.save(dest, "PNG"))
+            any = true;
+    }
+
+    return any;
+}
+
+bool IconApplier::installPackHicolorBridge(const QString& packName)
+{
+    const QString shortName = packShortName(packName);
+    const QString packRoot = packDir(packName);
+    if(!QDir(packRoot).exists())
+        return false;
+
+    bool ok = false;
+
+    for(const QString& size : kNativeHicolorSizes)
+    {
+        const QString srcDir = nativeAppsSourceDir(packName, size);
+        if(srcDir.isEmpty())
+            continue;
+
+        const QString dstDir = hicolorAppsDir(shortName, size);
+        QDir().mkpath(dstDir);
+
+        QDir src(srcDir);
+        const QStringList pngs = src.entryList(QStringList() << QStringLiteral("*.png"),
+                                               QDir::Files);
+        for(const QString& f : pngs)
+        {
+            const QString from = src.absoluteFilePath(f);
+            const QString to = dstDir + f;
+            if(QFile::exists(to))
+                QFile::remove(to);
+            if(QFile::copy(from, to))
+                ok = true;
+        }
+    }
+
+    QSet<QString> keysInHicolor;
+    for(const QString& size : kNativeHicolorSizes)
+    {
+        QDir d(hicolorAppsDir(shortName, size));
+        const QStringList pngs = d.entryList(QStringList() << QStringLiteral("*.png"),
+                                              QDir::Files);
+        for(const QString& f : pngs)
+            keysInHicolor.insert(QFileInfo(f).completeBaseName());
+    }
+
+    for(const QString& zSize : kJollaSizes)
+    {
+        const QString jDir = packRoot + QStringLiteral("/jolla/") + zSize
+                             + QStringLiteral("/icons");
+        QDir jd(jDir);
+        if(!jd.exists())
+            continue;
+
+        const QStringList pngs = jd.entryList(QStringList() << QStringLiteral("*.png"),
+                                                QDir::Files);
+        for(const QString& f : pngs)
+        {
+            const QString key = QFileInfo(f).completeBaseName();
+            if(keysInHicolor.contains(key))
+                continue;
+
+            QImage img(jd.absoluteFilePath(f));
+            if(img.isNull())
+                continue;
+
+            if(publishPngToAllHicolorSizes(shortName, key, img))
+            {
+                keysInHicolor.insert(key);
+                ok = true;
+            }
+        }
+    }
+
+    QSet<QString> apkKeys;
+    for(const QString& size : kApkPackSizes)
+    {
+        QDir d(packRoot + QStringLiteral("/apk/") + size);
+        if(!d.exists())
+            continue;
+        const QStringList pngs = d.entryList(QStringList() << QStringLiteral("*.png"),
+                                              QDir::Files);
+        for(const QString& f : pngs)
+            apkKeys.insert(QFileInfo(f).completeBaseName());
+    }
+
+    for(const QString& key : apkKeys)
+    {
+        if(publishApkKeyToHicolor(packName, key))
+            ok = true;
+    }
+
+    return ok;
+}
+
+void IconApplier::removePackHicolorBridge(const QString& packName)
+{
+    const QString shortName = packShortName(packName);
+
+    for(const QString& size : kNativeHicolorSizes)
+    {
+        const QString dstDir = QString::fromLatin1(kHicolorRoot) + QStringLiteral("/")
+                               + size + QStringLiteral("/apps/") + shortName;
+        QDir(dstDir).removeRecursively();
+    }
+}
+
+QString IconApplier::nativeIconKey(const QString& iconValue, const QString& desktopPath) const
+{
+    QString key = iconKeyFromValue(iconValue);
+
+    if(iconValue.contains(QLatin1Char('/')) && !iconValue.startsWith(QLatin1Char('/')))
+    {
+        const int slash = iconValue.indexOf(QLatin1Char('/'));
+        const QString tail = iconValue.mid(slash + 1);
+        if(!tail.isEmpty())
+            key = iconKeyFromValue(tail);
+    }
+
+    if(key.isEmpty())
+        key = baseForNative(desktopPath);
+
+    return key;
+}
+
+QString IconApplier::themedIconId(const QString& packName, const QString& iconKey) const
+{
+    if(iconKey.isEmpty())
+        return QString();
+    return packShortName(packName) + QLatin1Char('/') + iconKey;
+}
+
+bool IconApplier::themedIconExists(const QString& packName, const QString& themedIcon) const
+{
+    if(themedIcon.startsWith(QLatin1Char('/')))
+        return QFileInfo::exists(themedIcon);
+
+    const int slash = themedIcon.indexOf(QLatin1Char('/'));
+    if(slash <= 0)
+        return false;
+
+    if(themedIcon.left(slash) != packShortName(packName))
+        return false;
+
+    return hicolorHasIcon(themedIcon.left(slash), themedIcon.mid(slash + 1));
+}
+
 QString IconApplier::findNativeIcon(const QString& packName, const QString& iconValue) const
 {
-    // Native (post-3.0) layout: <pack>/native/<size>/apps/<key>.png. Largest first
-    // so the launcher gets the highest-resolution available asset.
-    static const QStringList nativeSizes = {
-        QStringLiteral("256x256"),
-        QStringLiteral("172x172"),
-        QStringLiteral("128x128"),
-        QStringLiteral("108x108"),
-        QStringLiteral("86x86")
-    };
-    // Pre-3.0 Sailfish "ambience" layout: <pack>/jolla/<zX.Y>/icons/<key>.png.
-    // Order mirrors the original tps/icon-run.sh fallback (largest first).
-    static const QStringList jollaSizes = {
-        QStringLiteral("z2.0"),
-        QStringLiteral("z1.75"),
-        QStringLiteral("z1.5-large"),
-        QStringLiteral("z1.5"),
-        QStringLiteral("z1.25"),
-        QStringLiteral("z1.0")
-    };
-
-    // Normalise the Icon= value to a bare key so packs can match regardless of
-    // how the .desktop spelled it:
-    //   - strip leading directory ("/usr/share/icons/.../foo.png" -> "foo")
-    //   - strip trailing .png if some package wrote a full filename
-    QString key = iconValue;
-    if(key.contains(QLatin1Char('/')))
-        key = QFileInfo(key).completeBaseName();
-    if(key.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
-        key.chop(4);
+    const QString key = iconKeyFromValue(iconValue);
     if(key.isEmpty())
         return QString();
 
     const QString root = packDir(packName);
 
-    for(const QString& s : nativeSizes)
+    for(const QString& s : kNativeHicolorSizes)
     {
         const QString p = root + QStringLiteral("/native/") + s
                           + QStringLiteral("/apps/") + key + QStringLiteral(".png");
@@ -115,10 +391,10 @@ QString IconApplier::findNativeIcon(const QString& packName, const QString& icon
             return p;
     }
 
-    for(const QString& s : jollaSizes)
+    for(const QString& s : kJollaSizes)
     {
-        const QString p = root + QStringLiteral("/jolla/") + s
-                          + QStringLiteral("/icons/") + key + QStringLiteral(".png");
+        const QString p = root + QStringLiteral("/jolla/") + s + QStringLiteral("/icons/")
+                          + key + QStringLiteral(".png");
         if(QFileInfo::exists(p))
             return p;
     }
@@ -126,81 +402,32 @@ QString IconApplier::findNativeIcon(const QString& packName, const QString& icon
     return QString();
 }
 
-static QString nativePackLookupKey(const QString& iconValue)
-{
-    static const QString overlayTag = QStringLiteral("sailfishos-uithemer/overlay");
-    static const QString kindSep = QStringLiteral("__");
-
-    if(iconValue.contains(overlayTag))
-    {
-        const int sep = iconValue.indexOf(kindSep);
-        if(sep > 0)
-        {
-            QString key = iconValue.mid(sep + kindSep.size());
-            if(key.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
-                key.chop(4);
-            if(!key.isEmpty())
-                return key;
-        }
-    }
-    return iconValue;
-}
-
 QString IconApplier::findNativeIconForDesktop(const QString& packName,
                                               const QString& iconValue,
                                               const QString& desktopPath) const
 {
-    const QString lookup = nativePackLookupKey(iconValue);
-    QString themed = findNativeIcon(packName, lookup);
+    QString themed = findNativeIcon(packName, iconValue);
     if(!themed.isEmpty())
         return themed;
 
     const QString base = baseForNative(desktopPath);
+    const QString lookup = iconKeyFromValue(iconValue);
     if(lookup != base)
         themed = findNativeIcon(packName, base);
     return themed;
 }
 
-QString IconApplier::snapshotNativeOriginalIcon(const QString& iconValue,
-                                                const QString& desktopPath) const
-{
-    static const QString kThemedPack = QStringLiteral("harbour-themepack-");
-    static const QString kOverlay = QStringLiteral("sailfishos-uithemer/overlay");
-
-    if(!iconValue.contains(kThemedPack) && !iconValue.contains(kOverlay))
-        return iconValue;
-
-    QString key = nativePackLookupKey(iconValue);
-    if(key.contains(QLatin1Char('/')))
-    {
-        key = QFileInfo(key).completeBaseName();
-        if(key.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
-            key.chop(4);
-    }
-    return key.isEmpty() ? iconValue : key;
-}
-
 QString IconApplier::findApkIcon(const QString& packName, const QString& base) const
 {
-    static const QStringList sizes = {
-        QStringLiteral("192x192"),
-        QStringLiteral("128x128"),
-        QStringLiteral("86x86")
-    };
-
     const QString root = packDir(packName);
-    for(const QString& s : sizes)
+    for(const QString& s : kApkPackSizes)
     {
-        const QString p = root + QStringLiteral("/apk/") + s
-                          + QStringLiteral("/") + base + QStringLiteral(".png");
+        const QString p = root + QStringLiteral("/apk/") + s + QStringLiteral("/")
+                          + base + QStringLiteral(".png");
         if(QFileInfo::exists(p))
             return p;
     }
 
-    // Legacy fallback: older packs (pre underscore-style apkd-bridge)
-    // shipped apkd_launcher_org.fdroid.fdroid.png, i.e. they kept the
-    // dotted Android package name in the filename. Try that variant
-    // by swapping underscores after "apkd_launcher_" back to dots.
     static const QString kPrefix = QStringLiteral("apkd_launcher_");
     if(base.startsWith(kPrefix))
     {
@@ -209,11 +436,10 @@ QString IconApplier::findApkIcon(const QString& packName, const QString& base) c
         const QString legacy = kPrefix + legacyTail;
         if(legacy != base)
         {
-            for(const QString& s : sizes)
+            for(const QString& s : kApkPackSizes)
             {
-                const QString p = root + QStringLiteral("/apk/") + s
-                                  + QStringLiteral("/") + legacy
-                                  + QStringLiteral(".png");
+                const QString p = root + QStringLiteral("/apk/") + s + QStringLiteral("/")
+                                  + legacy + QStringLiteral(".png");
                 if(QFileInfo::exists(p))
                     return p;
             }
@@ -255,22 +481,7 @@ QString IconApplier::baseForNative(const QString& desktopPath) const
 
 QString IconApplier::baseForApk(const QString& iconValue) const
 {
-    // Normalise the .desktop's Icon= value to the pack-side lookup key.
-    // Modern apkd-bridge writes an absolute path inside its per-user
-    // launcherIcon dir, of the form:
-    //   /home/defaultuser/.local/share/apkd-bridge/launcherIcon/
-    //   apkd_launcher_<pkg>-<ActivityClass>.png
-    // The "<pkg>" portion uses underscores in place of dots (e.g.
-    // org_fdroid_fdroid for org.fdroid.fdroid). Theme packs ship one
-    // PNG per package, keyed apkd_launcher_<pkg>.png, so we drop the
-    // "-<ActivityClass>" tail before looking up. Older apkd-bridge
-    // wrote just the bare apkd_launcher_<launcher_id> string with no
-    // path, which still works the same way after the strip below.
-    QString v = iconValue;
-    if(v.contains(QLatin1Char('/')))
-        v = QFileInfo(v).completeBaseName();
-    if(v.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
-        v.chop(4);
+    QString v = iconKeyFromValue(iconValue);
 
     static const QString kPrefix = QStringLiteral("apkd_launcher_");
     if(v.startsWith(kPrefix))
@@ -288,19 +499,15 @@ int IconApplier::nativeMatchCount(const QString& packName) const
         return 0;
 
     int count = 0;
-    const QStringList ds = nativeDesktops();
-    for(const QString& d : ds)
+    for(const QString& d : nativeDesktops())
     {
-        // Native lookup is now keyed off Icon= (so jolla-camera.desktop ->
-        // Icon=icon-launcher-camera matches the pack's icon-launcher-camera.png).
-        // We have to load the .desktop here to read it.
         DesktopFile df(d);
         if(!df.load())
             continue;
         const QString iv = df.value(QStringLiteral("Icon"));
         if(iv.isEmpty())
             continue;
-        if(!findNativeIcon(packName, iv).isEmpty())
+        if(!findNativeIconForDesktop(packName, iv, d).isEmpty())
             ++count;
     }
     return count;
@@ -312,8 +519,7 @@ int IconApplier::apkMatchCount(const QString& packName) const
         return 0;
 
     int count = 0;
-    const QStringList ds = apkDesktops();
-    for(const QString& dpath : ds)
+    for(const QString& dpath : apkDesktops())
     {
         DesktopFile df(dpath);
         if(!df.load())
@@ -321,8 +527,7 @@ int IconApplier::apkMatchCount(const QString& packName) const
         const QString iv = df.value(QStringLiteral("Icon"));
         if(iv.isEmpty())
             continue;
-        const QString base = baseForApk(iv);
-        if(!findApkIcon(packName, base).isEmpty())
+        if(!findApkIcon(packName, baseForApk(iv)).isEmpty())
             ++count;
     }
     return count;
@@ -333,33 +538,24 @@ QString IconApplier::resolveSourceIcon(const QString& iconValue, const QString& 
     if(iconValue.isEmpty())
         return QString();
 
-    // Absolute path: return as-is.
     if(iconValue.startsWith(QLatin1Char('/')) && QFileInfo::exists(iconValue))
         return iconValue;
 
+    const QString key = iconKeyFromValue(iconValue);
+
     if(kind == QStringLiteral("apk"))
     {
-        // apkd-bridge keeps the PNG flat under launcherIcon/<icon>.png
         const QString p = QStringLiteral("/home/defaultuser/.local/share/apkd-bridge/launcherIcon/")
-                          + iconValue + QStringLiteral(".png");
+                          + key + QStringLiteral(".png");
         if(QFileInfo::exists(p))
             return p;
     }
     else
     {
-        // Native: try standard hicolor sizes.
-        static const QStringList sizes = {
-            QStringLiteral("256x256"),
-            QStringLiteral("172x172"),
-            QStringLiteral("128x128"),
-            QStringLiteral("108x108"),
-            QStringLiteral("86x86")
-        };
-        for(const QString& s : sizes)
+        for(const QString& s : kNativeHicolorSizes)
         {
-            const QString p = QStringLiteral("/usr/share/icons/hicolor/")
-                              + s + QStringLiteral("/apps/")
-                              + iconValue + QStringLiteral(".png");
+            const QString p = QString::fromLatin1(kHicolorRoot) + QStringLiteral("/") + s
+                              + QStringLiteral("/apps/") + key + QStringLiteral(".png");
             if(QFileInfo::exists(p))
                 return p;
         }
@@ -367,23 +563,17 @@ QString IconApplier::resolveSourceIcon(const QString& iconValue, const QString& 
     return QString();
 }
 
-QString IconApplier::makeOverlayIcon(const QString& packName, const QString& base,
+QImage IconApplier::makeOverlayImage(const QString& packName, const QString& base,
                                      const QString& kind, const QString& sourceIcon) const
 {
+    Q_UNUSED(base);
+
     if(sourceIcon.isEmpty())
-        return QString();
+        return QImage();
 
     const QString overlayBase = ImageUtil::randomOverlayBase(packDir(packName));
     if(overlayBase.isEmpty())
-        return QString();
-
-    const QString cacheDir = cacheOverlayDir() + QStringLiteral("/") + packName;
-    QDir().mkpath(cacheDir);
-    chownToDefaultUser(cacheOverlayDir());
-    chownToDefaultUser(cacheDir);
-
-    const QString outPath = cacheDir + QStringLiteral("/") + kind
-                            + QStringLiteral("__") + base + QStringLiteral(".png");
+        return QImage();
 
     QSize outer, inner;
     if(kind == QStringLiteral("apk"))
@@ -400,13 +590,47 @@ QString IconApplier::makeOverlayIcon(const QString& packName, const QString& bas
     QImage baseImg(overlayBase);
     QImage innerImg(sourceIcon);
     QImage out = ImageUtil::composite(baseImg, innerImg, outer, inner);
-    if(out.isNull())
-        return QString();
+    return out.isNull() ? QImage() : out;
+}
 
-    if(!out.save(outPath, "PNG"))
-        return QString();
-    chownToDefaultUser(outPath);
-    return outPath;
+void IconApplier::publishOverlayIconsToHicolor(const QString& packName)
+{
+    const QString shortName = packShortName(packName);
+
+    auto maybeOverlay = [&](const QString& dpath, const QString& kind, bool isApk) {
+        DesktopFile df(dpath);
+        if(!df.load())
+            return;
+
+        const QString original = df.value(QStringLiteral("Icon"));
+        if(isApk && original.isEmpty())
+            return;
+
+        const bool hasPack = isApk
+                                 ? !findApkIcon(packName, baseForApk(original)).isEmpty()
+                                 : !findNativeIconForDesktop(packName, original, dpath).isEmpty();
+        if(hasPack)
+            return;
+
+        const QString base = isApk ? baseForApk(original) : baseForNative(dpath);
+        const QString iconKey = isApk ? base : nativeIconKey(original, dpath);
+
+        const QString source = resolveSourceIcon(original, kind);
+        if(source.isEmpty())
+            return;
+
+        const QImage img = makeOverlayImage(packName, base, kind, source);
+        if(img.isNull())
+            return;
+
+        publishPngToAllHicolorSizes(shortName, iconKey, img);
+    };
+
+    for(const QString& dpath : nativeDesktops())
+        maybeOverlay(dpath, QStringLiteral("native"), false);
+
+    for(const QString& dpath : apkDesktops())
+        maybeOverlay(dpath, QStringLiteral("apk"), true);
 }
 
 void IconApplier::applyIcons(const QString& packName, bool overlay)
@@ -417,18 +641,17 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         return;
     }
 
-    FileLock lk; // serialise vs helper / systemupgrade / autoupdate timer
+    FileLock lk;
     Q_UNUSED(lk);
 
-    // Always restore first, so re-applying a different pack starts from clean originals.
-    // restoreIcons() also takes the lock; flock is non-recursive across distinct file
-    // descriptors but recursive on the SAME fd. Our FileLock opens a new fd each time,
-    // so a nested restoreIcons() would deadlock. Inline the restore work here so we
-    // hold the lock once across the full apply.
     {
         IconManifest mfRestore(manifestPath());
         if(mfRestore.load())
         {
+            const QString oldPack = mfRestore.activeIconPack();
+            if(!oldPack.isEmpty())
+                removePackHicolorBridge(oldPack);
+
             const QHash<QString, IconManifest::Entry> entries = mfRestore.entries();
             for(auto it = entries.begin(); it != entries.end(); ++it)
             {
@@ -444,7 +667,7 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
                 if(!df.load())
                     continue;
 
-                df.setValue(QStringLiteral("Icon"), e.originalIcon);
+                df.setValue(QStringLiteral("Icon"), stripUiThemerSuffix(e.originalIcon));
                 if(df.save())
                 {
                     if(e.kind == QStringLiteral("apk"))
@@ -457,10 +680,17 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         }
     }
 
+    if(!installPackHicolorBridge(packName))
+        qWarning() << "uithemer: hicolor publish failed for" << packName;
+
+    if(overlay)
+        publishOverlayIconsToHicolor(packName);
+
     IconManifest manifest(manifestPath());
     manifest.load();
     manifest.setActiveIconPack(packName);
 
+    const QString shortName = packShortName(packName);
     const QStringList native = nativeDesktops();
     const QStringList apk = apkDesktops();
     const int total = native.size() + apk.size();
@@ -478,27 +708,22 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         if(isApk && original.isEmpty())
             return;
 
-        // `base` is still useful as a stable, filesystem-safe key for the overlay
-        // cache filename. Native uses the .desktop basename (no slashes, no .png),
-        // APK uses the apkd_launcher_<id> from Icon=. The actual pack lookup uses
-        // Icon= directly for native (so jolla-camera -> icon-launcher-camera).
-        const QString base = isApk ? baseForApk(original) : baseForNative(dpath);
+        const QString iconKey = isApk ? baseForApk(original) : nativeIconKey(original, dpath);
 
-        QString themed = isApk ? findApkIcon(packName, base)
-                               : findNativeIconForDesktop(packName, original, dpath);
-        if(themed.isEmpty() && overlay)
-            themed = makeOverlayIcon(packName, base, kind,
-                                     resolveSourceIcon(original, kind));
+        const bool hasPack = isApk
+                                 ? !findApkIcon(packName, iconKey).isEmpty()
+                                 : !findNativeIconForDesktop(packName, original, dpath).isEmpty();
+        const bool hasOverlay = overlay && hicolorHasIcon(shortName, iconKey);
+
+        if(!hasPack && !hasOverlay)
+            return;
+
+        const QString themed = themedIconId(packName, iconKey);
         if(themed.isEmpty())
             return;
 
-        // Per-entry commit order matters: write the manifest entry FIRST,
-        // then the .desktop file. If we crash between the two, the manifest
-        // already records the original_icon so restore still works. If we
-        // crash before the manifest write, no harm done — .desktop is
-        // unchanged.
         IconManifest::Entry e;
-        e.originalIcon = isApk ? original : snapshotNativeOriginalIcon(original, dpath);
+        e.originalIcon = original;
         e.themedIcon = themed;
         e.kind = kind;
         manifest.setEntry(dpath, e);
@@ -507,7 +732,6 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         df.setValue(QStringLiteral("Icon"), themed);
         if(!df.save())
         {
-            // Roll back the manifest entry on write failure.
             manifest.removeEntry(dpath);
             manifest.save();
             return;
@@ -523,7 +747,6 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         processOne(dpath, QStringLiteral("apk"), true);
 
     manifest.save();
-    touchDesktopFiles();
     emit applied();
 }
 
@@ -539,6 +762,7 @@ void IconApplier::restoreIcons()
         return;
     }
 
+    const QString activePack = manifest.activeIconPack();
     const QHash<QString, IconManifest::Entry> entries = manifest.entries();
     int done = 0;
     const int total = entries.size();
@@ -554,7 +778,6 @@ void IconApplier::restoreIcons()
         DesktopFile df(dpath);
         if(!df.exists())
         {
-            // Whole .desktop is gone (app uninstalled). Drop the entry.
             manifest.removeEntry(dpath);
             continue;
         }
@@ -562,7 +785,7 @@ void IconApplier::restoreIcons()
         if(!df.load())
             continue;
 
-        df.setValue(QStringLiteral("Icon"), e.originalIcon);
+        df.setValue(QStringLiteral("Icon"), stripUiThemerSuffix(e.originalIcon));
         if(!df.save())
             continue;
         if(e.kind == QStringLiteral("apk"))
@@ -571,33 +794,27 @@ void IconApplier::restoreIcons()
         manifest.removeEntry(dpath);
     }
 
+    if(!activePack.isEmpty())
+        removePackHicolorBridge(activePack);
+
     manifest.setActiveIconPack(QString());
     manifest.save();
-    touchDesktopFiles();
     emit restored();
 }
 
-void IconApplier::reassertWithinLock(IconManifest& manifest,
-                                     int& reasserted, int& removed)
+void IconApplier::reassertWithinLock(IconManifest& manifest, int& reasserted, int& removed)
 {
-    reasserted = 0;
-    removed = 0;
-
     const QString pack = manifest.activeIconPack();
-    if(pack.isEmpty())
-        return;
-
     const QHash<QString, IconManifest::Entry> entries = manifest.entries();
 
     for(auto it = entries.begin(); it != entries.end(); ++it)
     {
         const QString dpath = it.key();
-        IconManifest::Entry e = it.value();
+        const IconManifest::Entry& e = it.value();
 
         DesktopFile df(dpath);
         if(!df.exists())
         {
-            // Uninstall cleanup: .desktop is gone (app uninstalled).
             manifest.removeEntry(dpath);
             ++removed;
             continue;
@@ -607,20 +824,12 @@ void IconApplier::reassertWithinLock(IconManifest& manifest,
 
         const QString cur = df.value(QStringLiteral("Icon"));
 
-        // (a) Self-heal: if Icon= drifted to something that's neither the
-        // themed value nor the recorded original, the upstream package
-        // changed it. Snapshot it as the new original BEFORE we clobber.
-        if(!cur.isEmpty() && cur != e.themedIcon && cur != e.originalIcon)
-        {
-            e.originalIcon = cur;
-            manifest.setEntry(dpath, e);
-        }
+        if(cur == e.originalIcon)
+            continue;
 
-        // (b) Theme pack uninstalled / themed PNG vanished: write the
-        // original back instead of pointing at a missing path.
-        if(!QFileInfo::exists(e.themedIcon))
+        if(!themedIconExists(pack, e.themedIcon))
         {
-            df.setValue(QStringLiteral("Icon"), e.originalIcon);
+            df.setValue(QStringLiteral("Icon"), stripUiThemerSuffix(e.originalIcon));
             if(df.save())
             {
                 if(e.kind == QStringLiteral("apk"))
@@ -631,7 +840,6 @@ void IconApplier::reassertWithinLock(IconManifest& manifest,
             continue;
         }
 
-        // (c) Normal case: re-write Icon= to the themed value.
         if(cur == e.themedIcon)
             continue;
 
@@ -644,7 +852,6 @@ void IconApplier::reassertWithinLock(IconManifest& manifest,
         }
     }
 
-    // If every themed_icon vanished, the active pack is effectively gone.
     if(manifest.entries().isEmpty())
         manifest.setActiveIconPack(QString());
 }
@@ -661,15 +868,22 @@ void IconApplier::reassertCurrentTheme()
         return;
     }
 
+    const QString pack = manifest.activeIconPack();
+    if(pack.isEmpty())
+    {
+        emit reasserted();
+        return;
+    }
+
+    installPackHicolorBridge(pack);
+
     int reassertedCount = 0;
     int removedCount = 0;
     reassertWithinLock(manifest, reassertedCount, removedCount);
 
     if(reassertedCount > 0 || removedCount > 0)
-    {
         manifest.save();
-        touchDesktopFiles();
-    }
+
     emit reasserted();
 }
 
@@ -686,7 +900,7 @@ void IconApplier::refreshOriginals()
     }
 
     bool changed = false;
-    QHash<QString, IconManifest::Entry> entries = manifest.entries();
+    const QHash<QString, IconManifest::Entry> entries = manifest.entries();
 
     for(auto it = entries.begin(); it != entries.end(); ++it)
     {
@@ -698,8 +912,6 @@ void IconApplier::refreshOriginals()
             continue;
 
         const QString cur = df.value(QStringLiteral("Icon"));
-        // If cur is no longer the themed value, the package update wrote a fresh Icon=:
-        // refresh the snapshot of "original" so a future restore returns to that value.
         if(cur != e.themedIcon && !cur.isEmpty())
         {
             e.originalIcon = cur;
@@ -710,6 +922,7 @@ void IconApplier::refreshOriginals()
 
     if(changed)
         manifest.save();
+
     emit originalsRefreshed();
 }
 
@@ -732,22 +945,19 @@ void IconApplier::themeNewDesktops(bool overlay)
         return;
     }
 
-    // First: drift reassert + uninstall cleanup. Fixes entries whose
-    // Icon= was rewritten by an RPM update, rolls back entries whose
-    // themed PNG vanished, and prunes entries whose .desktop is gone.
+    installPackHicolorBridge(pack);
+
+    if(overlay)
+        publishOverlayIconsToHicolor(pack);
+
     int reassertedCount = 0;
     int removedCount = 0;
     reassertWithinLock(manifest, reassertedCount, removedCount);
 
-    // If the helper pruned the last entry, reassertWithinLock cleared
-    // the active pack -- bail before themeing anything new.
     if(manifest.activeIconPack().isEmpty())
     {
         if(reassertedCount > 0 || removedCount > 0)
-        {
             manifest.save();
-            touchDesktopFiles();
-        }
         emit newDesktopsThemed(0);
         return;
     }
@@ -757,6 +967,7 @@ void IconApplier::themeNewDesktops(bool overlay)
     for(auto it = entries.begin(); it != entries.end(); ++it)
         known.insert(it.key());
 
+    const QString shortName = packShortName(pack);
     int themed = 0;
 
     auto processOne = [&](const QString& dpath, const QString& kind, bool isApk) {
@@ -771,32 +982,28 @@ void IconApplier::themeNewDesktops(bool overlay)
         if(isApk && original.isEmpty())
             return;
 
-        // `base` is the filesystem-safe key for the overlay cache.
-        // Native uses the .desktop basename; APK uses baseForApk(Icon=).
-        // Native pack lookup uses Icon= directly so jolla-* matches.
-        const QString base = isApk ? baseForApk(original) : baseForNative(dpath);
+        const QString iconKey = isApk ? baseForApk(original) : nativeIconKey(original, dpath);
 
-        QString themedPath = isApk ? findApkIcon(pack, base)
-                                   : findNativeIconForDesktop(pack, original, dpath);
-        // Overlay-on-new: when the user picked the overlay at apply
-        // time (passed in via the dconf flag the GUI mirrors), generate
-        // a composited icon for any new .desktop the pack has no
-        // direct asset for. Mirrors the apply path.
-        if(themedPath.isEmpty() && overlay)
-            themedPath = makeOverlayIcon(pack, base, kind,
-                                         resolveSourceIcon(original, kind));
-        if(themedPath.isEmpty())
+        const bool hasPack = isApk
+                                 ? !findApkIcon(pack, iconKey).isEmpty()
+                                 : !findNativeIconForDesktop(pack, original, dpath).isEmpty();
+        const bool hasOverlay = overlay && hicolorHasIcon(shortName, iconKey);
+
+        if(!hasPack && !hasOverlay)
             return;
 
-        // Same per-entry commit order as applyIcons: manifest first, then file.
+        const QString themedIcon = themedIconId(pack, iconKey);
+        if(themedIcon.isEmpty())
+            return;
+
         IconManifest::Entry e;
-        e.originalIcon = isApk ? original : snapshotNativeOriginalIcon(original, dpath);
-        e.themedIcon = themedPath;
+        e.originalIcon = original;
+        e.themedIcon = themedIcon;
         e.kind = kind;
         manifest.setEntry(dpath, e);
         manifest.save();
 
-        df.setValue(QStringLiteral("Icon"), themedPath);
+        df.setValue(QStringLiteral("Icon"), themedIcon);
         if(!df.save())
         {
             manifest.removeEntry(dpath);
@@ -815,16 +1022,8 @@ void IconApplier::themeNewDesktops(bool overlay)
         processOne(dpath, QStringLiteral("apk"), true);
 
     if(themed > 0 || reassertedCount > 0 || removedCount > 0)
-    {
         manifest.save();
-        touchDesktopFiles();
-    }
 
-    // Count semantic: number of entries whose Icon= changed in this
-    // pass (new theming + drift reassert). Excludes removedCount,
-    // which is uninstall cleanup -- the .desktop is gone so the
-    // launcher prunes it on its own; no lipstick refresh hint needed.
-    // QML uses this to decide whether to restart the homescreen.
     emit newDesktopsThemed(themed + reassertedCount);
 }
 
@@ -836,10 +1035,10 @@ void IconApplier::enableAutoTheming(bool enable)
             return;
 
         _watcher = new QFileSystemWatcher(this);
-
-        QStringList dirs;
-        dirs << QStringLiteral("/usr/share/applications");
-        dirs << QStringLiteral("/home/defaultuser/.local/share/applications");
+        const QStringList dirs = {
+            QStringLiteral("/usr/share/applications"),
+            QStringLiteral("/home/defaultuser/.local/share/applications"),
+        };
         for(const QString& d : dirs)
         {
             if(QFileInfo::exists(d))
@@ -861,17 +1060,11 @@ void IconApplier::enableAutoTheming(bool enable)
 
 void IconApplier::onWatchedDirChanged(const QString& /*path*/)
 {
-    // Coalesce rapid bursts (RPM transactions, apkd-bridge batch writes).
     _watchDebounce.start();
 }
 
 void IconApplier::debouncedRescan()
 {
-    // The GUI's IconApplier runs as defaultuser and has no privilege
-    // to rewrite /usr/share/applications/*.desktop or the system
-    // manifest, so calling themeNewDesktops() locally would just emit
-    // newDesktopsThemed(0). QML hooks watcherFired and dispatches the
-    // call to the daemon via Helper.themeNewDesktops(overlay).
     emit watcherFired();
 }
 
@@ -890,25 +1083,4 @@ void IconApplier::buildPreview(const QString& packName)
 
     IconPreviewCache::instance().put(packName, ok ? img : QImage());
     emit previewReady(packName, ok);
-}
-
-void IconApplier::touchDesktopFiles() const
-{
-    auto touch = [](const QString& dir) {
-        QDir d(dir);
-        const QStringList files = d.entryList(QStringList() << QStringLiteral("*.desktop"),
-                                              QDir::Files);
-        for(const QString& f : files)
-        {
-            const QString p = d.absoluteFilePath(f);
-            QFile fd(p);
-            if(!fd.open(QIODevice::Append))
-                continue;
-            fd.close();
-            // Bump mtime so lipstick reloads it.
-            utimensat(AT_FDCWD, p.toLocal8Bit().constData(), nullptr, 0);
-        }
-    };
-    touch(QString::fromLatin1(kNativeAppsDir));
-    touch(QString::fromLatin1(kApkAppsDir));
 }

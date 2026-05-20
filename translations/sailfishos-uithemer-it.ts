@@ -115,14 +115,6 @@
         <translation>Stile font</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Ricorda di riavviare la schermata home subito dopo.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Riavvia schermata home</translation>
-    </message>
-    <message>
         <source>Icons</source>
         <translation>Icone</translation>
     </message>
@@ -148,6 +140,14 @@
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -360,8 +360,8 @@
         <translation type="unfinished">Riavvia configurazione guidata</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished">Riavvia schermata home</translation>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -386,15 +386,15 @@
         <translation>Device pixel ratio predefinito</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Ricorda di riavviare la schermata home subito dopo.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Riavvia schermata home</translation>
-    </message>
-    <message>
         <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -409,20 +409,20 @@
         <translation>Annulla</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation>Riavvia schermata home</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Ricorda di riavviare la schermata home subito dopo.</translation>
-    </message>
-    <message>
         <source>Default icons</source>
         <translation>Icone predefinite</translation>
     </message>
     <message>
         <source>Default fonts</source>
         <translation>Font predefiniti</translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -115,14 +115,6 @@
         <translation>Lettergewicht</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Vergeet niet om het startscherm nadien te herstarten.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Startscherm herstarten</translation>
-    </message>
-    <message>
         <source>Icons</source>
         <translation>Pictogrammen</translation>
     </message>
@@ -148,6 +140,14 @@
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -360,8 +360,8 @@
         <translation type="unfinished">Eerste-start-wizard herstarten</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished">Startscherm herstarten</translation>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -386,15 +386,15 @@
         <translation>Standaardpixelverhouding van apparaat</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Vergeet niet om het startscherm nadien te herstarten.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Startscherm herstarten</translation>
-    </message>
-    <message>
         <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -409,20 +409,20 @@
         <translation>Annuleren</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation>Startscherm herstarten</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Vergeet niet om het startscherm nadien te herstarten.</translation>
-    </message>
-    <message>
         <source>Default icons</source>
         <translation>Standaardpictogrammen</translation>
     </message>
     <message>
         <source>Default fonts</source>
         <translation>Standaardlettertypen</translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

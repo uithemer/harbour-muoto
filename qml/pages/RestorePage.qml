@@ -124,11 +124,11 @@ Dialog
             } // grid
 
             LabelText {
-                text: "<br>" + qsTr("Remember to restart the homescreen right after.")
+                text: "<br>" + qsTr("Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).")
             }
 
             TextSwitch {
-                text: qsTr("Restart homescreen")
+                text: qsTr("Restart homescreen (fallback)")
                 checked: settings.homeRefresh
                 onCheckedChanged: {
                     settings.homeRefresh = checked;

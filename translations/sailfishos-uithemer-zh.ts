@@ -115,14 +115,6 @@
         <translation>字体粗细</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>记住之后立即重启主屏幕</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>重启主屏幕</translation>
-    </message>
-    <message>
         <source>Icons</source>
         <translation>图标</translation>
     </message>
@@ -148,6 +140,14 @@
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -360,8 +360,8 @@
         <translation type="unfinished">重启首次运行向导</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished">重启主屏幕</translation>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -386,15 +386,15 @@
         <translation>设备像素比例</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>记住之后立即重启主屏幕。</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>重启主屏幕</translation>
-    </message>
-    <message>
         <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -409,20 +409,20 @@
         <translation>取消</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation>重启主屏幕</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>记住之后立即重启主屏幕</translation>
-    </message>
-    <message>
         <source>Default icons</source>
         <translation>默认图标</translation>
     </message>
     <message>
         <source>Default fonts</source>
         <translation>默认字体</translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

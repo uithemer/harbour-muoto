@@ -115,14 +115,6 @@
         <translation>Debelina pisave</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Po zaključku sprememb ne pozabite na ponovi zagon domačega zaslona.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Ponovni zagon domačega zaslona</translation>
-    </message>
-    <message>
         <source>Icons</source>
         <translation>Ikone</translation>
     </message>
@@ -148,6 +140,14 @@
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -360,8 +360,8 @@
         <translation type="unfinished">Ponovno zaženi čarovnika za prvi zagon</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished">Ponovni zagon domačega zaslona</translation>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -386,15 +386,15 @@
         <translation>Privzeto razmerje pikslov naprave</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Ne pozabite na ponovi zagon domačega zaslona po zaključku sprememb.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Ponovni zagon domačega zaslona</translation>
-    </message>
-    <message>
         <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -409,20 +409,20 @@
         <translation>Prekliči</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation>Ponovni zagon domačega zaslona</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Ne pozabite na ponovni zagon domačega zaslona.</translation>
-    </message>
-    <message>
         <source>Default icons</source>
         <translation>Privzete ikone</translation>
     </message>
     <message>
         <source>Default fonts</source>
         <translation>Privzete pisave</translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -115,14 +115,6 @@
         <translation>Вес шрифта</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Не забудьте сразу после изменений перезагрузить домашний экран.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Перезагрузить домашний экран</translation>
-    </message>
-    <message>
         <source>Icons</source>
         <translation>Значки</translation>
     </message>
@@ -148,6 +140,14 @@
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -360,8 +360,8 @@
         <translation type="unfinished">Перезапуск мастера первого запуска</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished">Перезагрузить домашний экран</translation>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -386,15 +386,15 @@
         <translation>Соотношение пикселей устройства по умолчанию</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Не забудьте сразу после изменений перезагрузить домашний экран.</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Перезагрузить домашний экран</translation>
-    </message>
-    <message>
         <source>Default icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -409,20 +409,20 @@
         <translation>Отменить</translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation>Перезагрузить домашний экран</translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation>Не забудьте сразу после изменений перезагрузить домашний экран.</translation>
-    </message>
-    <message>
         <source>Default icons</source>
         <translation>Значки по умолчанию</translation>
     </message>
     <message>
         <source>Default fonts</source>
         <translation>Шрифты по умолчанию</translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
