@@ -1,4 +1,7 @@
 #include "helperservice.h"
+#include "filelock.h"
+
+#include <memory>
 
 #include <QProcess>
 #include <QStringList>
@@ -115,13 +118,21 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
                                   void (IconApplier::*doneSignal)())
 {
     _backend->resetIdleTimer();
+
+    const auto lock = std::make_shared<FileLock>(FileLock::defaultLockPath(), false);
+    if(!lock->isHeld())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("busy"));
+        return;
+    }
+
     IconApplier &applier = _backend->iconApplier();
 
-    const int epoch = _backend->nextIconOpEpoch();
     auto *conn = new QMetaObject::Connection;
-    *conn = connect(&applier, doneSignal, this, [this, op, epoch, conn]()
+    *conn = connect(&applier, doneSignal, this, [this, op, lock, conn]()
                     {
-        emit OperationCompleted(op, true, QString::number(epoch));
+        Q_UNUSED(lock);
+        emit OperationCompleted(op, true, QString());
         QObject::disconnect(*conn);
         delete conn;
         _backend->resetIdleTimer(); });

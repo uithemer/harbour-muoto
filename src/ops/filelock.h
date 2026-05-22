@@ -4,27 +4,29 @@
 #include <QString>
 
 // RAII wrapper around POSIX flock(2) on a sentinel file.
-// Used to serialise concurrent UI Themer operations across processes:
-//   - helperd applyIcons/restoreIcons/refreshOriginals
+// Serialises theme/icon/font/density mutations across GUI, helperd, and
+// any D-Bus/systemd caller. Concurrent ops are refused (LOCK_NB), not queued.
 //
-// All paths use a single lock sentinel sibling to the manifest:
+// Sentinel (sibling to the manifest):
 //   /usr/share/sailfishos-uithemer/icon-backup.lock
 //
 // Usage:
-//   {
-//       FileLock lk;                      // acquires LOCK_EX (blocking)
-//       // ... read manifest, mutate desktops, write manifest ...
-//   }                                     // releases on scope exit
+//   if (!FileLock::tryProbe()) { ... busy ... }
+//   FileLock lk(false);  // hold for an operation; released on scope exit
 class FileLock
 {
 public:
     // Default sentinel path. Override only for tests.
-    explicit FileLock(const QString& path = defaultLockPath(), bool blocking = true);
+    // blocking=false: flock(LOCK_EX|LOCK_NB); refuses if already held.
+    explicit FileLock(const QString& path = defaultLockPath(), bool blocking = false);
     ~FileLock();
 
     bool isHeld() const { return _fd >= 0; }
 
     static QString defaultLockPath();
+
+    // Option A GUI probe: acquire NB lock and release before returning.
+    static bool tryProbe(const QString& path = defaultLockPath());
 
 private:
     FileLock(const FileLock&) = delete;

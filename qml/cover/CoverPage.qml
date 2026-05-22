@@ -67,6 +67,12 @@ CoverBackground
                  notification.publish();
              }
          }
+         onError: {
+             if (op === "ApplyIcons" || op === "RestoreIcons") {
+                 settings.isRunning = false;
+                 coverRoot.iconOpFromCover = false;
+             }
+         }
      }
 
     Rectangle {

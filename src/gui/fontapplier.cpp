@@ -210,7 +210,7 @@ void FontApplier::applyFromPack(const QString& packName, const QString& weightBa
     FileLock lk;
     if(!lk.isHeld())
     {
-        emit error(QStringLiteral("could not acquire lock"));
+        emit error(QStringLiteral("busy"));
         emit applied(packName);
         return;
     }
@@ -248,7 +248,7 @@ void FontApplier::restoreFonts()
     FileLock lk;
     if(!lk.isHeld())
     {
-        emit error(QStringLiteral("could not acquire lock"));
+        emit error(QStringLiteral("busy"));
         emit restored();
         return;
     }

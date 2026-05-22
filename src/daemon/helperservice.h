@@ -33,10 +33,6 @@ public:
     // on the next call.
     void resetIdleTimer();
 
-    // Monotonic counter paired with HelperClient::_iconOpEpoch so stale
-    // ApplyIcons/RestoreIcons completions are ignored after a newer op.
-    int nextIconOpEpoch() { return ++_iconOpEpoch; }
-
     // True once login1.Manager.PrepareForShutdown(true) has fired. The
     // adaptors check this gate at method entry and refuse to dispatch
     // new work; the broadcast OperationCompleted(op, false, "shutting
@@ -57,7 +53,6 @@ private:
     DensityEnabler _densityEnabler;
     QTimer         _idleTimer;
     bool           _shuttingDown = false;
-    int            _iconOpEpoch = 0;
 };
 
 // One QDBusAbstractAdaptor per logical interface. Each adaptor exposes

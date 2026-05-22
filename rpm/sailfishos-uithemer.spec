@@ -163,6 +163,9 @@ rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 if [ ! -e %{_datadir}/%{name}/icon-backup.json ]; then
     printf '{"version":2,"active_icon_pack":null,"entries":{}}\n' > %{_datadir}/%{name}/icon-backup.json
 fi
+# Theme-op flock sentinel: defaultuser (GUI probe) and root (helperd) need O_RDWR.
+touch %{_datadir}/%{name}/icon-backup.lock 2>/dev/null || :
+chmod 0666 %{_datadir}/%{name}/icon-backup.lock 2>/dev/null || :
 
 # 2.4.5: the vendor dconf defaults file is no longer shipped. If it was
 # installed by an older version (<= 2.4.4), drop it and refresh the dconf db.

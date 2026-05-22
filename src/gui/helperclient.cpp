@@ -1,4 +1,5 @@
 #include "helperclient.h"
+#include "filelock.h"
 
 #include <QDBusInterface>
 #include <QDBusConnection>
@@ -145,28 +146,38 @@ void HelperClient::asyncCall(QDBusInterface* iface, const QString& op,
 
 // ---- Themes ---------------------------------------------------------------
 
+bool HelperClient::beginIconOpOrError(const QString& op)
+{
+    if(!FileLock::tryProbe())
+    {
+        emit error(op, QStringLiteral("busy"));
+        return false;
+    }
+    return true;
+}
+
 void HelperClient::applyIcons(const QString& pack, bool overlay)
 {
-    ++_iconOpEpoch;
-    asyncCall(themesIface(), QStringLiteral("ApplyIcons"),
-              QVariantList() << pack << overlay);
+    const QString op = QStringLiteral("ApplyIcons");
+    if(!beginIconOpOrError(op))
+        return;
+    asyncCall(themesIface(), op, QVariantList() << pack << overlay);
 }
 
 void HelperClient::restoreIcons()
 {
-    ++_iconOpEpoch;
-    asyncCall(themesIface(), QStringLiteral("RestoreIcons"), QVariantList());
+    const QString op = QStringLiteral("RestoreIcons");
+    if(!beginIconOpOrError(op))
+        return;
+    asyncCall(themesIface(), op, QVariantList());
 }
 
 void HelperClient::refreshOriginals()
 {
-    ++_iconOpEpoch;
-    asyncCall(themesIface(), QStringLiteral("RefreshOriginals"), QVariantList());
-}
-
-bool HelperClient::acceptIconOpEpoch(const QString& message) const
-{
-    return message.toInt() == _iconOpEpoch;
+    const QString op = QStringLiteral("RefreshOriginals");
+    if(!beginIconOpOrError(op))
+        return;
+    asyncCall(themesIface(), op, QVariantList());
 }
 
 void HelperClient::densityEnable()
@@ -194,21 +205,17 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
     }
     if(op == QLatin1String("ApplyIcons"))
     {
-        const bool accepted = acceptIconOpEpoch(message);
-        if(!accepted)
-            return;
+        Q_UNUSED(message);
         emit iconsApplied();
     }
     else if(op == QLatin1String("RestoreIcons"))
     {
-        if(!acceptIconOpEpoch(message))
-            return;
+        Q_UNUSED(message);
         emit iconsRestored();
     }
     else if(op == QLatin1String("RefreshOriginals"))
     {
-        if(!acceptIconOpEpoch(message))
-            return;
+        Q_UNUSED(message);
         emit originalsRefreshed();
     }
     else if(op == QLatin1String("DensityEnable"))

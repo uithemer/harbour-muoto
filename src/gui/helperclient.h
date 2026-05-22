@@ -62,11 +62,8 @@ signals:
     void progress(int done, int total);
 
     // op is the daemon-side method name ("ApplyIcons", "UninstallPack",
-    // ...). Fired on polkit deny, daemon error, or D-Bus transport
-    // failure. The GUI typically just logs; the matching positive-
-    // result signal still does NOT fire in this case, but the
-    // daemon's OperationCompleted(false,...) broadcast triggers this
-    // error and lets QML clear `settings.isRunning`.
+    // ...). Fired on daemon error, D-Bus transport failure, or when the
+    // theme-op lock is busy. Lets QML clear settings.isRunning.
     void error(const QString& op, const QString& message);
 
 private slots:
@@ -90,7 +87,7 @@ private:
     // Progress) broadcast signals once, before any method is invoked.
     void hookBroadcastSignals();
 
-    bool acceptIconOpEpoch(const QString& message) const;
+    bool beginIconOpOrError(const QString& op);
 
     // Private: callers go through HelperClient::instance() or the
     // QML `Helper` singleton.
@@ -100,7 +97,6 @@ private:
     QDBusInterface* _themes;
     QDBusInterface* _packs;
     bool            _hooked;
-    int             _iconOpEpoch = 0;
 };
 
 #endif // HELPERCLIENT_H

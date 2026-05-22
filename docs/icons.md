@@ -70,6 +70,11 @@ To theme apps installed or updated after the last apply, use the **cover sync**
 action: it re-runs `ApplyIcons` for the active pack using the overlay flag saved
 in dconf at apply time (`settings.iconOverlay`).
 
+Concurrent apply, restore, refresh, font, or density operations are **rejected**
+(not queued) via a shared `flock` on `/usr/share/sailfishos-uithemer/icon-backup.lock`.
+A second app instance, cover sync during an active apply, or a overlapping D-Bus
+call receives `busy` and does not start work.
+
 > Graphic theming for Sailfish system widgets (the old PNG-replacement
 > pipeline) has been **removed** in 2.4.2.
 >

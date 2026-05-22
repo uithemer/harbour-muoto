@@ -14,6 +14,11 @@ CoverBackground
      Connections {
          target: Helper
          onIconsRestored: { settings.isRunning = false; notification.publish(); }
+         onError: {
+             if (op === "RestoreIcons") {
+                 settings.isRunning = false;
+             }
+         }
      }
      ThemePack {
          function notifyDone() {

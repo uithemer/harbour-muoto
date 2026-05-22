@@ -235,16 +235,16 @@ Page
                         // BEFORE the synchronous restoreTheme call so the
                         // cover sees activeFontPack="default" by the time
                         // FontApplier::restored fires inside the call.
+                        if(dlgrestore.restoreFonts) {
+                            settings.deactivateFont();
+                            themepackmodel.restoreTheme(dlgrestore.restoreFonts);
+                        }
                         if(dlgrestore.restoreIcons) {
                             settings.deactivateIcon();
                             // Clear overlay dconf so a later cover sync
                             // cannot apply overlays after restore.
                             settings.iconOverlay = false;
                             Helper.restoreIcons();
-                        }
-                        if(dlgrestore.restoreFonts) {
-                            settings.deactivateFont();
-                            themepackmodel.restoreTheme(dlgrestore.restoreFonts);
                         }
                     });
                 }
@@ -299,15 +299,15 @@ Page
                     // applyTheme(...). If activeFontPack were written
                     // afterwards the cover would re-render once with the
                     // stale value and leave the font CoverLabel empty.
+                    if(dlgconfirm.fontsSelected) {
+                        settings.activeFontPack = model.packName;
+                        themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont);
+                    }
                     if(dlgconfirm.iconsSelected) {
                         settings.activeIconPack = model.packName;
                         // Persist overlay in dconf for cover sync re-apply.
                         settings.iconOverlay = dlgconfirm.iconOverlaySelected;
                         Helper.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
-                    }
-                    if(dlgconfirm.fontsSelected) {
-                        settings.activeFontPack = model.packName;
-                        themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont);
                     }
                 });
             }

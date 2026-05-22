@@ -3,8 +3,6 @@
 #include "iconmanifest.h"
 #include "imageutil.h"
 #include "iconpreviewcache.h"
-#include "filelock.h"
-
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -621,9 +619,6 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
         return;
     }
 
-    FileLock lk;
-    Q_UNUSED(lk);
-
     {
         IconManifest mfRestore(manifestPath());
         if(mfRestore.load())
@@ -732,9 +727,6 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
 
 void IconApplier::restoreIcons()
 {
-    FileLock lk;
-    Q_UNUSED(lk);
-
     IconManifest manifest(manifestPath());
     if(!manifest.load())
     {
@@ -784,9 +776,6 @@ void IconApplier::restoreIcons()
 
 void IconApplier::refreshOriginals()
 {
-    FileLock lk;
-    Q_UNUSED(lk);
-
     IconManifest manifest(manifestPath());
     if(!manifest.load())
     {

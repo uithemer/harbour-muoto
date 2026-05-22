@@ -28,7 +28,7 @@
 // restore_iz.sh shell trio. Always emits restored() so QML's busy state
 // drains.
 //
-// Serialises on the same FileLock sentinel as IconApplier / FontApplier
+// Uses the same non-blocking FileLock sentinel as icon / font ops
 // so density / icon / font jobs never race each other.
 //
 // Aliendalvik build.prop reading (the legacy script's other side effect)

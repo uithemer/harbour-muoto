@@ -72,7 +72,7 @@ void DensityEnabler::ensureEnabled()
     FileLock lk;
     if(!lk.isHeld())
     {
-        emit error(QStringLiteral("could not acquire lock"));
+        emit error(QStringLiteral("busy"));
         emit enabled();
         return;
     }
@@ -104,7 +104,7 @@ void DensityEnabler::restoreDensity(bool dpr, bool iconSize)
     FileLock lk;
     if(!lk.isHeld())
     {
-        emit error(QStringLiteral("could not acquire lock"));
+        emit error(QStringLiteral("busy"));
         emit restored();
         return;
     }
