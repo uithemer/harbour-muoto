@@ -54,7 +54,7 @@ Matching uses **PNG basename** on disk, not `.desktop` `Icon=` fields.
 
 ### Launcher refresh
 
-After apply or restore, UI Themer bumps mtimes on launcher `.desktop` files (Clockwork-style `futimens`). If the user enabled **Restart homescreen (fallback)** in settings, `lipstick.service` is restarted for defaultuser.
+After apply or restore, UI Themer bumps mtimes on launcher `.desktop` files (Clockwork-style `futimens`) from the helper. If the user enabled **Restart homescreen (fallback)**, the app restarts `lipstick.service` only after icon work completes and dconf (`activeIconPack`, `iconOverlay`, or restore defaults) has been synced — not during the privileged write.
 
 Concurrent icon, restore, font, or density operations are rejected via `flock` on `/usr/share/sailfishos-uithemer/icon-ops.lock` (`busy`).
 

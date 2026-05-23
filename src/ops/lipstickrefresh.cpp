@@ -103,5 +103,4 @@ void touchAllLauncherDesktops()
 void notifyLauncherAfterIconOp()
 {
     touchAllLauncherDesktops();
-    restartDefaultUserLipstick();
 }

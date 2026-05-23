@@ -72,8 +72,16 @@ Page
         settings.isRunning = false;
         notification.previewBody = qsTr("Settings applied.");
         notification.publish();
+        settings.syncToDisk();
         if(settings.homeRefresh === true)
-            themepack.restartHomescreen();
+            lipstickRestartTimer.start();
+    }
+
+    Timer {
+        id: lipstickRestartTimer
+        interval: 250
+        repeat: false
+        onTriggered: themepack.restartHomescreen()
     }
 
     // Connections.enabled needs QtQuick 2.4+; MainPage still imports
@@ -274,6 +282,7 @@ Page
 
                         settings.isRunning = true;
                         mainpage._armApply(nOps);
+                        settings.syncToDisk();
 
                         // Same ordering rule as the apply path: write dconf
                         // BEFORE the synchronous restoreTheme call so the
@@ -335,6 +344,7 @@ Page
 
                     settings.isRunning = true;
                     mainpage._armApply(nOps);
+                    settings.syncToDisk();
 
                     // Write dconf BEFORE the C++ apply calls. FontApplier is
                     // synchronous, so themeApplied fires inside
