@@ -27,7 +27,7 @@ Active theme is stored in dconf (`activeIconPack`) after a **successful** apply.
 
 | Kind | Live path | Pack source (under `$HOME/.themepack/<pack>/` or via `/usr/share/...` symlink) |
 |------|-----------|-------------|
-| Jolla (ambient) | `/usr/share/themes/sailfish-default/meegotouch/<z>/icons/<icon-key>.png` | `jolla/<z>/icons/` (z cascade) |
+| Jolla (ambient) | `/usr/share/themes/sailfish-default/silica/<z>/icons/<icon-key>.png` | `jolla/<z>/icons/` (z cascade) |
 | Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (size cascade) |
 | Android | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | `apk/<size>/<key>.png` |
 
@@ -89,7 +89,7 @@ A native icon is themed when the pack has `<key>.png` and stock already has `hic
 
 ### Z cascade (jolla apply)
 
-Pack `jolla/<z>/icons/` is copied into live `meegotouch/<z>/icons/` using the same index-aligned cascade as TPS (largest z tier first for each target z).
+Pack `jolla/<z>/icons/` is copied into live `silica/<z>/icons/` using the same index-aligned cascade as TPS (largest z tier first for each target z).
 
 ### APK / apkd
 
@@ -104,6 +104,6 @@ Largest PNG folder under `<pack>/apk/` is copied into flat `apkd-bridge/launcher
 | Asset       | Recommended size  |
 | ----------- | ----------------- |
 | Native app  | 172x172 (preferred), down to 86x86 |
-| Jolla app   | per z tier under `meegotouch/` |
+| Jolla app   | per z tier under `silica/` |
 | APK app     | 192x192 (preferred), down to 86x86 |
 | Overlay     | 192x192 / 172x172 composite canvas |

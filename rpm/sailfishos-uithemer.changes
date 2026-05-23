@@ -1,6 +1,6 @@
 * Sat May 23 2026 2.7.1-6
 - Icons: hicolor-only apply (pack jolla/ scaled into hicolor; no live
-  meegotouch writes). Backup/restore snapshots hicolor + apk only.
+  silica writes). Backup/restore snapshots hicolor + apk only.
 - Icons: TPS basename matching for nativeMatchCount/apkMatchCount; drop
   2.4.3 desktop Icon= lookup and desktopfile helper.
 - Icons: overlay uses packIconKeys / pack apk basenames for all packs;
@@ -519,7 +519,7 @@
 
 * Sun May 10 2026 2.4.2-1
 - Removed graphic theming (the Sailfish system widget icons under
-  /usr/share/themes/sailfish-default/meegotouch/icons/):
+  /usr/share/themes/sailfish-default/silica/icons/):
   - Dropped tps/graphic-{run,restore,menu,backup}.sh.
   - Removed the (G)raphic theme entry from the CLI menu
     (tps/themepacksupport.sh).
