@@ -11,7 +11,10 @@ Dialog
     property ThemePackModel themePackModel
     property int themePackIndex
 
-    property bool hasIcons: themePackModel.hasIcons(themePackIndex)
+    property bool hasNative: themePackModel.hasNative(themePackIndex)
+    property bool hasJolla: themePackModel.hasJolla(themePackIndex)
+    property bool hasApk: themePackModel.hasApk(themePackIndex)
+    property bool hasIconApply: hasNative || hasApk || hasJolla
     property bool hasIconOverlay: themePackModel.hasIconOverlay(themePackIndex)
     property bool hasFont: themePackModel.hasFont(themePackIndex)
     property bool hasFontNonLatin: themePackModel.hasFontNonLatin(themePackIndex)
@@ -22,10 +25,13 @@ Dialog
     property alias fontsSelected: itsfonts.checked
     property string selectedFont: ""
     property string confirmheadername: "%1".arg(packDisplayName)
+    property bool wantsIconOps: itsicons.checked || itsiconoverlay.checked
 
     id: dlgconfirm
     focus: true
-    canAccept: itsicons.checked || itsiconoverlay.checked || (itsfonts.checked && selectedFont !== "") || (itsfonts.checked && !hasFont && hasFontNonLatin)
+    canAccept: wantsIconOps
+        || (itsfonts.checked && hasFont && selectedFont !== "")
+        || (itsfonts.checked && !hasFont && hasFontNonLatin)
 
     BusyState { id: busyindicator }
 
@@ -40,7 +46,7 @@ Dialog
     }
 
     Component.onCompleted: {
-        if (hasIcons || hasIconOverlay)
+        if (hasIconApply || hasIconOverlay)
                 iconapplier.buildPreview(packName)
     }
 
@@ -136,12 +142,12 @@ Dialog
 
             SectionHeader {
                 text: qsTr("Icons")
-                visible: hasIcons || hasIconOverlay
+                visible: hasIconApply || hasIconOverlay
             }
 
             Grid {
                 width: parent.width
-                visible: hasIcons || hasIconOverlay
+                visible: hasIconApply || hasIconOverlay
                 columns: isLandscape ? 2 : 1
 
             Column
@@ -193,17 +199,11 @@ Dialog
                 id: itsicons
                 automaticCheck: true
                 text: qsTr("Apply icons")
-                visible: hasIcons
-                checked: hasIcons
-                enabled: hasIcons
+                visible: hasIconApply
+                checked: hasIconApply
+                enabled: hasIconApply
                 onClicked: {
                     iconsSelected = itsicons.checked;
-                    itsiconoverlay.checked = itsicons.checked;
-
-                    if(!itsicons.checked && !itsfonts.checked)
-                        dlgconfirm.canAccept = false
-                    else
-                        dlgconfirm.canAccept = true
                 }
             }
 
@@ -214,7 +214,7 @@ Dialog
                 description: qsTr("The theme supports overlays.")
                 visible: hasIconOverlay
                 checked: hasIconOverlay
-                enabled: hasIconOverlay && itsicons.checked
+                enabled: hasIconOverlay
                 onClicked: {
                     iconOverlaySelected = itsiconoverlay.checked;
                 }
@@ -282,11 +282,6 @@ Dialog
 
                 onClicked: {
                     fontsSelected = itsfonts.checked;
-
-                    if(!itsicons.checked && !itsfonts.checked)
-                        dlgconfirm.canAccept = false
-                    else
-                        dlgconfirm.canAccept = true
                 }
             }
 

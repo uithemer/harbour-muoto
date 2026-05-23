@@ -144,7 +144,7 @@ CoverBackground
             onTriggered: {
                 coverRoot.iconOpFromCover = true;
                 settings.isRunning = true;
-                Helper.applyIcons(settings.activeIconPack, settings.iconOverlay);
+                Helper.applyIcons(settings.activeIconPack, true, settings.iconOverlay);
             }
         }
     }

@@ -159,7 +159,7 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
     start(applier);
 }
 
-void ThemesAdaptor::ApplyIcons(const QString &pack, bool overlay,
+void ThemesAdaptor::ApplyIcons(const QString &pack, bool runPack, bool overlay,
                                const QDBusMessage &message)
 {
     const QString op = QStringLiteral("ApplyIcons");
@@ -170,8 +170,8 @@ void ThemesAdaptor::ApplyIcons(const QString &pack, bool overlay,
     }
     if (!authorize(message, op))
         return;
-    runIconOpVoid(op, [pack, overlay](IconApplier &a)
-                  { a.applyIcons(pack, overlay); }, &IconApplier::applied);
+    runIconOpVoid(op, [pack, runPack, overlay](IconApplier &a)
+                  { a.applyIcons(pack, runPack, overlay); }, &IconApplier::applied);
 }
 
 void ThemesAdaptor::RestoreIcons(const QDBusMessage &message)

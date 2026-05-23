@@ -186,6 +186,11 @@ bool ThemePackModel::hasNative(int index) const
     return this->hasCapability(index, "native");
 }
 
+bool ThemePackModel::hasJolla(int index) const
+{
+    return this->hasCapability(index, "jolla");
+}
+
 bool ThemePackModel::hasApk(int index) const
 {
     return this->hasCapability(index, "apk");

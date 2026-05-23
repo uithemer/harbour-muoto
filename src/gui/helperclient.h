@@ -39,7 +39,7 @@ public:
 
 public slots:
     // -- Themes interface (manage-themes) --
-    void applyIcons(const QString& pack, bool overlay);
+    void applyIcons(const QString& pack, bool runPack, bool overlay);
     void restoreIcons();
     void refreshOriginals();
     void densityEnable();

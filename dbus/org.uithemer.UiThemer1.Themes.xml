@@ -14,6 +14,7 @@
   <interface name="org.uithemer.UiThemer1.Themes">
     <method name="ApplyIcons">
       <arg name="pack" direction="in" type="s"/>
+      <arg name="runPack" direction="in" type="b"/>
       <arg name="overlay" direction="in" type="b"/>
     </method>
     <method name="RestoreIcons"/>

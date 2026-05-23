@@ -15,7 +15,7 @@ public slots:
     int nativeMatchCount(const QString& packName) const;
     int apkMatchCount(const QString& packName) const;
 
-    void applyIcons(const QString& packName, bool overlay);
+    void applyIcons(const QString& packName, bool runPack, bool overlay);
     void restoreIcons();
     void refreshOriginals();
     void buildPreview(const QString& packName);

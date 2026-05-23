@@ -323,7 +323,8 @@ Page
                     // FontApplier is synchronous, so themepackmodel
                     // .applyTheme() would re-enter _opDone() before
                     // _pendingOps was set if we counted lazily.
-                    var nOps = (dlgconfirm.iconsSelected ? 1 : 0)
+                    var wantsIcons = dlgconfirm.iconsSelected || dlgconfirm.iconOverlaySelected
+                    var nOps = (wantsIcons ? 1 : 0)
                              + (dlgconfirm.fontsSelected ? 1 : 0);
                     if(nOps === 0)
                         return;
@@ -340,10 +341,10 @@ Page
                         settings.activeFontPack = model.packName;
                         themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont);
                     }
-                    if(dlgconfirm.iconsSelected) {
+                    if(wantsIcons) {
                         mainpage._pendingIconPack = model.packName;
                         mainpage._pendingIconOverlay = dlgconfirm.iconOverlaySelected;
-                        Helper.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
+                        Helper.applyIcons(model.packName, dlgconfirm.iconsSelected, dlgconfirm.iconOverlaySelected);
                     }
                 });
             }

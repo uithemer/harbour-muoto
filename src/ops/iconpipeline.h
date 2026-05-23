@@ -6,7 +6,7 @@
 class IconPipeline
 {
 public:
-    bool apply(const QString& packName, bool overlay) const;
+    bool apply(const QString& packName, bool runPack, bool overlay) const;
     bool restore() const;
 };
 

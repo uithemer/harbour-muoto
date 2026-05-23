@@ -43,6 +43,7 @@ class ThemePackModel : public QAbstractListModel
         QString packDisplayName(int index) const;
         bool hasIcons(int index) const;
         bool hasNative(int index) const;
+        bool hasJolla(int index) const;
         bool hasApk(int index) const;
         bool hasIconOverlay(int index) const;
         bool hasFont(int index) const;

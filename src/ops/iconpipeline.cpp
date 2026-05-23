@@ -8,12 +8,21 @@
 #include <QDir>
 #include <QDebug>
 
-bool IconPipeline::apply(const QString& packName, bool overlay) const
+bool IconPipeline::apply(const QString& packName, bool runPack, bool overlay) const
 {
     if(packName.isEmpty() || packName == QLatin1String("default"))
         return false;
 
-    if(!QDir(IconPaths::packDir(packName)).exists())
+    if(!runPack && !overlay)
+        return false;
+
+    if(runPack && !QDir(IconPaths::packDir(packName)).exists())
+    {
+        qWarning() << "uithemer: icon pack not found" << packName;
+        return false;
+    }
+
+    if(overlay && !QDir(IconPaths::packDir(packName)).exists())
     {
         qWarning() << "uithemer: icon pack not found" << packName;
         return false;
@@ -27,9 +36,12 @@ bool IconPipeline::apply(const QString& packName, bool overlay) const
     if(!stock.backup())
         qWarning() << "uithemer: icon stock backup failed";
 
-    IconPackRunner runner;
-    if(!runner.run(packName))
-        qWarning() << "uithemer: icon pack run produced no copies for" << packName;
+    if(runPack)
+    {
+        IconPackRunner runner;
+        if(!runner.run(packName))
+            qWarning() << "uithemer: icon pack run produced no copies for" << packName;
+    }
 
     if(overlay)
     {

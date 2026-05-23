@@ -12,8 +12,8 @@ Item
         property string activeIconPack
         property string activeFontPack
         // Mirror of the user's "apply icon overlay" choice at the last
-        // ApplyIcons call. Cover sync and main-page apply pass this to
-        // Helper.applyIcons so overlay-composited icons are included when
+        // ApplyIcons(pack, runPack, overlay). Cover sync and main-page apply pass
+        // runPack/overlay so overlay-composited icons are included when
         // the user opted in. Cleared on restore so it cannot leak across
         // theme generations.
         property bool iconOverlay

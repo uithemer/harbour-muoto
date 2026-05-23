@@ -15,7 +15,7 @@ UI Themer reimplements the classic Theme Pack Support icon pipeline:
 
 1. **Restore** stock PNGs from `backup/icons/` (if a backup exists).
 2. **Backup** current stock PNGs with *first snapshot wins* (`ignore-existing`).
-3. **Run** the pack: copy themed PNGs into live system trees (`existing-only`).
+3. **Run** the pack (optional): copy themed PNGs into live system trees (`existing-only`).
 4. **Overlay** (optional): composite pack `overlay/` onto apps not covered by the pack.
 5. **Touch** launcher `.desktop` files so Lipstick reloads icons.
 
@@ -27,8 +27,8 @@ Active theme is stored in dconf (`activeIconPack`) after a **successful** apply.
 
 | Kind | Live path | Pack source |
 |------|-----------|-------------|
-| Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (cascaded to smaller sizes) |
-| Jolla (ambient) | same hicolor paths | `jolla/<z>/icons/` (scaled into hicolor, index-aligned z cascade) |
+| Jolla (ambient) | `/usr/share/themes/sailfish-default/meegotouch/<z>/icons/<icon-key>.png` | `jolla/<z>/icons/` (z cascade) |
+| Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (size cascade) |
 | Android | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | `apk/<size>/<key>.png` |
 
 Theme packs under `/usr/share/harbour-themepack-<name>/` are **read-only**; UI Themer does not modify them.
@@ -37,6 +37,7 @@ Theme packs under `/usr/share/harbour-themepack-<name>/` are **read-only**; UI T
 
 ```
 /usr/share/sailfishos-uithemer/backup/icons/
+  jolla/<z>/icons/
   native/<size>/apps/
   apk/
 ```
@@ -86,19 +87,9 @@ Icons are matched by **PNG basename** on disk (classic TPS). UI Themer does not 
 
 A native icon is themed when the pack has `<key>.png` and stock already has `hicolor/*/apps/<key>.png` (`existing-only`).
 
-### Z → hicolor (jolla apply)
+### Z cascade (jolla apply)
 
-Pack `jolla/<z>/icons/` uses the same index-aligned cascade as TPS (largest z tier first), but pixels are **scaled** into existing hicolor sizes:
-
-| Index | Hicolor | Pack z |
-|-------|---------|--------|
-| 0 | 256×256 | z2.0 |
-| 1 | 172×172 | z1.75 |
-| 2 | 128×128 | z1.5-large |
-| 3 | 108×108 | z1.25 |
-| 4 | 86×86 | z1.0 |
-
-If the pack also has `native/<size>/apps/<key>.png`, native wins for that key.
+Pack `jolla/<z>/icons/` is copied into live `meegotouch/<z>/icons/` using the same index-aligned cascade as TPS (largest z tier first for each target z).
 
 ### APK / apkd
 
@@ -113,5 +104,6 @@ Largest PNG folder under `<pack>/apk/` is copied into flat `apkd-bridge/launcher
 | Asset       | Recommended size  |
 | ----------- | ----------------- |
 | Native app  | 172x172 (preferred), down to 86x86 |
+| Jolla app   | per z tier under `meegotouch/` |
 | APK app     | 192x192 (preferred), down to 86x86 |
 | Overlay     | 192x192 / 172x172 composite canvas |

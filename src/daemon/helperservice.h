@@ -67,7 +67,7 @@ public:
     ThemesAdaptor(HelperBackend* backend, QObject* parent);
 
 public slots:
-    void ApplyIcons(const QString& pack, bool overlay,
+    void ApplyIcons(const QString& pack, bool runPack, bool overlay,
                     const QDBusMessage& message);
     void RestoreIcons(const QDBusMessage& message);
     void RefreshOriginals(const QDBusMessage& message);

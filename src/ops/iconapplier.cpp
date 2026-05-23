@@ -55,7 +55,7 @@ int IconApplier::apkMatchCount(const QString& packName) const
     return count;
 }
 
-void IconApplier::applyIcons(const QString& packName, bool overlay)
+void IconApplier::applyIcons(const QString& packName, bool runPack, bool overlay)
 {
     if(packName.isEmpty())
     {
@@ -65,7 +65,7 @@ void IconApplier::applyIcons(const QString& packName, bool overlay)
 
     emit progress(0, 4);
     IconPipeline pipeline;
-    pipeline.apply(packName, overlay);
+    pipeline.apply(packName, runPack, overlay);
     emit progress(4, 4);
     emit applied();
 }

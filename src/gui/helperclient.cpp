@@ -156,12 +156,12 @@ bool HelperClient::beginIconOpOrError(const QString& op)
     return true;
 }
 
-void HelperClient::applyIcons(const QString& pack, bool overlay)
+void HelperClient::applyIcons(const QString& pack, bool runPack, bool overlay)
 {
     const QString op = QStringLiteral("ApplyIcons");
     if(!beginIconOpOrError(op))
         return;
-    asyncCall(themesIface(), op, QVariantList() << pack << overlay);
+    asyncCall(themesIface(), op, QVariantList() << pack << runPack << overlay);
 }
 
 void HelperClient::restoreIcons()

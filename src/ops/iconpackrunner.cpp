@@ -12,6 +12,24 @@ bool IconPackRunner::run(const QString& packName) const
 
     bool ok = false;
 
+    const QStringList& jollaCap = IconPaths::jollaSizes();
+    for(int i = 0; i < jollaCap.size(); ++i)
+    {
+        for(int j = i; j < jollaCap.size(); ++j)
+        {
+            const QString src = packRoot + QStringLiteral("/jolla/") + jollaCap.at(j)
+                                + QStringLiteral("/icons/");
+            if(!QDir(src).exists())
+                continue;
+
+            const int n = IconPaths::copyPngDirExistingOnly(src,
+                                                            IconPaths::liveJollaIconsDir(jollaCap.at(i)));
+            if(n > 0)
+                ok = true;
+            break;
+        }
+    }
+
     const QStringList& nativeCap = IconPaths::nativeHicolorSizes();
     for(int i = 0; i < nativeCap.size(); ++i)
     {
@@ -28,9 +46,6 @@ bool IconPackRunner::run(const QString& packName) const
             break;
         }
     }
-
-    if(IconPaths::publishJollaIconsToHicolorCascade(packName) > 0)
-        ok = true;
 
     QDir().mkpath(IconPaths::liveApkLauncherDir());
     const QStringList& apkCap = IconPaths::apkPackSizes();
