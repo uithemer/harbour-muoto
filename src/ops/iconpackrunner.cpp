@@ -3,12 +3,16 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <QDebug>
 
 bool IconPackRunner::run(const QString& packName) const
 {
     const QString packRoot = IconPaths::packDir(packName);
     if(!QDir(packRoot).exists())
+    {
+        qWarning() << "uithemer: icon pack run: pack not found" << packName << "at" << packRoot;
         return false;
+    }
 
     bool ok = false;
 
@@ -73,6 +77,10 @@ bool IconPackRunner::run(const QString& packName) const
         }
     }
 apk_done:
+
+    if(!ok)
+        qWarning() << "uithemer: icon pack run produced no copies for" << packName << "root"
+                   << packRoot;
 
     return ok;
 }

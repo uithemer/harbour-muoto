@@ -8,24 +8,30 @@
 #include <QDir>
 #include <QDebug>
 
-bool IconPipeline::apply(const QString& packName, bool runPack, bool overlay) const
+namespace
+{
+    IconApplyResult fail(const QString& message)
+    {
+        IconApplyResult r;
+        r.ok = false;
+        r.message = message;
+        return r;
+    }
+}
+
+IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool overlay) const
 {
     if(packName.isEmpty() || packName == QLatin1String("default"))
-        return false;
+        return fail(QStringLiteral("invalid pack"));
 
     if(!runPack && !overlay)
-        return false;
+        return fail(QStringLiteral("no icon operation"));
 
-    if(runPack && !QDir(IconPaths::packDir(packName)).exists())
+    const QString root = IconPaths::packDir(packName);
+    if(!QDir(root).exists())
     {
-        qWarning() << "uithemer: icon pack not found" << packName;
-        return false;
-    }
-
-    if(overlay && !QDir(IconPaths::packDir(packName)).exists())
-    {
-        qWarning() << "uithemer: icon pack not found" << packName;
-        return false;
+        qWarning() << "uithemer: icon pack not found" << packName << "at" << root;
+        return fail(QStringLiteral("pack not found"));
     }
 
     QDir().mkpath(IconPaths::tmpDir());
@@ -40,18 +46,30 @@ bool IconPipeline::apply(const QString& packName, bool runPack, bool overlay) co
     {
         IconPackRunner runner;
         if(!runner.run(packName))
-            qWarning() << "uithemer: icon pack run produced no copies for" << packName;
+        {
+            qWarning() << "uithemer: icon pack run produced no copies for" << packName
+                       << "root" << root;
+            return fail(QStringLiteral("pack run produced no copies"));
+        }
     }
 
     if(overlay)
     {
         IconOverlay ov;
         if(!ov.apply(packName))
-            qDebug() << "uithemer: no overlay applied for" << packName;
+        {
+            qWarning() << "uithemer: overlay not applied for" << packName << "root" << root;
+            return fail(QStringLiteral("overlay not applied"));
+        }
     }
 
     notifyLauncherAfterIconOp();
-    return true;
+
+    IconApplyResult r;
+    r.ok = true;
+    qInfo() << "uithemer: icons applied" << packName << "runPack" << runPack << "overlay"
+            << overlay;
+    return r;
 }
 
 bool IconPipeline::restore() const

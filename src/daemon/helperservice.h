@@ -88,13 +88,11 @@ private:
     // duration of one op, broadcast OperationCompleted, then
     // disconnect. The lambda passed in `start` is what actually
     // invokes the relevant IconApplier slot; `doneSignal` is the
-    // IconApplier::xxx member-pointer that the op fires on success
-    // (and on logged-but-non-fatal failure -- IconApplier always
-    // emits its done signal so QML/HelperClient's busy spinner can
-    // drain).
+    // IconApplier::xxx member-pointer; the op emits (ok, message) so
+    // OperationCompleted reflects pipeline success or failure.
     void runIconOpVoid(const QString& op,
                        std::function<void(IconApplier&)> start,
-                       void (IconApplier::*doneSignal)());
+                       void (IconApplier::*doneSignal)(bool, const QString&));
 
     HelperBackend* _backend;
 };

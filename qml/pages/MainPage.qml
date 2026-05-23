@@ -70,6 +70,7 @@ Page
     }
     function _finalise() {
         settings.isRunning = false;
+        notification.previewBody = qsTr("Settings applied.");
         notification.publish();
         if(settings.homeRefresh === true)
             themepack.restartHomescreen();
@@ -97,6 +98,9 @@ Page
             mainpage._opDone();
         }
         onError: {
+            notification.previewBody = message.length
+                ? message
+                : qsTr("Operation failed");
             if(op === "ApplyIcons") {
                 mainpage._pendingIconPack = "";
                 mainpage._opDone();

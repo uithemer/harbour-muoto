@@ -22,9 +22,9 @@ public slots:
 
 signals:
     void progress(int done, int total);
-    void applied();
-    void restored();
-    void originalsRefreshed();
+    void applied(bool ok, const QString& message);
+    void restored(bool ok, const QString& message);
+    void originalsRefreshed(bool ok, const QString& message);
     void previewReady(const QString& packName, bool ok);
 
 private:

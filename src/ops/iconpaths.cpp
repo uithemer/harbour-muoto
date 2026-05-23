@@ -41,7 +41,10 @@ namespace
     QString packShortName(QString packName)
     {
         static const QString kBare = QStringLiteral("harbour-themepack-");
-        if (packName.startsWith(kBare))
+        const QString kFullPrefix = QString::fromLatin1(kPackPrefix);
+        if (packName.startsWith(kFullPrefix))
+            packName = packName.mid(kFullPrefix.size());
+        else if (packName.startsWith(kBare))
             packName = packName.mid(kBare.size());
         return packName;
     }
@@ -94,7 +97,7 @@ namespace
         return QString();
     }
 
-    QString resolveShareCapabilityDir(const QString &packRoot, const QString &capability)
+    QString resolveCapabilityDir(const QString &packRoot, const QString &capability)
     {
         const QString entry = packRoot + QLatin1Char('/') + capability;
         const QFileInfo fi(entry);
@@ -144,23 +147,24 @@ QString IconPaths::tmpDir()
 
 QString IconPaths::packDir(const QString &packName)
 {
-    QString name = packName;
-    if (!name.startsWith(QLatin1String("harbour-themepack-")))
-        name = QString::fromLatin1(kPackPrefix) + packShortName(packName);
-    return name;
+    return QString::fromLatin1(kPackPrefix) + packShortName(packName);
 }
 
 QString IconPaths::resolvePackCapabilityDir(const QString &packRoot, const QString &capability)
 {
-    const QString homeRoot = packHomeRoot(packRoot);
+    QString shareRoot = packRoot;
+    if (!shareRoot.startsWith(QString::fromLatin1(kPackPrefix)))
+        shareRoot = packDir(packRoot);
+
+    const QString homeRoot = packHomeRoot(shareRoot);
     if (!homeRoot.isEmpty())
     {
-        const QString homeCap = existingCapabilityDir(homeRoot + QLatin1Char('/') + capability);
+        const QString homeCap = resolveCapabilityDir(homeRoot, capability);
         if (!homeCap.isEmpty())
             return homeCap;
     }
 
-    return resolveShareCapabilityDir(packRoot, capability);
+    return resolveCapabilityDir(shareRoot, capability);
 }
 
 bool IconPaths::packCapabilityUsable(const QString &packRoot, const QString &capability)

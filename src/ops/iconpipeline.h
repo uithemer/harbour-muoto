@@ -3,10 +3,16 @@
 
 #include <QString>
 
+struct IconApplyResult
+{
+    bool ok = false;
+    QString message;
+};
+
 class IconPipeline
 {
 public:
-    bool apply(const QString& packName, bool runPack, bool overlay) const;
+    IconApplyResult apply(const QString& packName, bool runPack, bool overlay) const;
     bool restore() const;
 };
 

@@ -115,7 +115,7 @@ bool ThemesAdaptor::authorize(const QDBusMessage &message, const QString &op)
 
 void ThemesAdaptor::runIconOpVoid(const QString &op,
                                   std::function<void(IconApplier &)> start,
-                                  void (IconApplier::*doneSignal)())
+                                  void (IconApplier::*doneSignal)(bool, const QString &))
 {
     _backend->resetIdleTimer();
 
@@ -129,13 +129,15 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
     IconApplier &applier = _backend->iconApplier();
 
     auto *conn = new QMetaObject::Connection;
-    *conn = connect(&applier, doneSignal, this, [this, op, lock, conn]()
+    *conn = connect(&applier, doneSignal, this,
+                    [this, op, lock, conn](bool ok, const QString &message)
                     {
-        Q_UNUSED(lock);
-        emit OperationCompleted(op, true, QString());
-        QObject::disconnect(*conn);
-        delete conn;
-        _backend->resetIdleTimer(); });
+                        Q_UNUSED(lock);
+                        emit OperationCompleted(op, ok, message);
+                        QObject::disconnect(*conn);
+                        delete conn;
+                        _backend->resetIdleTimer();
+                    });
 
     auto *progressConn = new QMetaObject::Connection;
     *progressConn = connect(&applier, &IconApplier::progress, this,

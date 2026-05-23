@@ -59,15 +59,15 @@ void IconApplier::applyIcons(const QString& packName, bool runPack, bool overlay
 {
     if(packName.isEmpty())
     {
-        emit applied();
+        emit applied(true, QString());
         return;
     }
 
     emit progress(0, 4);
     IconPipeline pipeline;
-    pipeline.apply(packName, runPack, overlay);
+    const IconApplyResult result = pipeline.apply(packName, runPack, overlay);
     emit progress(4, 4);
-    emit applied();
+    emit applied(result.ok, result.message);
 }
 
 void IconApplier::restoreIcons()
@@ -76,12 +76,12 @@ void IconApplier::restoreIcons()
     IconPipeline pipeline;
     pipeline.restore();
     emit progress(1, 1);
-    emit restored();
+    emit restored(true, QString());
 }
 
 void IconApplier::refreshOriginals()
 {
-    emit originalsRefreshed();
+    emit originalsRefreshed(true, QString());
 }
 
 void IconApplier::buildPreview(const QString& packName)

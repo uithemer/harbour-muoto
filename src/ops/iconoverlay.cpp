@@ -8,6 +8,7 @@
 #include <QImage>
 #include <QSet>
 #include <QSize>
+#include <QDebug>
 
 namespace
 {
@@ -78,7 +79,12 @@ namespace
 
         if(QFile::exists(stockPath))
             QFile::remove(stockPath);
-        return out.save(stockPath, "PNG");
+        if(!out.save(stockPath, "PNG"))
+        {
+            qWarning() << "uithemer: overlay save failed" << stockPath << "pack" << packName;
+            return false;
+        }
+        return true;
     }
 
     bool writeOverlayApk(const QString& packName, const QString& fileName)
@@ -102,23 +108,38 @@ namespace
 
         if(QFile::exists(stockPath))
             QFile::remove(stockPath);
-        return out.save(stockPath, "PNG");
+        if(!out.save(stockPath, "PNG"))
+        {
+            qWarning() << "uithemer: overlay save failed" << stockPath << "pack" << packName;
+            return false;
+        }
+        return true;
     }
 }
 
 bool IconOverlay::apply(const QString& packName) const
 {
-    const QString overlayDir = IconPaths::resolvePackCapabilityDir(IconPaths::packDir(packName),
+    const QString shareRoot = IconPaths::packDir(packName);
+    const QString overlayDir = IconPaths::resolvePackCapabilityDir(shareRoot,
                                                                  QStringLiteral("overlay"));
     if(overlayDir.isEmpty())
+    {
+        qWarning() << "uithemer: overlay capability not found for" << packName << "share"
+                   << shareRoot;
         return false;
+    }
 
     const QStringList overlays = QDir(overlayDir).entryList(
         QStringList() << QStringLiteral("*.png"), QDir::Files);
     if(overlays.isEmpty())
+    {
+        qWarning() << "uithemer: no overlay PNGs in" << overlayDir;
         return false;
+    }
 
     bool any = false;
+    int nativeCount = 0;
+    int apkCount = 0;
     const QSet<QString> packApk = IconPaths::packApkKeys(packName);
 
     for(const QString& liveSize : IconPaths::nativeHicolorSizes())
@@ -127,7 +148,10 @@ bool IconOverlay::apply(const QString& packName) const
         for(const QString& file : files)
         {
             if(writeOverlayNative(packName, liveSize, file))
+            {
                 any = true;
+                ++nativeCount;
+            }
         }
     }
 
@@ -142,10 +166,19 @@ bool IconOverlay::apply(const QString& packName) const
                 continue;
 
             if(writeOverlayApk(packName, f))
+            {
                 any = true;
+                ++apkCount;
+            }
         }
         IconPaths::chownApkLauncherTree();
     }
+
+    if(!any)
+        qWarning() << "uithemer: overlay produced no writes for" << packName;
+    else
+        qInfo() << "uithemer: overlay applied for" << packName << "native" << nativeCount
+                << "apk" << apkCount;
 
     return any;
 }

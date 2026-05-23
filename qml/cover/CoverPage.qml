@@ -57,6 +57,7 @@ CoverBackground
              settings.isRunning = false;
              if (coverRoot.iconOpFromCover) {
                  coverRoot.iconOpFromCover = false;
+                 notification.previewBody = qsTr("Settings applied.");
                  notification.publish();
              }
          }
@@ -69,6 +70,10 @@ CoverBackground
          }
          onError: {
              if (op === "ApplyIcons" || op === "RestoreIcons") {
+                 notification.previewBody = message.length
+                     ? message
+                     : qsTr("Operation failed");
+                 notification.publish();
                  settings.isRunning = false;
                  coverRoot.iconOpFromCover = false;
              }

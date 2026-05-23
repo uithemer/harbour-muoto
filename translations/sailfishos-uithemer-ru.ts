@@ -152,6 +152,17 @@
     </message>
 </context>
 <context>
+    <name>CoverPage</name>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished">Настройки применены.</translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DensityPage</name>
     <message>
         <source>Usage guide</source>
@@ -361,6 +372,14 @@
     </message>
     <message>
         <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished">Настройки применены.</translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
