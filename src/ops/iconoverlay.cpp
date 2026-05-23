@@ -108,8 +108,9 @@ namespace
 
 bool IconOverlay::apply(const QString& packName) const
 {
-    const QString overlayDir = IconPaths::packDir(packName) + QStringLiteral("/overlay");
-    if(!QDir(overlayDir).exists())
+    const QString overlayDir = IconPaths::resolvePackCapabilityDir(IconPaths::packDir(packName),
+                                                                 QStringLiteral("overlay"));
+    if(overlayDir.isEmpty())
         return false;
 
     const QStringList overlays = QDir(overlayDir).entryList(

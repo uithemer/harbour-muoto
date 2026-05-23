@@ -25,13 +25,13 @@ Active theme is stored in dconf (`activeIconPack`) after a **successful** apply.
 
 ### Live paths (where themed pixels go)
 
-| Kind | Live path | Pack source |
+| Kind | Live path | Pack source (under `$HOME/.themepack/<pack>/` or via `/usr/share/...` symlink) |
 |------|-----------|-------------|
 | Jolla (ambient) | `/usr/share/themes/sailfish-default/meegotouch/<z>/icons/<icon-key>.png` | `jolla/<z>/icons/` (z cascade) |
 | Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (size cascade) |
 | Android | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | `apk/<size>/<key>.png` |
 
-Theme packs under `/usr/share/harbour-themepack-<name>/` are **read-only**; UI Themer does not modify them.
+Theme packs are installed under `/usr/share/harbour-themepack-<name>/` (RPM metadata and often symlinks). **Icon PNGs are read** from `$HOME/.themepack/<harbour-themepack-name>/` first (classic TPS layout), then from resolved `/usr/share/...` paths if needed. UI Themer does not modify pack files.
 
 ### Stock backup store
 

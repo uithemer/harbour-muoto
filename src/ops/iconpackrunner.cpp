@@ -12,12 +12,16 @@ bool IconPackRunner::run(const QString& packName) const
 
     bool ok = false;
 
+    const QString jollaRoot = IconPaths::resolvePackCapabilityDir(packRoot, QStringLiteral("jolla"));
     const QStringList& jollaCap = IconPaths::jollaSizes();
     for(int i = 0; i < jollaCap.size(); ++i)
     {
         for(int j = i; j < jollaCap.size(); ++j)
         {
-            const QString src = packRoot + QStringLiteral("/jolla/") + jollaCap.at(j)
+            if(jollaRoot.isEmpty())
+                continue;
+
+            const QString src = jollaRoot + QLatin1Char('/') + jollaCap.at(j)
                                 + QStringLiteral("/icons/");
             if(!QDir(src).exists())
                 continue;
@@ -48,12 +52,16 @@ bool IconPackRunner::run(const QString& packName) const
     }
 
     QDir().mkpath(IconPaths::liveApkLauncherDir());
+    const QString apkRoot = IconPaths::resolvePackCapabilityDir(packRoot, QStringLiteral("apk"));
     const QStringList& apkCap = IconPaths::apkPackSizes();
     for(int i = 0; i < apkCap.size(); ++i)
     {
         for(int j = i; j < apkCap.size(); ++j)
         {
-            const QString src = packRoot + QStringLiteral("/apk/") + apkCap.at(j) + QLatin1Char('/');
+            if(apkRoot.isEmpty())
+                continue;
+
+            const QString src = apkRoot + QLatin1Char('/') + apkCap.at(j) + QLatin1Char('/');
             if(!QDir(src).exists())
                 continue;
 

@@ -60,10 +60,69 @@ namespace
         return keys;
     }
 
+    QString userHomeDir()
+    {
+        struct passwd* pw = getpwuid(getuid());
+        return pw ? QString::fromUtf8(pw->pw_dir) : QString();
+    }
+
+    QString remapNemoHome(const QString& path)
+    {
+        static const QString kNemoHome = QStringLiteral("/home/nemo");
+        const QString home = userHomeDir();
+        if(home.isEmpty() || home == kNemoHome)
+            return path;
+        if(path.startsWith(kNemoHome))
+            return home + path.mid(kNemoHome.size());
+        return path;
+    }
+
+    QString packHomeRoot(const QString& packRoot)
+    {
+        const QString home = userHomeDir();
+        const QString base = QFileInfo(packRoot).fileName();
+        if(home.isEmpty() || base.isEmpty())
+            return QString();
+        return home + QStringLiteral("/.themepack/") + base;
+    }
+
+    QString existingCapabilityDir(const QString& path)
+    {
+        const QFileInfo fi(path);
+        if(fi.isDir() && !fi.isSymLink() && fi.exists())
+            return fi.absoluteFilePath();
+        return QString();
+    }
+
+    QString resolveShareCapabilityDir(const QString& packRoot, const QString& capability)
+    {
+        const QString entry = packRoot + QLatin1Char('/') + capability;
+        const QFileInfo fi(entry);
+
+        QString inspect;
+        if(fi.isDir() && !fi.isSymLink())
+            inspect = fi.absoluteFilePath();
+        else if(fi.isSymLink())
+        {
+            QString target = fi.symLinkTarget();
+            if(!QDir::isAbsolutePath(target))
+                target = fi.absoluteDir().absoluteFilePath(target);
+            inspect = remapNemoHome(target);
+        }
+        else
+            return QString();
+
+        return existingCapabilityDir(inspect);
+    }
+
     QString packJollaIconsDir(const QString& packName, const QString& zSize)
     {
-        const QString dir = IconPaths::packDir(packName) + QStringLiteral("/jolla/") + zSize
-                            + QStringLiteral("/icons/");
+        const QString jollaRoot = IconPaths::resolvePackCapabilityDir(IconPaths::packDir(packName),
+                                                                      QStringLiteral("jolla"));
+        if(jollaRoot.isEmpty())
+            return QString();
+
+        const QString dir = jollaRoot + QLatin1Char('/') + zSize + QStringLiteral("/icons/");
         return QDir(dir).exists() ? dir : QString();
     }
 }
@@ -89,6 +148,29 @@ QString IconPaths::packDir(const QString& packName)
     if(!name.startsWith(QLatin1String("harbour-themepack-")))
         name = QString::fromLatin1(kPackPrefix) + packShortName(packName);
     return name;
+}
+
+QString IconPaths::resolvePackCapabilityDir(const QString& packRoot, const QString& capability)
+{
+    const QString homeRoot = packHomeRoot(packRoot);
+    if(!homeRoot.isEmpty())
+    {
+        const QString homeCap = existingCapabilityDir(homeRoot + QLatin1Char('/') + capability);
+        if(!homeCap.isEmpty())
+            return homeCap;
+    }
+
+    return resolveShareCapabilityDir(packRoot, capability);
+}
+
+bool IconPaths::packCapabilityUsable(const QString& packRoot, const QString& capability)
+{
+    const QString resolved = resolvePackCapabilityDir(packRoot, capability);
+    if(resolved.isEmpty())
+        return false;
+
+    const QDir dir(resolved);
+    return !dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot).isEmpty();
 }
 
 const QStringList& IconPaths::nativeHicolorSizes()
@@ -221,8 +303,11 @@ void IconPaths::chownApkLauncherTree()
 
 QString IconPaths::nativeAppsSourceDir(const QString& packName, const QString& size)
 {
-    const QString apps = packDir(packName) + QStringLiteral("/native/") + size
-                         + QStringLiteral("/apps");
+    const QString nativeRoot = resolvePackCapabilityDir(packDir(packName), QStringLiteral("native"));
+    if(nativeRoot.isEmpty())
+        return QString();
+
+    const QString apps = nativeRoot + QLatin1Char('/') + size + QStringLiteral("/apps");
     return QDir(apps).exists() ? apps : QString();
 }
 
@@ -250,11 +335,13 @@ QSet<QString> IconPaths::packIconKeys(const QString& packName)
 QSet<QString> IconPaths::packApkKeys(const QString& packName)
 {
     QSet<QString> keys;
-    const QString root = packDir(packName);
+    const QString apkRoot = resolvePackCapabilityDir(packDir(packName), QStringLiteral("apk"));
+    if(apkRoot.isEmpty())
+        return keys;
 
     for(const QString& size : kApkSizes)
     {
-        const QString dir = root + QStringLiteral("/apk/") + size + QLatin1Char('/');
+        const QString dir = apkRoot + QLatin1Char('/') + size + QLatin1Char('/');
         keys.unite(pngBaseNamesInDir(dir));
     }
     return keys;

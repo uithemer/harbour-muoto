@@ -1,5 +1,6 @@
 #include "themepackmodel.h"
 #include "helperclient.h"
+#include "iconpaths.h"
 
 #include <QProcess>
 #include <QStringList>
@@ -67,12 +68,8 @@ bool ThemePackModel::hasCapability(int index, const QString &capability) const
     if(index < 0 || index >= _packlist.size())
         return false;
 
-    QDir dir(QStringLiteral("/usr/share/") + _packlist.at(index) + QLatin1Char('/')
-             + capability);
-    if(!dir.exists())
-        return false;
-
-    return !dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot).isEmpty();
+    return IconPaths::packCapabilityUsable(QStringLiteral("/usr/share/") + _packlist.at(index),
+                                           capability);
 }
 
 void ThemePackModel::applyTheme(int index, bool font, const QString& weight)

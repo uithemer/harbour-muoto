@@ -1,4 +1,5 @@
 #include "imageutil.h"
+#include "iconpaths.h"
 
 #include <QDir>
 #include <QDirIterator>
@@ -10,6 +11,23 @@
 
 namespace ImageUtil
 {
+
+namespace
+{
+    QStringList collectPngsUnderCapability(const QString& packRoot, const QString& capability)
+    {
+        const QString path = IconPaths::resolvePackCapabilityDir(packRoot, capability);
+        if(path.isEmpty())
+            return QStringList();
+
+        QStringList all;
+        QDirIterator it(path, QStringList() << QStringLiteral("*.png"),
+                        QDir::Files, QDirIterator::Subdirectories);
+        while(it.hasNext())
+            all << it.next();
+        return all;
+    }
+}
 
 QImage composite(const QImage& overlayBase, const QImage& innerIcon,
                  const QSize& outerSize, const QSize& innerSize)
@@ -82,26 +100,15 @@ QImage montage9(const QStringList& pngs, const QSize& cell, int pad)
     return out;
 }
 
-static QStringList collectPngs(const QString& root)
-{
-    QStringList all;
-    if(!QFileInfo::exists(root))
-        return all;
-
-    QDirIterator it(root, QStringList() << QStringLiteral("*.png"),
-                    QDir::Files, QDirIterator::Subdirectories);
-    while(it.hasNext())
-        all << it.next();
-    return all;
-}
-
 QStringList samplePackIcons(const QString& packDir, int count)
 {
+    const QString packRoot = IconPaths::packDir(packDir);
+
     QStringList all;
-    all << collectPngs(packDir + QStringLiteral("/native"));
-    all << collectPngs(packDir + QStringLiteral("/apk"));
-    all << collectPngs(packDir + QStringLiteral("/overlay"));
-    all << collectPngs(packDir + QStringLiteral("/jolla"));
+    all << collectPngsUnderCapability(packRoot, QStringLiteral("native"));
+    all << collectPngsUnderCapability(packRoot, QStringLiteral("jolla"));
+    all << collectPngsUnderCapability(packRoot, QStringLiteral("apk"));
+    all << collectPngsUnderCapability(packRoot, QStringLiteral("overlay"));
 
     if(all.isEmpty())
         return all;
@@ -118,7 +125,8 @@ QStringList samplePackIcons(const QString& packDir, int count)
 
 QString randomOverlayBase(const QString& packDir)
 {
-    const QStringList all = collectPngs(packDir + QStringLiteral("/overlay"));
+    const QString packRoot = IconPaths::packDir(packDir);
+    const QStringList all = collectPngsUnderCapability(packRoot, QStringLiteral("overlay"));
     if(all.isEmpty())
         return QString();
 

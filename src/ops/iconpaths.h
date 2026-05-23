@@ -11,6 +11,8 @@ namespace IconPaths
     QString backupIconsRoot();
     QString tmpDir();
     QString packDir(const QString& packName);
+    QString resolvePackCapabilityDir(const QString& packRoot, const QString& capability);
+    bool packCapabilityUsable(const QString& packRoot, const QString& capability);
 
     const QStringList& nativeHicolorSizes();
     const QStringList& jollaSizes();

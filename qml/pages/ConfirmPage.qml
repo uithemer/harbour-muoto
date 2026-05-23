@@ -36,9 +36,20 @@ Dialog
 
     BusyState { id: busyindicator }
 
+    function refreshIconPreview() {
+        if (!hasIcons || packName === "") {
+            busyimg.running = false
+            return
+        }
+        busyimg.running = true
+        imgpreviewfallback.visible = false
+        iconapplier.buildPreview(packName)
+    }
+
     onStatusChanged: {
         if (status === PageStatus.Active) {
             app.coverMode = "confirmDialog"
+            refreshIconPreview()
         }
     }
 
@@ -47,8 +58,7 @@ Dialog
     }
 
     Component.onCompleted: {
-        if (hasIcons)
-                iconapplier.buildPreview(packName)
+        refreshIconPreview()
     }
 
     Connections {
