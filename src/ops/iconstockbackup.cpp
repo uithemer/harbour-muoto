@@ -8,10 +8,6 @@ bool IconStockBackup::backup() const
 {
     QDir().mkpath(IconPaths::backupIconsRoot());
 
-    for(const QString& z : IconPaths::jollaSizes())
-        IconPaths::copyPngDirIgnoreExistingBackup(IconPaths::liveJollaIconsDir(z),
-                                                  IconPaths::backupJollaIconsDir(z));
-
     for(const QString& size : IconPaths::nativeHicolorSizes())
         IconPaths::copyPngDirIgnoreExistingBackup(IconPaths::liveNativeAppsDir(size),
                                                   IconPaths::backupNativeAppsDir(size));
@@ -36,10 +32,6 @@ bool IconStockBackup::backup() const
 
 bool IconStockBackup::restore() const
 {
-    for(const QString& z : IconPaths::jollaSizes())
-        IconPaths::copyPngDirExistingOnly(IconPaths::backupJollaIconsDir(z),
-                                          IconPaths::liveJollaIconsDir(z));
-
     for(const QString& size : IconPaths::nativeHicolorSizes())
         IconPaths::copyPngDirExistingOnly(IconPaths::backupNativeAppsDir(size),
                                           IconPaths::liveNativeAppsDir(size));

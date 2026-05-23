@@ -192,7 +192,27 @@ const QStringList &IconPaths::apkPackSizes()
     return kApkSizes;
 }
 
-QString IconPaths::liveJollaIconsDir(const QString &zSize)
+QString IconPaths::hicolorSizeForJollaZ(const QString &zSize)
+{
+    if (zSize == QLatin1String("z2.0"))
+        return QStringLiteral("256x256");
+    if (zSize == QLatin1String("z1.75"))
+        return QStringLiteral("172x172");
+    if (zSize == QLatin1String("z1.5"))
+        return QStringLiteral("128x128");
+    if (zSize == QLatin1String("z1.25"))
+        return QStringLiteral("108x108");
+    if (zSize == QLatin1String("z1.0"))
+        return QStringLiteral("86x86");
+    return QString();
+}
+
+bool IconPaths::isJollaLauncherIconKey(const QString &baseName)
+{
+    return baseName.startsWith(QLatin1String("icon-launcher-"));
+}
+
+QString IconPaths::stockJollaIconsSourceDir(const QString &zSize)
 {
     return QString::fromLatin1(kJollaRoot) + QLatin1Char('/') + zSize + QStringLiteral("/icons/");
 }
@@ -213,11 +233,6 @@ QString IconPaths::liveApkLauncherDir()
             return home + QStringLiteral("/.local/share/apkd-bridge/launcherIcon/");
     }
     return remapNemoHome(QString::fromLatin1(kApkLauncher)) + QLatin1Char('/');
-}
-
-QString IconPaths::backupJollaIconsDir(const QString &zSize)
-{
-    return backupIconsRoot() + QStringLiteral("/jolla/") + zSize + QStringLiteral("/icons/");
 }
 
 QString IconPaths::backupNativeAppsDir(const QString &size)

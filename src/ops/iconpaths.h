@@ -18,11 +18,15 @@ namespace IconPaths
     const QStringList& jollaSizes();
     const QStringList& apkPackSizes();
 
-    QString liveJollaIconsDir(const QString& zSize);
+    // Maps silica z tier to hicolor apps size; empty for unmapped tiers (z1.5-large).
+    QString hicolorSizeForJollaZ(const QString& zSize);
+    bool isJollaLauncherIconKey(const QString& baseName);
+
+    // Read-only stock Jolla icons under /usr/share/themes/.../silica (never written).
+    QString stockJollaIconsSourceDir(const QString& zSize);
     QString liveNativeAppsDir(const QString& size);
     QString liveApkLauncherDir();
 
-    QString backupJollaIconsDir(const QString& zSize);
     QString backupNativeAppsDir(const QString& size);
     QString backupApkDir();
 

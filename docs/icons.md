@@ -14,33 +14,50 @@ How to create icons compatible with UI Themer.
 UI Themer reimplements the classic Theme Pack Support icon pipeline:
 
 1. **Restore** stock PNGs from `backup/icons/` (if a backup exists).
-2. **Backup** current stock PNGs with *first snapshot wins* (`ignore-existing`).
-3. **Run** the pack (optional): copy themed PNGs into live system trees (`existing-only`).
-4. **Overlay** (optional): composite pack `overlay/` onto apps not covered by the pack.
-5. **Touch** launcher `.desktop` files so Lipstick reloads icons.
+2. **Mirror** stock Jolla launcher icons (`icon-launcher-*`) from themes silica into hicolor (create-if-missing; themes are never written).
+3. **Backup** current stock PNGs with *first snapshot wins* (`ignore-existing`).
+4. **Run** the pack (optional): copy themed PNGs into live hicolor / APK trees (`existing-only`).
+5. **Overlay** (optional): composite pack `overlay/` onto apps not covered by the pack.
+6. **Touch** launcher `.desktop` files so Lipstick reloads icons.
 
 **`.desktop` files are never modified.** `Icon=` stays as shipped; only the PNG files behind that name change.
 
-Active theme is stored in dconf (`activeIconPack`) after a **successful** apply. Cover sync re-runs the full restore→backup→run→overlay cycle for the active pack.
+**`/usr/share/themes/` is never modified.** Stock Jolla artwork is read from `sailfish-default/silica` only as a mirror source.
+
+Active theme is stored in dconf (`activeIconPack`) after a **successful** apply. Cover sync re-runs the full restore→mirror→backup→run→overlay cycle for the active pack.
 
 ### Live paths (where themed pixels go)
 
 | Kind | Live path | Pack source (under `$HOME/.themepack/<pack>/` or via `/usr/share/...` symlink) |
 |------|-----------|-------------|
-| Jolla (ambient) | `/usr/share/themes/sailfish-default/silica/<z>/icons/<icon-key>.png` | `jolla/<z>/icons/` (z cascade) |
+| Jolla (launcher) | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `jolla/<z>/icons/` (z cascade → hicolor; see z map below) |
 | Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (size cascade) |
 | Android | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | `apk/<size>/<key>.png` |
 
+Stock `icon-launcher-*` PNGs are mirrored from `/usr/share/themes/sailfish-default/silica/<z>/icons/` into hicolor before backup (read-only source).
+
 Theme packs are installed under `/usr/share/harbour-themepack-<name>/` (RPM metadata and often symlinks). **Icon PNGs are read** from `$HOME/.themepack/<harbour-themepack-name>/` first (classic TPS layout), then from resolved `/usr/share/...` paths if needed. UI Themer does not modify pack files.
+
+### Jolla z → hicolor map
+
+| Silica z tier (pack / stock source) | hicolor `apps` size |
+|-------------------------------------|---------------------|
+| z2.0 | 256x256 |
+| z1.75 | 172x172 |
+| z1.5 | 128x128 |
+| z1.25 | 108x108 |
+| z1.0 | 86x86 |
+| z1.5-large | *(not a destination; may be used as cascade source only)* |
 
 ### Stock backup store
 
 ```
 /usr/share/sailfishos-uithemer/backup/icons/
-  jolla/<z>/icons/
   native/<size>/apps/
   apk/
 ```
+
+Jolla launcher icons in hicolor are included in the native hicolor backup. There is no separate `backup/icons/jolla/` tree.
 
 Restore copies backup → live only where the live file still exists (TPS `existing-only`).
 
@@ -48,7 +65,7 @@ Restore copies backup → live only where the live file still exists (TPS `exist
 
 When enabled, UI Themer writes composited PNGs into the **same stock paths** as native/APK icons (not a separate pack subfolder). Each target gets a random `overlay/*.png` base composited on top of the current live stock PNG.
 
-Overlay runs on **both** native hicolor and APK `launcherIcon` trees. Only live icons whose **basename is not in the pack** get composited (`native/` ∪ `jolla/` for hicolor, `apk/<size>/` for Android). Apps the theme already provides an icon for are left unchanged.
+Overlay runs on **both** native hicolor and APK `launcherIcon` trees. Only live icons whose **basename is not in the pack** get composited (`native/` ∪ `jolla/` pack keys for hicolor, `apk/<size>/` for Android). Apps the theme already provides an icon for are left unchanged.
 
 Matching uses **PNG basename** on disk, not `.desktop` `Icon=` fields.
 
@@ -90,7 +107,7 @@ A native icon is themed when the pack has `<key>.png` and stock already has `hic
 
 ### Z cascade (jolla apply)
 
-Pack `jolla/<z>/icons/` is copied into live `silica/<z>/icons/` using the same index-aligned cascade as TPS (largest z tier first for each target z).
+Pack `jolla/<z>/icons/` is copied into live hicolor `apps/` using the z→hicolor map above and the same index-aligned cascade as TPS (largest z tier first for each target z). Unmapped tiers such as `z1.5-large` are not destinations but may supply icons for smaller z targets.
 
 ### APK / apkd
 
@@ -98,13 +115,13 @@ Largest PNG folder under `<pack>/apk/` is copied into flat `apkd-bridge/launcher
 
 ## Restore
 
-`Restore theme` restores stock PNGs from the backup store, clears the backup tree, touches launchers, and sets dconf `activeIconPack` to `default` after success.
+`Restore theme` restores stock PNGs from the backup store, **removes** all `icon-launcher-*.png` from hicolor `apps/` tiers, clears the backup tree, touches launchers, and sets dconf `activeIconPack` to `default` after success. Themes silica is never modified.
 
 ## Icon file size hints
 
 | Asset       | Recommended size  |
 | ----------- | ----------------- |
 | Native app  | 172x172 (preferred), down to 86x86 |
-| Jolla app   | per z tier under `silica/` |
+| Jolla app   | per z→hicolor map above |
 | APK app     | 192x192 (preferred), down to 86x86 |
 | Overlay     | 192x192 / 172x172 composite canvas |

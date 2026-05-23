@@ -20,6 +20,10 @@ bool IconPackRunner::run(const QString& packName) const
     const QStringList& jollaCap = IconPaths::jollaSizes();
     for(int i = 0; i < jollaCap.size(); ++i)
     {
+        const QString hicolorSize = IconPaths::hicolorSizeForJollaZ(jollaCap.at(i));
+        if(hicolorSize.isEmpty())
+            continue;
+
         for(int j = i; j < jollaCap.size(); ++j)
         {
             if(jollaRoot.isEmpty())
@@ -31,7 +35,7 @@ bool IconPackRunner::run(const QString& packName) const
                 continue;
 
             const int n = IconPaths::copyPngDirExistingOnly(src,
-                                                            IconPaths::liveJollaIconsDir(jollaCap.at(i)));
+                                                            IconPaths::liveNativeAppsDir(hicolorSize));
             if(n > 0)
                 ok = true;
             break;
