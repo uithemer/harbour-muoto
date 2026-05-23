@@ -46,10 +46,14 @@ Restore copies backup → live only where the live file still exists (TPS `exist
 
 ### Overlay
 
-When enabled, UI Themer writes composited PNGs into the **same stock paths** as native/APK icons (not a separate pack subfolder). Apps without a matching pack PNG get a random `overlay/*.png` base plus the current stock icon.
+When enabled, UI Themer writes composited PNGs into the **same stock paths** as native/APK icons (not a separate pack subfolder). Each target gets a random `overlay/*.png` base composited on top of the current live stock PNG.
 
-- **Native:** live hicolor icons whose basename is not in the pack (`native/` ∪ `jolla/`).
-- **APK:** live `launcherIcon` icons with no matching `apk/<size>/<basename>.png`.
+Overlay runs on **both** native hicolor and APK `launcherIcon` trees.
+
+- **Apply icons + overlay:** skip apps the pack already themed this run (basename present in pack `native/` ∪ `jolla/` or `apk/<size>/`).
+- **Overlay only:** overlay every existing live PNG on both trees (pack icon lists are not used as skip sets).
+
+Matching uses **PNG basename** on disk, not `.desktop` `Icon=` fields.
 
 ### Launcher refresh
 

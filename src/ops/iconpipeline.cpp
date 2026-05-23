@@ -56,7 +56,7 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
     if(overlay)
     {
         IconOverlay ov;
-        if(!ov.apply(packName))
+        if(!ov.apply(packName, runPack))
         {
             qWarning() << "uithemer: overlay not applied for" << packName << "root" << root;
             return fail(QStringLiteral("overlay not applied"));

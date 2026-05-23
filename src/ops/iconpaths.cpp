@@ -204,7 +204,7 @@ QString IconPaths::liveNativeAppsDir(const QString &size)
 
 QString IconPaths::liveApkLauncherDir()
 {
-    return QString::fromLatin1(kApkLauncher);
+    return remapNemoHome(QString::fromLatin1(kApkLauncher));
 }
 
 QString IconPaths::backupJollaIconsDir(const QString &zSize)
