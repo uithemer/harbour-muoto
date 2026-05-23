@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QImage>
 
 #include <pwd.h>
 #include <unistd.h>
@@ -11,7 +12,6 @@ namespace
 {
     const char* kUithemerShare = "/usr/share/sailfishos-uithemer";
     const char* kPackPrefix = "/usr/share/harbour-themepack-";
-    const char* kJollaRoot = "/usr/share/themes/sailfish-default/meegotouch";
     const char* kHicolorRoot = "/usr/share/icons/hicolor";
     const char* kApkLauncher = "/home/defaultuser/.local/share/apkd-bridge/launcherIcon";
 
@@ -44,6 +44,32 @@ namespace
         if(packName.startsWith(kBare))
             packName = packName.mid(kBare.size());
         return packName;
+    }
+
+    QSet<QString> pngBaseNamesInDir(const QString& dirPath)
+    {
+        QSet<QString> keys;
+        QDir d(dirPath);
+        if(!d.exists())
+            return keys;
+
+        const QStringList pngs = d.entryList(QStringList() << QStringLiteral("*.png"),
+                                             QDir::Files);
+        for(const QString& f : pngs)
+            keys.insert(QFileInfo(f).completeBaseName());
+        return keys;
+    }
+
+    bool parseHicolorSize(const QString& size, int& w, int& h)
+    {
+        const int x = size.indexOf(QLatin1Char('x'));
+        if(x <= 0)
+            return false;
+        bool okW = false;
+        bool okH = false;
+        w = size.left(x).toInt(&okW);
+        h = size.mid(x + 1).toInt(&okH);
+        return okW && okH && w > 0 && h > 0;
     }
 }
 
@@ -85,12 +111,6 @@ const QStringList& IconPaths::apkPackSizes()
     return kApkSizes;
 }
 
-QString IconPaths::liveJollaIconsDir(const QString& zSize)
-{
-    return QString::fromLatin1(kJollaRoot) + QLatin1Char('/') + zSize
-           + QStringLiteral("/icons/");
-}
-
 QString IconPaths::liveNativeAppsDir(const QString& size)
 {
     return QString::fromLatin1(kHicolorRoot) + QLatin1Char('/') + size
@@ -100,12 +120,6 @@ QString IconPaths::liveNativeAppsDir(const QString& size)
 QString IconPaths::liveApkLauncherDir()
 {
     return QString::fromLatin1(kApkLauncher);
-}
-
-QString IconPaths::backupJollaIconsDir(const QString& zSize)
-{
-    return backupIconsRoot() + QStringLiteral("/jolla/") + zSize
-           + QStringLiteral("/icons/");
 }
 
 QString IconPaths::backupNativeAppsDir(const QString& size)
@@ -218,21 +232,121 @@ QString IconPaths::nativeAppsSourceDir(const QString& packName, const QString& s
     return QString();
 }
 
-bool IconPaths::packIsAndroidOnly(const QString& packName)
+QString IconPaths::packJollaIconsDir(const QString& packName, const QString& zSize)
 {
-    QFile f(packDir(packName) + QStringLiteral("/type"));
-    if(!f.open(QIODevice::ReadOnly))
-        return false;
-    return QString::fromUtf8(f.readAll()).trimmed() == QLatin1String("android");
+    const QString dir = packDir(packName) + QStringLiteral("/jolla/") + zSize
+                        + QStringLiteral("/icons/");
+    return QDir(dir).exists() ? dir : QString();
 }
 
-QString IconPaths::largestPackNativeAppsDir(const QString& packName)
+QSet<QString> IconPaths::packIconKeys(const QString& packName)
 {
+    QSet<QString> keys;
+
     for(const QString& size : kNativeSizes)
     {
         const QString dir = nativeAppsSourceDir(packName, size);
         if(!dir.isEmpty())
-            return dir;
+            keys.unite(pngBaseNamesInDir(dir));
     }
-    return QString();
+
+    for(const QString& z : kJolla)
+    {
+        const QString dir = packJollaIconsDir(packName, z);
+        if(!dir.isEmpty())
+            keys.unite(pngBaseNamesInDir(dir));
+    }
+
+    return keys;
+}
+
+QSet<QString> IconPaths::packApkKeys(const QString& packName)
+{
+    QSet<QString> keys;
+    const QString root = packDir(packName);
+
+    for(const QString& size : kApkSizes)
+    {
+        const QString dir = root + QStringLiteral("/apk/") + size + QLatin1Char('/');
+        keys.unite(pngBaseNamesInDir(dir));
+    }
+    return keys;
+}
+
+QSet<QString> IconPaths::liveHicolorAppKeys()
+{
+    QSet<QString> keys;
+    for(const QString& size : kNativeSizes)
+        keys.unite(pngBaseNamesInDir(liveNativeAppsDir(size)));
+    return keys;
+}
+
+bool IconPaths::packHasNativeIcon(const QString& packName, const QString& key)
+{
+    const QString root = packDir(packName);
+    const QString file = key + QStringLiteral(".png");
+    for(const QString& size : kNativeSizes)
+    {
+        if(QFileInfo::exists(root + QStringLiteral("/native/") + size
+                              + QStringLiteral("/apps/") + file))
+            return true;
+    }
+    return false;
+}
+
+int IconPaths::publishJollaIconsToHicolorCascade(const QString& packName)
+{
+    const QString packRoot = packDir(packName);
+    const QStringList& nativeCap = nativeHicolorSizes();
+    const QStringList& jollaCap = jollaSizes();
+    int published = 0;
+
+    for(int i = 0; i < nativeCap.size(); ++i)
+    {
+        int w = 0;
+        int h = 0;
+        if(!parseHicolorSize(nativeCap.at(i), w, h))
+            continue;
+
+        const QSize targetSize(w, h);
+        const QString dstDir = liveNativeAppsDir(nativeCap.at(i));
+
+        for(int j = i; j < jollaCap.size(); ++j)
+        {
+            const QString srcDir = packRoot + QStringLiteral("/jolla/") + jollaCap.at(j)
+                                   + QStringLiteral("/icons/");
+            QDir src(srcDir);
+            if(!src.exists())
+                continue;
+
+            const QStringList pngs = src.entryList(QStringList() << QStringLiteral("*.png"),
+                                                   QDir::Files);
+            for(const QString& file : pngs)
+            {
+                const QString key = QFileInfo(file).completeBaseName();
+                if(packHasNativeIcon(packName, key))
+                    continue;
+
+                const QString dstPath = dstDir + file;
+                if(!QFileInfo::exists(dstPath))
+                    continue;
+
+                QImage img(src.absoluteFilePath(file));
+                if(img.isNull())
+                    continue;
+
+                const QImage scaled = img.scaled(targetSize,
+                                                 Qt::IgnoreAspectRatio,
+                                                 Qt::SmoothTransformation);
+                if(scaled.isNull())
+                    continue;
+
+                if(QFile::remove(dstPath) && scaled.save(dstPath, "PNG"))
+                    ++published;
+            }
+            break;
+        }
+    }
+
+    return published;
 }

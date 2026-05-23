@@ -21,7 +21,6 @@ HEADERS += \
     $$PWD/iconpackrunner.h \
     $$PWD/iconoverlay.h \
     $$PWD/iconpreviewcache.h \
-    $$PWD/desktopfile.h \
     $$PWD/imageutil.h \
     $$PWD/filelock.h \
     $$PWD/spawner.h \
@@ -36,7 +35,6 @@ SOURCES += \
     $$PWD/iconpackrunner.cpp \
     $$PWD/iconoverlay.cpp \
     $$PWD/iconpreviewcache.cpp \
-    $$PWD/desktopfile.cpp \
     $$PWD/imageutil.cpp \
     $$PWD/filelock.cpp \
     $$PWD/spawner.cpp \

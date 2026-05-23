@@ -1,3 +1,12 @@
+* Sat May 23 2026 2.7.1-6
+- Icons: hicolor-only apply (pack jolla/ scaled into hicolor; no live
+  meegotouch writes). Backup/restore snapshots hicolor + apk only.
+- Icons: TPS basename matching for nativeMatchCount/apkMatchCount; drop
+  2.4.3 desktop Icon= lookup and desktopfile helper.
+- Icons: overlay uses packIconKeys / pack apk basenames for all packs;
+  drop pack/type android special cases.
+- docs/icons.md updated for the above.
+
 * Sun May 10 2026 2.6.1-1
 - Renamed the headless helper from sailfishos-uithemer-reassert to
   sailfishos-uithemer-icond. Boot unit is now

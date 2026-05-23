@@ -28,8 +28,8 @@ Active theme is stored in dconf (`activeIconPack`) after a **successful** apply.
 | Kind | Live path | Pack source |
 |------|-----------|-------------|
 | Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (cascaded to smaller sizes) |
-| Jolla fallback | `/usr/share/themes/sailfish-default/meegotouch/<z>/icons/<key>.png` | `jolla/<z>/icons/` |
-| Android | `/home/defaultuser/.local/share/applications/apkd_launcher_*.desktop` uses PNGs in `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/` | `apk/<size>/` |
+| Jolla (ambient) | same hicolor paths | `jolla/<z>/icons/` (scaled into hicolor, index-aligned z cascade) |
+| Android | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | `apk/<size>/<key>.png` |
 
 Theme packs under `/usr/share/harbour-themepack-<name>/` are **read-only**; UI Themer does not modify them.
 
@@ -37,7 +37,6 @@ Theme packs under `/usr/share/harbour-themepack-<name>/` are **read-only**; UI T
 
 ```
 /usr/share/sailfishos-uithemer/backup/icons/
-  jolla/<z>/icons/
   native/<size>/apps/
   apk/
 ```
@@ -48,7 +47,8 @@ Restore copies backup → live only where the live file still exists (TPS `exist
 
 When enabled, UI Themer writes composited PNGs into the **same stock paths** as native/APK icons (not a separate pack subfolder). Apps without a matching pack PNG get a random `overlay/*.png` base plus the current stock icon.
 
-Android-only packs (`pack/type` contains `android`) skip native overlay and overlay all launcher icons in `apkd-bridge/launcherIcon/`.
+- **Native:** live hicolor icons whose basename is not in the pack (`native/` ∪ `jolla/`).
+- **APK:** live `launcherIcon` icons with no matching `apk/<size>/<basename>.png`.
 
 ### Launcher refresh
 
@@ -78,18 +78,31 @@ apk/
 
 overlay/
   *.png
-
-type          # optional; "android" for Android-only packs
 ```
 
-### Lookup order (native, for match counts / preview)
+### Matching (apply and match counts)
 
-1. `<pack>/native/<size>/apps/<icon-key>.png` (largest size first).
-2. `<pack>/jolla/<zSize>/icons/<icon-key>.png` (largest `z*` first).
+Icons are matched by **PNG basename** on disk (classic TPS). UI Themer does not read `.desktop` `Icon=` fields.
+
+A native icon is themed when the pack has `<key>.png` and stock already has `hicolor/*/apps/<key>.png` (`existing-only`).
+
+### Z → hicolor (jolla apply)
+
+Pack `jolla/<z>/icons/` uses the same index-aligned cascade as TPS (largest z tier first), but pixels are **scaled** into existing hicolor sizes:
+
+| Index | Hicolor | Pack z |
+|-------|---------|--------|
+| 0 | 256×256 | z2.0 |
+| 1 | 172×172 | z1.75 |
+| 2 | 128×128 | z1.5-large |
+| 3 | 108×108 | z1.25 |
+| 4 | 86×86 | z1.0 |
+
+If the pack also has `native/<size>/apps/<key>.png`, native wins for that key.
 
 ### APK / apkd
 
-Largest PNG under `<pack>/apk/` is copied into flat `apkd-bridge/launcherIcon/<key>.png` when the live file exists.
+Largest PNG folder under `<pack>/apk/` is copied into flat `apkd-bridge/launcherIcon/<key>.png` when the live file exists. After writes, PNGs are owned by `defaultuser`.
 
 ## Restore
 

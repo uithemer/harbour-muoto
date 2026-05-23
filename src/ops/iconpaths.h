@@ -1,6 +1,7 @@
 #ifndef ICONPATHS_H
 #define ICONPATHS_H
 
+#include <QSet>
 #include <QString>
 #include <QStringList>
 
@@ -15,11 +16,9 @@ namespace IconPaths
     const QStringList& jollaSizes();
     const QStringList& apkPackSizes();
 
-    QString liveJollaIconsDir(const QString& zSize);
     QString liveNativeAppsDir(const QString& size);
     QString liveApkLauncherDir();
 
-    QString backupJollaIconsDir(const QString& zSize);
     QString backupNativeAppsDir(const QString& size);
     QString backupApkDir();
 
@@ -30,9 +29,14 @@ namespace IconPaths
 
     void chownApkLauncherTree();
     QString nativeAppsSourceDir(const QString& packName, const QString& size);
+    QString packJollaIconsDir(const QString& packName, const QString& zSize);
 
-    bool packIsAndroidOnly(const QString& packName);
-    QString largestPackNativeAppsDir(const QString& packName);
+    QSet<QString> packIconKeys(const QString& packName);
+    QSet<QString> packApkKeys(const QString& packName);
+    QSet<QString> liveHicolorAppKeys();
+
+    bool packHasNativeIcon(const QString& packName, const QString& key);
+    int publishJollaIconsToHicolorCascade(const QString& packName);
 }
 
 #endif // ICONPATHS_H

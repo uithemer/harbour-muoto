@@ -40,12 +40,8 @@ namespace
     QStringList stockOnlyNativeKeys(const QString& packName, const QString& liveSize)
     {
         const QString stockDir = IconPaths::liveNativeAppsDir(liveSize);
-        const QString packNative = IconPaths::largestPackNativeAppsDir(packName);
-        if(packNative.isEmpty())
-            return QStringList();
-
         const QSet<QString> stock = pngBaseNames(stockDir);
-        const QSet<QString> pack = pngBaseNames(packNative);
+        const QSet<QString> pack = IconPaths::packIconKeys(packName);
         QStringList out;
         for(const QString& k : stock)
         {
@@ -108,18 +104,6 @@ namespace
             QFile::remove(stockPath);
         return out.save(stockPath, "PNG");
     }
-
-    bool packHasApkFile(const QString& packName, const QString& baseName)
-    {
-        const QString root = IconPaths::packDir(packName);
-        for(const QString& size : IconPaths::apkPackSizes())
-        {
-            if(QFileInfo::exists(root + QStringLiteral("/apk/") + size + QLatin1Char('/')
-                                 + baseName))
-                return true;
-        }
-        return false;
-    }
 }
 
 bool IconOverlay::apply(const QString& packName) const
@@ -135,18 +119,15 @@ bool IconOverlay::apply(const QString& packName) const
         return false;
 
     bool any = false;
-    const bool androidOnly = IconPaths::packIsAndroidOnly(packName);
+    const QSet<QString> packApk = IconPaths::packApkKeys(packName);
 
-    if(!androidOnly)
+    for(const QString& liveSize : IconPaths::nativeHicolorSizes())
     {
-        for(const QString& liveSize : IconPaths::nativeHicolorSizes())
+        const QStringList files = stockOnlyNativeKeys(packName, liveSize);
+        for(const QString& file : files)
         {
-            const QStringList files = stockOnlyNativeKeys(packName, liveSize);
-            for(const QString& file : files)
-            {
-                if(writeOverlayNative(packName, liveSize, file))
-                    any = true;
-            }
+            if(writeOverlayNative(packName, liveSize, file))
+                any = true;
         }
     }
 
@@ -157,17 +138,10 @@ bool IconOverlay::apply(const QString& packName) const
                                                QDir::Files);
         for(const QString& f : pngs)
         {
-            bool overlayThis = false;
-            if(androidOnly)
-            {
-                overlayThis = true;
-            }
-            else if(!packHasApkFile(packName, f))
-            {
-                overlayThis = true;
-            }
+            if(packApk.contains(QFileInfo(f).completeBaseName()))
+                continue;
 
-            if(overlayThis && writeOverlayApk(packName, f))
+            if(writeOverlayApk(packName, f))
                 any = true;
         }
         IconPaths::chownApkLauncherTree();

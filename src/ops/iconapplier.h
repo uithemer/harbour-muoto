@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QStringList>
 
 class IconApplier : public QObject
 {
@@ -30,16 +29,6 @@ signals:
 
 private:
     QString packDir(const QString& packName) const;
-    QString findNativeIcon(const QString& packName, const QString& iconValue) const;
-    QString findNativeIconForDesktop(const QString& packName,
-                                     const QString& iconValue,
-                                     const QString& desktopPath) const;
-    QString findApkIcon(const QString& packName, const QString& base) const;
-
-    QStringList nativeDesktops() const;
-    QStringList apkDesktops() const;
-    QString baseForNative(const QString& desktopPath) const;
-    QString baseForApk(const QString& iconValue) const;
 };
 
 #endif // ICONAPPLIER_H
