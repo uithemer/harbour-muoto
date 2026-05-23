@@ -72,16 +72,22 @@ private slots:
     void onThemesProgress(const QString& op, int done, int total);
     void onPacksOperationCompleted(const QString& op, bool ok,
                                    const QString& message);
+    void onNameOwnerChanged(const QString& name, const QString& oldOwner,
+                            const QString& newOwner);
 
 private:
+    // dbus-activate helperd and drop stale QDBusInterface proxies when the
+    // well-known name leaves the bus (helperd idle-quits after 30 s).
+    bool ensureHelperService();
+    void dropDBusProxies();
+
     // Lazy-construct a per-interface QDBusInterface on the system bus.
     QDBusInterface* themesIface();
     QDBusInterface* packsIface();
 
     // Wrap a fire-and-forget D-Bus method call. On transport failure
     // emit error(op, ...) so the GUI's busy state drains.
-    void asyncCall(QDBusInterface* iface, const QString& op,
-                   const QVariantList& args);
+    void asyncCall(const QString& op, const QVariantList& args);
 
     // Subscribe to the per-interface OperationCompleted (and Themes
     // Progress) broadcast signals once, before any method is invoked.

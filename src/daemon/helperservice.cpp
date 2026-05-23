@@ -14,6 +14,19 @@ namespace
     const int kIdleTimeoutMs = 30 * 1000;
     const int kShutdownDrainMs = 150;
 
+    // Slots that take QDBusMessage as the last argument do not get an
+    // auto-reply; the GUI's asyncCall() would time out otherwise.
+    void sendMethodReply(const QDBusMessage &message)
+    {
+        if(message.type() != QDBusMessage::MethodCallMessage)
+            return;
+        if(!QDBusConnection::systemBus().send(message.createReply()))
+        {
+            qWarning() << "uithemer-helperd: failed to send method reply:"
+                       << QDBusConnection::systemBus().lastError().message();
+        }
+    }
+
     const char *kLogin1Service = "org.freedesktop.login1";
     const char *kLogin1Path    = "/org/freedesktop/login1";
     const char *kLogin1Manager = "org.freedesktop.login1.Manager";
@@ -144,6 +157,7 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
                             [this, op](int done, int total)
                             {
                                 emit Progress(op, done, total);
+                                _backend->resetIdleTimer();
                             });
     // Disconnect progress when done. Schedule it via a one-shot
     // single-shot timer chained to the done signal. Simpler: also
@@ -168,12 +182,17 @@ void ThemesAdaptor::ApplyIcons(const QString &pack, bool runPack, bool overlay,
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        sendMethodReply(message);
         return;
     }
     if (!authorize(message, op))
+    {
+        sendMethodReply(message);
         return;
+    }
     runIconOpVoid(op, [pack, runPack, overlay](IconApplier &a)
                   { a.applyIcons(pack, runPack, overlay); }, &IconApplier::applied);
+    sendMethodReply(message);
 }
 
 void ThemesAdaptor::RestoreIcons(const QDBusMessage &message)
@@ -182,12 +201,17 @@ void ThemesAdaptor::RestoreIcons(const QDBusMessage &message)
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        sendMethodReply(message);
         return;
     }
     if (!authorize(message, op))
+    {
+        sendMethodReply(message);
         return;
+    }
     runIconOpVoid(op, [](IconApplier &a)
                   { a.restoreIcons(); }, &IconApplier::restored);
+    sendMethodReply(message);
 }
 
 void ThemesAdaptor::RefreshOriginals(const QDBusMessage &message)
@@ -196,12 +220,17 @@ void ThemesAdaptor::RefreshOriginals(const QDBusMessage &message)
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        sendMethodReply(message);
         return;
     }
     if (!authorize(message, op))
+    {
+        sendMethodReply(message);
         return;
+    }
     runIconOpVoid(op, [](IconApplier &a)
                   { a.refreshOriginals(); }, &IconApplier::originalsRefreshed);
+    sendMethodReply(message);
 }
 
 void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
@@ -210,10 +239,14 @@ void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        sendMethodReply(message);
         return;
     }
     if (!authorize(message, op))
+    {
+        sendMethodReply(message);
         return;
+    }
     _backend->resetIdleTimer();
     DensityEnabler &density = _backend->densityEnabler();
     auto *conn = new QMetaObject::Connection;
@@ -224,6 +257,7 @@ void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
         delete conn;
         _backend->resetIdleTimer(); });
     density.ensureEnabled();
+    sendMethodReply(message);
 }
 
 // =====================================================================
@@ -251,10 +285,14 @@ void PacksAdaptor::UninstallPack(const QString &rpmName,
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        sendMethodReply(message);
         return;
     }
     if (!authorize(message, op))
+    {
+        sendMethodReply(message);
         return;
+    }
 
     _backend->resetIdleTimer();
 
@@ -266,6 +304,7 @@ void PacksAdaptor::UninstallPack(const QString &rpmName,
     {
         emit OperationCompleted(op, false,
                                 QStringLiteral("failed to start rpm"));
+        sendMethodReply(message);
         return;
     }
     if (!p.waitForFinished(60000))
@@ -273,6 +312,7 @@ void PacksAdaptor::UninstallPack(const QString &rpmName,
         p.kill();
         emit OperationCompleted(op, false,
                                 QStringLiteral("rpm timed out"));
+        sendMethodReply(message);
         return;
     }
     const bool ok = (p.exitStatus() == QProcess::NormalExit && p.exitCode() == 0);
@@ -280,5 +320,6 @@ void PacksAdaptor::UninstallPack(const QString &rpmName,
                             ok ? rpmName
                                : QStringLiteral("rpm exited %1").arg(p.exitCode()));
     _backend->resetIdleTimer();
+    sendMethodReply(message);
 }
 

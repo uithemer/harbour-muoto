@@ -305,7 +305,8 @@ void IconPaths::chownApkLauncherTree()
     for (const QString &f : pngs)
     {
         const QByteArray path = d.absoluteFilePath(f).toLocal8Bit();
-        chown(path.constData(), pw->pw_uid, pw->pw_gid);
+        if(chown(path.constData(), pw->pw_uid, pw->pw_gid) != 0)
+            continue;
     }
 }
 

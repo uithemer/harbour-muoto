@@ -57,7 +57,11 @@ CoverBackground
             x: Theme.paddingLarge
             font.pixelSize: Theme.fontSizeMedium
             truncationMode: TruncationMode.Fade
-            text: pageStack.currentPage.confirmheadername
+            text: {
+                var p = pageStack.currentPage
+                return (p && p.confirmheadername !== undefined)
+                       ? p.confirmheadername : ""
+            }
         }
 
         Image {
@@ -92,7 +96,10 @@ CoverBackground
 
         Loader {
             id: fontloader
-            active: pageStack.currentPage.hasFont || pageStack.currentPage.hasFontNonLatin
+            active: {
+                var p = pageStack.currentPage
+                return p && (p.hasFont || p.hasFontNonLatin)
+            }
             source: ""
             visible: false
             width: root.width

@@ -8,6 +8,7 @@
 #include <QDBusPendingCallWatcher>
 #include <QDBusMessage>
 #include <QDBusError>
+#include <QDBusConnectionInterface>
 #include <QVariantList>
 #include <QDebug>
 #include <QQmlEngine>
@@ -30,6 +31,17 @@ HelperClient::HelperClient()
     // Subscribe to the daemon's broadcast signals as early as possible
     // so we never miss an OperationCompleted that races our asyncCall.
     hookBroadcastSignals();
+
+    QDBusConnection bus = QDBusConnection::systemBus();
+    if(bus.isConnected())
+    {
+        bus.connect(QStringLiteral("org.freedesktop.DBus"),
+                    QStringLiteral("/org/freedesktop/DBus"),
+                    QStringLiteral("org.freedesktop.DBus"),
+                    QStringLiteral("NameOwnerChanged"),
+                    this,
+                    SLOT(onNameOwnerChanged(QString, QString, QString)));
+    }
 }
 
 HelperClient::~HelperClient()
@@ -58,18 +70,78 @@ QObject* HelperClient::qmlSingleton(QQmlEngine* engine, QJSEngine* scriptEngine)
     return h;
 }
 
+bool HelperClient::ensureHelperService()
+{
+    QDBusConnection bus = QDBusConnection::systemBus();
+    if(!bus.isConnected())
+        return false;
+    QDBusConnectionInterface* bi = bus.interface();
+    if(!bi)
+        return false;
+    const QString svc = QString::fromLatin1(kServiceName);
+    const QDBusReply<bool> registered = bi->isServiceRegistered(svc);
+    if(registered.isValid() && registered.value())
+        return true;
+    const QDBusReply<void> started = bi->startService(svc);
+    return started.isValid();
+}
+
+void HelperClient::dropDBusProxies()
+{
+    delete _themes;
+    _themes = nullptr;
+    delete _packs;
+    _packs = nullptr;
+}
+
+void HelperClient::onNameOwnerChanged(const QString& name,
+                                      const QString& oldOwner,
+                                      const QString& newOwner)
+{
+    if(name != QLatin1String(kServiceName))
+        return;
+    if(!newOwner.isEmpty() || oldOwner.isEmpty())
+        return;
+
+    // A helper instance released the name. dbus-activation may already have
+    // started a replacement; ignore stale "owner lost" signals in that case.
+    QDBusConnection bus = QDBusConnection::systemBus();
+    QDBusConnectionInterface* bi = bus.interface();
+    const QDBusReply<bool> registered =
+        bi ? bi->isServiceRegistered(QString::fromLatin1(kServiceName))
+           : QDBusReply<bool>();
+    if(registered.isValid() && registered.value())
+        return;
+
+    dropDBusProxies();
+}
+
 QDBusInterface* HelperClient::themesIface()
 {
+    ensureHelperService();
+    if(_themes && !_themes->isValid())
+    {
+        delete _themes;
+        _themes = nullptr;
+    }
     if(!_themes)
+    {
         _themes = new QDBusInterface(QString::fromLatin1(kServiceName),
                                      QString::fromLatin1(kObjectPath),
                                      QString::fromLatin1(kIfaceThemes),
                                      QDBusConnection::systemBus(), this);
+    }
     return _themes;
 }
 
 QDBusInterface* HelperClient::packsIface()
 {
+    ensureHelperService();
+    if(_packs && !_packs->isValid())
+    {
+        delete _packs;
+        _packs = nullptr;
+    }
     if(!_packs)
         _packs = new QDBusInterface(QString::fromLatin1(kServiceName),
                                     QString::fromLatin1(kObjectPath),
@@ -113,9 +185,17 @@ void HelperClient::hookBroadcastSignals()
                 SLOT(onPacksOperationCompleted(QString, bool, QString)));
 }
 
-void HelperClient::asyncCall(QDBusInterface* iface, const QString& op,
-                             const QVariantList& args)
+void HelperClient::asyncCall(const QString& op, const QVariantList& args)
 {
+    const bool themesOp =
+        (op == QLatin1String("ApplyIcons")
+         || op == QLatin1String("RestoreIcons")
+         || op == QLatin1String("RefreshOriginals")
+         || op == QLatin1String("DensityEnable"));
+    QDBusInterface* iface = themesOp ? themesIface()
+                        : (op == QLatin1String("UninstallPack") ? packsIface()
+                                                                : nullptr);
+
     if(!iface || !iface->isValid())
     {
         qWarning() << "HelperClient::asyncCall:" << op
@@ -129,16 +209,17 @@ void HelperClient::asyncCall(QDBusInterface* iface, const QString& op,
     QDBusPendingCall pending = iface->asyncCallWithArgumentList(op, args);
     QDBusPendingCallWatcher* w = new QDBusPendingCallWatcher(pending, this);
     connect(w, &QDBusPendingCallWatcher::finished, this,
-            [this, op](QDBusPendingCallWatcher* watcher) {
+            [op](QDBusPendingCallWatcher* watcher) {
         // Method-reply errors only happen if the daemon explicitly
         // sendErrorReply()s or if the bus transport itself fails;
         // success is reported via the broadcast signal, not the reply.
         QDBusPendingReply<> r = *watcher;
         if(r.isError())
         {
+            // Real success/failure is reported via OperationCompleted;
+            // missing method replies must not surface as op failures.
             qWarning() << "HelperClient::asyncCall:" << op
-                       << "error:" << r.error().message();
-            emit error(op, r.error().message());
+                       << "method reply:" << r.error().message();
         }
         watcher->deleteLater();
     });
@@ -161,7 +242,7 @@ void HelperClient::applyIcons(const QString& pack, bool runPack, bool overlay)
     const QString op = QStringLiteral("ApplyIcons");
     if(!beginIconOpOrError(op))
         return;
-    asyncCall(themesIface(), op, QVariantList() << pack << runPack << overlay);
+    asyncCall(op, QVariantList() << pack << runPack << overlay);
 }
 
 void HelperClient::restoreIcons()
@@ -169,7 +250,7 @@ void HelperClient::restoreIcons()
     const QString op = QStringLiteral("RestoreIcons");
     if(!beginIconOpOrError(op))
         return;
-    asyncCall(themesIface(), op, QVariantList());
+    asyncCall(op, QVariantList());
 }
 
 void HelperClient::refreshOriginals()
@@ -177,20 +258,19 @@ void HelperClient::refreshOriginals()
     const QString op = QStringLiteral("RefreshOriginals");
     if(!beginIconOpOrError(op))
         return;
-    asyncCall(themesIface(), op, QVariantList());
+    asyncCall(op, QVariantList());
 }
 
 void HelperClient::densityEnable()
 {
-    asyncCall(themesIface(), QStringLiteral("DensityEnable"), QVariantList());
+    asyncCall(QStringLiteral("DensityEnable"), QVariantList());
 }
 
 // ---- Packs ----------------------------------------------------------------
 
 void HelperClient::uninstallPack(const QString& rpmName)
 {
-    asyncCall(packsIface(), QStringLiteral("UninstallPack"),
-              QVariantList() << rpmName);
+    asyncCall(QStringLiteral("UninstallPack"), QVariantList() << rpmName);
 }
 
 // ---- Demux of broadcast signals -------------------------------------------
