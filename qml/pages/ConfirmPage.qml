@@ -14,6 +14,7 @@ Dialog
     property bool hasNative: themePackModel.hasNative(themePackIndex)
     property bool hasJolla: themePackModel.hasJolla(themePackIndex)
     property bool hasApk: themePackModel.hasApk(themePackIndex)
+    property bool hasIcons: themePackModel.hasIcons(themePackIndex)
     property bool hasIconApply: hasNative || hasApk || hasJolla
     property bool hasIconOverlay: themePackModel.hasIconOverlay(themePackIndex)
     property bool hasFont: themePackModel.hasFont(themePackIndex)
@@ -46,7 +47,7 @@ Dialog
     }
 
     Component.onCompleted: {
-        if (hasIconApply || hasIconOverlay)
+        if (hasIcons)
                 iconapplier.buildPreview(packName)
     }
 
@@ -142,12 +143,12 @@ Dialog
 
             SectionHeader {
                 text: qsTr("Icons")
-                visible: hasIconApply || hasIconOverlay
+                visible: hasIcons
             }
 
             Grid {
                 width: parent.width
-                visible: hasIconApply || hasIconOverlay
+                visible: hasIcons
                 columns: isLandscape ? 2 : 1
 
             Column

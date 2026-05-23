@@ -315,7 +315,7 @@ Page
 
             onClicked: {
                 timer.stop()
-                var dlgconfirm = pageStack.push("ConfirmPage.qml", { "settings": settings, "themePackModel": themepackmodel, "themePackIndex": model.index });
+                var dlgconfirm = pageStack.push("ConfirmPage.qml", { "settings": settings, "themePackModel": themepackmodel, "themePackIndex": index });
 
                 dlgconfirm.accepted.connect(function() {
                     // Pre-count the user's selections so we can arm the
@@ -339,7 +339,7 @@ Page
                     // stale value and leave the font CoverLabel empty.
                     if(dlgconfirm.fontsSelected) {
                         settings.activeFontPack = model.packName;
-                        themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont);
+                        themepackmodel.applyTheme(index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont);
                     }
                     if(wantsIcons) {
                         mainpage._pendingIconPack = model.packName;
@@ -356,10 +356,10 @@ Page
                     if(iconInstalled) {
                         mainpage._pendingIconRestore = true;
                         mainpage._uninstallAfterIconRestore = true;
-                        mainpage._uninstallPackIndex = model.index;
+                        mainpage._uninstallPackIndex = index;
                         Helper.restoreIcons();
                     } else {
-                        themepackmodel.uninstall(model.index);
+                        themepackmodel.uninstall(index);
                     }
 
                     if(fontInstalled)

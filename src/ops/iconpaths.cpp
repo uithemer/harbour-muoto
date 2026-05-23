@@ -223,20 +223,7 @@ QString IconPaths::nativeAppsSourceDir(const QString& packName, const QString& s
 {
     const QString apps = packDir(packName) + QStringLiteral("/native/") + size
                          + QStringLiteral("/apps");
-    const QFileInfo fi(apps);
-    if(!fi.exists())
-        return QString();
-
-    if(fi.isSymLink())
-    {
-        const QString canonical = QFileInfo(fi.canonicalFilePath()).absoluteFilePath();
-        return canonical.isEmpty() ? QString() : canonical;
-    }
-
-    if(fi.isDir())
-        return apps;
-
-    return QString();
+    return QDir(apps).exists() ? apps : QString();
 }
 
 QSet<QString> IconPaths::packIconKeys(const QString& packName)

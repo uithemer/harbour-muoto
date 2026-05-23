@@ -64,15 +64,15 @@ QString ThemePackModel::readThemePackName(const QString &packname) const
 
 bool ThemePackModel::hasCapability(int index, const QString &capability) const
 {
-    if(this->_packnames.empty())
+    if(index < 0 || index >= _packlist.size())
         return false;
 
-    QDir dir("/usr/share/" + this->_packlist[index] + "/" + capability);
-
+    QDir dir(QStringLiteral("/usr/share/") + _packlist.at(index) + QLatin1Char('/')
+             + capability);
     if(!dir.exists())
         return false;
 
-    return dir.count() > 0;
+    return !dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot).isEmpty();
 }
 
 void ThemePackModel::applyTheme(int index, bool font, const QString& weight)
@@ -178,7 +178,8 @@ QString ThemePackModel::packDisplayName(int index) const
 
 bool ThemePackModel::hasIcons(int index) const
 {
-    return this->hasNative(index) || this->hasApk(index) || this->hasIconOverlay(index);
+    return this->hasNative(index) || this->hasApk(index) || this->hasJolla(index)
+           || this->hasIconOverlay(index);
 }
 
 bool ThemePackModel::hasNative(int index) const
