@@ -33,6 +33,26 @@ Page
     // op has reported completion.
     property int _pendingOps: 0
     property bool _waitForFinalise: false
+    property string _pendingIconPack: ""
+    property bool _pendingIconOverlay: false
+    property bool _pendingIconRestore: false
+    property bool _uninstallAfterIconRestore: false
+    property int _uninstallPackIndex: -1
+
+    function _commitPendingIconApply() {
+        if(_pendingIconPack !== "") {
+            settings.activeIconPack = _pendingIconPack;
+            settings.iconOverlay = _pendingIconOverlay;
+            _pendingIconPack = "";
+        }
+    }
+    function _commitPendingIconRestore() {
+        if(_pendingIconRestore) {
+            settings.deactivateIcon();
+            settings.iconOverlay = false;
+            _pendingIconRestore = false;
+        }
+    }
 
     function _armApply(nOps) {
         _waitForFinalise = true;
@@ -61,11 +81,31 @@ Page
     // (cover sync, uninstall's restoreIcons preamble) just no-op here.
     Connections {
         target: Helper
-        onIconsApplied: mainpage._opDone()
-        onIconsRestored: mainpage._opDone()
+        onIconsApplied: {
+            mainpage._commitPendingIconApply();
+            mainpage._opDone();
+        }
+        onIconsRestored: {
+            mainpage._commitPendingIconRestore();
+            if(mainpage._uninstallAfterIconRestore) {
+                var idx = mainpage._uninstallPackIndex;
+                mainpage._uninstallAfterIconRestore = false;
+                mainpage._uninstallPackIndex = -1;
+                if(idx >= 0)
+                    themepackmodel.uninstall(idx);
+            }
+            mainpage._opDone();
+        }
         onError: {
-            if(op === "ApplyIcons" || op === "RestoreIcons")
+            if(op === "ApplyIcons") {
+                mainpage._pendingIconPack = "";
                 mainpage._opDone();
+            } else if(op === "RestoreIcons") {
+                mainpage._pendingIconRestore = false;
+                mainpage._uninstallAfterIconRestore = false;
+                mainpage._uninstallPackIndex = -1;
+                mainpage._opDone();
+            }
         }
     }
 
@@ -240,10 +280,7 @@ Page
                             themepackmodel.restoreTheme(dlgrestore.restoreFonts);
                         }
                         if(dlgrestore.restoreIcons) {
-                            settings.deactivateIcon();
-                            // Clear overlay dconf so a later cover sync
-                            // cannot apply overlays after restore.
-                            settings.iconOverlay = false;
+                            mainpage._pendingIconRestore = true;
                             Helper.restoreIcons();
                         }
                     });
@@ -304,9 +341,8 @@ Page
                         themepackmodel.applyTheme(model.index, dlgconfirm.fontsSelected, dlgconfirm.selectedFont);
                     }
                     if(dlgconfirm.iconsSelected) {
-                        settings.activeIconPack = model.packName;
-                        // Persist overlay in dconf for cover sync re-apply.
-                        settings.iconOverlay = dlgconfirm.iconOverlaySelected;
+                        mainpage._pendingIconPack = model.packName;
+                        mainpage._pendingIconOverlay = dlgconfirm.iconOverlaySelected;
                         Helper.applyIcons(model.packName, dlgconfirm.iconOverlaySelected);
                     }
                 });
@@ -317,17 +353,13 @@ Page
                     settings.isRunning = true;
 
                     if(iconInstalled) {
-                        // Restore originals BEFORE rpm removes the pack, otherwise
-                        // every themed Icon= ends up pointing at a path that is
-                        // about to vanish and Lipstick falls back to placeholders.
+                        mainpage._pendingIconRestore = true;
+                        mainpage._uninstallAfterIconRestore = true;
+                        mainpage._uninstallPackIndex = model.index;
                         Helper.restoreIcons();
-                        settings.deactivateIcon();
-                        // Same as the explicit restore path: don't let the
-                        // overlay flag survive a pack uninstall.
-                        settings.iconOverlay = false;
+                    } else {
+                        themepackmodel.uninstall(model.index);
                     }
-
-                    themepackmodel.uninstall(model.index);
 
                     if(fontInstalled)
                         settings.deactivateFont();

@@ -159,13 +159,12 @@ systemctl enable --now sailfishos-uithemer-helperd.service 2>/dev/null || :
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
-# Seed an empty icon backup manifest if one does not exist yet.
-if [ ! -e %{_datadir}/%{name}/icon-backup.json ]; then
-    printf '{"version":2,"active_icon_pack":null,"entries":{}}\n' > %{_datadir}/%{name}/icon-backup.json
-fi
-# Theme-op flock sentinel: defaultuser (GUI probe) and root (helperd) need O_RDWR.
-touch %{_datadir}/%{name}/icon-backup.lock 2>/dev/null || :
-chmod 0666 %{_datadir}/%{name}/icon-backup.lock 2>/dev/null || :
+# Icon ops: stock PNG backup tree + flock sentinel (GUI probe + helperd).
+mkdir -p %{_datadir}/%{name}/backup/icons %{_datadir}/%{name}/tmp 2>/dev/null || :
+rm -f %{_datadir}/%{name}/icon-backup.json
+touch %{_datadir}/%{name}/icon-ops.lock 2>/dev/null || :
+chmod 0666 %{_datadir}/%{name}/icon-ops.lock 2>/dev/null || :
+rm -f %{_datadir}/%{name}/icon-backup.lock 2>/dev/null || :
 
 # 2.4.5: the vendor dconf defaults file is no longer shipped. If it was
 # installed by an older version (<= 2.4.4), drop it and refresh the dconf db.

@@ -9,130 +9,91 @@ nav_order: 1
 
 How to create icons compatible with UI Themer.
 
-## How icons are applied
+## How icons are applied (TPS model)
 
-Starting from UI Themer 2.4, icons are applied by **rewriting the `Icon=` entry
-inside `.desktop` files**. UI Themer scans:
+UI Themer reimplements the classic Theme Pack Support icon pipeline:
 
-* `/usr/share/applications/*.desktop` for native apps.
-* `/home/defaultuser/.local/share/applications/apkd_launcher_*.desktop` for
-  Android launcher entries.
+1. **Restore** stock PNGs from `backup/icons/` (if a backup exists).
+2. **Backup** current stock PNGs with *first snapshot wins* (`ignore-existing`).
+3. **Run** the pack: copy themed PNGs into live system trees (`existing-only`).
+4. **Overlay** (optional): composite pack `overlay/` onto apps not covered by the pack.
+5. **Touch** launcher `.desktop` files so Lipstick reloads icons.
 
-For each `.desktop` that matches a theme pack (or overlay, when enabled), UI
-Themer:
+**`.desktop` files are never modified.** `Icon=` stays as shipped; only the PNG files behind that name change.
 
-1. Records the original `Icon=` value in
-   `/usr/share/sailfishos-uithemer/icon-backup.json`.
-2. Publishes PNGs under
-   `/usr/share/icons/hicolor/<size>/apps/<pack-short>/`.
-3. Sets `Icon=<pack-short>/<icon-key>` on the `.desktop` (e.g.
-   `Icon=numix-circle/harbour-talteen`).
+Active theme is stored in dconf (`activeIconPack`) after a **successful** apply. Cover sync re-runs the full restore→backup→run→overlay cycle for the active pack.
 
-`<pack-short>` is the pack name without the `harbour-themepack-` prefix
-(e.g. `numix-circle` for `harbour-themepack-numix-circle`).
+### Live paths (where themed pixels go)
 
-### Hicolor publish tree
+| Kind | Live path | Pack source |
+|------|-----------|-------------|
+| Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (cascaded to smaller sizes) |
+| Jolla fallback | `/usr/share/themes/sailfish-default/meegotouch/<z>/icons/<key>.png` | `jolla/<z>/icons/` |
+| Android | `/home/defaultuser/.local/share/applications/apkd_launcher_*.desktop` uses PNGs in `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/` | `apk/<size>/` |
 
-All themed pixels for a pack live in one place per launcher size, for example:
+Theme packs under `/usr/share/harbour-themepack-<name>/` are **read-only**; UI Themer does not modify them.
 
-```text
-/usr/share/icons/hicolor/108x108/apps/numix-circle/
-  harbour-talteen.png
-  icon-launcher-camera.png
-  apkd_launcher_org_fdroid_fdroid.png
+### Stock backup store
+
+```
+/usr/share/sailfishos-uithemer/backup/icons/
+  jolla/<z>/icons/
+  native/<size>/apps/
+  apk/
 ```
 
-The same keys exist under `86x86`, `128x128`, `172x172`, and `256x256`.
+Restore copies backup → live only where the live file still exists (TPS `existing-only`).
 
-Sources copied or generated into that tree:
+### Overlay
 
-| Source | Publish |
-|--------|---------|
-| `native/<size>/apps/` | Copy into matching `hicolor/<size>/apps/<pack-short>/` |
-| `jolla/<zSize>/icons/` | For keys missing from native: scale largest `z*` asset into all hicolor sizes |
-| `apk/<size>/` | Copy per size when present; otherwise scale from largest APK asset |
-| Overlay (optional) | Composite in memory, write into the same hicolor paths |
+When enabled, UI Themer writes composited PNGs into the **same stock paths** as native/APK icons (not a separate pack subfolder). Apps without a matching pack PNG get a random `overlay/*.png` base plus the current stock icon.
 
-Theme packs under `/usr/share/harbour-themepack-<name>/` are **read-only**
-sources; UI Themer does not modify or symlink them.
+Android-only packs (`pack/type` contains `android`) skip native overlay and overlay all launcher icons in `apkd-bridge/launcherIcon/`.
 
-Native, APK, and apkd launchers all use the same `Icon=<pack-short>/<key>` form.
-UI Themer does **not** copy icons into `apkd-bridge/launcherIcon/`.
+### Launcher refresh
 
-### How the launcher refreshes
+After apply or restore, UI Themer bumps mtimes on launcher `.desktop` files (Clockwork-style `futimens`). If the user enabled **Restart homescreen (fallback)** in settings, `lipstick.service` is restarted for defaultuser.
 
-After UI Themer writes a new `Icon=` and saves the `.desktop`, Lipstick's
-`QFileSystemWatcher` reloads that launcher entry within about a second. A full
-`systemctl --user restart lipstick.service` is **not** required for normal apply
-or restore.
+Concurrent icon, restore, font, or density operations are rejected via `flock` on `/usr/share/sailfishos-uithemer/icon-ops.lock` (`busy`).
 
-To theme apps installed or updated after the last apply, use the **cover sync**
-action: it re-runs `ApplyIcons` for the active pack using the overlay flag saved
-in dconf at apply time (`settings.iconOverlay`).
-
-Concurrent apply, restore, refresh, font, or density operations are **rejected**
-(not queued) via a shared `flock` on `/usr/share/sailfishos-uithemer/icon-backup.lock`.
-A second app instance, cover sync during an active apply, or a overlapping D-Bus
-call receives `busy` and does not start work.
-
-> Graphic theming for Sailfish system widgets (the old PNG-replacement
-> pipeline) has been **removed** in 2.4.2.
->
-> Since 2.4.3, the pre-3.0 Jolla ambient icon subtree
-> (`<pack>/jolla/zX.Y/icons/`) is used as a fallback when publishing into
-> hicolor.
+> Graphic widget PNG theming has been **removed** since 2.4.2.
 
 ## Theme pack layout
 
-Inside `/usr/share/harbour-themepack-<name>/` UI Themer looks for:
+Inside `/usr/share/harbour-themepack-<name>/`:
 
 ```
 native/
   256x256/apps/<icon-key>.png
   172x172/apps/<icon-key>.png
-  128x128/apps/<icon-key>.png
-  108x108/apps/<icon-key>.png
-   86x86/apps/<icon-key>.png
+  ...
 
-jolla/                            # legacy fallback
+jolla/
   z2.0/icons/<icon-key>.png
   ...
 
 apk/
   192x192/<launcher_id>.png
-  128x128/<launcher_id>.png
-   86x86/<launcher_id>.png
+  ...
 
 overlay/
-  *.png    # optional overlay base images
+  *.png
+
+type          # optional; "android" for Android-only packs
 ```
 
-### Lookup order (native)
-
-For each native `.desktop`, UI Themer normalises `Icon=` to a bare key and
-tries:
+### Lookup order (native, for match counts / preview)
 
 1. `<pack>/native/<size>/apps/<icon-key>.png` (largest size first).
 2. `<pack>/jolla/<zSize>/icons/<icon-key>.png` (largest `z*` first).
 
 ### APK / apkd
 
-UI Themer uses the largest PNG under `<pack>/apk/` and publishes it into
-`hicolor/.../<pack-short>/`. The `.desktop` gets
-`Icon=<pack-short>/apkd_launcher_<id>`.
-
-## Overlays
-
-When the user enables **Apply icon overlay**, UI Themer composites a random
-`overlay/*.png` base with the stock app icon for apps that have **no** matching
-pack PNG, then writes the result directly into
-`hicolor/<size>/apps/<pack-short>/` (no separate overlay cache directory).
+Largest PNG under `<pack>/apk/` is copied into flat `apkd-bridge/launcherIcon/<key>.png` when the live file exists.
 
 ## Restore
 
-`Restore theme` walks `icon-backup.json`, restores each `original_icon` on
-its `.desktop` file, deletes
-`/usr/share/icons/hicolor/*/apps/<pack-short>/`, and clears the manifest.
+`Restore theme` restores stock PNGs from the backup store, clears the backup tree, touches launchers, and sets dconf `activeIconPack` to `default` after success.
 
 ## Icon file size hints
 

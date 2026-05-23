@@ -25,7 +25,7 @@
 // runtime ignores fontconfig.
 //
 // All operations use the same non-blocking FileLock sentinel as icon ops
-// (/usr/share/sailfishos-uithemer/icon-backup.lock) so font / icon jobs
+// (/usr/share/sailfishos-uithemer/icon-ops.lock) so font / icon jobs
 // never race each other.
 class FontApplier : public QObject
 {

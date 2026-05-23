@@ -15,20 +15,30 @@ INCLUDEPATH += $$PWD
 
 HEADERS += \
     $$PWD/iconapplier.h \
-    $$PWD/iconmanifest.h \
+    $$PWD/iconpaths.h \
+    $$PWD/iconpipeline.h \
+    $$PWD/iconstockbackup.h \
+    $$PWD/iconpackrunner.h \
+    $$PWD/iconoverlay.h \
     $$PWD/iconpreviewcache.h \
     $$PWD/desktopfile.h \
     $$PWD/imageutil.h \
     $$PWD/filelock.h \
     $$PWD/spawner.h \
-    $$PWD/densityenabler.h
+    $$PWD/densityenabler.h \
+    $$PWD/lipstickrefresh.h
 
 SOURCES += \
     $$PWD/iconapplier.cpp \
-    $$PWD/iconmanifest.cpp \
+    $$PWD/iconpaths.cpp \
+    $$PWD/iconpipeline.cpp \
+    $$PWD/iconstockbackup.cpp \
+    $$PWD/iconpackrunner.cpp \
+    $$PWD/iconoverlay.cpp \
     $$PWD/iconpreviewcache.cpp \
     $$PWD/desktopfile.cpp \
     $$PWD/imageutil.cpp \
     $$PWD/filelock.cpp \
     $$PWD/spawner.cpp \
-    $$PWD/densityenabler.cpp
+    $$PWD/densityenabler.cpp \
+    $$PWD/lipstickrefresh.cpp
