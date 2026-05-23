@@ -6,7 +6,7 @@
 class IconOverlay
 {
 public:
-    bool apply(const QString& packName, bool runPack) const;
+    bool apply(const QString& packName) const;
 };
 
 #endif // ICONOVERLAY_H

@@ -204,7 +204,15 @@ QString IconPaths::liveNativeAppsDir(const QString &size)
 
 QString IconPaths::liveApkLauncherDir()
 {
-    return remapNemoHome(QString::fromLatin1(kApkLauncher));
+    // helperd runs as root; APK icons always live under defaultuser's home.
+    struct passwd *pw = getpwnam("defaultuser");
+    if(pw)
+    {
+        const QString home = QString::fromUtf8(pw->pw_dir);
+        if(!home.isEmpty())
+            return home + QStringLiteral("/.local/share/apkd-bridge/launcherIcon/");
+    }
+    return remapNemoHome(QString::fromLatin1(kApkLauncher)) + QLatin1Char('/');
 }
 
 QString IconPaths::backupJollaIconsDir(const QString &zSize)

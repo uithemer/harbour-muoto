@@ -24,29 +24,19 @@ namespace
         return okW && okH && w > 0 && h > 0;
     }
 
-    QSet<QString> pngBaseNames(const QString& dirPath)
+    QStringList livePngsExcludingPack(const QString& dirPath, const QSet<QString>& packKeys)
     {
-        QSet<QString> keys;
         QDir d(dirPath);
         if(!d.exists())
-            return keys;
+            return QStringList();
 
+        QStringList out;
         const QStringList pngs = d.entryList(QStringList() << QStringLiteral("*.png"),
                                              QDir::Files);
         for(const QString& f : pngs)
-            keys.insert(QFileInfo(f).completeBaseName());
-        return keys;
-    }
-
-    QStringList stockNativeFiles(const QString& liveSize, const QSet<QString>& skipKeys)
-    {
-        const QString stockDir = IconPaths::liveNativeAppsDir(liveSize);
-        const QSet<QString> stock = pngBaseNames(stockDir);
-        QStringList out;
-        for(const QString& k : stock)
         {
-            if(!skipKeys.contains(k))
-                out << k + QStringLiteral(".png");
+            if(!packKeys.contains(QFileInfo(f).completeBaseName()))
+                out << f;
         }
         return out;
     }
@@ -116,7 +106,7 @@ namespace
     }
 }
 
-bool IconOverlay::apply(const QString& packName, bool runPack) const
+bool IconOverlay::apply(const QString& packName) const
 {
     const QString shareRoot = IconPaths::packDir(packName);
     const QString overlayDir = IconPaths::resolvePackCapabilityDir(shareRoot,
@@ -136,18 +126,18 @@ bool IconOverlay::apply(const QString& packName, bool runPack) const
         return false;
     }
 
-    const QSet<QString> skipNative = runPack ? IconPaths::packIconKeys(packName) : QSet<QString>();
-    const QSet<QString> skipApk = runPack ? IconPaths::packApkKeys(packName) : QSet<QString>();
+    // Only apps without a matching pack icon (native/jolla/apk basename) get overlay.
+    const QSet<QString> packNative = IconPaths::packIconKeys(packName);
+    const QSet<QString> packApk = IconPaths::packApkKeys(packName);
 
     bool any = false;
     int nativeCount = 0;
     int apkCount = 0;
-    int apkLive = 0;
-    int apkSkipped = 0;
 
     for(const QString& liveSize : IconPaths::nativeHicolorSizes())
     {
-        const QStringList files = stockNativeFiles(liveSize, skipNative);
+        const QStringList files =
+            livePngsExcludingPack(IconPaths::liveNativeAppsDir(liveSize), packNative);
         for(const QString& file : files)
         {
             if(writeOverlayNative(packName, liveSize, file))
@@ -166,18 +156,10 @@ bool IconOverlay::apply(const QString& packName, bool runPack) const
     }
     else
     {
-        const QStringList pngs = apk.entryList(QStringList() << QStringLiteral("*.png"),
-                                               QDir::Files);
-        apkLive = pngs.size();
+        const QStringList pngs = livePngsExcludingPack(launcherDir, packApk);
+        const int apkCandidates = pngs.size();
         for(const QString& f : pngs)
         {
-            const QString key = QFileInfo(f).completeBaseName();
-            if(skipApk.contains(key))
-            {
-                ++apkSkipped;
-                continue;
-            }
-
             if(writeOverlayApk(packName, f))
             {
                 any = true;
@@ -186,19 +168,16 @@ bool IconOverlay::apply(const QString& packName, bool runPack) const
         }
         IconPaths::chownApkLauncherTree();
 
-        if(apkLive > 0 && apkCount == 0)
-        {
-            qWarning() << "uithemer: APK overlay wrote 0 of" << apkLive << "launcherIcon PNGs"
-                       << "pack" << packName << "runPack" << runPack << "skipped" << apkSkipped;
-        }
+        if(apkCandidates > 0 && apkCount == 0)
+            qWarning() << "uithemer: APK overlay wrote 0 of" << apkCandidates
+                       << "candidates for" << packName << "dir" << launcherDir;
     }
 
     if(!any)
-        qWarning() << "uithemer: overlay produced no writes for" << packName << "runPack" << runPack;
+        qWarning() << "uithemer: overlay produced no writes for" << packName;
     else
-        qInfo() << "uithemer: overlay applied for" << packName << "runPack" << runPack << "native"
-                << nativeCount << "apk" << apkCount << "apkLive" << apkLive << "apkSkipped"
-                << apkSkipped;
+        qInfo() << "uithemer: overlay applied for" << packName << "native" << nativeCount << "apk"
+                << apkCount;
 
     return any;
 }
