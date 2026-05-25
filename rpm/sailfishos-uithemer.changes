@@ -1,6 +1,8 @@
 * Sat May 23 2026 2.7.1-7
 - Settings: dconf namespace moved to /apps/sailfishos-uithemer (was
   /desktop/lipstick/sailfishos-uithemer).
+- C++ user dconf read/write/reset via runDconfAsDefaultUser() (defaultuser
+  env from helperd or GUI); remove dead helperd lipstick restart path.
 
 * Sat May 23 2026 2.7.1-6
 - Icons: hicolor-only apply (pack jolla/ scaled into hicolor; no live

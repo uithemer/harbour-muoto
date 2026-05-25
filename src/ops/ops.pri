@@ -25,6 +25,8 @@ HEADERS += \
     $$PWD/imageutil.h \
     $$PWD/filelock.h \
     $$PWD/spawner.h \
+    $$PWD/dconfsettings.h \
+    $$PWD/dconfuser.h \
     $$PWD/densityenabler.h \
     $$PWD/lipstickrefresh.h
 
@@ -40,5 +42,6 @@ SOURCES += \
     $$PWD/imageutil.cpp \
     $$PWD/filelock.cpp \
     $$PWD/spawner.cpp \
+    $$PWD/dconfuser.cpp \
     $$PWD/densityenabler.cpp \
     $$PWD/lipstickrefresh.cpp

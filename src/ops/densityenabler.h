@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 
 // DensityEnabler: idempotent C++ port of the legacy tps/enable-dpi.sh
 // plus the C++ replacement for the retired restore_dpi.sh / restore_dpr.sh
@@ -22,11 +23,9 @@
 // (i.e. ensureEnabled() ran before, e.g. from %post on package install),
 // the per-file move is skipped.
 //
-// restoreDensity(dpr, iconSize) is the inverse user-action: it dconf-resets
-// /desktop/sailfish/silica/{theme_pixel_ratio,icon_size_launcher} as
-// defaultuser, replacing the old restore_dpi.sh + restore_dpr.sh +
-// restore_iz.sh shell trio. Always emits restored() so QML's busy state
-// drains.
+// restoreDensity(dpr, iconSize) dconf-resets
+// /desktop/sailfish/silica/{theme_pixel_ratio,icon_size_launcher} via
+// runDconfAsDefaultUser() (never root's user DB). Always emits restored().
 //
 // Uses the same non-blocking FileLock sentinel as icon / font ops
 // so density / icon / font jobs never race each other.
@@ -47,9 +46,6 @@ public slots:
     // or logged failure) so QML callers' one-shot connections always drain.
     void ensureEnabled();
 
-    // dconf-reset DPR and/or icon size to the vendor default as
-    // defaultuser. Replaces scripts/restore_dpi.sh + tps/restore_dpr.sh +
-    // tps/restore_iz.sh. Always emits restored() at the end.
     void restoreDensity(bool dpr, bool iconSize);
 
 signals:
@@ -59,8 +55,9 @@ signals:
 
 private:
     bool moveLockToBackup(const QString& fileName);
+    // System-wide compile after relocating vendor lock files (root only).
     void runDconfUpdate();
-    void runDefaultUserDconf(const QString& cmd);
+    void runUserDconf(const QStringList& args);
 
     static const char* kVendorLocksDir;
     static const char* kBackupDir;

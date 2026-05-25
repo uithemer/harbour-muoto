@@ -27,7 +27,7 @@ UI Themer reimplements the classic Theme Pack Support icon pipeline:
 
 **`/usr/share/themes/` is never modified.** Stock Jolla artwork is read from `sailfish-default/silica` only as a mirror source.
 
-Active theme is stored in dconf under `/apps/sailfishos-uithemer` (`activeIconPack`, `activeFontPack`, `iconOverlay`, `homeRefresh`, `wizardDone`) after a **successful** apply. Cover sync re-runs the full restore→mirror→backup→run→overlay cycle for the active pack.
+Active theme is stored in dconf under `/apps/sailfishos-uithemer` (`activeIconPack`, `activeFontPack`, `iconOverlay`, `homeRefresh`, `wizardDone`) after a **successful** apply (GUI writes as defaultuser; C++ uses `runDconfAsDefaultUser()` only). Cover sync re-runs the full restore→mirror→backup→run→overlay cycle for the active pack.
 
 ### Live paths (where themed pixels go)
 

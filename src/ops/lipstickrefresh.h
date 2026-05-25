@@ -3,11 +3,7 @@
 
 #include <QString>
 
-bool homeRefreshEnabledInDconf();
-
 bool touchPathForLauncher(const QString& path);
-
-bool restartDefaultUserLipstick();
 
 void touchAllLauncherDesktops();
 

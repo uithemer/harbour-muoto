@@ -1,11 +1,11 @@
 #include "densityenabler.h"
+#include "dconfuser.h"
 #include "filelock.h"
 #include "spawner.h"
 
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QProcess>
 #include <QStringList>
 #include <QDebug>
 
@@ -44,27 +44,14 @@ bool DensityEnabler::moveLockToBackup(const QString& fileName)
 
 void DensityEnabler::runDconfUpdate()
 {
+    // Compiles system dconf after lock-file moves; not a per-user key read/write.
     Spawner::executeSync(QStringLiteral("dconf update"));
 }
 
-void DensityEnabler::runDefaultUserDconf(const QString& cmd)
+void DensityEnabler::runUserDconf(const QStringList& args)
 {
-    // 2.6.0: with the GUI itself running as defaultuser, dconf already
-    // reads/writes the right per-user db without any `su -` shell.
-    // restoreDensity() is only ever called from the GUI process; the
-    // daemon never instantiates DensityEnabler for restore (only for
-    // ensureEnabled()), so this code path always runs as defaultuser.
-    QProcess p;
-    p.setProcessChannelMode(QProcess::ForwardedChannels);
-    QStringList args = cmd.split(QChar(' '), QString::SkipEmptyParts);
-    p.start(QStringLiteral("dconf"), args);
-    p.waitForStarted();
-    p.waitForFinished(15000);
-    if(p.exitStatus() != QProcess::NormalExit || p.exitCode() != 0)
-    {
-        qWarning() << "DensityEnabler: dconf" << cmd
-                   << "failed with exit" << p.exitCode();
-    }
+    if(!runDconfAsDefaultUser(args))
+        qWarning() << "DensityEnabler: dconf failed:" << args.join(QLatin1Char(' '));
 }
 
 void DensityEnabler::ensureEnabled()
@@ -111,13 +98,13 @@ void DensityEnabler::restoreDensity(bool dpr, bool iconSize)
 
     if(dpr)
     {
-        runDefaultUserDconf(QStringLiteral("reset ")
-                            + QString::fromLatin1(kThemePixelRatioKey));
+        runUserDconf(QStringList() << QStringLiteral("reset")
+                                   << QString::fromLatin1(kThemePixelRatioKey));
     }
     if(iconSize)
     {
-        runDefaultUserDconf(QStringLiteral("reset ")
-                            + QString::fromLatin1(kIconSizeLauncherKey));
+        runUserDconf(QStringList() << QStringLiteral("reset")
+                                   << QString::fromLatin1(kIconSizeLauncherKey));
     }
 
     emit restored();
