@@ -383,11 +383,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarted homescreen</source>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Uninstalled %1</source>
+        <source>Uninstalling %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
