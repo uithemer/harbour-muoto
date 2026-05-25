@@ -198,7 +198,7 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation>Kom ihåg att starta om hemskärmen (från &lt;i&gt;Alternativ&lt;/i&gt;-menyn), direkt efter att du har ändrat inställningarna på denna sida.</translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -340,10 +340,6 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
 <context>
     <name>MainPage</name>
     <message>
-        <source>Uninstalling %1</source>
-        <translation>Avinstallerar %1</translation>
-    </message>
-    <message>
         <source>No themes yet</source>
         <translation>Inga teman ännu</translation>
     </message>
@@ -388,7 +384,11 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalled %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

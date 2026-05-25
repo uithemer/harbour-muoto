@@ -197,7 +197,7 @@
         <translation>Ricorda di riavviare la schermata home (dalla pagina &lt;i&gt;Opzioni&lt;/i&gt;) subito dopo aver cambiato i settaggi in questa pagina.</translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -339,10 +339,6 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>Uninstalling %1</source>
-        <translation>Disinstallazione: %1</translation>
-    </message>
-    <message>
         <source>No themes yet</source>
         <translation>Nessun tema</translation>
     </message>
@@ -387,7 +383,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalled %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

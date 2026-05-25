@@ -55,7 +55,7 @@ Page
     }
 
     function _restartHomescreenWithRemorse() {
-        remorseAction(qsTr("Restarting homescreen"), function() {
+        remorsepopup.execute(qsTr("Restarted homescreen"), function() {
             themepack.restartHomescreen();
         });
     }

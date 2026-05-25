@@ -197,7 +197,7 @@
         <translation>Ne pozabite na ponovni zagon domačega zaslona (iz menija  &lt;i&gt;Možnosti&lt;/i&gt;) takoj, ko spremenite nastavitve na tej strani.</translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -339,10 +339,6 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>Uninstalling %1</source>
-        <translation>Odstranjevanje %1</translation>
-    </message>
-    <message>
         <source>No themes yet</source>
         <translation>Ni tem</translation>
     </message>
@@ -387,7 +383,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalled %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -197,7 +197,7 @@
         <translation>Vergeet niet van ’t startscherm te herstarten (via de pagina &lt;i&gt;Opties&lt;/i&gt;) nadat ge de instellingen op deze pagina hebt gewijzigd.</translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -339,10 +339,6 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>Uninstalling %1</source>
-        <translation>%1 wordt verwijderd</translation>
-    </message>
-    <message>
         <source>No themes yet</source>
         <translation>Nog geen thema’s</translation>
     </message>
@@ -387,7 +383,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalled %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

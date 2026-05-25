@@ -197,7 +197,7 @@
         <translation>Θυμηθείτε να κάνετε επανεκκίνηση της αρχικής οθόνης (από τη σελίδα &lt;i&gt;Επιλογές&lt;/i&gt;) αμέσως μετά την αλλαγή των ρυθμίσεων σε αυτήν τη σελίδα.</translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -339,10 +339,6 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>Uninstalling %1</source>
-        <translation>Απεγκατάσταση %1</translation>
-    </message>
-    <message>
         <source>No themes yet</source>
         <translation>Κανένα θέμα ακόμα</translation>
     </message>
@@ -387,7 +383,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalled %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -197,7 +197,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -343,10 +343,6 @@
         <translation type="unfinished">Témák</translation>
     </message>
     <message>
-        <source>Uninstalling %1</source>
-        <translation type="unfinished">Eltávolítás %1</translation>
-    </message>
-    <message>
         <source>No themes yet</source>
         <translation type="unfinished">Még nincsenek témák</translation>
     </message>
@@ -387,7 +383,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalled %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

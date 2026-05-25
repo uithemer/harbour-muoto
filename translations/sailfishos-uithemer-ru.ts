@@ -197,7 +197,7 @@
         <translation>Не забудьте перезапустить домашний экран (со страницы &lt;i&gt;Параметры&lt;/i&gt;) сразу после изменения настроек на этой странице.</translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -339,10 +339,6 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>Uninstalling %1</source>
-        <translation>Удаление %1</translation>
-    </message>
-    <message>
         <source>No themes yet</source>
         <translation>Тем пока нет</translation>
     </message>
@@ -387,7 +383,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restarting homescreen</source>
+        <source>Restarted homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalled %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
