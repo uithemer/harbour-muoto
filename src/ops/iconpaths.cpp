@@ -210,7 +210,12 @@ QString IconPaths::hicolorSizeForJollaZ(const QString &zSize)
 
 bool IconPaths::isJollaLauncherIconKey(const QString &baseName)
 {
-    return baseName.startsWith(QLatin1String("icon-launcher-"));
+    if (!baseName.startsWith(QLatin1String("icon-launcher-")))
+        return false;
+    // Folder launcher icons (icon-launcher-folder-*) — do not mirror or strip from hicolor.
+    if (baseName.startsWith(QLatin1String("icon-launcher-folder-")))
+        return false;
+    return true;
 }
 
 QString IconPaths::stockJollaIconsSourceDir(const QString &zSize)

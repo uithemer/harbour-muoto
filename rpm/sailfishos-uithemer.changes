@@ -1,3 +1,13 @@
+* Sat May 23 2026 3.0.0beta2
+- Icons: stock mirror/restore skips icon-launcher-folder-* (app
+  icon-launcher-* only).
+- Homescreen: pulley "Restart homescreen" always uses remorse popup;
+  automatic restart after apply/density only when homeRefresh is enabled;
+  cover sync does not restart.
+- Icons: live APK theming path; Jolla pack apply without extra homescreen
+  restart beyond existing lipstick refresh rules.
+- Version 3.0.0beta2; About page label updated.
+
 * Sat May 23 2026 2.7.1-7
 - Settings: dconf namespace moved to /apps/sailfishos-uithemer (was
   /desktop/lipstick/sailfishos-uithemer).

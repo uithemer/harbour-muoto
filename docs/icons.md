@@ -14,7 +14,7 @@ How to create icons compatible with UI Themer.
 UI Themer reimplements the classic Theme Pack Support icon pipeline:
 
 1. **Restore** stock PNGs from `backup/icons/` (if a backup exists).
-2. **Mirror** stock Jolla launcher icons (`icon-launcher-*`) from themes silica into hicolor (create-if-missing; themes are never written).
+2. **Mirror** stock Jolla app launcher icons (`icon-launcher-*`, not `icon-launcher-folder-*`) from themes silica into hicolor (create-if-missing; themes are never written).
 3. **Backup** current stock PNGs with *first snapshot wins* (`ignore-existing`).
 4. **SFOS pack** (optional): copy themed Jolla + native PNGs into hicolor (`existing-only`).
 5. **SFOS overlay** (optional): composite pack `overlay/` onto hicolor apps not covered by the pack.
@@ -38,7 +38,7 @@ Active theme is stored in dconf under `/apps/sailfishos-uithemer` (`activeIconPa
 | Android (stock) | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | *(apkd; not overwritten by apply)* |
 | Android (themed) | `/home/defaultuser/.local/share/apkd-bridge/custom/<key>.png` | `apk/<size>/<key>.png` (pack) or overlay composite |
 
-Stock `icon-launcher-*` PNGs are mirrored from `/usr/share/themes/sailfish-default/silica/<z>/icons/` into hicolor before backup (read-only source).
+Stock app `icon-launcher-*` PNGs (excluding `icon-launcher-folder-*`) are mirrored from `/usr/share/themes/sailfish-default/silica/<z>/icons/` into hicolor before backup (read-only source).
 
 Theme packs are installed under `/usr/share/harbour-themepack-<name>/` (RPM metadata and often symlinks). **Icon PNGs are read** from `$HOME/.themepack/<harbour-themepack-name>/` first (classic TPS layout), then from resolved `/usr/share/...` paths if needed. UI Themer does not modify pack files.
 
@@ -125,7 +125,7 @@ Pack `apk/` PNGs are copied into `apkd-bridge/custom/<key>.png` when stock exist
 
 ## Restore
 
-`Restore theme` reverts APK `Icon=` paths to `launcherIcon/`, deletes `custom/`, restores stock PNGs from the backup store (including `launcherIcon/` if backed up), **removes** all `icon-launcher-*.png` from hicolor `apps/` tiers, clears the backup tree, touches launchers, and sets dconf `activeIconPack` to `default` after success. Themes silica is never modified.
+`Restore theme` reverts APK `Icon=` paths to `launcherIcon/`, deletes `custom/`, restores stock PNGs from the backup store (including `launcherIcon/` if backed up), **removes** mirrored app `icon-launcher-*.png` from hicolor `apps/` tiers (not `icon-launcher-folder-*`), clears the backup tree, touches launchers, and sets dconf `activeIconPack` to `default` after success. Themes silica is never modified.
 
 ## Icon file size hints
 

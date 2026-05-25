@@ -20,6 +20,7 @@ namespace IconPaths
 
     // Maps silica z tier to hicolor apps size; empty for unmapped tiers (z1.5-large).
     QString hicolorSizeForJollaZ(const QString& zSize);
+    // App launcher keys (icon-launcher-*), not icon-launcher-folder-*.
     bool isJollaLauncherIconKey(const QString& baseName);
 
     // Read-only stock Jolla icons under /usr/share/themes/.../silica (never written).
