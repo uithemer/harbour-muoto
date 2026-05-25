@@ -7,7 +7,7 @@ Item
 
     ConfigurationGroup {
         id: conf
-        path: "/desktop/lipstick/sailfishos-uithemer"
+        path: "/apps/sailfishos-uithemer"
         property bool wizardDone
         property string activeIconPack
         property string activeFontPack

@@ -78,7 +78,7 @@ Page
     }
 
     function _restartHomescreenWithRemorse() {
-        remorsepopup.execute(qsTr("Restarted homescreen"), function() {
+        remorsepopup.execute(qsTr("Restarting homescreen"), function() {
             themepack.restartHomescreen();
         });
     }
@@ -361,7 +361,7 @@ Page
             }
 
             onUninstallRequested: {
-                remorsepopup.execute(qsTr("Uninstalled %1").arg(model.packName), function() {
+                remorsepopup.execute(qsTr("Uninstalling %1").arg(model.packName), function() {
                     settings.isRunning = true;
 
                     if(iconInstalled) {

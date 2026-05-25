@@ -1,4 +1,5 @@
 #include "lipstickrefresh.h"
+#include "dconfsettings.h"
 #include "iconpaths.h"
 #include "iconpackrunner.h"
 #include "iconoverlay.h"
@@ -16,9 +17,6 @@
 namespace
 {
     const char* kNativeAppsDir = "/usr/share/applications";
-
-    const char* kHomeRefreshKey =
-        "/desktop/lipstick/sailfishos-uithemer/homeRefresh";
 
     const QString kIconKey = QStringLiteral("Icon=");
 
@@ -129,7 +127,8 @@ bool homeRefreshEnabledInDconf()
                 << QStringLiteral("-")
                 << QStringLiteral("defaultuser")
                 << QStringLiteral("-c")
-                << (QStringLiteral("dconf read ") + QLatin1String(kHomeRefreshKey)));
+                << (QStringLiteral("dconf read ")
+                    + QLatin1String(DconfSettings::homeRefreshKey)));
     if(!p.waitForFinished(5000))
     {
         p.kill();
