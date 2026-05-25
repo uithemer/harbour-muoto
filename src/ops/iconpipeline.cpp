@@ -46,28 +46,41 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
     if(!stock.backup())
         qWarning() << "uithemer: icon stock backup failed";
 
+    bool anyWork = false;
+    bool apkIconsTouched = false;
+
     if(runPack)
     {
         IconPackRunner runner;
-        if(!runner.run(packName))
-        {
-            qWarning() << "uithemer: icon pack run produced no copies for" << packName
-                       << "root" << root;
-            return fail(QStringLiteral("pack run produced no copies"));
-        }
+        if(runner.runSfos(packName))
+            anyWork = true;
     }
 
     if(overlay)
     {
         IconOverlay ov;
-        if(!ov.apply(packName))
+        if(!ov.applySfos(packName))
         {
             qWarning() << "uithemer: overlay not applied for" << packName << "root" << root;
             return fail(QStringLiteral("overlay not applied"));
         }
+        anyWork = true;
     }
 
-    notifyLauncherAfterIconOp();
+    if(runPack || overlay)
+    {
+        if(applyApkPhase(packName, runPack, overlay, &apkIconsTouched))
+            anyWork = true;
+    }
+
+    if(!anyWork)
+    {
+        qWarning() << "uithemer: icon apply produced no work for" << packName << "runPack"
+                   << runPack << "overlay" << overlay;
+        return fail(QStringLiteral("pack run produced no copies"));
+    }
+
+    notifyLauncherAfterIconOp(apkIconsTouched);
 
     IconApplyResult r;
     r.ok = true;
@@ -78,9 +91,12 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
 
 bool IconPipeline::restore() const
 {
+    revertApkDesktopsToLauncherIcon();
+
     IconStockBackup stock;
     stock.restore();
     IconJollaMirror().removeStockLauncherIconsFromHicolor();
-    notifyLauncherAfterIconOp();
+    removeApkCustomDir();
+    notifyLauncherAfterIconOp(false);
     return true;
 }

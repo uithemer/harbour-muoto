@@ -16,11 +16,14 @@ UI Themer reimplements the classic Theme Pack Support icon pipeline:
 1. **Restore** stock PNGs from `backup/icons/` (if a backup exists).
 2. **Mirror** stock Jolla launcher icons (`icon-launcher-*`) from themes silica into hicolor (create-if-missing; themes are never written).
 3. **Backup** current stock PNGs with *first snapshot wins* (`ignore-existing`).
-4. **Run** the pack (optional): copy themed PNGs into live hicolor / APK trees (`existing-only`).
-5. **Overlay** (optional): composite pack `overlay/` onto apps not covered by the pack.
-6. **Touch** launcher `.desktop` files so Lipstick reloads icons.
+4. **SFOS pack** (optional): copy themed Jolla + native PNGs into hicolor (`existing-only`).
+5. **SFOS overlay** (optional): composite pack `overlay/` onto hicolor apps not covered by the pack.
+6. **APK last** (when pack and/or overlay selected): copy pack `apk/` and/or overlay composites into `apkd-bridge/custom/`, then rewrite `apkd_launcher_*.desktop` `Icon=` lines.
+7. **Touch** launcher `.desktop` files (`futimens`; optional lipstick restart when APK PNGs were written and **Restart homescreen** is on).
 
-**`.desktop` files are never modified.** `Icon=` stays as shipped; only the PNG files behind that name change.
+**Native `.desktop` files are never modified** — `Icon=` stays as shipped; only hicolor PNGs behind that name change.
+
+**Android:** apkd stock PNGs stay in `launcherIcon/`. Themed pack and overlay output go to `custom/`. After the APK phase, `Icon=` on `apkd_launcher_*.desktop` uses `/custom/<key>.png` when that file exists, otherwise the absolute path to the active pack’s `apk/<size>/<key>.png`. Restore rewrites any non-`launcherIcon` APK `Icon=` back to `launcherIcon/<key>.png` and deletes `custom/`.
 
 **`/usr/share/themes/` is never modified.** Stock Jolla artwork is read from `sailfish-default/silica` only as a mirror source.
 
@@ -32,7 +35,8 @@ Active theme is stored in dconf (`activeIconPack`) after a **successful** apply.
 |------|-----------|-------------|
 | Jolla (launcher) | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `jolla/<z>/icons/` (z cascade → hicolor; see z map below) |
 | Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (size cascade) |
-| Android | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | `apk/<size>/<key>.png` |
+| Android (stock) | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | *(apkd; not overwritten by apply)* |
+| Android (themed) | `/home/defaultuser/.local/share/apkd-bridge/custom/<key>.png` | `apk/<size>/<key>.png` (pack) or overlay composite |
 
 Stock `icon-launcher-*` PNGs are mirrored from `/usr/share/themes/sailfish-default/silica/<z>/icons/` into hicolor before backup (read-only source).
 
@@ -65,13 +69,19 @@ Restore copies backup → live only where the live file still exists (TPS `exist
 
 When enabled, UI Themer writes composited PNGs into the **same stock paths** as native/APK icons (not a separate pack subfolder). Each target gets a random `overlay/*.png` base composited on top of the current live stock PNG.
 
-Overlay runs on **both** native hicolor and APK `launcherIcon` trees. Only live icons whose **basename is not in the pack** get composited (`native/` ∪ `jolla/` pack keys for hicolor, `apk/<size>/` for Android). Apps the theme already provides an icon for are left unchanged.
+**SFOS overlay** (step 5) composites onto hicolor only. **APK overlay** runs in step 6: inner image from `launcherIcon/`, output to `custom/`. Only icons whose **basename is not in the pack** get overlay (`native/` ∪ `jolla/` for hicolor; `apk/` keys for Android).
 
 Matching uses **PNG basename** on disk, not `.desktop` `Icon=` fields.
 
 ### Launcher refresh
 
-After apply or restore, UI Themer bumps mtimes on launcher `.desktop` files (Clockwork-style `futimens`) from the helper. If the user enabled **Restart homescreen (fallback)**, the app restarts `lipstick.service` only after icon work completes and dconf (`activeIconPack`, `iconOverlay`, or restore defaults) has been synced — not during the privileged write.
+| Kind | Mechanism |
+|------|-------------|
+| Native / Jolla | `futimens` on `/usr/share/applications/*.desktop`; Lipstick watches hicolor and resolves theme icon names |
+| Android (APK) | Step 6: `Icon=` → `/custom/` (segment swap) or pack `apk/` path; then `futimens` on desktops |
+| Fallback | If **Restart homescreen** (`homeRefresh`) is enabled and APK PNGs were written to `custom/` this apply, helperd may restart `lipstick.service`; the main app page also restarts after apply/restore when the setting is on (cover sync does not) |
+
+On restore: `revertApkDesktopsToLauncherIcon()` first, then stock PNG restore, then `removeApkCustomDir()`.
 
 Concurrent icon, restore, font, or density operations are rejected via `flock` on `/usr/share/sailfishos-uithemer/icon-ops.lock` (`busy`).
 
@@ -111,11 +121,11 @@ Pack `jolla/<z>/icons/` is copied into live hicolor `apps/` using the z→hicolo
 
 ### APK / apkd
 
-Largest PNG folder under `<pack>/apk/` is copied into flat `apkd-bridge/launcherIcon/<key>.png` when the live file exists. After writes, PNGs are owned by `defaultuser`.
+Pack `apk/` PNGs are copied into `apkd-bridge/custom/<key>.png` when stock exists in `launcherIcon/` (APK phase). APK overlay uses the same `custom/` path. Desktop `Icon=` is updated in that same phase: `/launcherIcon/` → `/custom/` when `custom/<key>.png` exists, else absolute pack `apk/…/<key>.png` when the pack provides it.
 
 ## Restore
 
-`Restore theme` restores stock PNGs from the backup store, **removes** all `icon-launcher-*.png` from hicolor `apps/` tiers, clears the backup tree, touches launchers, and sets dconf `activeIconPack` to `default` after success. Themes silica is never modified.
+`Restore theme` reverts APK `Icon=` paths to `launcherIcon/`, deletes `custom/`, restores stock PNGs from the backup store (including `launcherIcon/` if backed up), **removes** all `icon-launcher-*.png` from hicolor `apps/` tiers, clears the backup tree, touches launchers, and sets dconf `activeIconPack` to `default` after success. Themes silica is never modified.
 
 ## Icon file size hints
 

@@ -5,7 +5,7 @@
 #include <QFileInfo>
 #include <QDebug>
 
-bool IconPackRunner::run(const QString& packName) const
+bool IconPackRunner::runSfos(const QString& packName) const
 {
     const QString packRoot = IconPaths::packDir(packName);
     if(!QDir(packRoot).exists())
@@ -59,7 +59,20 @@ bool IconPackRunner::run(const QString& packName) const
         }
     }
 
-    QDir().mkpath(IconPaths::liveApkLauncherDir());
+    return ok;
+}
+
+bool IconPackRunner::runApk(const QString& packName, bool* apkIconsTouched) const
+{
+    if(apkIconsTouched)
+        *apkIconsTouched = false;
+
+    const QString packRoot = IconPaths::packDir(packName);
+    if(!QDir(packRoot).exists())
+        return false;
+
+    QDir().mkpath(IconPaths::liveApkCustomDir());
+
     const QString apkRoot = IconPaths::resolvePackCapabilityDir(packRoot, QStringLiteral("apk"));
     const QStringList& apkCap = IconPaths::apkPackSizes();
     for(int i = 0; i < apkCap.size(); ++i)
@@ -73,18 +86,12 @@ bool IconPackRunner::run(const QString& packName) const
             if(!QDir(src).exists())
                 continue;
 
-            const int n = IconPaths::copyPngDirExistingOnly(src, IconPaths::liveApkLauncherDir());
-            if(n > 0)
-                ok = true;
-            IconPaths::chownApkLauncherTree();
-            goto apk_done;
+            const int n = IconPaths::copyApkPackPngsToCustomDir(src);
+            if(n > 0 && apkIconsTouched)
+                *apkIconsTouched = true;
+            return n > 0;
         }
     }
-apk_done:
 
-    if(!ok)
-        qWarning() << "uithemer: icon pack run produced no copies for" << packName << "root"
-                   << packRoot;
-
-    return ok;
+    return false;
 }

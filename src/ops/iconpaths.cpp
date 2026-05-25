@@ -14,6 +14,7 @@ namespace
     const char *kJollaRoot = "/usr/share/themes/sailfish-default/silica";
     const char *kHicolorRoot = "/usr/share/icons/hicolor";
     const char *kApkLauncher = "/home/defaultuser/.local/share/apkd-bridge/launcherIcon";
+    const char *kApkCustom = "/home/defaultuser/.local/share/apkd-bridge/custom";
 
     const QStringList kNativeSizes = {
         QStringLiteral("256x256"),
@@ -235,6 +236,40 @@ QString IconPaths::liveApkLauncherDir()
     return remapNemoHome(QString::fromLatin1(kApkLauncher)) + QLatin1Char('/');
 }
 
+QString IconPaths::liveApkCustomDir()
+{
+    struct passwd *pw = getpwnam("defaultuser");
+    if(pw)
+    {
+        const QString home = QString::fromUtf8(pw->pw_dir);
+        if(!home.isEmpty())
+            return home + QStringLiteral("/.local/share/apkd-bridge/custom/");
+    }
+    return remapNemoHome(QString::fromLatin1(kApkCustom)) + QLatin1Char('/');
+}
+
+QString IconPaths::liveApkApplicationsDir()
+{
+    struct passwd *pw = getpwnam("defaultuser");
+    if(pw)
+    {
+        const QString home = QString::fromUtf8(pw->pw_dir);
+        if(!home.isEmpty())
+            return home + QStringLiteral("/.local/share/applications/");
+    }
+    return QStringLiteral("/home/defaultuser/.local/share/applications/");
+}
+
+QString IconPaths::apkLauncherIconSegment()
+{
+    return QStringLiteral("/launcherIcon/");
+}
+
+QString IconPaths::apkCustomSegment()
+{
+    return QStringLiteral("/custom/");
+}
+
 QString IconPaths::backupNativeAppsDir(const QString &size)
 {
     return backupIconsRoot() + QStringLiteral("/native/") + size + QStringLiteral("/apps/");
@@ -304,24 +339,64 @@ int IconPaths::copyPngDirExistingOnly(const QString &srcDir, const QString &dstD
     return n;
 }
 
+int IconPaths::copyApkPackPngsToCustomDir(const QString &packSrcDir)
+{
+    QDir src(packSrcDir);
+    if(!src.exists())
+        return 0;
+
+    const QString stockDir = liveApkLauncherDir();
+    const QString customDir = liveApkCustomDir();
+    QDir().mkpath(customDir);
+
+    int n = 0;
+    const QStringList pngs = src.entryList(QStringList() << QStringLiteral("*.png"),
+                                           QDir::Files);
+    for(const QString &f : pngs)
+    {
+        const QString stockPath = stockDir + f;
+        if(!QFileInfo::exists(stockPath))
+            continue;
+
+        const QString dst = customDir + f;
+        if(QFile::exists(dst))
+            QFile::remove(dst);
+        if(QFile::copy(src.absoluteFilePath(f), dst))
+            ++n;
+    }
+    return n;
+}
+
+void IconPaths::chownToDefaultUser(const QString &path)
+{
+    struct passwd *pw = getpwnam("defaultuser");
+    if(!pw || path.isEmpty())
+        return;
+
+    const QByteArray local = path.toLocal8Bit();
+    chown(local.constData(), pw->pw_uid, pw->pw_gid);
+}
+
 void IconPaths::chownApkLauncherTree()
 {
     struct passwd *pw = getpwnam("defaultuser");
     if (!pw)
         return;
 
-    const QString root = liveApkLauncherDir();
-    QDir d(root);
-    if (!d.exists())
-        return;
-
-    const QStringList pngs = d.entryList(QStringList() << QStringLiteral("*.png"),
-                                         QDir::Files);
-    for (const QString &f : pngs)
+    const QStringList dirs = { liveApkLauncherDir(), liveApkCustomDir() };
+    for(const QString &root : dirs)
     {
-        const QByteArray path = d.absoluteFilePath(f).toLocal8Bit();
-        if(chown(path.constData(), pw->pw_uid, pw->pw_gid) != 0)
+        QDir d(root);
+        if(!d.exists())
             continue;
+
+        const QStringList pngs = d.entryList(QStringList() << QStringLiteral("*.png"),
+                                             QDir::Files);
+        for(const QString &f : pngs)
+        {
+            const QByteArray path = d.absoluteFilePath(f).toLocal8Bit();
+            chown(path.constData(), pw->pw_uid, pw->pw_gid);
+        }
     }
 }
 
@@ -369,6 +444,26 @@ QSet<QString> IconPaths::packApkKeys(const QString &packName)
         keys.unite(pngBaseNamesInDir(dir));
     }
     return keys;
+}
+
+QString IconPaths::packApkPngPath(const QString &packName, const QString &fileName)
+{
+    const QString apkRoot = resolvePackCapabilityDir(packDir(packName), QStringLiteral("apk"));
+    if(apkRoot.isEmpty())
+        return QString();
+
+    const QStringList &apkCap = apkPackSizes();
+    for(int i = 0; i < apkCap.size(); ++i)
+    {
+        for(int j = i; j < apkCap.size(); ++j)
+        {
+            const QString path = apkRoot + QLatin1Char('/') + apkCap.at(j) + QLatin1Char('/')
+                                 + fileName;
+            if(QFileInfo::exists(path))
+                return path;
+        }
+    }
+    return QString();
 }
 
 QSet<QString> IconPaths::liveHicolorAppKeys()

@@ -6,7 +6,8 @@
 class IconOverlay
 {
 public:
-    bool apply(const QString& packName) const;
+    bool applySfos(const QString& packName) const;
+    bool applyApk(const QString& packName, bool* apkIconsTouched = nullptr) const;
 };
 
 #endif // ICONOVERLAY_H

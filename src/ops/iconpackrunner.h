@@ -6,7 +6,8 @@
 class IconPackRunner
 {
 public:
-    bool run(const QString& packName) const;
+    bool runSfos(const QString& packName) const;
+    bool runApk(const QString& packName, bool* apkIconsTouched = nullptr) const;
 };
 
 #endif // ICONPACKRUNNER_H

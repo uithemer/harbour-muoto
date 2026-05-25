@@ -26,6 +26,11 @@ namespace IconPaths
     QString stockJollaIconsSourceDir(const QString& zSize);
     QString liveNativeAppsDir(const QString& size);
     QString liveApkLauncherDir();
+    QString liveApkCustomDir();
+    QString liveApkApplicationsDir();
+
+    QString apkLauncherIconSegment();
+    QString apkCustomSegment();
 
     QString backupNativeAppsDir(const QString& size);
     QString backupApkDir();
@@ -34,8 +39,12 @@ namespace IconPaths
     bool copyFileExistingOnly(const QString& src, const QString& dst);
     int copyPngDirIgnoreExistingBackup(const QString& srcDir, const QString& dstDir);
     int copyPngDirExistingOnly(const QString& srcDir, const QString& dstDir);
+    int copyApkPackPngsToCustomDir(const QString& packSrcDir);
+
+    QString packApkPngPath(const QString& packName, const QString& fileName);
 
     void chownApkLauncherTree();
+    void chownToDefaultUser(const QString& path);
     QString nativeAppsSourceDir(const QString& packName, const QString& size);
 
     QSet<QString> packIconKeys(const QString& packName);
