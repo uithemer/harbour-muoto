@@ -77,6 +77,12 @@ Page
             lipstickRestartTimer.start();
     }
 
+    function _restartHomescreenWithRemorse() {
+        remorseAction(qsTr("Restarting homescreen"), function() {
+            themepack.restartHomescreen();
+        });
+    }
+
     Timer {
         id: lipstickRestartTimer
         interval: 250
@@ -206,11 +212,7 @@ Page
         }
 
         if (event.key === Qt.Key_R) {
-            var dlgrestart = pageStack.push("RestartHSPage.qml");
-            dlgrestart.accepted.connect(function() {
-                    themepack.restartHomescreen();
-                    console.log("homescreen restart");
-            });
+            _restartHomescreenWithRemorse();
             event.accepted = true;
         }
     }
@@ -251,12 +253,7 @@ Page
 
             MenuItem {
                 text: qsTr("Restart homescreen (fallback)")
-                onClicked: {
-                    var dlgrestart = pageStack.push("RestartHSPage.qml");
-                    dlgrestart.accepted.connect(function() {
-                        themepack.restartHomescreen();
-                    });
-                }
+                onClicked: mainpage._restartHomescreenWithRemorse()
             }
 
             MenuItem {

@@ -333,8 +333,6 @@ void removeApkCustomDir()
 
 void notifyLauncherAfterIconOp(bool apkIconsTouched)
 {
+    Q_UNUSED(apkIconsTouched);
     touchAllLauncherDesktops();
-
-    if(apkIconsTouched && homeRefreshEnabledInDconf())
-        restartDefaultUserLipstick();
 }

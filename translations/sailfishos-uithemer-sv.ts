@@ -197,6 +197,10 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
         <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
         <translation>Kom ihåg att starta om hemskärmen (från &lt;i&gt;Alternativ&lt;/i&gt;-menyn), direkt efter att du har ändrat inställningarna på denna sida.</translation>
     </message>
+    <message>
+        <source>Restarting homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GuidePage</name>
@@ -381,6 +385,10 @@ Tack till Dax89, för hjälp med C++ och QML-kod, den här appen hade inte funni
     </message>
     <message>
         <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

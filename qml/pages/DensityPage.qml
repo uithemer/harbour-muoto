@@ -54,6 +54,12 @@ Page
         property real icon_size_launcher
     }
 
+    function _restartHomescreenWithRemorse() {
+        remorseAction(qsTr("Restarting homescreen"), function() {
+            themepack.restartHomescreen();
+        });
+    }
+
     Keys.onPressed: {
         handleKeyPressed(event);
     }
@@ -118,11 +124,7 @@ Page
         }
 
         if (event.key === Qt.Key_R) {
-            var dlgrestart = pageStack.push("RestartHSPage.qml");
-            dlgrestart.accepted.connect(function() {
-                    themepack.restartHomescreen();
-                    console.log("homescreen restart");
-            });
+            _restartHomescreenWithRemorse();
             event.accepted = true;
         }
     }

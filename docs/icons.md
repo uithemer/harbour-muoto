@@ -79,7 +79,7 @@ Matching uses **PNG basename** on disk, not `.desktop` `Icon=` fields.
 |------|-------------|
 | Native / Jolla | `futimens` on `/usr/share/applications/*.desktop`; Lipstick watches hicolor and resolves theme icon names |
 | Android (APK) | Step 6: `Icon=` → `/custom/` (segment swap) or pack `apk/` path; then `futimens` on desktops |
-| Fallback | If **Restart homescreen** (`homeRefresh`) is enabled and APK PNGs were written to `custom/` this apply, helperd may restart `lipstick.service`; the main app page also restarts after apply/restore when the setting is on (cover sync does not) |
+| Fallback | **Automatic** lipstick restart only when **Restart homescreen** (`homeRefresh`) is enabled in the apply/restore UI (main app `_finalise` after apply/restore; density restore). **Manual** restart anytime via MainPage pulley or **R** on MainPage/DensityPage (remorse, not tied to the toggle). Cover sync and helperd never restart lipstick; they only touch launcher `.desktop` mtimes |
 
 On restore: `revertApkDesktopsToLauncherIcon()` first, then stock PNG restore, then `removeApkCustomDir()`.
 

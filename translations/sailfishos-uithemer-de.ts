@@ -196,6 +196,10 @@
         <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
         <translation>Denke daran den Startbildschirm ( in der &lt;i&gt;Options&lt;/i&gt; Seite), direkt nach Änderungen in diesem Einstellungsdialog, neu zu starten</translation>
     </message>
+    <message>
+        <source>Restarting homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GuidePage</name>
@@ -380,6 +384,10 @@
     </message>
     <message>
         <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
