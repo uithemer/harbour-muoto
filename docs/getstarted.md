@@ -1,15 +1,17 @@
 ---
 layout: default
-title: Get started
+title: Create theme packs
 nav_order: 3
 permalink: docs/getstarted
 has_children: true
 has_toc: true
 ---
 
-# Get started
+# Create theme packs
 
 Information on how to create theme packs compatible with **UI Themer**. Use the [dummy package](https://github.com/uithemer/harbour-themepack-dummy) as a reference — it includes the basic directory tree and an example spec file.
+
+For **using** the app (apply themes, display density, restore), see **[Using UI Themer](guide)**.
 
 ## Requisites
 
