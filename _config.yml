@@ -1,10 +1,10 @@
 remote_theme: pmarsceill/just-the-docs
 title: UI Themer
 description: Enables customization of icons, fonts and pixel density in Sailfish OS
-baseurl: ""
+baseurl: "/sailfishos-uithemer"
 exclude: ["appicons/", "images/", "qml/", "rpm/", "scripts/", "src/", "translations/", "LICENSE", "*.desktop", "*.pro"]
 
-url: "https://uithemer.github.io/sailfishos-uithemer"
+url: "https://uithemer.github.io"
 search_enabled: true
 aux_links:
     "UI Themer on GitHub":
