@@ -1,13 +1,18 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Opal.SupportMe 1.0
 import harbour.uithemer 1.0
 import "pages"
 import "common"
+import "components"
 
 ApplicationWindow
 {
     id: app
     property string coverMode
+    property string coverIconPreviewPack: ""
+    property bool coverIconPreviewOk: false
+    property int coverIconPreviewSeq: 0
 
     Component {
         id: mainpage
@@ -20,10 +25,28 @@ ApplicationWindow
 }
 
     ThemePack { id: themepack }
-    property bool vIM: themepack.hasImageMagickInstalled()
+    IconApplier {
+        id: iconapplier
+        // Preview only (ConfirmPage buildPreview). Icon apply/restore and
+        // cover refresh go through Helper -> helperd.
+    }
+
+    Connections {
+        target: iconapplier
+        onPreviewReady: {
+            coverIconPreviewPack = packName
+            coverIconPreviewOk = ok
+            coverIconPreviewSeq++
+        }
+    }
+
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
 
-    initialPage: (settings.wizardDone && vIM ) ? mainpage : welcomepage
+    function showSupportDialog() {
+        askForSupport.show()
+    }
+
+    initialPage: settings.wizardDone ? mainpage : welcomepage
     cover: switch (app.coverMode) {
            case "confirmDialog":
                return Qt.resolvedUrl("cover/CoverConfirm.qml");
@@ -35,4 +58,11 @@ ApplicationWindow
     _defaultPageOrientations: defaultAllowedOrientations
 
     Settings { id: settings }
+
+    AskForSupport {
+        id: askForSupport
+        contents: Component {
+            UIThemerSupportDialog {}
+        }
+    }
 }

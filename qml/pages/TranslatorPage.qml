@@ -4,74 +4,9 @@ import "../components"
 
 Page
 {
-    id: translatorpage
-    focus: true
     backNavigation: !settings.isRunning
     showNavigationIndicator: !settings.isRunning
     BusyState { id: busyindicator }
-
-    Keys.onPressed: {
-        handleKeyPressed(event);
-    }
-
-    function handleKeyPressed(event) {
-
-        if (event.key === Qt.Key_Down) {
-            flickable.flick(0, - translatorpage.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Up) {
-            flickable.flick(0, translatorpage.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageDown) {
-            flickable.scrollToBottom();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageUp) {
-            flickable.scrollToTop();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_B) {
-            pageStack.navigateBack();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_H) {
-            pageStack.replaceAbove(null, Qt.resolvedUrl("MainPage.qml"));
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_D && settings.showDensity === true && settings.guimode !== 0) {
-            pageStack.replace(Qt.resolvedUrl("DensityPage.qml"));
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_O) {
-            pageStack.replace(Qt.resolvedUrl("OptionsPage.qml"));
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_G) {
-            pageStack.push(Qt.resolvedUrl("GuidePage.qml"));
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_A) {
-            pageStack.navigateBack();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_W && settings.guimode !== 0) {
-            settings.wizardDone = false
-            pageStack.replaceAbove(null, Qt.resolvedUrl("WelcomePage.qml"));
-            event.accepted = true;
-        }
-    }
 
     SilicaFlickable
     {
@@ -177,7 +112,7 @@ Page
               Button {
                   anchors.horizontalCenter: parent.horizontalCenter
                   text: qsTr("Transifex")
-                  onClicked: Qt.openUrlExternally("https://www.transifex.com/fravaccaro/ui-themer")
+                  onClicked: Qt.openUrlExternally("https://explore.transifex.com/fravaccaro/ui-themer")
               }
 
         }

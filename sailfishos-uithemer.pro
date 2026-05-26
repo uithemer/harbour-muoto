@@ -1,61 +1,23 @@
-TARGET = sailfishos-uithemer
+TEMPLATE = subdirs
 
-scripts.files = scripts/*
-scripts.path = $$PREFIX/share/$$TARGET/scripts
+# Build the GUI app and the bus-activated privileged daemon as one
+# project. Each child .pro lives next to its sources under src/<role>/,
+# so qmake creates per-target Makefiles in matching build subdirectories.
+# %qtc_qmake5 in the RPM spec drives both (gui, daemon + the implicit
+# ops.pri include) in a single invocation.
+#
+# Naming note: src/daemon/ produces the privileged D-Bus
+# /usr/libexec/sailfishos-uithemer-helperd. (2.7.0 retired the headless
+# /usr/bin/sailfishos-uithemer-icond binary along with OptionsPage's
+# autoupdate/systemupgrade/boot-reassert units.)
+SUBDIRS = gui daemon
 
-images.files = images/*
-images.path = $$PREFIX/share/$$TARGET/images
+gui.subdir     = src/gui
+daemon.subdir  = src/daemon
 
-appicons.files = appicons/*
-appicons.path = /usr/share/icons/hicolor/
-
-INSTALLS += scripts images appicons
-
-CONFIG += sailfishapp c++11
-
-SOURCES += src/sailfishos-uithemer.cpp \
-    src/spawner.cpp \
-    src/themepackmodel.cpp \
-    src/fontweightmodel.cpp \
-    src/themepack.cpp
-
-OTHER_FILES += \
-    qml/sailfishos-uithemer.qml \
-    qml/common/Settings.qml \
-    qml/components/AboutLanguage.qml \
-    qml/components/AboutTranslator.qml \
-    qml/components/BackgroundRectangle.qml \
-    qml/components/BusyState.qml \
-    qml/components/FontPreview.qml \
-    qml/components/LabelSpacer.qml \
-    qml/components/LabelText.qml \
-    qml/components/Notification.qml \
-    qml/components/themepacklistview/ThemePackItem.qml \
-    qml/cover/CoverPage.qml \
-    qml/cover/CoverConfirm.qml \
-    qml/cover/CoverActionList1.qml \
-    qml/cover/CoverActionList2.qml \
-    qml/cover/CoverLabel.qml \
-    qml/cover/FontPreviewCover.qml \
-    qml/pages/ConfirmPage.qml \
-    qml/pages/DensityPage.qml \
-    qml/pages/MainPage.qml \
-    qml/pages/OptionsPage.qml \
-    qml/pages/RestorePage.qml \
-    qml/pages/RestoreDDPage.qml \
-    qml/pages/WelcomePage.qml \
-    qml/pages/AboutPage.qml \
-    qml/pages/GuidePage.qml \
-    qml/pages/RecoveryPage.qml \
-    rpm/* \
-    sailfishos-uithemer.desktop \
-
-CONFIG += sailfishapp_i18n
-
-TRANSLATIONS +=  translations/*.ts
-
-HEADERS += \
-    src/spawner.h \
-    src/themepackmodel.h \
-    src/fontweightmodel.h \
-    src/themepack.h
+# Both binaries pull in src/ops/ops.pri at compile-time, so there is no
+# inter-subdir build-order dependency. Listing the depends here anyway
+# makes the topological order explicit if a future ops/ change does
+# require a rebuild ordering.
+gui.depends     =
+daemon.depends  =

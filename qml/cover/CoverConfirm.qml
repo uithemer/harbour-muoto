@@ -8,14 +8,17 @@ CoverBackground
 {
     id: root
      Notification { id: notification }
-     ThemePackModel {
-         function notifyDone() {
-             settings.isRunning = false;
-             notification.publish();
+     // 2.6.0: icon ops route through HelperClient and the daemon, so
+     // listen for its bridged signals instead of iconapplier's local
+     // ones.
+     Connections {
+         target: Helper
+         onIconsRestored: { settings.isRunning = false; notification.publish(); }
+         onError: {
+             if (op === "RestoreIcons") {
+                 settings.isRunning = false;
+             }
          }
-         id: themepackmodel
-         onIconReapplied: notifyDone()
-         onOcrRestored: notifyDone()
      }
      ThemePack {
          function notifyDone() {
@@ -25,17 +28,76 @@ CoverBackground
          id: themepack
          onHomescreenRestarted: notifyDone()
      }
+
+     function confirmPage() {
+         var p = pageStack.currentPage
+         return p && p.confirmheadername !== undefined ? p : null
+     }
+
+     property string _coverPreviewPack: ""
+
+     function setCoverPreviewSource(pack) {
+         // Image.source is a QUrl — no .indexOf(); only skip when already showing this pack.
+         if (_coverPreviewPack === pack && coverimgpreview.status === Image.Ready)
+             return
+         _coverPreviewPack = pack
+         coverimgpreview.source = "image://uithemer/preview/" + pack + "?t=" + Date.now()
+     }
+
+     function refreshCoverIconPreviewFromCache() {
+         var p = confirmPage()
+         if (!p)
+             return
+         if (!(p.hasIcons || p.hasIconOverlay) || !p.packName)
+             return
+         setCoverPreviewSource(p.packName)
+     }
+
+     function refreshCoverIconPreview(previewPack, ok) {
+         var p = confirmPage()
+         if (!p || previewPack !== p.packName)
+             return
+         if (ok)
+             setCoverPreviewSource(previewPack)
+         else {
+             _coverPreviewPack = ""
+             coverimgpreview.source = ""
+         }
+     }
+
+     function refreshCoverFontPreview() {
+         var p = confirmPage()
+         if (!p)
+             return
+         if (p.hasFont && p.selectedFont !== "") {
+             fontloader.visible = true
+             fontloader.reload()
+         }
+     }
+
+     Connections {
+         target: app
+         onCoverIconPreviewSeqChanged: {
+             refreshCoverIconPreview(app.coverIconPreviewPack,
+                                     app.coverIconPreviewOk)
+         }
+     }
+
+     Connections {
+         target: Qt.application
+         onStateChanged: {
+             if (state !== Qt.ApplicationActive
+                     && app.coverMode === "confirmDialog") {
+                 refreshCoverIconPreviewFromCache()
+                 refreshCoverFontPreview()
+             }
+         }
+     }
+
      onStatusChanged: {
          if (status === Cover.Active || Cover.Activating || Cover.Deactivating) {
-             if (pageStack.currentPage.hasIcons || pageStack.currentPage.hasIconOverlay) {
-                 coverimgpreview.source = ""
-                 coverimgpreview.source = "/usr/share/harbour-themepacksupport/tmp/iconspreview.png"
-             }
-             if (pageStack.currentPage.hasFont && pageStack.currentPage.selectedFont !== "") {
-                 fontloader.visible = true
-                 fontloader.reload()
-             }
-
+             refreshCoverIconPreviewFromCache()
+             refreshCoverFontPreview()
          }
      }
 
@@ -51,7 +113,11 @@ CoverBackground
             x: Theme.paddingLarge
             font.pixelSize: Theme.fontSizeMedium
             truncationMode: TruncationMode.Fade
-            text: pageStack.currentPage.confirmheadername
+            text: {
+                var p = pageStack.currentPage
+                return (p && p.confirmheadername !== undefined)
+                       ? p.confirmheadername : ""
+            }
         }
 
         Image {
@@ -86,14 +152,21 @@ CoverBackground
 
         Loader {
             id: fontloader
-            source: "FontPreviewCover.qml"
+            active: {
+                var p = pageStack.currentPage
+                if (!p)
+                    return false
+                return p.hasFont === true || p.hasFontNonLatin === true
+            }
+            source: ""
             visible: false
             width: root.width
             height: root.height
 
             function reload() {
                 source = ""
-                source = "FontPreviewCover.qml"
+                if (pageStack.currentPage.hasFont || pageStack.currentPage.hasFontNonLatin)
+                    source = "FontPreviewCover.qml"
             }
         }
     }

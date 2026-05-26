@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.uithemer 1.0
 import "../common"
 import "../components"
 
@@ -8,67 +7,28 @@ Dialog
 {
     property Settings settings
     property alias restoreDPR: itsrestoredpr.checked
-    property alias restoreADPI: itsrestoreadpi.checked
-
-    ThemePack { id: themepack }
+    property alias restoreIconSize: itsrestoreis.checked
 
     id: dlgrestore
-    focus: true
-    canAccept: itsrestoredpr.checked || ( itsrestoreadpi.checked && themepack.hasAndroidSupport )
-    backNavigation: !settings.isRunning
-    forwardNavigation: !settings.isRunning
-    showNavigationIndicator: !settings.isRunning
+    canAccept: itsrestoredpr.checked || itsrestoreis.checked
 
     BusyState { id: busyindicator }
 
-    Keys.onPressed: {
-        handleKeyPressed(event);
-    }
-
-    function handleKeyPressed(event) {
-
-        if (event.key === Qt.Key_Down) {
-            flickable.flick(0, - dlgrestore.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Up) {
-            flickable.flick(0, dlgrestore.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageDown) {
-            flickable.scrollToBottom();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageUp) {
-            flickable.scrollToTop();
-            event.accepted = true;
-        }
-
-        if ((event.key === Qt.Key_B) || (event.key === Qt.Key_C)) {
-            pageStack.navigateBack();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Return) {
-            dlgrestore.accept();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_G) {
-            pageStack.push(Qt.resolvedUrl("GuidePage.qml"));
-            event.accepted = true;
-        }
+    DialogHeader {
+        id: header
+        dialog: dlgrestore
+        acceptText: qsTr("Restore")
+        cancelText: qsTr("Cancel")
     }
 
     SilicaFlickable
     {
         id: flickable
-        anchors.fill: parent
+        anchors.top: header.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         contentHeight: column.height
-        width: parent.width
         enabled: !settings.isRunning
         opacity: settings.isRunning ? 0.2 : 1.0
 
@@ -79,17 +39,7 @@ Dialog
             id: column
             width: parent.width
 
-            DialogHeader { id: header; acceptText: qsTr("Restore"); cancelText: qsTr("Cancel") }
-
             ConfirmHeader { text: qsTr("Restore") }
-
-            Grid {
-                width: parent.width
-                columns: isLandscape ? 2 : 1
-
-            Column
-            {
-                width: isLandscape ? parent.width/2 : parent.width
 
             IconTextSwitch {
                 id: itsrestoredpr
@@ -98,59 +48,31 @@ Dialog
                 checked: true
 
                 onClicked: {
-                    if(!itsrestoredpr.checked && !itsrestoreadpi.checked)
-                        dlgrestore.canAccept = false
-                    else
-                        dlgrestore.canAccept = true
+                    dlgrestore.canAccept = itsrestoredpr.checked || itsrestoreis.checked
                 }
             }
 
-            }
-
-            Column
-            {
-                width: isLandscape ? parent.width/2 : parent.width
-
             IconTextSwitch {
-                id: itsrestoreadpi
-                visible: themepack.hasAndroidSupport
+                id: itsrestoreis
                 automaticCheck: true
-                text: qsTr("Default Android DPI")
+                text: qsTr("Default icon size")
                 checked: true
 
                 onClicked: {
-                    if(!itsrestoredpr.checked && !itsrestoreadpi.checked)
-                        dlgrestore.canAccept = false
-                    else
-                        dlgrestore.canAccept = true
+                    dlgrestore.canAccept = itsrestoredpr.checked || itsrestoreis.checked
                 }
             }
 
-            }
-            } // grid
-
             LabelText {
-                visible: settings.guimode === 0 ? false : true
-                text: "<br>" + qsTr("Remember to restart the homescreen right after.")
-            }
-
-            LabelText {
-                visible: themepack.hasAndroidSupport && settings.isXA2
-                text: qsTr("If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.")
+                text: "<br>" + qsTr("Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).")
             }
 
             TextSwitch {
-                visible: settings.guimode === 0 ? false : true
-                text: qsTr("Restart homescreen")
+                text: qsTr("Restart homescreen (fallback)")
                 checked: settings.homeRefresh
                 onCheckedChanged: {
                     settings.homeRefresh = checked;
                 }
-            }
-
-            LabelText {
-                visible: settings.guimode === 0
-                text: "<br>" + qsTr("After confirming, your device will restart. Your currently opened apps will be closed.")
             }
 
             Item {

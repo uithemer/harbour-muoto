@@ -5,7 +5,6 @@ ListItem
 {
     property bool iconInstalled: false
     property bool fontInstalled: false
-    property bool soundInstalled: false
 
     signal uninstallRequested()
 
@@ -37,9 +36,6 @@ ListItem
 
             if(fontInstalled)
                 types.push(qsTr("fonts"));
-
-            if(soundInstalled)
-                types.push(qsTr("sounds"));
 
             if(types.length <= 0)
                 return s;

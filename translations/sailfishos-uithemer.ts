@@ -4,15 +4,63 @@
 <context>
     <name>AboutPage</name>
     <message>
-        <source>Sources</source>
+        <source>Documentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Issues</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Released under the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; license.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opal.About page and tabbed main UI (Themes + Display density). Icon paths: pack jolla/ to silica z/icons/, APK to launcherIcon/. Keyboard shortcuts removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon pipeline: stock mirror skips icon-launcher-folder-*; homescreen restart uses remorse when enabled; live APK theming path.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings moved to /apps/sailfishos-uithemer dconf namespace; user dconf via defaultuser from helperd/GUI.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Testing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Community testers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Theme packs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>If you want to create a theme compatible with UI Themer, please read the documentation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Documentation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -24,71 +72,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Issues</source>
+        <source>Credits for existing translations and how to contribute.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Support</source>
+        <source>Translator credits</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>AskForSupport</name>
     <message>
-        <source>If you like my work and want to buy me a beer, feel free to do it!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Donate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Credits</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Translations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Released under the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; license.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Part of this app is based on &lt;a href=&apos;https://github.com/RikudouSage/sailfish-iconpacksupport-gui&apos;&gt;Icon pack support GUI&lt;/a&gt; by RikudouSennin.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>App icon by</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Thanks to Dax89 for helping with C++ and QML code, this app would not exist without him.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Thanks to Eugenio_g7 for helping with the &lt;i&gt;One-click restore&lt;/i&gt; service.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Thanks to all the testers for being brave and patient.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keyboard navigation based on &lt;a href=&apos;https://github.com/Wunderfitz/harbour-piepmatz&apos;&gt;Piepmatz&lt;/a&gt; by Sebastian Wolf.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer lets you customize icons, fonts, sounds and pixel density in Sailfish OS.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Thanks to LQS for helping with the Android DPI on the Xperia XA2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Iconography by</source>
+        <source>Please take a moment to consider if you can contribute to this project in one way or another.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -96,6 +91,18 @@
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No preview available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -107,6 +114,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>The theme supports overlays.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a font weight to preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Apply fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -115,7 +134,61 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
+        <source>Choose the main font weight for the UI.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CoverPage</name>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DensityTabContent</name>
+    <message>
+        <source>Restore display density</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compact (86)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal (108)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medium (129)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Large (151)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extra large (172)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About UI Themer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -123,264 +196,67 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Icons</source>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fonts</source>
+        <source>Display scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Apply</source>
+        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose a font weight to preview</source>
+        <source>Launcher icon size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose the main font weight for the UI.</source>
+        <source>Pull down and tap Restart homescreen after changing these settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Apply sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The theme supports overlays.</source>
+        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size (often 108 on many phones).</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>DensityPage</name>
+    <name>DetailsDrawer</name>
     <message>
-        <source>Usage guide</source>
+        <source>show less</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restore display density</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Display density</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable display density settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Device pixel ratio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the display pixel ratio. To a smaller value corresponds an higher density.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Android DPI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Android DPI value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the Android DPI value. To a smaller value corresponds an higher density.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icon size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the size of UI icons. To a greater value corresponds an huger size.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
+        <source>show more</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>GuidePage</name>
+    <name>ExternalUrlPage</name>
     <message>
-        <source>Usage guide</source>
+        <source>Swipe left to preview.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
+        <source>You are using a mobile data connection.</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>LicenseListPart</name>
     <message>
-        <source>Themes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The &lt;i&gt;Themes&lt;/i&gt; page lets you customize icons and fonts via thirdy party themes. The page lists the themes you have currently installed (e.g. from OpenRepos). To apply them, tap on a theme of your choice and then select what you want to use from that theme - if the theme contains different font weights, you can choose the default one to use for the UI. You can also combine different themes, so for example you can use icons from a theme and fonts from another. To revert to the default settings, you can use the restore option from the pulley menu.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Display density</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>By increasing the display density, you can display more content on your screen - or less, if you prefer to have bigger UI elements. Android apps use a different setting than Sailfish OS ones. To revert to the default settings, you can use the restore options from the pulley menu.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icon updater</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Further help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>One-click restore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>CLI tool</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If anything goes wrong or you want to manage all the options via terminal, you can recall the CLI tool by typing &lt;b&gt;themepacksupport&lt;/b&gt; as root.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remember to unapply themes and display density customizations before updating your system. In case you forgot, you may need to use the options provided in the &lt;i&gt;Recovery&lt;/i&gt; page or uninstall and reinstall Theme pack support e UI Themer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keyboard shortcuts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;A&lt;/b&gt; for the about page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You can quickly restart the homescreen after you applied a setting by pressing &lt;b&gt;R&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You can cancel a countdown or a dialog by pressing &lt;b&gt;C&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time. You can choose between a pre-defined set of hours or a custom hour of the day.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;G&lt;/b&gt; for the usage guide.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;W&lt;/b&gt; for restart the first run wizard.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>An homescreen restart may be needed to apply your settings. You can do that through the dialog or from the &lt;i&gt;Options&lt;/i&gt; page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>An homescreen restart may be needed to apply your settings. You can do that from the &lt;i&gt;Options&lt;/i&gt; page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;O&lt;/b&gt; for the options page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer can be navigated via a physical keyboard, using convenient shortcuts.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;B&lt;/b&gt; to go back to the previous page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you have Storeman installed, you can quickly look for compatible themes by using the &lt;i&gt;Download&lt;/i&gt; icon in the main page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;H&lt;/b&gt; for the home page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;D&lt;/b&gt; for the display density page.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Backup &amp; restore icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you are working on a theme or you want to have the default icons in a safe place, you can backup them. A compressed archive will be created and saved into &lt;i&gt;/home/nemo/&lt;/i&gt;. You can also restore a previous backup.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you still can&apos;t get the help you need, you can open an issue on</source>
+        <source>License text</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainPage</name>
     <message>
-        <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No themes yet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Install a compatible theme first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -395,6 +271,42 @@
         <source>Themes</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>About UI Themer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restarting homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support UI Themer</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Notification</name>
@@ -404,272 +316,163 @@
     </message>
 </context>
 <context>
-    <name>OptionsPage</name>
+    <name>Opal.About</name>
     <message>
-        <source>Restart first run wizard</source>
+        <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Usage guide</source>
+        <source>Version %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Recovery</source>
+        <source>Development</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Icon updater</source>
+        <source>show contributors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time.</source>
+        <source>Homepage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Update icons</source>
+        <source>Changelog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Disabled</source>
+        <source>Translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>30 minutes</source>
+        <source>Source Code</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>1 hour</source>
+        <source>Donations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>2 hours</source>
+        <source>License</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>show license(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>News</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>3 hours</source>
+        <source>Changes since version %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>6 hours</source>
+        <source>show details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>12 hours</source>
+        <source>Thank you!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Daily</source>
+        <source>Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>One-click restore</source>
+        <source>Contributors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
+        <source>Acknowledgements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restore</source>
+        <source>Please refer to &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Options</source>
+        <source>Download license texts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cover</source>
+        <source>You are using a mobile data connection.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Cover action</source>
-        <translation type="unfinished"></translation>
+    <message numerus="yes">
+        <source>License(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
-        <source>refresh current theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>one-click restore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Second cover action</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart the homescreen, to make your modifications effective. Your currently opened apps will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restoring</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose the action to be shown on the UI Themer cover, for a quick access when the app is minimized on the homescreen.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Optionally, you can choose to display a second action on the cover.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Run before system updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restore the default icons, fonts and display density settings before performing a system update, so you don&apos;t need to manually do it.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show active theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the current theme on the cover.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>easy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>full</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Backup icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Backup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Backuping</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restore icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select backup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restoring backup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>From here you can backup all the default icons into a compressed archive. The archive will be saved into &lt;i&gt;/home/nemo/&lt;/i&gt;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select and restore an archive previously saved via UI Themer. You will still need to perform a &lt;i&gt;Restore theme&lt;/i&gt; from the &lt;i&gt;Themes&lt;/i&gt; page in order to restore the icons in your system.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>See less options and have an hassle-free experience.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Get full control of the app settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable advanced users and theme developers-tailored options.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>advanced</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons, fonts or sounds if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <source>Note: please check the source code for most accurate information.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>RecoveryPage</name>
+    <name>Opal.About.Common</name>
     <message>
-        <source>Continue</source>
+        <source>If you want to support my work, you can buy me a cup of coffee.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cancel</source>
+        <source>You can support this project by contributing, or by donating using any of these services.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Recovery</source>
+        <source>Your contributions to translations or code would be most welcome.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Opal.LinkHandler</name>
+    <message>
+        <source>Copied to clipboard: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reinstall icons</source>
+        <source>Share link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>If any error occurs during themes applying/restoring, you can end up with messed up icons. From here, you can reinstall default Jolla app icons while, for thirdy party apps, you may need to reinstall/update apps to restore the default look.</source>
+        <source>Phone number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reinstall fonts</source>
+        <source>External link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reinstall sounds</source>
+        <source>Open in browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reinstall default sounds, if sounds applying/restoring fails.</source>
+        <source>Open externally</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
+        <source>Share</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
+        <source>Copy link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reinstall default fonts, if fonts applying/restoring fails.</source>
+        <source>Copy text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No preview available.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The page is taking too long to load.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -688,23 +491,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Default Android DPI</source>
+        <source>Default icon size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen right after.</source>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you have an Xperia XA2 series device, a full restart may be needed to apply your Android settings.</source>
+        <source>Restart homescreen (fallback)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -719,14 +514,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remember to restart the homescreen right after.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Default icons</source>
         <translation type="unfinished"></translation>
     </message>
@@ -735,15 +522,34 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>After confirming, your device will restart. Your currently opened apps will be closed.</source>
+        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Default sounds</source>
+        <source>Restart homescreen (fallback)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SupportDialog</name>
+    <message>
+        <source>Hi there!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>For sounds, a full restart may be needed to apply your settings.</source>
+        <source>Thank you for using my little app! Maybe you can contribute back?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thank you for your support!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remind me later</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t ask me again</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -759,10 +565,6 @@
     </message>
     <message>
         <source>fonts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -782,17 +584,68 @@
     </message>
 </context>
 <context>
+    <name>UIThemerSupportDialog</name>
+    <message>
+        <source>Hi there!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thank you for using UI Themer! If you find it useful, consider supporting its development.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thank you for your support!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donate via Liberapay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Help with translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Improve UI Themer in your language on Transifex.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Report issues on GitHub</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File bugs, suggest features, or follow development.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Why support this app?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer is free software (GPLv3) for customizing Sailfish icons, fonts, and display density. It is maintained in spare time alongside other projects.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donations and contributions help keep the app compatible with new Sailfish releases and theme packs from the community.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Other ways to help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share theme packs, write documentation, test beta builds, or star the project on GitHub — every bit helps.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send a tip or recurring support on Liberapay.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WelcomePage</name>
     <message>
         <source>Welcome to UI Themer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Install dependencies</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I have already installed the dependencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -817,38 +670,6 @@
     </message>
     <message>
         <source>Support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer needs some additional dependencies in order to function properly. Install them now if you haven&apos;t already.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>It may take a while, do not quit.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dependencies</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ImageMagick</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ImageMagick is required for UI Themer overlays to work. Overlays need to be supported by the theme.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Install ImageMagick</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ImageMagick installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

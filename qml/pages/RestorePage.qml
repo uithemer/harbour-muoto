@@ -8,65 +8,27 @@ Dialog
     property Settings settings
     property alias restoreIcons: itsrestoreicons.checked
     property alias restoreFonts: itsrestorefonts.checked
-    property alias restoreSounds: itsrestoresounds.checked
 
     id: dlgrestore
-    focus: true
-    canAccept: itsrestoreicons.checked || itsrestorefonts.checked || itsrestoresounds.checked
-    backNavigation: !settings.isRunning
-    forwardNavigation: !settings.isRunning
-    showNavigationIndicator: !settings.isRunning
+    canAccept: itsrestoreicons.checked || itsrestorefonts.checked
 
     BusyState { id: busyindicator }
 
-    Keys.onPressed: {
-        handleKeyPressed(event);
-    }
-
-    function handleKeyPressed(event) {
-
-        if (event.key === Qt.Key_Down) {
-            flickable.flick(0, - dlgrestore.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Up) {
-            flickable.flick(0, dlgrestore.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageDown) {
-            flickable.scrollToBottom();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageUp) {
-            flickable.scrollToTop();
-            event.accepted = true;
-        }
-
-        if ((event.key === Qt.Key_B) || (event.key === Qt.Key_C)) {
-            pageStack.navigateBack();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Return) {
-            dlgrestore.accept();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_G) {
-            pageStack.push(Qt.resolvedUrl("GuidePage.qml"));
-            event.accepted = true;
-        }
+    DialogHeader {
+        id: header
+        dialog: dlgrestore
+        acceptText: qsTr("Restore")
+        cancelText: qsTr("Cancel")
     }
 
     SilicaFlickable
     {
         id: flickable
-        anchors.fill: parent
+        anchors.top: header.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         contentHeight: column.height
-        width: parent.width
         enabled: !settings.isRunning
         opacity: settings.isRunning ? 0.2 : 1.0
 
@@ -76,8 +38,6 @@ Dialog
         {
             id: column
             width: parent.width
-
-            DialogHeader { id: header; acceptText: qsTr("Restore"); cancelText: qsTr("Cancel") }
 
             ConfirmHeader { text: qsTr("Restore") }
 
@@ -96,7 +56,7 @@ Dialog
                 checked: true
 
                 onClicked: {
-                    if(!itsrestoreicons.checked && !itsrestorefonts.checked && !itsrestoresounds.checked)
+                    if(!itsrestoreicons.checked && !itsrestorefonts.checked)
                         dlgrestore.canAccept = false
                     else
                         dlgrestore.canAccept = true
@@ -110,21 +70,7 @@ Dialog
                 checked: true
 
                 onClicked: {
-                    if(!itsrestoreicons.checked && !itsrestorefonts.checked && !itsrestoresounds.checked)
-                        dlgrestore.canAccept = false
-                    else
-                        dlgrestore.canAccept = true
-                }
-            }
-
-            IconTextSwitch {
-                id: itsrestoresounds
-                automaticCheck: true
-                text: qsTr("Default sounds")
-                checked: true
-
-                onClicked: {
-                    if(!itsrestoreicons.checked && !itsrestorefonts.checked && !itsrestoresounds.checked)
+                    if(!itsrestoreicons.checked && !itsrestorefonts.checked)
                         dlgrestore.canAccept = false
                     else
                         dlgrestore.canAccept = true
@@ -135,26 +81,15 @@ Dialog
             } // grid
 
             LabelText {
-                visible: settings.guimode === 0 ? false : true
-                text: "<br>" + qsTr("Remember to restart the homescreen right after.")
+                text: "<br>" + qsTr("Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).")
             }
 
             TextSwitch {
-                visible: settings.guimode === 0 ? false : true
-                text: qsTr("Restart homescreen")
+                text: qsTr("Restart homescreen (fallback)")
                 checked: settings.homeRefresh
                 onCheckedChanged: {
                     settings.homeRefresh = checked;
                 }
-            }
-
-            LabelText {
-                visible: settings.guimode === 0
-                text: "<br>" + qsTr("After confirming, your device will restart. Your currently opened apps will be closed.")
-            }
-
-            LabelText {
-                text: qsTr("For sounds, a full restart may be needed to apply your settings.")
             }
 
             Item {
