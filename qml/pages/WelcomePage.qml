@@ -5,45 +5,9 @@ import "../components"
 
 Page
 {
-    id: welcomepage
-    focus: true
-
     property bool vDon: false
 
     ThemePack { id: themepack }
-
-    Keys.onPressed: {
-        handleKeyPressed(event);
-    }
-
-    function handleKeyPressed(event) {
-
-        if (event.key === Qt.Key_Down) {
-            flickable.flick(0, - welcomepage.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Up) {
-            flickable.flick(0, welcomepage.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageDown) {
-            flickable.scrollToBottom();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageUp) {
-            flickable.scrollToTop();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_G) {
-            pageStack.push(Qt.resolvedUrl("GuidePage.qml"));
-            event.accepted = true;
-        }
-
-    }
 
     SilicaFlickable
     {
@@ -89,15 +53,6 @@ Page
             LabelText {
                 text: qsTr("UI Themer DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).")
             }
-
-            SectionHeader { text: qsTr("Usage guide") }
-
-            Button {
-                 id: usageguide
-                 anchors.horizontalCenter: parent.horizontalCenter
-                 text: qsTr("Usage guide")
-                 onClicked: pageStack.push(Qt.resolvedUrl("GuidePage.qml"))
-             }
 
             }
 

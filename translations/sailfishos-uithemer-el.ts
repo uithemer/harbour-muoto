@@ -4,92 +4,80 @@
 <context>
     <name>AboutPage</name>
     <message>
-        <source>Sources</source>
-        <translation>Πηγές</translation>
-    </message>
-    <message>
-        <source>If you want to create a theme compatible with UI Themer, please read the documentation.</source>
-        <translation>Αν θέλετε να δημιουργήσετε ένα συμβατό θέμα με το UI Themer, παρακαλώ διαβάστε την τεκμηρίωση.</translation>
-    </message>
-    <message>
         <source>Documentation</source>
         <translation>Τεκμηρίωση</translation>
-    </message>
-    <message>
-        <source>Feedback</source>
-        <translation>Σχόλια</translation>
-    </message>
-    <message>
-        <source>If you want to provide feedback or report an issue, please use GitHub.</source>
-        <translation>Εάν θέλετε να αφήσετε σχόλια ή να αναφέρετε κάποιο πρόβλημα, χρησιμοποιήστε το GitHub.</translation>
     </message>
     <message>
         <source>Issues</source>
         <translation>Προβλήματα</translation>
     </message>
     <message>
-        <source>Support</source>
-        <translation>Υποστήριξη</translation>
-    </message>
-    <message>
-        <source>If you like my work and want to buy me a beer, feel free to do it!</source>
-        <translation>Αν σας αρέσει το έργο μου και θέλετε να με κεράσετε μια μπύρα, μην διστάσετε να το κάνετε!</translation>
-    </message>
-    <message>
-        <source>Donate</source>
-        <translation>Δωρεά</translation>
-    </message>
-    <message>
-        <source>Credits</source>
-        <translation>Ευχαριστίες</translation>
-    </message>
-    <message>
         <source>Translations</source>
         <translation>Μεταφράσεις</translation>
-    </message>
-    <message>
-        <source>Released under the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; license.</source>
-        <translation>Κυκλοφόρησε υπό την άδεια &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt;.</translation>
-    </message>
-    <message>
-        <source>Part of this app is based on &lt;a href=&apos;https://github.com/RikudouSage/sailfish-iconpacksupport-gui&apos;&gt;Icon pack support GUI&lt;/a&gt; by RikudouSennin.</source>
-        <translation>Μέρος αυτής της εφαρμογής βασίζεται στο &lt;a href=&apos;https://github.com/RikudouSage/sailfish-iconpacksupport-gui&apos;&gt;Icon pack support GUI&lt;/a&gt; του RikudouSennin.</translation>
-    </message>
-    <message>
-        <source>App icon by</source>
-        <translation>Εικονίδιο εφαρμογής από</translation>
-    </message>
-    <message>
-        <source>Thanks to Dax89 for helping with C++ and QML code, this app would not exist without him.</source>
-        <translation>Ευχαριστίες στον Dax89 για την βοήθεια του με τον κώδικα C++ και QML, αυτή η εφαρμογή δεν θα υπήρχε χωρίς αυτόν.</translation>
-    </message>
-    <message>
-        <source>Thanks to Eugenio_g7 for helping with the &lt;i&gt;One-click restore&lt;/i&gt; service.</source>
-        <translation>Ευχαριστίες στον Eugenio_g7 για την βοήθεια με την υπηρεσία &lt;i&gt;Αποκατάσταση με ένα κλικ&lt;/i&gt;.</translation>
-    </message>
-    <message>
-        <source>Thanks to all the testers for being brave and patient.</source>
-        <translation>Ευχαριστίες σε όλους τους δοκιμαστές για την γενναιότητα και υπομονετικότητά τους.</translation>
-    </message>
-    <message>
-        <source>Keyboard navigation based on &lt;a href=&apos;https://github.com/Wunderfitz/harbour-piepmatz&apos;&gt;Piepmatz&lt;/a&gt; by Sebastian Wolf.</source>
-        <translation>Η πλοήγηση πληκτρολογίου βασίζεται στο &lt;a href=&apos;https://github.com/Wunderfitz/harbour-piepmatz&apos;&gt;Piepmatz&lt;/a&gt; του Sebastian Wolf.</translation>
-    </message>
-    <message>
-        <source>About UI Themer</source>
-        <translation>Σχετικά με το UI Themer</translation>
     </message>
     <message>
         <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
         <translation type="unfinished">Το UI Themer σάς επιτρέπει να προσαρμόσετε εικονίδια, γραμματοσειρές και πυκνότητα εικονοστοιχείων στο Sailfish OS.</translation>
     </message>
     <message>
-        <source>Thanks to LQS for helping with the Android DPI on the Xperia XA2.</source>
-        <translation>Ευχαριστίες στον LQS για την βοήθεια του σχετικά με το υποστήριξη αλλαγής του DPI στο υποσυστημα Android σε συσκευές Xperia XA2.</translation>
+        <source>Released under the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; license.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Iconography by</source>
-        <translation>Εικονογραφία από</translation>
+        <source>Opal.About page and tabbed main UI (Themes + Display density). Icon paths: pack jolla/ to silica z/icons/, APK to launcherIcon/. Keyboard shortcuts removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon pipeline: stock mirror skips icon-launcher-folder-*; homescreen restart uses remorse when enabled; live APK theming path.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings moved to /apps/sailfishos-uithemer dconf namespace; user dconf via defaultuser from helperd/GUI.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Testing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Community testers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Theme packs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you want to create a theme compatible with UI Themer, please read the documentation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feedback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you want to provide feedback or report an issue, please use GitHub.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Credits for existing translations and how to contribute.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translator credits</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -163,177 +151,48 @@
     </message>
 </context>
 <context>
-    <name>DensityPage</name>
-    <message>
-        <source>Usage guide</source>
-        <translation>Εγχειρίδιο χρήσης</translation>
-    </message>
+    <name>DensityTabContent</name>
     <message>
         <source>Restore display density</source>
-        <translation>Επαναφορά πυκνότητας εμφάνισης</translation>
-    </message>
-    <message>
-        <source>Display density</source>
-        <translation>Πυκνότητα εμφάνισης</translation>
+        <translation type="unfinished">Επαναφορά πυκνότητας εμφάνισης</translation>
     </message>
     <message>
         <source>Device pixel ratio</source>
-        <translation>Αναλογία εικονοστοιχείων συσκευής</translation>
+        <translation type="unfinished">Αναλογία εικονοστοιχείων συσκευής</translation>
     </message>
     <message>
         <source>Change the display pixel ratio. To a smaller value corresponds an higher density.</source>
-        <translation>Αλλαγή της αναλογίας εικονοστοιχείων οθόνης. Μικρότερη τιμή αντιστοιχεί σε υψηλότερη πυκνότητα.</translation>
+        <translation type="unfinished">Αλλαγή της αναλογίας εικονοστοιχείων οθόνης. Μικρότερη τιμή αντιστοιχεί σε υψηλότερη πυκνότητα.</translation>
     </message>
     <message>
         <source>Icon size</source>
-        <translation>Μέγεθος εικονιδίων</translation>
+        <translation type="unfinished">Μέγεθος εικονιδίων</translation>
     </message>
     <message>
         <source>Change the size of UI icons. To a greater value corresponds an huger size.</source>
-        <translation>Αλλάξτε το μέγεθος των εικονιδίων UI. Mεγαλύτερη τιμή αντιστοιχεί σε μεγαλύτερο μέγεθος.</translation>
+        <translation type="unfinished">Αλλάξτε το μέγεθος των εικονιδίων UI. Mεγαλύτερη τιμή αντιστοιχεί σε μεγαλύτερο μέγεθος.</translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen (from the &lt;i&gt;Options&lt;/i&gt; page) right after you have changed the settings in this page.</source>
-        <translation>Θυμηθείτε να κάνετε επανεκκίνηση της αρχικής οθόνης (από τη σελίδα &lt;i&gt;Επιλογές&lt;/i&gt;) αμέσως μετά την αλλαγή των ρυθμίσεων σε αυτήν τη σελίδα.</translation>
-    </message>
-    <message>
-        <source>Restarted homescreen</source>
+        <source>Remember to restart the homescreen from the pulley menu on the Themes tab after changing these settings.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>GuidePage</name>
+    <name>ExternalUrlPage</name>
     <message>
-        <source>Usage guide</source>
-        <translation>Εγχειρίδιο χρήσης</translation>
-    </message>
-    <message>
-        <source>UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation>Το UI Themer σάς επιτρέπει να προσαρμόσετε εικονίδια, γραμματοσειρές και πυκνότητα εικονοστοιχείων στο Sailfish OS.</translation>
-    </message>
-    <message>
-        <source>Themes</source>
-        <translation>Θέματα</translation>
-    </message>
-    <message>
-        <source>The &lt;i&gt;Themes&lt;/i&gt; page lets you customize icons and fonts via thirdy party themes. The page lists the themes you have currently installed (e.g. from OpenRepos). To apply them, tap on a theme of your choice and then select what you want to use from that theme - if the theme contains different font weights, you can choose the default one to use for the UI. You can also combine different themes, so for example you can use icons from a theme and fonts from another. To revert to the default settings, you can use the restore option from the pulley menu.</source>
-        <translation>Η σελίδα &lt;i&gt;Θέματα&lt;/i&gt;  σάς επιτρέπει να προσαρμόσετε τα εικονίδια και τις γραμματοσειρές μέσω θεμάτων τρίτων. Στη σελίδα παρατίθενται τα θέματα που έχετε εγκαταστήσει (π.χ. από το OpenRepos). Για να τα εφαρμόσετε, πατήστε σε ένα θέμα της επιλογής σας και στη συνέχεια επιλέξτε τι θέλετε να χρησιμοποιήσετε από το συγκεκριμένο θέμα - εάν το θέμα περιέχει διαφορετικά βάρη γραμματοσειρών, μπορείτε να επιλέξετε το προεπιλεγμένο που θα χρησιμοποιηθεί για το περιβάλλον χρήστη. Μπορείτε επίσης να συνδυάσετε διαφορετικά θέματα, για παράδειγμα μπορείτε να χρησιμοποιήσετε εικονίδια από ένα θέμα και γραμματοσειρές από ένα άλλο. Για να επαναφέρετε τις προεπιλεγμένες ρυθμίσεις, μπορείτε να χρησιμοποιήσετε την επιλογή επαναφοράς από το μενού τροχαλία.</translation>
-    </message>
-    <message>
-        <source>Display density</source>
-        <translation>Πυκνότητα εμφάνισης</translation>
-    </message>
-    <message>
-        <source>By increasing the display density, you can display more content on your screen - or less, if you prefer to have bigger UI elements. Android apps use a different setting than Sailfish OS ones. To revert to the default settings, you can use the restore options from the pulley menu.</source>
-        <translation>Αυξάνοντας της πυκνότητας εμφάνισης, μπορείτε να εμφανίσετε περισσότερο περιεχόμενο στην οθόνη σας - ή λιγότερο, αν προτιμάτε να έχετε μεγαλύτερα στοιχεία UI. Οι εφαρμογές Android χρησιμοποιούν διαφορετική ρύθμιση από αυτές του Sailfish OS. Για να επαναφέρετε τις προεπιλεγμένες ρυθμίσεις, μπορείτε να χρησιμοποιήσετε τις επιλογές επαναφοράς από το μενού τροχαλία.</translation>
-    </message>
-    <message>
-        <source>Icon updater</source>
-        <translation>Ενημερωτής εικονιδίων</translation>
-    </message>
-    <message>
-        <source>Further help</source>
-        <translation>Επιπλέον βοήθεια</translation>
-    </message>
-    <message>
-        <source>One-click restore</source>
-        <translation>Επαναφορά με ένα κλικ</translation>
-    </message>
-    <message>
-        <source>Recovery</source>
-        <translation>Επαναφορά</translation>
-    </message>
-    <message>
-        <source>CLI tool</source>
-        <translation>Εργαλέιο CLI</translation>
-    </message>
-    <message>
-        <source>If anything goes wrong or you want to manage all the options via terminal, you can recall the CLI tool by typing &lt;b&gt;themepacksupport&lt;/b&gt; as root.</source>
-        <translation>Εάν κάτι πάει στραβά ή αν θέλετε να διαχειριστείτε όλες τις επιλογές μέσω τερματικού, μπορείτε να ανακαλέσετε το εργαλείο CLI πληκτρολογώντας &lt;b&gt;themepacksupport&lt;/b&gt; ως χρήστης root.</translation>
-    </message>
-    <message>
-        <source>Remember to unapply themes and display density customizations before updating your system. In case you forgot, you may need to use the options provided in the &lt;i&gt;Recovery&lt;/i&gt; page or uninstall and reinstall Theme pack support e UI Themer.</source>
-        <translation>Θυμηθείτε να αναιρέσετε την εφαρμογή θεμάτων και την προσαρμοσμένη πυκνότητα προβολής πριν από την ενημέρωση του συστήματός σας. Σε περίπτωση που ξεχάσετε, ίσως χρειαστεί να χρησιμοποιήσετε τις επιλογές που παρέχονται στη σελίδα &lt;i&gt;Επαναφορά&lt;/i&gt; ή να απεγκαταστήσετε και να επανεγκαταστήσετε την Υποστήριξη Θεμάτων του UI Themer.</translation>
-    </message>
-    <message>
-        <source>UI Themer customizations must be reverted before performing a system update. With &lt;i&gt;One-click restore&lt;/i&gt; you can automate this process and restore icons, fonts and display density settings with just one click.</source>
-        <translation>Οι προσαρμογές του UI Themer πρέπει να επανέλθουν στις προεπιλεγμένες ρυθμίσεις πριν εκτελέσετε μια ενημέρωση συστήματος. Με την &lt;i&gt;Επαναφορά ενός κλικ&lt;/i&gt; μπορείτε να αυτοματοποιήσετε αυτήν τη διαδικασία και να επαναφέρετε τα εικονίδια, τις γραμματοσειρές και τις ρυθμίσεις πυκνότητας εμφάνισης με ένα μόνο κλικ.  </translation>
-    </message>
-    <message>
-        <source>Keyboard shortcuts</source>
-        <translation>Συντομεύσεις πληκτρολογίου</translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;A&lt;/b&gt; for the about page.</source>
-        <translation>Πατήστε &lt;b&gt;A&lt;/b&gt; για την σελίδα Σχετικά.</translation>
-    </message>
-    <message>
-        <source>You can quickly restart the homescreen after you applied a setting by pressing &lt;b&gt;R&lt;/b&gt;.</source>
-        <translation>Μπορείτε να επανεκκινήσετε γρήγορα την αρχική οθόνη αφού εφαρμόσετε μια ρύθμιση πατώντας το πλήκτρο &lt;b&gt;R&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>You can cancel a countdown or a dialog by pressing &lt;b&gt;C&lt;/b&gt;.</source>
-        <translation>Μπορείτε να ακυρώσετε μια αντίστροφη μέτρηση ή ένα παράθυρο διαλόγου πατώντας το πλήκτρο &lt;b&gt;C&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. &lt;i&gt;Icon updater&lt;/i&gt; will automate this process, enabling automatic update of icons at a given time. You can choose between a pre-defined set of hours or a custom hour of the day.</source>
-        <translation>Κάθε φορά που μια εφαρμογή ενημερώνεται, θα χρειαστεί να επαν-εφαρμόσετε το θέμα για να εμφανιστεί το προσαρμοσμένο εικονίδιο. Ο &lt;i&gt;Ενημερωτής εικονιδίων&lt;/i&gt; θα αυτοματοποιήσει αυτή τη διαδικασία, ενεργοποιώντας την αυτόματη ενημέρωση των εικονιδίων σε μια δεδομένη στιγμή. Μπορείτε να επιλέξετε ανάμεσα σε ένα προκαθορισμένο χρονικό όριο ή μια προσαρμοσμένη ώρα της ημέρας.</translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;G&lt;/b&gt; for the usage guide.</source>
-        <translation>Πατήστε &lt;b&gt;G&lt;/b&gt; για τον οδηγό χρήσης.</translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;W&lt;/b&gt; for restart the first run wizard.</source>
-        <translation>Πατήστε &lt;b&gt;W&lt;/b&gt; για να επανεκκινήσετε τον οδηγό πρώτης εκτέλεσης.</translation>
-    </message>
-    <message>
-        <source>An homescreen restart may be needed to apply your settings. You can do that through the dialog or from the &lt;i&gt;Options&lt;/i&gt; page.</source>
-        <translation>Για την εφαρμογή των ρυθμίσεών σας μπορεί να χρειαστεί επανεκκίνηση στην αρχική οθόνη. Μπορείτε να το κάνετε αυτό μέσα από το παράθυρο διαλόγου ή από τη σελίδα &lt;i&gt;Επιλογές&lt;/i&gt;.</translation>
-    </message>
-    <message>
-        <source>An homescreen restart may be needed to apply your settings. You can do that from the &lt;i&gt;Options&lt;/i&gt; page.</source>
-        <translation>Μπορεί να χρειαστεί επανεκκίνηση της αρχικής οθόνης. Μπορείτε να το κάνετε αυτό από την σελίδα &lt;i&gt;Επιλογές&lt;/i&gt;.</translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;O&lt;/b&gt; for the options page.</source>
-        <translation>Πατήστε &lt;b&gt;O&lt;/b&gt; για τη σελίδα επιλογών.</translation>
-    </message>
-    <message>
-        <source>UI Themer can be navigated via a physical keyboard, using convenient shortcuts.</source>
-        <translation>Το UI Themer μπορεί να πλοηγηθεί μέσω ενός φυσικού πληκτρολογίου, χρησιμοποιώντας βολικές συντομεύσεις.</translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;B&lt;/b&gt; to go back to the previous page.</source>
-        <translation>Πατήστε &lt;b&gt;B&lt;/b&gt; για να επιστρέψετε στην προηγούμενη σελίδα.</translation>
-    </message>
-    <message>
-        <source>If you have Storeman installed, you can quickly look for compatible themes by using the &lt;i&gt;Download&lt;/i&gt; icon in the main page.</source>
-        <translation>Αν έχετε εγκαταστήσει το Storeman, μπορείτε να αναζητήσετε γρήγορα συμβατά θέματα χρησιμοποιώντας το εικονίδιο &lt;i&gt;Λήψη&lt;/i&gt; στην κύρια σελίδα.</translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;H&lt;/b&gt; for the home page.</source>
-        <translation>Πατήστε &lt;b&gt;H&lt;/b&gt; για την αρχική σελίδα.</translation>
-    </message>
-    <message>
-        <source>Press &lt;b&gt;D&lt;/b&gt; for the display density page.</source>
-        <translation>Πατήστε &lt;b&gt;D&lt;/b&gt; για τη σελίδα πυκνότητας οθόνης.</translation>
-    </message>
-    <message>
-        <source>Backup &amp; restore icons</source>
-        <translation>Δημιουργία αντιγράφου ασφαλέιας και επαναφορά εικονιδίων</translation>
-    </message>
-    <message>
-        <source>If you are working on a theme or you want to have the default icons in a safe place, you can backup them. A compressed archive will be created and saved into &lt;i&gt;/home/nemo/&lt;/i&gt;. You can also restore a previous backup.</source>
-        <translation>Εάν εργάζεστε σε ένα θέμα ή θέλετε να έχετε τα προεπιλεγμένα εικονίδια σε ασφαλές μέρος, μπορείτε να δημιουργήσετε αντίγραφα ασφαλείας αυτών. Ένα συμπιεσμένο αρχείο θα δημιουργηθεί και θα αποθηκευτεί στο &lt;i&gt;/home/nemo/&lt;/i&gt;.  Μπορείτε επίσης να επαναφέρετε ένα προηγούμενο αντίγραφο ασφαλείας.</translation>
-    </message>
-    <message>
-        <source>Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.</source>
+        <source>Swipe left to preview.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>If you still can&apos;t get the help you need, you can open an issue on</source>
-        <translation>Εάν εξακολουθείτε να μην μπορείτε να λάβετε τη βοήθεια που χρειάζεστε, μπορείτε να ανοίξετε ένα πρόβλημα στο</translation>
+        <source>You are using a mobile data connection.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LicenseListPart</name>
+    <message>
+        <source>License text</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -345,10 +204,6 @@
     <message>
         <source>Install a compatible theme first</source>
         <translation>Εγκαταστήστε ένα σθμβατό θέμα πρώτα</translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation>Εγχειρίδιο χρήσης</translation>
     </message>
     <message>
         <source>Display density</source>
@@ -371,10 +226,6 @@
         <translation type="unfinished">Επανεκκίνηση οδηγού πρώτης χρήσης</translation>
     </message>
     <message>
-        <source>Restart homescreen (fallback)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Settings applied.</source>
         <translation type="unfinished">Οι ρυθμίσεις εφαρμόστηκαν.</translation>
     </message>
@@ -390,12 +241,183 @@
         <source>Uninstalling %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Notification</name>
     <message>
         <source>Settings applied.</source>
         <translation>Οι ρυθμίσεις εφαρμόστηκαν.</translation>
+    </message>
+</context>
+<context>
+    <name>Opal.About</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Έκδοση %1</translation>
+    </message>
+    <message>
+        <source>Development</source>
+        <translation>Ανάπτυξη</translation>
+    </message>
+    <message>
+        <source>show contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Homepage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation>Μεταφράσεις</translation>
+    </message>
+    <message>
+        <source>Source Code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donations</source>
+        <translation>Δωρεές</translation>
+    </message>
+    <message>
+        <source>License</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>show license(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>News</source>
+        <translation>Ειδήσεις</translation>
+    </message>
+    <message>
+        <source>Changes since version %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>show details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thank you!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acknowledgements</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please refer to &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download license texts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You are using a mobile data connection.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>License(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Note: please check the source code for most accurate information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Opal.About.Common</name>
+    <message>
+        <source>If you want to support my work, you can buy me a cup of coffee.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You can support this project by contributing, or by donating using any of these services.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your contributions to translations or code would be most welcome.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Opal.LinkHandler</name>
+    <message>
+        <source>Copied to clipboard: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share link</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Phone number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>External link</source>
+        <translation type="unfinished">Εξωτερικός σύνδεσμος</translation>
+    </message>
+    <message>
+        <source>Open in browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open externally</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy link</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No preview available.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The page is taking too long to load.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -511,10 +533,6 @@
     <message>
         <source>Support</source>
         <translation>Υποστήριξη</translation>
-    </message>
-    <message>
-        <source>Usage guide</source>
-        <translation>Εγχειρίδιο χρήσης</translation>
     </message>
     <message>
         <source>Terms and conditions</source>

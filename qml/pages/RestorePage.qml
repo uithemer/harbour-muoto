@@ -10,52 +10,9 @@ Dialog
     property alias restoreFonts: itsrestorefonts.checked
 
     id: dlgrestore
-    focus: true
     canAccept: itsrestoreicons.checked || itsrestorefonts.checked
 
     BusyState { id: busyindicator }
-
-    Keys.onPressed: {
-        handleKeyPressed(event);
-    }
-
-    function handleKeyPressed(event) {
-
-        if (event.key === Qt.Key_Down) {
-            flickable.flick(0, - dlgrestore.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Up) {
-            flickable.flick(0, dlgrestore.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageDown) {
-            flickable.scrollToBottom();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageUp) {
-            flickable.scrollToTop();
-            event.accepted = true;
-        }
-
-        if ((event.key === Qt.Key_B) || (event.key === Qt.Key_C)) {
-            pageStack.navigateBack();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Return) {
-            dlgrestore.accept();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_G) {
-            pageStack.push(Qt.resolvedUrl("GuidePage.qml"));
-            event.accepted = true;
-        }
-    }
 
     DialogHeader {
         id: header

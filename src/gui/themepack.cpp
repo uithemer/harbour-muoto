@@ -30,7 +30,7 @@ qint64 ThemePack::getFileSize(const QString& file)
 QString ThemePack::whoami() const
 {
     // 2.6.0: no setuid escalation. Whatever uid the GUI runs under is
-    // what we return. Used only by AboutPage / GuidePage as a sanity
+    // what we return. Used only by AboutPage as a sanity
     // check; defaultuser is the expected value.
     QProcess p;
     p.start(QStringLiteral("whoami"));

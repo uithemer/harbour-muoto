@@ -29,7 +29,6 @@ Dialog
     property bool wantsIconOps: itsicons.checked || itsiconoverlay.checked
 
     id: dlgconfirm
-    focus: true
     canAccept: wantsIconOps
         || (itsfonts.checked && hasFont && selectedFont !== "")
         || (itsfonts.checked && !hasFont && hasFontNonLatin)
@@ -77,48 +76,6 @@ Dialog
                 imgpreview.source = ""
                 imgpreviewfallback.visible = true
             }
-        }
-    }
-
-    Keys.onPressed: {
-        handleKeyPressed(event);
-    }
-
-    function handleKeyPressed(event) {
-
-        if (event.key === Qt.Key_Down) {
-            flickable.flick(0, - dlgconfirm.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Up) {
-            flickable.flick(0, dlgconfirm.height);
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageDown) {
-            flickable.scrollToBottom();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_PageUp) {
-            flickable.scrollToTop();
-            event.accepted = true;
-        }
-
-        if ((event.key === Qt.Key_B) || (event.key === Qt.Key_C)) {
-            pageStack.navigateBack();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_Return) {
-            dlgconfirm.accept();
-            event.accepted = true;
-        }
-
-        if (event.key === Qt.Key_G) {
-            pageStack.push(Qt.resolvedUrl("GuidePage.qml"));
-            event.accepted = true;
         }
     }
 

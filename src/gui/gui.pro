@@ -49,6 +49,8 @@ SOURCES += \
 
 ROOT = $$PWD/../..
 
+include($$ROOT/libs/opal.pri)
+
 OTHER_FILES += \
     $$ROOT/qml/sailfishos-uithemer.qml \
     $$ROOT/qml/common/Settings.qml \
@@ -66,13 +68,12 @@ OTHER_FILES += \
     $$ROOT/qml/cover/CoverLabel.qml \
     $$ROOT/qml/cover/FontPreviewCover.qml \
     $$ROOT/qml/pages/ConfirmPage.qml \
-    $$ROOT/qml/pages/DensityPage.qml \
+    $$ROOT/qml/components/DensityTabContent.qml \
     $$ROOT/qml/pages/MainPage.qml \
     $$ROOT/qml/pages/RestorePage.qml \
     $$ROOT/qml/pages/RestoreDDPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
-    $$ROOT/qml/pages/GuidePage.qml \
     $$ROOT/rpm/* \
     $$ROOT/sailfishos-uithemer.desktop
 

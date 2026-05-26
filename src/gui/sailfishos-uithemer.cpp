@@ -47,6 +47,9 @@ int main(int argc, char *argv[])
     view->engine()->addImageProvider(QStringLiteral("uithemer"),
                                      new IconPreviewProvider);
 
+    view->engine()->addImportPath(
+        SailfishApp::pathTo(QStringLiteral("qml/modules")).toString());
+
     view->setSource(SailfishApp::pathTo(qml));
     view->show();
     return app->exec();

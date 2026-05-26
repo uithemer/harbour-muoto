@@ -1,4 +1,8 @@
 * Tue May 26 2026
+- UI: vendored Opal.LinkHandler so About page loads and external links
+  work; removed in-app Usage guide (GuidePage).
+- UI: Opal.About page and Opal.Tabs (Themes + Display density); remove
+  keyboard shortcuts and separate Density page.
 - Icons: pack jolla/ applies to silica z/icons/ with jolla backup;
   APK pack/overlay writes to apkd-bridge/launcherIcon/ (no custom/
   dir or desktop Icon= rewriting); remove hicolor mirror step.
