@@ -10,8 +10,6 @@ void touchAllLauncherDesktops();
 bool applyApkPhase(const QString& packName, bool runPack, bool overlay,
                    bool* apkIconsTouched = nullptr);
 
-void revertApkDesktopsToLauncherIcon();
-
 void removeApkCustomDir();
 
 void notifyLauncherAfterIconOp(bool apkIconsTouched = false);

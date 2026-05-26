@@ -16,7 +16,6 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     $$PWD/iconapplier.h \
     $$PWD/iconpaths.h \
-    $$PWD/iconjollamirror.h \
     $$PWD/iconpipeline.h \
     $$PWD/iconstockbackup.h \
     $$PWD/iconpackrunner.h \
@@ -33,7 +32,6 @@ HEADERS += \
 SOURCES += \
     $$PWD/iconapplier.cpp \
     $$PWD/iconpaths.cpp \
-    $$PWD/iconjollamirror.cpp \
     $$PWD/iconpipeline.cpp \
     $$PWD/iconstockbackup.cpp \
     $$PWD/iconpackrunner.cpp \

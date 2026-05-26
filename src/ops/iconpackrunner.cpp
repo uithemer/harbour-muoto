@@ -20,10 +20,6 @@ bool IconPackRunner::runSfos(const QString& packName) const
     const QStringList& jollaCap = IconPaths::jollaSizes();
     for(int i = 0; i < jollaCap.size(); ++i)
     {
-        const QString hicolorSize = IconPaths::hicolorSizeForJollaZ(jollaCap.at(i));
-        if(hicolorSize.isEmpty())
-            continue;
-
         for(int j = i; j < jollaCap.size(); ++j)
         {
             if(jollaRoot.isEmpty())
@@ -34,8 +30,8 @@ bool IconPackRunner::runSfos(const QString& packName) const
             if(!QDir(src).exists())
                 continue;
 
-            const int n = IconPaths::copyPngDirExistingOnly(src,
-                                                            IconPaths::liveNativeAppsDir(hicolorSize));
+            const int n = IconPaths::copyPngDirExistingOnly(
+                src, IconPaths::liveJollaIconsDir(jollaCap.at(i)));
             if(n > 0)
                 ok = true;
             break;
@@ -71,7 +67,7 @@ bool IconPackRunner::runApk(const QString& packName, bool* apkIconsTouched) cons
     if(!QDir(packRoot).exists())
         return false;
 
-    QDir().mkpath(IconPaths::liveApkCustomDir());
+    QDir().mkpath(IconPaths::liveApkLauncherDir());
 
     const QString apkRoot = IconPaths::resolvePackCapabilityDir(packRoot, QStringLiteral("apk"));
     const QStringList& apkCap = IconPaths::apkPackSizes();
@@ -86,7 +82,7 @@ bool IconPackRunner::runApk(const QString& packName, bool* apkIconsTouched) cons
             if(!QDir(src).exists())
                 continue;
 
-            const int n = IconPaths::copyApkPackPngsToCustomDir(src);
+            const int n = IconPaths::copyPngDirExistingOnly(src, IconPaths::liveApkLauncherDir());
             if(n > 0 && apkIconsTouched)
                 *apkIconsTouched = true;
             return n > 0;

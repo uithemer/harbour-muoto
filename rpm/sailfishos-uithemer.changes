@@ -1,3 +1,8 @@
+* Tue May 26 2026
+- Icons: pack jolla/ applies to silica z/icons/ with jolla backup;
+  APK pack/overlay writes to apkd-bridge/launcherIcon/ (no custom/
+  dir or desktop Icon= rewriting); remove hicolor mirror step.
+
 * Sat May 23 2026 3.0.0beta2
 - Icons: stock mirror/restore skips icon-launcher-folder-* (app
   icon-launcher-* only).

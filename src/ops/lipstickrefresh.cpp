@@ -5,114 +5,12 @@
 
 #include <QDir>
 #include <QFile>
-#include <QFileInfo>
-#include <QDebug>
 
-#include <pwd.h>
 #include <sys/stat.h>
 
 namespace
 {
     const char* kNativeAppsDir = "/usr/share/applications";
-
-    const QString kIconKey = QStringLiteral("Icon=");
-
-    bool redirectApkIconLine(QString& line, const QString& packName, bool* usedPackPath)
-    {
-        if(usedPackPath)
-            *usedPackPath = false;
-
-        if(!line.startsWith(kIconKey))
-            return false;
-
-        const QString launcherSeg = IconPaths::apkLauncherIconSegment();
-        if(!line.contains(launcherSeg))
-            return false;
-
-        const QString basename = line.mid(kIconKey.size()).section(QLatin1Char('/'), -1);
-        if(basename.isEmpty())
-            return false;
-
-        const QString customPath = IconPaths::liveApkCustomDir() + basename;
-        if(QFileInfo::exists(customPath))
-        {
-            line.replace(launcherSeg, IconPaths::apkCustomSegment());
-            return true;
-        }
-
-        const QString packPath = IconPaths::packApkPngPath(packName, basename);
-        if(packPath.isEmpty())
-            return false;
-
-        line = kIconKey + packPath;
-        if(usedPackPath)
-            *usedPackPath = true;
-        return true;
-    }
-
-    bool revertApkIconLine(QString& line)
-    {
-        if(!line.startsWith(kIconKey))
-            return false;
-
-        if(line.contains(IconPaths::apkLauncherIconSegment()))
-            return false;
-
-        const QString basename = line.mid(kIconKey.size()).section(QLatin1Char('/'), -1);
-        if(basename.isEmpty())
-            return false;
-
-        line = kIconKey + IconPaths::liveApkLauncherDir() + basename;
-        return true;
-    }
-
-    bool writeApkDesktopRevert(const QString& desktopPath)
-    {
-        QFile in(desktopPath);
-        if(!in.open(QIODevice::ReadOnly))
-            return false;
-
-        const QString content = QString::fromUtf8(in.readAll());
-        in.close();
-
-        QStringList lines = content.split(QLatin1Char('\n'));
-        bool changed = false;
-
-        for(int i = 0; i < lines.size(); ++i)
-        {
-            QString line = lines.at(i);
-            if(!revertApkIconLine(line))
-                continue;
-
-            lines[i] = line;
-            changed = true;
-            break;
-        }
-
-        if(!changed)
-            return false;
-
-        QFile out(desktopPath);
-        if(!out.open(QIODevice::WriteOnly | QIODevice::Truncate))
-            return false;
-
-        const bool hadTrailingNl = content.endsWith(QLatin1Char('\n'));
-        QByteArray outData = lines.join(QLatin1Char('\n')).toUtf8();
-        if(hadTrailingNl && !outData.isEmpty() && !outData.endsWith('\n'))
-            outData.append('\n');
-
-        if(out.write(outData) != outData.size())
-        {
-            out.close();
-            return false;
-        }
-        out.close();
-
-        IconPaths::chownToDefaultUser(desktopPath);
-        touchPathForLauncher(desktopPath);
-        return true;
-    }
-
 }
 
 bool touchPathForLauncher(const QString& path)
@@ -145,97 +43,6 @@ void touchAllLauncherDesktops()
         touchPathForLauncher(apk.absoluteFilePath(n));
 }
 
-void redirectApkDesktopsToCustom(const QString& packName)
-{
-    QDir apk(IconPaths::liveApkApplicationsDir());
-    if(!apk.exists())
-        return;
-
-    int updatedCustom = 0;
-    int updatedPack = 0;
-    int skipped = 0;
-
-    const QStringList apkList = apk.entryList(
-        QStringList() << QStringLiteral("apkd_launcher_*.desktop"), QDir::Files);
-    for(const QString& n : apkList)
-    {
-        const QString path = apk.absoluteFilePath(n);
-        QFile in(path);
-        if(!in.open(QIODevice::ReadOnly))
-        {
-            ++skipped;
-            continue;
-        }
-
-        const QString content = QString::fromUtf8(in.readAll());
-        in.close();
-
-        QStringList lines = content.split(QLatin1Char('\n'));
-        bool changed = false;
-        bool usedPack = false;
-
-        for(int i = 0; i < lines.size(); ++i)
-        {
-            QString line = lines.at(i);
-            if(!redirectApkIconLine(line, packName, &usedPack))
-                continue;
-
-            lines[i] = line;
-            changed = true;
-            break;
-        }
-
-        if(!changed)
-        {
-            ++skipped;
-            continue;
-        }
-
-        QFile out(path);
-        if(!out.open(QIODevice::WriteOnly | QIODevice::Truncate))
-        {
-            ++skipped;
-            continue;
-        }
-
-        const bool hadTrailingNl = content.endsWith(QLatin1Char('\n'));
-        QByteArray outData = lines.join(QLatin1Char('\n')).toUtf8();
-        if(hadTrailingNl && !outData.isEmpty() && !outData.endsWith('\n'))
-            outData.append('\n');
-
-        if(out.write(outData) != outData.size())
-        {
-            out.close();
-            ++skipped;
-            continue;
-        }
-        out.close();
-
-        IconPaths::chownToDefaultUser(path);
-        touchPathForLauncher(path);
-
-        if(usedPack)
-            ++updatedPack;
-        else
-            ++updatedCustom;
-    }
-
-    qInfo() << "uithemer: APK desktop redirect custom" << updatedCustom << "pack" << updatedPack
-            << "skipped" << skipped;
-}
-
-void revertApkDesktopsToLauncherIcon()
-{
-    QDir apk(IconPaths::liveApkApplicationsDir());
-    if(!apk.exists())
-        return;
-
-    const QStringList apkList = apk.entryList(
-        QStringList() << QStringLiteral("apkd_launcher_*.desktop"), QDir::Files);
-    for(const QString& n : apkList)
-        writeApkDesktopRevert(apk.absoluteFilePath(n));
-}
-
 bool applyApkPhase(const QString& packName, bool runPack, bool overlay, bool* apkIconsTouched)
 {
     if(apkIconsTouched)
@@ -263,7 +70,6 @@ bool applyApkPhase(const QString& packName, bool runPack, bool overlay, bool* ap
             *apkIconsTouched = true;
     }
 
-    redirectApkDesktopsToCustom(packName);
     IconPaths::chownApkLauncherTree();
 
     return any;
@@ -271,9 +77,14 @@ bool applyApkPhase(const QString& packName, bool runPack, bool overlay, bool* ap
 
 void removeApkCustomDir()
 {
-    QDir custom(IconPaths::liveApkCustomDir());
-    if(custom.exists())
-        custom.removeRecursively();
+    QString custom = IconPaths::liveApkLauncherDir();
+    const int i = custom.lastIndexOf(QStringLiteral("launcherIcon"));
+    if(i < 0)
+        return;
+    custom.replace(i, QStringLiteral("launcherIcon").size(), QStringLiteral("custom"));
+    QDir dir(custom);
+    if(dir.exists())
+        dir.removeRecursively();
 }
 
 void notifyLauncherAfterIconOp(bool apkIconsTouched)

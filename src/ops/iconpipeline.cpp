@@ -2,7 +2,6 @@
 #include "iconoverlay.h"
 #include "iconpackrunner.h"
 #include "iconpaths.h"
-#include "iconjollamirror.h"
 #include "iconstockbackup.h"
 #include "lipstickrefresh.h"
 
@@ -40,8 +39,6 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
     IconStockBackup stock;
     if(!stock.restore())
         qWarning() << "uithemer: icon stock restore failed (continuing)";
-
-    IconJollaMirror().mirrorStockLauncherIcons();
 
     if(!stock.backup())
         qWarning() << "uithemer: icon stock backup failed";
@@ -91,11 +88,8 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
 
 bool IconPipeline::restore() const
 {
-    revertApkDesktopsToLauncherIcon();
-
     IconStockBackup stock;
     stock.restore();
-    IconJollaMirror().removeStockLauncherIconsFromHicolor();
     removeApkCustomDir();
     notifyLauncherAfterIconOp(false);
     return true;

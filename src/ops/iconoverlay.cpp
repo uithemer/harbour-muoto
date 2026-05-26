@@ -95,8 +95,7 @@ namespace
         if(out.isNull())
             return false;
 
-        const QString destPath = IconPaths::liveApkCustomDir() + fileName;
-        QDir().mkpath(IconPaths::liveApkCustomDir());
+        const QString destPath = IconPaths::liveApkLauncherDir() + fileName;
         if(QFile::exists(destPath))
             QFile::remove(destPath);
         if(!out.save(destPath, "PNG"))
