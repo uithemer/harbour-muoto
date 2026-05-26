@@ -1,4 +1,7 @@
 * Tue May 26 2026
+- UI: Opal.SupportMe (periodic support dialog + pulley preview); density tab
+  pulley adds About and Restart homescreen; clearer density labels and
+  launcher icon size presets including System default (dconf reset).
 - UI: vendored Opal.LinkHandler so About page loads and external links
   work; removed in-app Usage guide (GuidePage).
 - UI: Opal.About page and Opal.Tabs (Themes + Display density); remove

@@ -12,6 +12,26 @@ SilicaFlickable {
     enabled: !settings.isRunning
     opacity: settings.isRunning ? 0.2 : 1.0
 
+    property bool _dpiRestoreQuiet: false
+
+    function launcherIconSizeLabel(px) {
+        if (!px || px < 1)
+            return qsTr("System default")
+        switch (px) {
+        case 86: return qsTr("Compact (86)")
+        case 108: return qsTr("Normal (108)")
+        case 129: return qsTr("Medium (129)")
+        case 151: return qsTr("Large (151)")
+        case 172: return qsTr("Extra large (172)")
+        default: return qsTr("Custom (%1)").arg(px)
+        }
+    }
+
+    function syncDensityUi() {
+        silica.sync()
+        sldpr.value = silica.theme_pixel_ratio
+    }
+
     Component.onCompleted: Helper.densityEnable()
 
     RemorsePopup { id: remorsepopup }
@@ -31,9 +51,11 @@ SilicaFlickable {
 
         id: themepackmodel
         onDpiRestored: {
-            silica.sync()
-            sldpr.value = silica.theme_pixel_ratio
-            cbiz.value = silica.icon_size_launcher
+            syncDensityUi()
+            if (densityView._dpiRestoreQuiet) {
+                densityView._dpiRestoreQuiet = false
+                return
+            }
             applyDone()
         }
     }
@@ -46,6 +68,18 @@ SilicaFlickable {
     }
 
     PullDownMenu {
+        MenuItem {
+            text: qsTr("About UI Themer")
+            onClicked: pageStack.push(Qt.resolvedUrl("../pages/AboutPage.qml"))
+        }
+
+        MenuItem {
+            text: qsTr("Restart homescreen")
+            onClicked: remorsepopup.execute(qsTr("Restarting homescreen"), function() {
+                themepack.restartHomescreen()
+            })
+        }
+
         MenuItem {
             text: qsTr("Restore display density")
             onClicked: {
@@ -71,12 +105,12 @@ SilicaFlickable {
             Column {
                 width: isLandscape ? parent.width / 2 : parent.width
 
-                SectionHeader { text: qsTr("Device pixel ratio") }
+                SectionHeader { text: qsTr("Display scale") }
 
                 Slider {
                     id: sldpr
                     width: parent.width
-                    label: qsTr("Device pixel ratio")
+                    label: qsTr("Display scale")
                     maximumValue: 2.3
                     minimumValue: 0.7
                     stepSize: 0.05
@@ -90,33 +124,58 @@ SilicaFlickable {
                 }
 
                 LabelText {
-                    text: qsTr("Change the display pixel ratio. To a smaller value corresponds an higher density.")
+                    text: qsTr("Controls how large Sailfish UI elements appear. "
+                               + "Lower = more on screen; higher = larger text and buttons.")
                 }
             }
 
             Column {
                 width: isLandscape ? parent.width / 2 : parent.width
 
-                SectionHeader { text: qsTr("Icon size") }
+                SectionHeader { text: qsTr("Launcher icon size") }
 
                 ComboBox {
                     id: cbiz
                     width: parent.width
-                    label: qsTr("Icon size")
-                    description: qsTr("Change the size of UI icons. To a greater value corresponds an huger size.")
-                    value: silica.icon_size_launcher
+                    label: qsTr("Launcher icon size")
+                    description: qsTr("Icons on the home screen and app grid. "
+                                      + "System default uses your device's normal size "
+                                      + "(often 108 on many phones).")
+                    value: densityView.launcherIconSizeLabel(silica.icon_size_launcher)
 
                     menu: ContextMenu {
-                        MenuItem { text: "86"; onClicked: silica.icon_size_launcher = 86 }
-                        MenuItem { text: "108"; onClicked: silica.icon_size_launcher = 108 }
-                        MenuItem { text: "129"; onClicked: silica.icon_size_launcher = 129 }
-                        MenuItem { text: "151"; onClicked: silica.icon_size_launcher = 151 }
-                        MenuItem { text: "172"; onClicked: silica.icon_size_launcher = 172 }
+                        MenuItem {
+                            text: qsTr("System default")
+                            onClicked: {
+                                densityView._dpiRestoreQuiet = true
+                                themepackmodel.restoreDpi(false, true)
+                            }
+                        }
+                        MenuItem {
+                            text: qsTr("Compact (86)")
+                            onClicked: silica.icon_size_launcher = 86
+                        }
+                        MenuItem {
+                            text: qsTr("Normal (108)")
+                            onClicked: silica.icon_size_launcher = 108
+                        }
+                        MenuItem {
+                            text: qsTr("Medium (129)")
+                            onClicked: silica.icon_size_launcher = 129
+                        }
+                        MenuItem {
+                            text: qsTr("Large (151)")
+                            onClicked: silica.icon_size_launcher = 151
+                        }
+                        MenuItem {
+                            text: qsTr("Extra large (172)")
+                            onClicked: silica.icon_size_launcher = 172
+                        }
                     }
                 }
 
                 LabelText {
-                    text: qsTr("Remember to restart the homescreen from the pulley menu on the Themes tab after changing these settings.")
+                    text: qsTr("Pull down and tap Restart homescreen after changing these settings.")
                 }
             }
         }

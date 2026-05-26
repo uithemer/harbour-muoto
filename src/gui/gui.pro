@@ -69,6 +69,7 @@ OTHER_FILES += \
     $$ROOT/qml/cover/FontPreviewCover.qml \
     $$ROOT/qml/pages/ConfirmPage.qml \
     $$ROOT/qml/components/DensityTabContent.qml \
+    $$ROOT/qml/components/UIThemerSupportDialog.qml \
     $$ROOT/qml/pages/MainPage.qml \
     $$ROOT/qml/pages/RestorePage.qml \
     $$ROOT/qml/pages/RestoreDDPage.qml \

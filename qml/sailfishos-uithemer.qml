@@ -1,8 +1,10 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Opal.SupportMe 1.0
 import harbour.uithemer 1.0
 import "pages"
 import "common"
+import "components"
 
 ApplicationWindow
 {
@@ -52,4 +54,11 @@ ApplicationWindow
     _defaultPageOrientations: defaultAllowedOrientations
 
     Settings { id: settings }
+
+    AskForSupport {
+        id: askForSupport
+        contents: Component {
+            UIThemerSupportDialog {}
+        }
+    }
 }

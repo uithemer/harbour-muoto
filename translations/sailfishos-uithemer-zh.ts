@@ -81,6 +81,13 @@
     </message>
 </context>
 <context>
+    <name>AskForSupport</name>
+    <message>
+        <source>Please take a moment to consider if you can contribute to this project in one way or another.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
@@ -157,23 +164,74 @@
         <translation type="unfinished">恢复显示密度</translation>
     </message>
     <message>
-        <source>Device pixel ratio</source>
-        <translation type="unfinished">设备像素比例</translation>
+        <source>System default</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Change the display pixel ratio. To a smaller value corresponds an higher density.</source>
-        <translation type="unfinished">更改显示像素比例。值越小，密度越大。</translation>
+        <source>Compact (86)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Icon size</source>
-        <translation type="unfinished">图标大小</translation>
+        <source>Normal (108)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Change the size of UI icons. To a greater value corresponds an huger size.</source>
-        <translation type="unfinished">更改图标大小。值越大图标也越大。</translation>
+        <source>Medium (129)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remember to restart the homescreen from the pulley menu on the Themes tab after changing these settings.</source>
+        <source>Large (151)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extra large (172)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About UI Themer</source>
+        <translation type="unfinished">关于 UI Themer</translation>
+    </message>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restarting homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size (often 108 on many phones).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pull down and tap Restart homescreen after changing these settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DetailsDrawer</name>
+    <message>
+        <source>show less</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>show more</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -247,6 +305,10 @@
     </message>
     <message>
         <source>Download more themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support UI Themer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -473,6 +535,29 @@
     </message>
 </context>
 <context>
+    <name>SupportDialog</name>
+    <message>
+        <source>Hi there!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thank you for using my little app! Maybe you can contribute back?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thank you for your support!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remind me later</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t ask me again</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ThemePackItem</name>
     <message>
         <source>Uninstall</source>
@@ -500,6 +585,65 @@
     <message>
         <source>Transifex</source>
         <translation> Transifex</translation>
+    </message>
+</context>
+<context>
+    <name>UIThemerSupportDialog</name>
+    <message>
+        <source>Hi there!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thank you for using UI Themer! If you find it useful, consider supporting its development.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thank you for your support!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donate via PayPal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send a one-off tip to support maintenance and new features.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Help with translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Improve UI Themer in your language on Transifex.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Report issues on GitHub</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File bugs, suggest features, or follow development.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Why support this app?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer is free software (GPLv3) for customizing Sailfish icons, fonts, and display density. It is maintained in spare time alongside other projects.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donations and contributions help keep the app compatible with new Sailfish releases and theme packs from the community.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Other ways to help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share theme packs, write documentation, test beta builds, or star the project on GitHub — every bit helps.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

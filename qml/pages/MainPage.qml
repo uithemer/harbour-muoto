@@ -166,6 +166,11 @@ Page
                             }
 
                             MenuItem {
+                                text: qsTr("Support UI Themer")
+                                onClicked: app.askForSupport.show()
+                            }
+
+                            MenuItem {
                                 text: qsTr("Restart first run wizard")
                                 onClicked: {
                                     settings.wizardDone = false
