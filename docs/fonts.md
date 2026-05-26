@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Font pack guidelines
-parent: Get started
+parent: Create theme packs
 nav_order: 2
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Sound pack guidelines (removed)
-parent: Get started
+parent: Create theme packs
 nav_order: 4
 ---
 

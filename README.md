@@ -22,13 +22,13 @@ UI Themer lets you customize icons, fonts and pixel density in Sailfish OS. It b
 - Font theming.
 - Display density (pixel ratio, Android DPI, launcher icon size).
 
-## Usage guide
+## Using UI Themer
 
-[Usage guide](docs/guide) — how to use the app.
+[Using UI Themer](docs/guide) — apply themes, display density, restore, and other app features.
 
-## Create custom theme packs
+## Create theme packs
 
-[Get started](https://uithemer.github.io/sailfishos-uithemer/docs/getstarted) — author documentation (icons, fonts, packaging).
+[Create theme packs](docs/getstarted) — author documentation (icons, fonts, packaging).
 
 ## Translate
 

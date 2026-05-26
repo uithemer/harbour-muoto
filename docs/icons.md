@@ -1,71 +1,13 @@
 ---
 layout: default
 title: Icon pack guidelines
-parent: Get started
+parent: Create theme packs
 nav_order: 1
 ---
 
 # Icon pack guidelines
 
 How to create icons compatible with **UI Themer**.
-
-## How icons are applied
-
-UI Themer uses the classic Theme Pack Support icon pipeline:
-
-1. **Restore** stock PNGs from `backup/icons/` (if a backup exists).
-2. **Backup** current stock PNGs with *first snapshot wins* (`ignore-existing`).
-3. **SFOS pack** (optional): copy pack `jolla/` PNGs into silica `z/icons/`, and `native/` into hicolor (`existing-only`).
-4. **SFOS overlay** (optional): composite pack `overlay/` onto hicolor apps not covered by the pack.
-5. **APK last** (when pack and/or overlay selected): copy pack `apk/` and/or overlay composites into `apkd-bridge/launcherIcon/` (`existing-only` for pack icons).
-6. **Touch** launcher `.desktop` files (`futimens`; optional lipstick restart when APK PNGs were written and **Restart homescreen** is on).
-
-**Native `.desktop` files are never modified** — `Icon=` stays as shipped; only hicolor PNGs behind that name change.
-
-**Android:** pack and overlay write themed PNGs into `launcherIcon/` when stock already exists there. `apkd_launcher_*.desktop` `Icon=` lines are not modified. Restore brings back stock PNGs from backup and removes any leftover `custom/` directory from earlier betas.
-
-**Silica** (`/usr/share/themes/sailfish-default/silica/<z>/icons/`) is updated for pack `jolla/` icons. Other stock paths under `/usr/share/themes/` are not touched.
-
-Active theme is stored in dconf under `/apps/sailfishos-uithemer` (`activeIconPack`, `activeFontPack`, `iconOverlay`, `homeRefresh`, `wizardDone`) after a **successful** apply. Cover sync re-runs the full restore→backup→run→overlay cycle for the active pack.
-
-### Live paths (where themed pixels go)
-
-| Kind | Live path | Pack source |
-|------|-----------|-------------|
-| Jolla | `/usr/share/themes/sailfish-default/silica/<z>/icons/<icon-key>.png` | `jolla/<z>/icons/` (z cascade) |
-| Native | `/usr/share/icons/hicolor/<size>/apps/<icon-key>.png` | `native/<size>/apps/` (size cascade) |
-| Android | `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/<key>.png` | `apk/<size>/<key>.png` (pack) or overlay composite |
-
-Theme packs install under `/usr/share/harbour-themepack-<name>/`. Icon PNGs are read from `$HOME/.themepack/<harbour-themepack-name>/` first (classic layout), then from `/usr/share/...` if needed. UI Themer does not modify pack files.
-
-### Stock backup store
-
-```
-/usr/share/sailfishos-uithemer/backup/icons/
-  jolla/<z>/icons/
-  native/<size>/apps/
-  apk/
-```
-
-Restore copies backup → live only where the live file still exists (`existing-only`).
-
-### Overlay
-
-When enabled, UI Themer composites pack `overlay/*.png` onto stock PNGs in hicolor (native) and `launcherIcon/` (Android). Only icons whose **basename is not already in the pack** receive overlay (`native/` ∪ `jolla/` keys for SFOS; `apk/` keys for Android).
-
-Matching uses **PNG basename** on disk, not `.desktop` `Icon=` fields.
-
-### Launcher refresh
-
-| Kind | Mechanism |
-|------|-------------|
-| Native / Jolla | `futimens` on `/usr/share/applications/*.desktop`; Lipstick watches hicolor and silica icon paths |
-| Android (APK) | `futimens` on `apkd_launcher_*.desktop` after PNG writes |
-| Fallback | **Automatic** lipstick restart when **Restart homescreen** (`homeRefresh`) is enabled after apply/restore. **Manual** restart via the Themes or Display density pulley menu (*Restart homescreen*) |
-
-> Bulk **graphic** theming (writing widget PNGs under the old meegotouch tree) was removed in 2.4.2. Pack `jolla/` trees including ambient-style keys remain useful and still apply through the silica path where matching stock files exist.
-
-Concurrent icon, restore, font, or density operations are rejected via `flock` on `/usr/share/sailfishos-uithemer/icon-ops.lock`.
 
 ## Author checklist
 
@@ -100,17 +42,11 @@ dyncal/256x256/          (planned — ignored today)
 dynclock/256x256/        (planned — ignored today)
 ```
 
-### Matching (apply and match counts)
+### Matching
 
-A native icon is themed when the pack has `<key>.png` and stock already has `hicolor/*/apps/<key>.png` (`existing-only`).
+Icons are matched by **PNG basename** (the filename without `.png`). A stock icon is themed only when a matching PNG already exists on the device (`existing-only`) — name your pack files after the stock icon keys.
 
-### Z cascade (jolla apply)
-
-Pack `jolla/<z>/icons/` is copied into live silica `<z>/icons/` using index-aligned cascade (largest z tier in the pack first for each target z). Tiers such as `z1.5-large` are valid destinations.
-
-### APK / apkd
-
-Pack `apk/` PNGs copy into `apkd-bridge/launcherIcon/<key>.png` when stock already exists there (`existing-only`).
+Provide `jolla/` tiers (`z1.0`, `z1.5`, `z2.0`, …) as needed; UI Themer uses the best available size for each target.
 
 ## Create your icons
 
@@ -122,15 +58,15 @@ Pack `apk/` PNGs copy into `apkd-bridge/launcherIcon/<key>.png` when stock alrea
 
 Stock reference paths on device (read-only):
 
-* `/usr/share/themes/sailfish-default/silica/<z>/icons/` — Jolla / silica icons (apply target for pack `jolla/`)
+* `/usr/share/themes/sailfish-default/silica/<z>/icons/` — Jolla / silica icons
 * `/usr/share/icons/hicolor` — native app icons
 * `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/` — Android launcher icons
 
 ### Jolla Ambient
 
-Jolla Ambient is the set of stock icons used across native apps (controls, status bar, covers, camera, and launchers). In a theme pack, ship them under **`jolla/<z>/icons/<icon-key>.png`**. UI Themer copies matching keys into live silica (`existing-only`), the same path used for launcher icons.
+Jolla Ambient is the set of stock icons used across native apps (controls, status bar, covers, camera, and launchers). In a theme pack, ship them under **`jolla/<z>/icons/<icon-key>.png`**.
 
-Ambient artwork is still widely used in packs (prefixes such as `graphic-*`, `icon-status-*`, `icon-launcher-*`, etc.). Bulk replacement of the entire meegotouch widget tree is no longer supported, but many ambient keys **do** theme when the stock file exists under silica.
+Ambient artwork is still widely used in packs (prefixes such as `graphic-*`, `icon-status-*`, `icon-launcher-*`, etc.). Ship matching keys under `jolla/<z>/icons/`; UI Themer applies them under `/usr/share/themes/sailfish-default/silica/<z>/icons/` where stock files already exist.
 
 Icon families (by filename prefix):
 
@@ -142,7 +78,7 @@ Icon families (by filename prefix):
 * *icon-l-*, *icon-m-*, *icon-s-* — general-purpose UI icons
 * *icon-launcher-* — app and folder launchers
 * *icon-lock-* — lock screen notification
-* *icon-lock-emergency-call* / *icon-lockscreen-emergency-call* — emergency call
+* *icon-lock-emergency-call* / *icon-lockscreen-emergency-call*: emergency call
 * *icon-status-* / *icon-system-* — status bar
 
 #### z1.0
@@ -197,7 +133,7 @@ When support returns, UI Themer will apply these only if DynCal is installed.
 
 ## Overlays
 
-If your theme uses a consistent mask or frame, add PNGs under `overlay/`. UI Themer picks a random overlay base and composites it onto stock icons **not** already covered by the pack. Use a canvas sized for the target (recommended **192×192** or **172×172** for app icons).
+If your theme uses a consistent mask or frame, add PNGs under `overlay/`. UI Themer composites them onto stock icons **not** already covered by the pack. Use a canvas sized for the target (recommended **192×192** or **172×172** for app icons).
 
 The old Android-only overlay trick (root file `type` containing `android`) is **no longer supported**.
 
@@ -208,10 +144,6 @@ The old Android-only overlay trick (root file `type` containing `android`) is **
 | `sound/` | Removed in 2.4.4 — see [Sounds](sounds) |
 | `dyncal/`, `dynclock/` | Documented, planned — see above |
 | Root `type` (`android` overlay-only packs) | Dropped in 2.7.1 |
-
-## Restore
-
-**Restore theme** (pulley menu) restores stock PNGs from the backup store, removes leftover `custom/` under apkd-bridge, clears the backup tree, touches launchers, and resets `activeIconPack` after success.
 
 ## Icon file size hints
 
