@@ -17,7 +17,7 @@ UI Themer lets you customize icons, fonts and pixel density in Sailfish OS. It b
 <a href="docs/screenshots/screenshot1.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot1.png" alt="Screenshot 1" /></a> <a href="docs/screenshots/screenshot2.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot2.png" alt="Screenshot 2" /></a> <a href="docs/screenshots/screenshot3.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot3.png" alt="Screenshot 3" /></a> <a href="docs/screenshots/screenshot4.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot4.png" alt="Screenshot 4" /></a>
 <br style="clear: both; height:5px;" />
 
-- Icon theming (native, Jolla/silica, Android).
+- Icon theming (native, Jolla, Android).
 - Icon overlay.
 - Font theming.
 - Display density (pixel ratio, Android DPI, launcher icon size).
@@ -32,19 +32,11 @@ UI Themer lets you customize icons, fonts and pixel density in Sailfish OS. It b
 
 ## Translate
 
-Languages supported:
-
-[![Languages supported](https://www.transifex.com/_/charts/redirects/fravaccaro/ui-themer/image_png/sailfishos-uithemerts)](https://explore.transifex.com/fravaccaro/ui-themer)
-
 Request a new language or contribute on the [Transifex project page](https://explore.transifex.com/fravaccaro/ui-themer).
 
 ## Builds
 
 Builds for aarch64, armv7hl and i486 are available on [OpenRepos](https://openrepos.net/content/fravaccaro/ui-themer).
-
-## Roadmap
-
-Roadmap and features are tracked on the [Trello dashboard](https://trello.com/b/WwLwj2eu).
 
 ## Credits
 
