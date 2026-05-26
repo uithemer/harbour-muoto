@@ -7,58 +7,60 @@ permalink: docs/guide
 
 # Usage guide
 
-UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.
+UI Themer lets you customize icons, fonts, and display density on Sailfish OS.
 
-Remember to unapply themes and display density customizations before updating your system. In case you forgot, you may need to use the options provided in the *Recovery* page or uninstall and reinstall Theme pack support and UI Themer.
+## Before a system update
 
-UI Themer is divided into three main sections, which provide you icons, fonts and display density customization, alongside additional options.
+Revert themes and display-density changes **before** updating Sailfish OS. If you forgot, open UI Themer and use **Restore theme** from the Themes tab pulley menu (icons and/or fonts), then restore display density from the **Display density** tab.
 
-## Themes
+## Main window
 
-The *Themes* page lets you customize icons and fonts via thirdy party themes. The page lists the themes you have currently installed (e.g. from OpenRepos). To apply them, tap on a theme of your choice and then select what you want to use from that theme - if the theme contains different font weights, you can choose the default one to use for the UI. You can also combine different themes, so for example you can use icons from a theme and fonts from another. To revert to the default settings, you can use the restore option from the pulley menu.
+The app opens on two tabs:
 
-An homescreen restart may be needed to apply your settings. You can do that through the dialog or from the *Options* page.
+* **Themes** — icon and font packs from OpenRepos or other sources
+* **Display density** — pixel ratio, Android DPI, and launcher icon size
 
-If you have Storeman installed, you can quickly look for compatible themes by using the *Download* icon in the main page.
+Documentation for creating packs is on the [Get started](getstarted) page ([full site](https://uithemer.github.io/sailfishos-uithemer/docs/getstarted)).
 
-## Display density
+## Themes tab
 
-By increasing the display density, you can display more content on your screen - or less, if you prefer to have bigger UI elements. Android apps use a different setting than Sailfish OS ones. To revert to the default settings, you can use the restore options from the pulley menu.
+Installed `harbour-themepack-*` packages appear in the list.
 
-An homescreen restart may be needed to apply your settings. You can do that through the dialog or from the *Options* page.
+**Apply a theme:** tap a pack, choose icons, overlay, and/or fonts (and font weight if offered), then confirm. You can combine packs — for example icons from one pack and fonts from another (apply each part separately).
 
-If you have an Xperia XA2 series device, a full restart may be needed may be needed to apply your Android settings.
+**Icon overlay:** if the pack supports it, enable overlay to fill in icons not included in the pack using composited frames from the pack `overlay/` folder.
 
-## Icon updater
+**Homescreen refresh:** after apply or restore, launcher icons usually update automatically. If icons look stale, enable *Restart homescreen* in the confirm dialog, or use **Restart homescreen** from the pulley menu (with remorse).
 
-Everytime an app is updated, you need to re-apply the theme in order to get the custom icon back. *Icon updater* will automate this process, enabling automatic update of icons at a given time. You can choose between a pre-defined set of hours or a custom hour of the day.
+**Restore theme:** pulley → *Restore theme* — choose whether to restore icons and/or fonts to stock.
 
-## One-click restore
+**Other pulley actions:**
 
-UI Themer customizations must be reverted before performing a system update. With One-click restore you can automate this process and restore icons, fonts and display density settings with just one click.
+* *About UI Themer* — version, changelog, link to pack documentation
+* *Support UI Themer* — optional support dialog
+* *Restart first run wizard*
+* *Restart homescreen*
+* *Download more themes* — opens Storeman search when Storeman is installed
 
-## Keyboard shortcuts
+**Uninstall:** use the pack item menu to remove an RPM; if that pack is active for icons, UI Themer restores stock icons first.
 
-UI Themer can be navigated via a physical keyboard, using convenient shortcuts.
+## Display density tab
 
-- Press **H** for the home page.
-- Press **D** for the display density page.
-- Press **O** for the options page.
-- Press **G** for the usage guide.
-- Press **A** for the about page.
-- Press **W** for restart the first run wizard.
-- Press **B** to go back to the previous page.
-- You can quickly restart the homescreen after you applied a setting by pressing **R**.
-- You can cancel a countdown or a dialog by pressing **C**.
+Adjust how much UI fits on screen:
 
-## Recovery
+* **Theme pixel ratio** — Sailfish UI density
+* **Android DPI** — separate setting for Alien Dalvik apps
+* **Launcher icon size** — includes a *System default* preset to reset dconf
 
-Here you can find advanced settings for UI Themer, e.g. reinstall default icons or fonts if you forget to revert to default theme before a system update or if the applying fails.
+Use the pulley menu on this tab for *About*, *Restart homescreen*, and density **restore** (same pattern as the Themes tab).
 
-## Backup & restore
+A full device restart may still be needed on some hardware (e.g. Xperia XA2) for Android DPI changes to take effect everywhere.
 
-If you are working on a theme or you want to have the default icons in a safe place, you can backup them. A compressed archive will be created and saved into */home/nemo/*. You can also restore a previous backup.
+## Cover
+
+The app cover shows the active icon/font pack when set. After applying from the main UI, the cover can reflect your choices; icon apply and restore run through the privileged helper service.
 
 ## Further help
 
-If you still can't get the help you need, you can open an [issue on GitHub](https://github.com/uithemer/sailfishos-uithemer/issues).
+* [Theme pack guidelines](https://uithemer.github.io/sailfishos-uithemer/docs/getstarted)
+* [Report an issue](https://github.com/uithemer/sailfishos-uithemer/issues)

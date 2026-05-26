@@ -68,7 +68,7 @@ A.AboutPageBase {
             buttons: [
                 A.InfoButton {
                     text: qsTr("Documentation")
-                    onClicked: Qt.openUrlExternally("https://github.com/uithemer/sailfishos-uithemer/blob/master/docs/getstarted.md")
+                    onClicked: Qt.openUrlExternally("https://uithemer.github.io/sailfishos-uithemer/docs/getstarted")
                 }
             ]
         },

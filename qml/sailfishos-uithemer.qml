@@ -42,6 +42,10 @@ ApplicationWindow
 
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
 
+    function showSupportDialog() {
+        askForSupport.show()
+    }
+
     initialPage: settings.wizardDone ? mainpage : welcomepage
     cover: switch (app.coverMode) {
            case "confirmDialog":

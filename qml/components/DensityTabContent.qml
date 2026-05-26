@@ -67,6 +67,19 @@ SilicaFlickable {
         property real icon_size_launcher
     }
 
+    Connections {
+        target: settings
+        onIsRunningChanged: {
+            if (!settings.isRunning)
+                syncDensityUi()
+        }
+    }
+
+    Connections {
+        target: silica
+        onTheme_pixel_ratioChanged: sldpr.value = silica.theme_pixel_ratio
+    }
+
     PullDownMenu {
         MenuItem {
             text: qsTr("About UI Themer")

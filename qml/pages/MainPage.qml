@@ -167,7 +167,7 @@ Page
 
                             MenuItem {
                                 text: qsTr("Support UI Themer")
-                                onClicked: app.askForSupport.show()
+                                onClicked: app.showSupportDialog()
                             }
 
                             MenuItem {

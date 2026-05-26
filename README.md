@@ -8,30 +8,27 @@ permalink: /
 
 # UI Themer
 
-UI Themer lets customize icons, fonts and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (shell scripts, systemd services, and the `themepacksupport` CLI) in a single package.
+UI Themer lets you customize icons, fonts and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (systemd services, privileged helper, and compatibility with `harbour-themepack-*` packages) in a single app.
 
 [![GitHub license](https://img.shields.io/github/license/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/releases/latest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fravaccaro)
 
 ## Features
 
-<a href="docs/screenshot1.png"><img width="25%" style="float: left;" src="docs/screenshot1.png" /></a> <a href="docs/screenshot2.png"><img width="25%" style="float: left;" src="docs/screenshot2.png" /></a> <a href="docs/screenshot3.png"><img width="25%" style="float: left;" src="docs/screenshot3.png" /></a> <a href="docs/screenshot4.png"><img width="25%" style="float: left;" src="docs/screenshot4.png" /></a>
+<a href="docs/screenshots/screenshot1.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot1.png" alt="Screenshot 1" /></a> <a href="docs/screenshots/screenshot2.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot2.png" alt="Screenshot 2" /></a> <a href="docs/screenshots/screenshot3.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot3.png" alt="Screenshot 3" /></a> <a href="docs/screenshots/screenshot4.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot4.png" alt="Screenshot 4" /></a>
 <br style="clear: both; height:5px;" />
 
-- Icon theming.
+- Icon theming (native, Jolla/silica, Android).
 - Icon overlay.
 - Font theming.
-- Change device pixel ratio.
-- Change DPI for Alien Dalvik.
-- Change icon size.
-- Recovery tools.
+- Display density (pixel ratio, Android DPI, launcher icon size).
 
 ## Usage guide
 
-A usage guide is available [here](docs/guide).
+[Usage guide](docs/guide) — how to use the app.
 
 ## Create custom theme packs
 
-Documentation on how to create theme packs is in this repository under [`docs/getstarted.md`](docs/getstarted.md) (also published with the project site).
+[Get started](https://uithemer.github.io/sailfishos-uithemer/docs/getstarted) — author documentation (icons, fonts, packaging).
 
 ## Translate
 
@@ -39,25 +36,25 @@ Languages supported:
 
 [![Languages supported](https://www.transifex.com/_/charts/redirects/fravaccaro/ui-themer/image_png/sailfishos-uithemerts)](https://www.transifex.com/fravaccaro/ui-themer/dashboard/)
 
-Request a new language or contribute to existing languages on the [Transifex project page](https://www.transifex.com/fravaccaro/ui-themer/dashboard/).
+Request a new language or contribute on the [Transifex project page](https://www.transifex.com/fravaccaro/ui-themer/dashboard/).
 
 ## Builds
 
-Builds for armv7hl and i486 available on [OpenRepos](https://openrepos.net/content/fravaccaro/ui-themer).
+Builds for aarch64, armv7hl and i486 are available on [OpenRepos](https://openrepos.net/content/fravaccaro/ui-themer).
 
 ## Roadmap
 
-Roadmap and features will be tracked on the [Trello dashboard](https://trello.com/b/WwLwj2eu).
+Roadmap and features are tracked on the [Trello dashboard](https://trello.com/b/WwLwj2eu).
 
 ## Credits
 
-- Theme pack support engine (bash, systemd, CLI) by fravaccaro (formerly separate `themepacksupport-sailfishos` package).
+- [Opal](https://github.com/Pretty-SFOS/opal) QML modules (About, Tabs, SupportMe, LinkHandler) by [Mirian Margiani](https://github.com/Pretty-SFOS/opal-about).
+- Theme pack support engine by fravaccaro (formerly separate `themepacksupport-sailfishos` package).
 - Partially based on [Icon pack support GUI](https://github.com/RikudouSage/sailfish-iconpacksupport-gui).
 - App icon by [Free Vectors](http://www.freevectors.com/blue-painting-roller/).
 - Iconography by [Retinaicons](https://www.flaticon.com/authors/retinaicons).
-- Keyboard navigation based on [Piepmatz](https://github.com/Wunderfitz/harbour-piepmatz) by Sebastian Wolf.
-- Thanks to Dax89 for helping with C++ and QML code, this app would not exist without him.
-- Thanks to Eugenio_g7 for helping with the *One-click restore* service.
-- Thanks to LQS for helping with the Android DPI on the Xperia XA2.
-- Thanks to [dt.iki.fi/sailfish-os-change-default-font](https://dt.iki.fi/sailfish-os-change-default-font) for a modern approach to font configuration.
-- Thanks to all the testers for being brave and patient.
+- Thanks to Dax89 for C++ and QML help.
+- Thanks to Eugenio_g7 for the *One-click restore* service.
+- Thanks to LQS for Android DPI on Xperia XA2.
+- Thanks to [dt.iki.fi/sailfish-os-change-default-font](https://dt.iki.fi/sailfish-os-change-default-font).
+- Thanks to all testers.

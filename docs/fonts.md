@@ -7,30 +7,40 @@ nav_order: 2
 
 # Font pack guidelines
 
-Here you'll find info on how to create fonts compatible with Theme pack support.
+How to create fonts compatible with **UI Themer**.
 
-In Sailfish OS there are two sets of fonts, system and Alien Dalvik, so you need to theme both.
+Sailfish OS uses separate font configuration for the system UI and Alien Dalvik; theme packs supply files under `font/` and `font-nonlatin/`. UI Themer writes `~/.config/fontconfig/conf.d/99-uithemer.conf` and runs `fc-cache` for the current user when a font pack is applied.
 
-First of all, download the TrueTypeFont (ttf) fonts of your choice. Only one font type is permitted, but 
-as many font styles (Bold, Regular, Light) as you like.
+Download TrueType (`.ttf`) or collection (`.ttc`) fonts of your choice. One typeface family per pack is typical, with multiple weights (Bold, Regular, Light, etc.).
 
-Note: result may vary depending if the fonts you chose have some characters missing.
+Note: results may vary if the fonts lack glyphs for some characters.
 
-1. Rename your fonts as `Regular.ttf`, `Light.ttf`, `ExtraLight.ttf`, etc.
-2. Place your fonts in `font`.
+## Latin / UI weights
 
-## Non-latin fonts
+1. Rename files as `Regular.ttf`, `Light.ttf`, `ExtraLight.ttf`, and so on (matching the weight names you expose in the apply dialog).
+2. Place them in the pack `font/` directory.
 
-1. Rename your fonts as `Arabic.ttf`, `Armenian.ttf`, `Chinese.ttc`, `Devangari.ttf`, `Ethiopic.ttf`, 
-`Georgian.ttf`, `Japanese.ttf`, `Hebrew.ttf`, `Naskh.ttf`, `Tamil.ttf` or `Thai.ttf`.
-2. Place your fonts in `font-nonlatin`.
+## Non-Latin fonts
 
-### Asian languages
+Place files in `font-nonlatin/`. UI Themer maps these filenames to fontconfig language tags:
 
-For Asian languages, Sailfish OS uses a .ttc font archive format. In order to make your font compatible with it, your 'Chinese.ttc' should contain 3 fonts named as following:
+| Pack filename | Used for |
+| ------------- | -------- |
+| `Arabic.ttf` | Arabic (`ar`) |
+| `Devanagari.ttf` | Hindi / Devanagari (`hi`) |
+| `Chinese.ttc` | Chinese (`zh`) |
+| `Japanese.ttf` | Japanese (`ja`) |
+| `Hebrew.ttf` | Hebrew (`he`) |
+| `Thai.ttf` | Thai (`th`) |
 
-* 'WenQuanYiZenHei-01.ttf'
-* 'WenQuanYiZenHeiMono-02.ttf'
-* 'WenQuanYiZenHeiSharp-03.ttf'
+Other names (e.g. `Armenian.ttf`, `Georgian.ttf`, `Tamil.ttf`) may be present in older pack docs but are **not** applied by the current engine unless support is added later.
 
-To achieve so, you can use softwares such as FontForge.
+### Asian languages (Chinese.ttc)
+
+Sailfish expects a `.ttc` archive for Chinese. Your `Chinese.ttc` should contain three fonts named:
+
+* `WenQuanYiZenHei-01.ttf`
+* `WenQuanYiZenHeiMono-02.ttf`
+* `WenQuanYiZenHeiSharp-03.ttf`
+
+You can build or edit these with tools such as [FontForge](https://fontforge.org/).

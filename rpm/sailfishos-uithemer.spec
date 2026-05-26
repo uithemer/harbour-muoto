@@ -39,9 +39,9 @@ BuildRequires:  desktop-file-utils
 %description
 Enables customization of icons, fonts and pixel density in Sailfish OS.
 Includes the former Theme pack support engine and CLI (themepacksupport).
-Icons are applied by rewriting the Icon= entries in .desktop files (no PNG
-replacement). Original Icon= values are tracked in a JSON manifest so the
-default theme can always be restored.
+Icons are applied by copying pack PNGs into stock paths (hicolor, silica
+jolla icons, and apkd-bridge launcherIcon) with backup/restore; fonts via
+fontconfig. Compatible with harbour-themepack-* theme packages.
 
 
 %prep
