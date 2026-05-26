@@ -8,7 +8,7 @@ SupportDialog {
     goodbye: qsTr("Thank you for your support!")
 
     SupportAction {
-        icon: SupportIcon.Liberapay
+        icon: Qt.resolvedUrl("../../images/support-liberapay.png")
         title: qsTr("Donate via Liberapay")
         description: qsTr("Send a tip or recurring support on Liberapay.")
         link: "https://liberapay.com/fravaccaro"
@@ -22,7 +22,7 @@ SupportDialog {
     }
 
     SupportAction {
-        icon: SupportIcon.Git
+        icon: Qt.resolvedUrl("../../images/support-git.png")
         title: qsTr("Report issues on GitHub")
         description: qsTr("File bugs, suggest features, or follow development.")
         link: "https://github.com/uithemer/sailfishos-uithemer/issues"
