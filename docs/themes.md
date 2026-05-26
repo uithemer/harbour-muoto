@@ -30,8 +30,6 @@ Pulley menu → *Restore theme* — choose whether to restore icons and/or fonts
 ## Other pulley actions
 
 * *About UI Themer* — version, changelog, link to pack documentation
-* *Support UI Themer* — optional support dialog
-* *Restart first run wizard*
 * *Restart homescreen*
 * *Download more themes* — opens Storeman search when Storeman is installed
 
