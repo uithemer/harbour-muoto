@@ -9,16 +9,16 @@ SupportDialog {
 
     SupportAction {
         icon: SupportIcon.Liberapay
-        title: qsTr("Donate via PayPal")
-        description: qsTr("Send a one-off tip to support maintenance and new features.")
-        link: "https://www.paypal.me/fravaccaro"
+        title: qsTr("Donate via Liberapay")
+        description: qsTr("Send a tip or recurring support on Liberapay.")
+        link: "https://liberapay.com/fravaccaro"
     }
 
     SupportAction {
-        icon: SupportIcon.Weblate
+        icon: Qt.resolvedUrl("../../images/support-translate.png")
         title: qsTr("Help with translations")
         description: qsTr("Improve UI Themer in your language on Transifex.")
-        link: "https://www.transifex.com/fravaccaro/ui-themer"
+        link: "https://explore.transifex.com/fravaccaro/ui-themer"
     }
 
     SupportAction {

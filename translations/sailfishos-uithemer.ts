@@ -598,11 +598,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Donate via PayPal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Send a one-off tip to support maintenance and new features.</source>
+        <source>Donate via Liberapay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -639,6 +635,10 @@
     </message>
     <message>
         <source>Share theme packs, write documentation, test beta builds, or star the project on GitHub — every bit helps.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send a tip or recurring support on Liberapay.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

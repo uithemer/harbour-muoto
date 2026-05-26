@@ -112,7 +112,7 @@ Page
               Button {
                   anchors.horizontalCenter: parent.horizontalCenter
                   text: qsTr("Transifex")
-                  onClicked: Qt.openUrlExternally("https://www.transifex.com/fravaccaro/ui-themer")
+                  onClicked: Qt.openUrlExternally("https://explore.transifex.com/fravaccaro/ui-themer")
               }
 
         }

@@ -17,7 +17,7 @@ A.AboutPageBase {
     authors: ["Francesco Vaccaro"]
     homepageUrl: "https://uithemer.github.io/sailfishos-uithemer/"
     sourcesUrl: "https://github.com/uithemer/sailfishos-uithemer"
-    translationsUrl: "https://www.transifex.com/fravaccaro/ui-themer"
+    translationsUrl: "https://explore.transifex.com/fravaccaro/ui-themer"
     donations.text: donations.defaultTextCoffee
     changelogItems: [
         A.ChangelogItem {
@@ -57,8 +57,8 @@ A.AboutPageBase {
     ]
     donations.services: [
         A.DonationService {
-            name: "PayPal"
-            url: "https://www.paypal.me/fravaccaro"
+            name: "Liberapay"
+            url: "https://liberapay.com/fravaccaro"
         }
     ]
     extraSections: [

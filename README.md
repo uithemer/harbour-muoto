@@ -10,7 +10,7 @@ permalink: /
 
 UI Themer lets you customize icons, fonts and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (systemd services, privileged helper, and compatibility with `harbour-themepack-*` packages) in a single app.
 
-[![GitHub license](https://img.shields.io/github/license/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/releases/latest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fravaccaro)
+[![GitHub license](https://img.shields.io/github/license/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/releases/latest) [![Donate on Liberapay](https://img.shields.io/badge/Donate-Liberapay-orange.svg)](https://liberapay.com/fravaccaro)
 
 ## Features
 
@@ -34,9 +34,9 @@ UI Themer lets you customize icons, fonts and pixel density in Sailfish OS. It b
 
 Languages supported:
 
-[![Languages supported](https://www.transifex.com/_/charts/redirects/fravaccaro/ui-themer/image_png/sailfishos-uithemerts)](https://www.transifex.com/fravaccaro/ui-themer/dashboard/)
+[![Languages supported](https://www.transifex.com/_/charts/redirects/fravaccaro/ui-themer/image_png/sailfishos-uithemerts)](https://explore.transifex.com/fravaccaro/ui-themer)
 
-Request a new language or contribute on the [Transifex project page](https://www.transifex.com/fravaccaro/ui-themer/dashboard/).
+Request a new language or contribute on the [Transifex project page](https://explore.transifex.com/fravaccaro/ui-themer).
 
 ## Builds
 

@@ -73,7 +73,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Donate")
                 onClicked: {
-                    Qt.openUrlExternally("https://www.paypal.me/fravaccaro");
+                    Qt.openUrlExternally("https://liberapay.com/fravaccaro");
                     vDon = true
                     itsdon.enabled = false
                 }
