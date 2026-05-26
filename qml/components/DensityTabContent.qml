@@ -14,22 +14,52 @@ SilicaFlickable {
 
     property bool _dpiRestoreQuiet: false
 
-    function launcherIconSizeLabel(px) {
-        if (!px || px < 1)
-            return qsTr("System default")
+    // ComboBox display comes from currentIndex/currentItem; index from ConfigurationValue
+    // so an unset key (after dconf reset) maps to "System default", not vendor default 108.
+    function iconSizeMenuIndex() {
+        iconSizeLauncherKey.sync()
+        var v = iconSizeLauncherKey.value
+        if (v === undefined)
+            return 0
+        var px = Number(v)
+        if (isNaN(px) || px < 1)
+            return 0
         switch (px) {
-        case 86: return qsTr("Compact (86)")
-        case 108: return qsTr("Normal (108)")
-        case 129: return qsTr("Medium (129)")
-        case 151: return qsTr("Large (151)")
-        case 172: return qsTr("Extra large (172)")
-        default: return qsTr("Custom (%1)").arg(px)
+        case 86: return 1
+        case 108: return 2
+        case 129: return 3
+        case 151: return 4
+        case 172: return 5
+        default: return -1
         }
+    }
+
+    function syncIconSizeCombo() {
+        iconSizeComboSyncTimer.targetIndex = iconSizeMenuIndex()
+        iconSizeComboSyncTimer.restart()
     }
 
     function syncDensityUi() {
         silica.sync()
+        iconSizeLauncherKey.sync()
         sldpr.value = silica.theme_pixel_ratio
+        syncIconSizeCombo()
+    }
+
+    Timer {
+        id: iconSizeComboSyncTimer
+        interval: 1
+        property int targetIndex: 0
+        onTriggered: {
+            if (targetIndex < 0) {
+                cbiz.currentIndex = -1
+                return
+            }
+            // Force refresh when the index is unchanged (Silica skips no-op updates).
+            if (cbiz.currentIndex === targetIndex)
+                cbiz.currentIndex = -1
+            cbiz.currentIndex = targetIndex
+        }
     }
 
     Component.onCompleted: Helper.densityEnable()
@@ -67,6 +97,11 @@ SilicaFlickable {
         property real icon_size_launcher
     }
 
+    ConfigurationValue {
+        id: iconSizeLauncherKey
+        key: "/desktop/sailfish/silica/icon_size_launcher"
+    }
+
     Connections {
         target: settings
         onIsRunningChanged: {
@@ -78,6 +113,16 @@ SilicaFlickable {
     Connections {
         target: silica
         onTheme_pixel_ratioChanged: sldpr.value = silica.theme_pixel_ratio
+        onIcon_size_launcherChanged: densityView.syncIconSizeCombo()
+        onValueChanged: function(key) {
+            if (key === "icon_size_launcher")
+                densityView.syncIconSizeCombo()
+        }
+    }
+
+    Connections {
+        target: iconSizeLauncherKey
+        onValueChanged: densityView.syncIconSizeCombo()
     }
 
     PullDownMenu {
@@ -154,7 +199,8 @@ SilicaFlickable {
                     description: qsTr("Icons on the home screen and app grid. "
                                       + "System default uses your device's normal size "
                                       + "(often 108 on many phones).")
-                    value: densityView.launcherIconSizeLabel(silica.icon_size_launcher)
+
+                    Component.onCompleted: densityView.syncIconSizeCombo()
 
                     menu: ContextMenu {
                         MenuItem {

@@ -188,10 +188,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Custom (%1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>About UI Themer</source>
         <translation type="unfinished">O programu UI Themer</translation>
     </message>
