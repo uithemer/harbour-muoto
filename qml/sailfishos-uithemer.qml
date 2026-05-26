@@ -8,6 +8,9 @@ ApplicationWindow
 {
     id: app
     property string coverMode
+    property string coverIconPreviewPack: ""
+    property bool coverIconPreviewOk: false
+    property int coverIconPreviewSeq: 0
 
     Component {
         id: mainpage
@@ -25,6 +28,16 @@ ApplicationWindow
         // Preview only (ConfirmPage buildPreview). Icon apply/restore and
         // cover refresh go through Helper -> helperd.
     }
+
+    Connections {
+        target: iconapplier
+        onPreviewReady: {
+            coverIconPreviewPack = packName
+            coverIconPreviewOk = ok
+            coverIconPreviewSeq++
+        }
+    }
+
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
 
     initialPage: settings.wizardDone ? mainpage : welcomepage

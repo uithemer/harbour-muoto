@@ -27,7 +27,8 @@ Dialog
     property string selectedFont: ""
     property string confirmheadername: "%1".arg(packDisplayName)
     property bool wantsIconOps: itsicons.checked || itsiconoverlay.checked
-
+    property string _previewBuiltPack: ""
+    property string _previewLoadedPack: ""
     id: dlgconfirm
     canAccept: wantsIconOps
         || (itsfonts.checked && hasFont && selectedFont !== "")
@@ -40,24 +41,23 @@ Dialog
             busyimg.running = false
             return
         }
+        if (packName === _previewBuiltPack)
+            return
+
+        _previewBuiltPack = packName
+        _previewLoadedPack = ""
         busyimg.running = true
         imgpreviewfallback.visible = false
         iconapplier.buildPreview(packName)
     }
 
     onStatusChanged: {
-        if (status === PageStatus.Active) {
-            app.coverMode = "confirmDialog"
+        if (status === PageStatus.Active)
             refreshIconPreview()
-        }
     }
 
     onAccepted: {
         settings.homeRefresh = tshomerefresh.checked;
-    }
-
-    Component.onCompleted: {
-        refreshIconPreview()
     }
 
     Connections {
@@ -69,10 +69,14 @@ Dialog
             busyimg.running = false
 
             if (ok) {
+                if (_previewLoadedPack === dlgconfirm.packName)
+                    return
+                _previewLoadedPack = dlgconfirm.packName
                 imgpreviewfallback.visible = false
-                imgpreview.source = ""
-                imgpreview.source = "image://uithemer/preview/" + packName + "?t=" + Date.now()
+                imgpreview.source = "image://uithemer/preview/" + dlgconfirm.packName
+                                    + "?t=" + Date.now()
             } else {
+                _previewLoadedPack = ""
                 imgpreview.source = ""
                 imgpreviewfallback.visible = true
             }
@@ -125,7 +129,8 @@ Dialog
             Item {
                 id: iconpreview
                 width: parent.width
-                height: 450
+                height: Math.min(parent.width,
+                                Math.max(450, flickable.height * 0.45))
 
                 BusyIndicator {
                     id: busyimg

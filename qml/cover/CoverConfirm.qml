@@ -28,20 +28,76 @@ CoverBackground
          id: themepack
          onHomescreenRestarted: notifyDone()
      }
+
+     function confirmPage() {
+         var p = pageStack.currentPage
+         return p && p.confirmheadername !== undefined ? p : null
+     }
+
+     property string _coverPreviewPack: ""
+
+     function setCoverPreviewSource(pack) {
+         // Image.source is a QUrl — no .indexOf(); only skip when already showing this pack.
+         if (_coverPreviewPack === pack && coverimgpreview.status === Image.Ready)
+             return
+         _coverPreviewPack = pack
+         coverimgpreview.source = "image://uithemer/preview/" + pack + "?t=" + Date.now()
+     }
+
+     function refreshCoverIconPreviewFromCache() {
+         var p = confirmPage()
+         if (!p)
+             return
+         if (!(p.hasIcons || p.hasIconOverlay) || !p.packName)
+             return
+         setCoverPreviewSource(p.packName)
+     }
+
+     function refreshCoverIconPreview(previewPack, ok) {
+         var p = confirmPage()
+         if (!p || previewPack !== p.packName)
+             return
+         if (ok)
+             setCoverPreviewSource(previewPack)
+         else {
+             _coverPreviewPack = ""
+             coverimgpreview.source = ""
+         }
+     }
+
+     function refreshCoverFontPreview() {
+         var p = confirmPage()
+         if (!p)
+             return
+         if (p.hasFont && p.selectedFont !== "") {
+             fontloader.visible = true
+             fontloader.reload()
+         }
+     }
+
+     Connections {
+         target: app
+         onCoverIconPreviewSeqChanged: {
+             refreshCoverIconPreview(app.coverIconPreviewPack,
+                                     app.coverIconPreviewOk)
+         }
+     }
+
+     Connections {
+         target: Qt.application
+         onStateChanged: {
+             if (state !== Qt.ApplicationActive
+                     && app.coverMode === "confirmDialog") {
+                 refreshCoverIconPreviewFromCache()
+                 refreshCoverFontPreview()
+             }
+         }
+     }
+
      onStatusChanged: {
          if (status === Cover.Active || Cover.Activating || Cover.Deactivating) {
-             if (pageStack.currentPage.hasIcons || pageStack.currentPage.hasIconOverlay) {
-                 var pn = pageStack.currentPage.packName
-                 if (pn) {
-                     coverimgpreview.source = ""
-                     coverimgpreview.source = "image://uithemer/preview/" + pn + "?t=" + Date.now()
-                 }
-             }
-             if (pageStack.currentPage.hasFont && pageStack.currentPage.selectedFont !== "") {
-                 fontloader.visible = true
-                 fontloader.reload()
-             }
-
+             refreshCoverIconPreviewFromCache()
+             refreshCoverFontPreview()
          }
      }
 
@@ -98,7 +154,9 @@ CoverBackground
             id: fontloader
             active: {
                 var p = pageStack.currentPage
-                return p && (p.hasFont || p.hasFontNonLatin)
+                if (!p)
+                    return false
+                return p.hasFont === true || p.hasFontNonLatin === true
             }
             source: ""
             visible: false

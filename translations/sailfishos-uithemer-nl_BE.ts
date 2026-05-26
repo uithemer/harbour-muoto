@@ -84,50 +84,50 @@
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
-        <translation>Annuleren</translation>
-    </message>
-    <message>
-        <source>Apply icons</source>
-        <translation>Pictogrammen toepassen</translation>
-    </message>
-    <message>
-        <source>Apply icon overlay</source>
-        <translation>Pictogramoverlay toepassen</translation>
-    </message>
-    <message>
-        <source>Apply fonts</source>
-        <translation>Lettertypen toepassen</translation>
-    </message>
-    <message>
-        <source>Font weight</source>
-        <translation>Lettergewicht</translation>
-    </message>
-    <message>
-        <source>Icons</source>
-        <translation>Pictogrammen</translation>
-    </message>
-    <message>
-        <source>Fonts</source>
-        <translation>Lettertypen</translation>
+        <translation type="unfinished">Annuleren</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation>Toepassen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose a font weight to preview</source>
-        <translation>Kiest een lettergewicht voor voorbeeldweergave</translation>
-    </message>
-    <message>
-        <source>Choose the main font weight for the UI.</source>
-        <translation>Kiest ’t standaardlettergewicht voor de gebruikersinterface.</translation>
-    </message>
-    <message>
-        <source>The theme supports overlays.</source>
-        <translation>’t Thema ondersteunt overlays.</translation>
+        <source>Icons</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply icon overlay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The theme supports overlays.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a font weight to preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose the main font weight for the UI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

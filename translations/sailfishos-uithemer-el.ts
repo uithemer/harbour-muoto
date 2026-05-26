@@ -84,50 +84,50 @@
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
-        <translation>Ακύρωση</translation>
-    </message>
-    <message>
-        <source>Apply icons</source>
-        <translation>Εφαρμογή εικονιδίων</translation>
-    </message>
-    <message>
-        <source>Apply icon overlay</source>
-        <translation>Εφαρμογή επικάλυψης εικονιδίου</translation>
-    </message>
-    <message>
-        <source>Apply fonts</source>
-        <translation>Εφαρμογή γραμματοσειρών</translation>
-    </message>
-    <message>
-        <source>Font weight</source>
-        <translation>Βάρος γραμματοσειράς</translation>
-    </message>
-    <message>
-        <source>Icons</source>
-        <translation>Εικονίδια</translation>
-    </message>
-    <message>
-        <source>Fonts</source>
-        <translation>Γραμματοσειρές</translation>
+        <translation type="unfinished">Ακύρωση</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation>Εφαρμογή</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose a font weight to preview</source>
-        <translation>Επιλέξτε ένα βάρος γραμματοσειράς για προεπισκόπηση</translation>
+        <source>Icons</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose the main font weight for the UI.</source>
-        <translation>Επιλέξτε το βασικό βάρος γραμματοσειράς για το περιβάλλον χρήστη.</translation>
+        <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply icon overlay</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>The theme supports overlays.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No preview available</source>
+        <source>Fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a font weight to preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose the main font weight for the UI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

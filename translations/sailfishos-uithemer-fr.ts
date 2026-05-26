@@ -87,11 +87,35 @@
         <translation type="unfinished">Annuler</translation>
     </message>
     <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Apply icons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Apply icon overlay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The theme supports overlays.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a font weight to preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -103,31 +127,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Icons</source>
-        <translation type="unfinished">îcones</translation>
-    </message>
-    <message>
-        <source>Fonts</source>
-        <translation type="unfinished">Polices</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose a font weight to preview</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Choose the main font weight for the UI.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The theme supports overlays.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No preview available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

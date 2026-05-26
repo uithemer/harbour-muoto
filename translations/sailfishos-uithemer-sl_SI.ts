@@ -84,50 +84,50 @@
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
-        <translation>Prekliči</translation>
-    </message>
-    <message>
-        <source>Apply icons</source>
-        <translation>Uveljavi ikone</translation>
-    </message>
-    <message>
-        <source>Apply icon overlay</source>
-        <translation>Uveljavi prekrivanje ikon</translation>
-    </message>
-    <message>
-        <source>Apply fonts</source>
-        <translation>Uveljavi pisave</translation>
-    </message>
-    <message>
-        <source>Font weight</source>
-        <translation>Debelina pisave</translation>
-    </message>
-    <message>
-        <source>Icons</source>
-        <translation>Ikone</translation>
-    </message>
-    <message>
-        <source>Fonts</source>
-        <translation>Pisave</translation>
+        <translation type="unfinished">Prekliči</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation>Uveljavi</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose a font weight to preview</source>
-        <translation>Izberite debelino pisave za predogled</translation>
-    </message>
-    <message>
-        <source>Choose the main font weight for the UI.</source>
-        <translation>Izberite debelino pisave uporabniškega vmesnika.</translation>
-    </message>
-    <message>
-        <source>The theme supports overlays.</source>
-        <translation>Tema podpira prekrivanje.</translation>
+        <source>Icons</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply icon overlay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The theme supports overlays.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a font weight to preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose the main font weight for the UI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

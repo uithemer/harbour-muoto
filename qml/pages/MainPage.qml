@@ -223,6 +223,7 @@ Page
 
                             onClicked: {
                                 timer.stop()
+                                app.coverMode = "confirmDialog"
                                 var dlgconfirm = pageStack.push("ConfirmPage.qml", {
                                     "settings": settings,
                                     "themePackModel": themepackmodel,
