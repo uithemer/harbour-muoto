@@ -41,6 +41,8 @@ SilicaFlickable {
     }
 
     function syncIconSizeCombo() {
+        if (!densityReady)
+            return
         iconSizeComboSyncTimer.targetIndex = iconSizeMenuIndex()
         iconSizeComboSyncTimer.restart()
     }
@@ -232,12 +234,9 @@ SilicaFlickable {
                                       + "System default uses your device's normal size "
                                       + "(often 108 on many phones).")
 
-                    Component.onCompleted: densityView.syncIconSizeCombo()
-
                     menu: ContextMenu {
                         MenuItem {
                             text: qsTr("System default")
-                            enabled: densityView.densityReady
                             onClicked: {
                                 densityView._dpiRestoreQuiet = true
                                 themepackmodel.restoreDpi(false, true)
@@ -245,27 +244,22 @@ SilicaFlickable {
                         }
                         MenuItem {
                             text: qsTr("Compact (86)")
-                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 86
                         }
                         MenuItem {
                             text: qsTr("Normal (108)")
-                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 108
                         }
                         MenuItem {
                             text: qsTr("Medium (129)")
-                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 129
                         }
                         MenuItem {
                             text: qsTr("Large (151)")
-                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 151
                         }
                         MenuItem {
                             text: qsTr("Extra large (172)")
-                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 172
                         }
                     }
