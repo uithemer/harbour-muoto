@@ -9,7 +9,7 @@
 // Replaces the legacy approach (overwriting /usr/share/fonts/sail-sans-pro
 // and friends from bash scripts) with the supported Sailfish mechanism:
 // write a single fontconfig conf file under
-//   ~/.config/fontconfig/conf.d/99-uithemer.conf
+//   ~/.config/fontconfig/conf.d/99-muoto.conf
 // that re-aliases "Sail Sans Pro Light" / "Sail Sans Pro" to the family
 // shipped by the user-selected theme pack, then run fc-cache -f.
 // Restore == remove the conf file + fc-cache.
@@ -25,7 +25,7 @@
 // runtime ignores fontconfig.
 //
 // All operations use the same non-blocking FileLock sentinel as icon ops
-// (/usr/share/sailfishos-uithemer/icon-ops.lock) so font / icon jobs
+// (/usr/share/harbour-muoto/icon-ops.lock) so font / icon jobs
 // never race each other.
 class FontApplier : public QObject
 {

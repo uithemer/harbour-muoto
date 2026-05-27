@@ -22,7 +22,7 @@ namespace
             return;
         if(!QDBusConnection::systemBus().send(message.createReply()))
         {
-            qWarning() << "uithemer-helperd: failed to send method reply:"
+            qWarning() << "muoto-helperd: failed to send method reply:"
                        << QDBusConnection::systemBus().lastError().message();
         }
     }
@@ -60,7 +60,7 @@ HelperBackend::HelperBackend(QObject *parent) : QObject(parent)
                     this,
                     SLOT(onPrepareForShutdown(bool))))
     {
-        qWarning() << "uithemer-helperd: could not subscribe to"
+        qWarning() << "muoto-helperd: could not subscribe to"
                    << "login1.Manager.PrepareForShutdown:"
                    << bus.lastError().message();
     }
@@ -73,7 +73,7 @@ void HelperBackend::resetIdleTimer()
 
 void HelperBackend::onIdleTimeout()
 {
-    qInfo() << "uithemer-helperd: idle timeout, quitting";
+    qInfo() << "muoto-helperd: idle timeout, quitting";
     emit idleQuit();
 }
 
@@ -89,7 +89,7 @@ void HelperBackend::onPrepareForShutdown(bool active)
     if(_shuttingDown)
         return;
     _shuttingDown = true;
-    qInfo() << "uithemer-helperd: PrepareForShutdown received, draining";
+    qInfo() << "muoto-helperd: PrepareForShutdown received, draining";
     _idleTimer.stop();
     // Quit via the same idleQuit signal main() already wires to
     // QCoreApplication::quit, with a small drain so any pending
@@ -116,7 +116,7 @@ ThemesAdaptor::ThemesAdaptor(HelperBackend *backend, QObject *parent)
 bool ThemesAdaptor::authorize(const QDBusMessage &message, const QString &op)
 {
     // Auth is enforced at the bus-policy layer
-    // (/etc/dbus-1/system.d/org.uithemer.UiThemer1.conf): only root may
+    // (/etc/dbus-1/system.d/org.muoto.Muoto1.conf): only root may
     // own the well-known name, and dbus-daemon rejects sends from any
     // user the policy has not allow-listed. Once a message reaches us
     // here, the caller has already cleared that gate, so we accept

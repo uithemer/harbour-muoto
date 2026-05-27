@@ -7,14 +7,14 @@ nav_order: 1
 
 # Icon pack guidelines
 
-How to create icons compatible with **UI Themer**.
+How to create icons compatible with **Muoto**.
 
 ## Author checklist
 
 1. Use the [dummy package](https://github.com/uithemer/harbour-themepack-dummy) as a template.
 2. Place launcher and app icons under `native/<size>/apps/`, `jolla/<z>/icons/`, and/or `apk/<size>/` using the **same basename** as the stock PNG (e.g. `icon-launcher-camera.png`).
 3. Optional: add `overlay/*.png` (see [Overlays](#overlays) below).
-4. Build with `harbour-themepack-*` naming and publish; users need **UI Themer** installed.
+4. Build with `harbour-themepack-*` naming and publish; users need **Muoto** installed.
 
 ## Theme pack layout
 
@@ -46,7 +46,7 @@ dynclock/256x256/        (planned — ignored today)
 
 Icons are matched by **PNG basename** (the filename without `.png`). A stock icon is themed only when a matching PNG already exists on the device (`existing-only`) — name your pack files after the stock icon keys.
 
-Provide `jolla/` tiers (`z1.0`, `z1.5`, `z2.0`, …) as needed; UI Themer uses the best available size for each target.
+Provide `jolla/` tiers (`z1.0`, `z1.5`, `z2.0`, …) as needed; Muoto uses the best available size for each target.
 
 ## Create your icons
 
@@ -66,7 +66,7 @@ Stock reference paths on device (read-only):
 
 Jolla Ambient is the set of stock icons used across native apps (controls, status bar, covers, camera, and launchers). In a theme pack, ship them under **`jolla/<z>/icons/<icon-key>.png`**.
 
-Ambient artwork is still widely used in packs (prefixes such as `graphic-*`, `icon-status-*`, `icon-launcher-*`, etc.). Ship matching keys under `jolla/<z>/icons/`; UI Themer applies them under `/usr/share/themes/sailfish-default/silica/<z>/icons/` where stock files already exist.
+Ambient artwork is still widely used in packs (prefixes such as `graphic-*`, `icon-status-*`, `icon-launcher-*`, etc.). Ship matching keys under `jolla/<z>/icons/`; Muoto applies them under `/usr/share/themes/sailfish-default/silica/<z>/icons/` where stock files already exist.
 
 Icon families (by filename prefix):
 
@@ -111,19 +111,19 @@ Pack paths: `jolla/z2.0/icons/`. Sizes are roughly 2× the z1.0 list (e.g. *icon
 ### DynCal
 
 {: .note }
-**Not applied by UI Themer 3.x yet.** Pack `dyncal/` is ignored by the current engine (support was removed in 2.4.0 and is planned to return). You may still ship this layout so packs are ready later.
+**Not applied by Muoto 3.x yet.** Pack `dyncal/` is ignored by the current engine (support was removed in 2.4.0 and is planned to return). You may still ship this layout so packs are ready later.
 
 [DynCal](https://github.com/fravaccaro/harbour-dyncal) skinning: place icons in `dyncal/256x256/`:
 
 * `dd.png` — day of month (`01`–`31`)
 * `mmdd.png` — holiday icons (month + day)
 
-When support returns, UI Themer will apply these only if DynCal is installed.
+When support returns, Muoto will apply these only if DynCal is installed.
 
 ### DynClock
 
 {: .note }
-**Not applied by UI Themer 3.x yet.** Pack `dynclock/` is ignored by the current engine (planned to return).
+**Not applied by Muoto 3.x yet.** Pack `dynclock/` is ignored by the current engine (planned to return).
 
 [DynClock](https://github.com/fravaccaro/harbour-dynclock) skinning:
 
@@ -133,7 +133,7 @@ When support returns, UI Themer will apply these only if DynCal is installed.
 
 ## Overlays
 
-If your theme uses a consistent mask or frame, add PNGs under `overlay/`. UI Themer composites them onto stock icons **not** already covered by the pack. Use a canvas sized for the target (recommended **192×192** or **172×172** for app icons).
+If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto stock icons **not** already covered by the pack. Use a canvas sized for the target (recommended **192×192** or **172×172** for app icons).
 
 The old Android-only overlay trick (root file `type` containing `android`) is **no longer supported**.
 

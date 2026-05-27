@@ -9,11 +9,11 @@ A.AboutPageBase {
     backNavigation: !settings.isRunning
     showNavigationIndicator: !settings.isRunning
     opacity: settings.isRunning ? 0.2 : 1
-    appName: "UI Themer"
+    appName: "Muoto"
     appIcon: Qt.resolvedUrl("../../images/appinfo.png")
     appVersion: "3.0.0"
     appRelease: "beta 2"
-    description: qsTr("UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.") + "<br><br>" + qsTr("Released under the <a href='https://www.gnu.org/licenses/gpl-3.0'>GNU GPLv3</a> license.")
+    description: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.") + "<br><br>" + qsTr("Released under the <a href='https://www.gnu.org/licenses/gpl-3.0'>GNU GPLv3</a> license.")
     authors: ["Francesco Vaccaro"]
     homepageUrl: "https://uithemer.github.io/sailfishos-uithemer/"
     sourcesUrl: "https://github.com/uithemer/sailfishos-uithemer"
@@ -33,7 +33,7 @@ A.AboutPageBase {
         A.ChangelogItem {
             version: "2.7.1"
             date: new Date(2026, 4, 23)
-            paragraphs: qsTr("Settings moved to /apps/sailfishos-uithemer dconf namespace; " + "user dconf via defaultuser from helperd/GUI.")
+            paragraphs: qsTr("Settings moved to /apps/harbour-muoto dconf namespace; " + "user dconf via defaultuser from helperd/GUI.")
         }
     ]
     contributionSections: [
@@ -64,7 +64,7 @@ A.AboutPageBase {
     extraSections: [
         A.InfoSection {
             title: qsTr("Theme packs")
-            text: qsTr("If you want to create a theme compatible with UI Themer, please read the documentation.")
+            text: qsTr("If you want to create a theme compatible with Muoto, please read the documentation.")
             buttons: [
                 A.InfoButton {
                     text: qsTr("Documentation")

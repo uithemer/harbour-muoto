@@ -1,19 +1,19 @@
 ---
 layout: default
-title: Using UI Themer
+title: Using Muoto
 nav_order: 2
 permalink: docs/guide
 has_children: true
 has_toc: true
 ---
 
-# Using UI Themer
+# Using Muoto
 
-UI Themer lets you customize icons, fonts, and display density on Sailfish OS.
+Muoto lets you customize icons, fonts, and display density on Sailfish OS.
 
 ## Before a system update
 
-Revert themes and display-density changes **before** updating Sailfish OS. If you forgot, open UI Themer and use **Restore theme** from the Themes tab pulley menu (icons and/or fonts), then restore display density from the **Display density** tab.
+Revert themes and display-density changes **before** updating Sailfish OS. If you forgot, open Muoto and use **Restore theme** from the Themes tab pulley menu (icons and/or fonts), then restore display density from the **Display density** tab.
 
 ## Main window
 

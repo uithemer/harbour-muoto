@@ -10,7 +10,7 @@ bool IconPackRunner::runSfos(const QString& packName) const
     const QString packRoot = IconPaths::packDir(packName);
     if(!QDir(packRoot).exists())
     {
-        qWarning() << "uithemer: icon pack run: pack not found" << packName << "at" << packRoot;
+        qWarning() << "muoto: icon pack run: pack not found" << packName << "at" << packRoot;
         return false;
     }
 

@@ -70,7 +70,7 @@ namespace
             QFile::remove(stockPath);
         if(!out.save(stockPath, "PNG"))
         {
-            qWarning() << "uithemer: overlay save failed" << stockPath << "pack" << packName;
+            qWarning() << "muoto: overlay save failed" << stockPath << "pack" << packName;
             return false;
         }
         return true;
@@ -100,7 +100,7 @@ namespace
             QFile::remove(destPath);
         if(!out.save(destPath, "PNG"))
         {
-            qWarning() << "uithemer: overlay save failed" << destPath << "pack" << packName;
+            qWarning() << "muoto: overlay save failed" << destPath << "pack" << packName;
             return false;
         }
         return true;
@@ -114,7 +114,7 @@ bool IconOverlay::applySfos(const QString& packName) const
                                                                  QStringLiteral("overlay"));
     if(overlayDir.isEmpty())
     {
-        qWarning() << "uithemer: overlay capability not found for" << packName << "share"
+        qWarning() << "muoto: overlay capability not found for" << packName << "share"
                    << shareRoot;
         return false;
     }
@@ -123,7 +123,7 @@ bool IconOverlay::applySfos(const QString& packName) const
         QStringList() << QStringLiteral("*.png"), QDir::Files);
     if(overlays.isEmpty())
     {
-        qWarning() << "uithemer: no overlay PNGs in" << overlayDir;
+        qWarning() << "muoto: no overlay PNGs in" << overlayDir;
         return false;
     }
 
@@ -142,7 +142,7 @@ bool IconOverlay::applySfos(const QString& packName) const
     }
 
     if(nativeCount > 0)
-        qInfo() << "uithemer: SFOS overlay applied for" << packName << "native" << nativeCount;
+        qInfo() << "muoto: SFOS overlay applied for" << packName << "native" << nativeCount;
 
     return true;
 }
@@ -156,7 +156,7 @@ bool IconOverlay::applyApk(const QString& packName, bool* apkIconsTouched) const
     QDir apk(launcherDir);
     if(!apk.exists())
     {
-        qWarning() << "uithemer: APK launcherIcon dir missing" << launcherDir;
+        qWarning() << "muoto: APK launcherIcon dir missing" << launcherDir;
         return false;
     }
 
@@ -175,7 +175,7 @@ bool IconOverlay::applyApk(const QString& packName, bool* apkIconsTouched) const
     }
 
     if(apkCount > 0)
-        qInfo() << "uithemer: APK overlay applied for" << packName << "apk" << apkCount;
+        qInfo() << "muoto: APK overlay applied for" << packName << "apk" << apkCount;
 
     return apkCount > 0;
 }

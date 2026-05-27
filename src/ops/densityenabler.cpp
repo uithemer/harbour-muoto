@@ -12,7 +12,7 @@
 const char* DensityEnabler::kVendorLocksDir =
     "/etc/dconf/db/vendor.d/locks";
 const char* DensityEnabler::kBackupDir =
-    "/usr/share/sailfishos-uithemer/backup/dlocks";
+    "/usr/share/harbour-muoto/backup/dlocks";
 const char* DensityEnabler::kThemePixelRatioKey =
     "/desktop/sailfish/silica/theme_pixel_ratio";
 const char* DensityEnabler::kIconSizeLauncherKey =

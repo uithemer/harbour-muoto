@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import org.nemomobile.notifications 1.0
-import harbour.uithemer 1.0
+import harbour.muoto 1.0
 import "../components"
 
 CoverBackground
@@ -41,7 +41,7 @@ CoverBackground
          if (_coverPreviewPack === pack && coverimgpreview.status === Image.Ready)
              return
          _coverPreviewPack = pack
-         coverimgpreview.source = "image://uithemer/preview/" + pack + "?t=" + Date.now()
+         coverimgpreview.source = "image://muoto/preview/" + pack + "?t=" + Date.now()
      }
 
      function refreshCoverIconPreviewFromCache() {

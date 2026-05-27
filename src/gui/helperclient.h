@@ -10,7 +10,7 @@ class QQmlEngine;
 class QJSEngine;
 
 // HelperClient: process-wide Q_OBJECT facade around the
-// org.uithemer.UiThemer1 system-bus service. Exposed to QML as the
+// org.muoto.Muoto1 system-bus service. Exposed to QML as the
 // `Helper` singleton (registered via qmlRegisterSingletonType in
 // main()), and shared with C++ peers (ThemePackModel, ThemePack) via
 // HelperClient::instance(). Singleton because each instance opens its

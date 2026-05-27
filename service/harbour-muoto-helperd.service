@@ -1,0 +1,37 @@
+[Unit]
+Description=Sailfish OS Muoto privileged helper
+Documentation=https://github.com/uithemer/sailfishos-uithemer
+Requires=dbus.service
+After=dbus.service
+# Start the daemon before user sessions come up so the GUI's very first
+# D-Bus method call never races bus-activation. 
+Before=systemd-user-sessions.service
+
+[Service]
+Type=dbus
+BusName=org.muoto.Muoto1
+User=root
+ExecStart=/usr/libexec/harbour-muoto-helperd
+# Auto-restart on any exit (the daemon may quit on idle; systemd will
+# bring it back as soon as the next D-Bus call arrives).
+Restart=always
+RestartSec=2
+
+# Hardening: the daemon legitimately writes to /usr/share/applications/
+# (Icon= rewrites), /usr/share/harbour-muoto/backup/, /etc/systemd/
+# system/ (autoupdate timer rewrites) and /etc/dconf/db/vendor.d/locks/
+# (DensityEnable). ProtectSystem=strict would break all of those, so we
+# keep it off and lean on the smaller set of restrictions below.
+NoNewPrivileges=yes
+ProtectHome=no
+PrivateTmp=no
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

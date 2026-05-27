@@ -61,7 +61,7 @@ private:
 class ThemesAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.uithemer.UiThemer1.Themes")
+    Q_CLASSINFO("D-Bus Interface", "org.muoto.Muoto1.Themes")
 
 public:
     ThemesAdaptor(HelperBackend* backend, QObject* parent);
@@ -100,7 +100,7 @@ private:
 class PacksAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.uithemer.UiThemer1.Packs")
+    Q_CLASSINFO("D-Bus Interface", "org.muoto.Muoto1.Packs")
 
 public:
     PacksAdaptor(HelperBackend* backend, QObject* parent);

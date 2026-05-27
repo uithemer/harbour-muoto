@@ -30,7 +30,7 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
     const QString root = IconPaths::packDir(packName);
     if(!QDir(root).exists())
     {
-        qWarning() << "uithemer: icon pack not found" << packName << "at" << root;
+        qWarning() << "muoto: icon pack not found" << packName << "at" << root;
         return fail(QStringLiteral("pack not found"));
     }
 
@@ -38,10 +38,10 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
 
     IconStockBackup stock;
     if(!stock.restore())
-        qWarning() << "uithemer: icon stock restore failed (continuing)";
+        qWarning() << "muoto: icon stock restore failed (continuing)";
 
     if(!stock.backup())
-        qWarning() << "uithemer: icon stock backup failed";
+        qWarning() << "muoto: icon stock backup failed";
 
     bool anyWork = false;
     bool apkIconsTouched = false;
@@ -58,7 +58,7 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
         IconOverlay ov;
         if(!ov.applySfos(packName))
         {
-            qWarning() << "uithemer: overlay not applied for" << packName << "root" << root;
+            qWarning() << "muoto: overlay not applied for" << packName << "root" << root;
             return fail(QStringLiteral("overlay not applied"));
         }
         anyWork = true;
@@ -72,7 +72,7 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
 
     if(!anyWork)
     {
-        qWarning() << "uithemer: icon apply produced no work for" << packName << "runPack"
+        qWarning() << "muoto: icon apply produced no work for" << packName << "runPack"
                    << runPack << "overlay" << overlay;
         return fail(QStringLiteral("pack run produced no copies"));
     }
@@ -81,7 +81,7 @@ IconApplyResult IconPipeline::apply(const QString& packName, bool runPack, bool 
 
     IconApplyResult r;
     r.ok = true;
-    qInfo() << "uithemer: icons applied" << packName << "runPack" << runPack << "overlay"
+    qInfo() << "muoto: icons applied" << packName << "runPack" << runPack << "overlay"
             << overlay;
     return r;
 }

@@ -7,7 +7,7 @@
 
 namespace IconPaths
 {
-    QString uithemerShare();
+    QString muotoShare();
     QString backupIconsRoot();
     QString tmpDir();
     QString packDir(const QString& packName);

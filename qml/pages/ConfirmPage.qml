@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.uithemer 1.0
+import harbour.muoto 1.0
 import "../common"
 import "../components"
 
@@ -73,7 +73,7 @@ Dialog
                     return
                 _previewLoadedPack = dlgconfirm.packName
                 imgpreviewfallback.visible = false
-                imgpreview.source = "image://uithemer/preview/" + dlgconfirm.packName
+                imgpreview.source = "image://muoto/preview/" + dlgconfirm.packName
                                     + "?t=" + Date.now()
             } else {
                 _previewLoadedPack = ""

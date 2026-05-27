@@ -1,5 +1,5 @@
 remote_theme: pmarsceill/just-the-docs
-title: UI Themer
+title: Muoto
 description: Enables customization of icons, fonts and pixel density in Sailfish OS
 baseurl: "/sailfishos-uithemer"
 exclude: ["appicons/", "images/", "qml/", "rpm/", "scripts/", "src/", "translations/", "LICENSE", "*.desktop", "*.pro"]
@@ -7,5 +7,5 @@ exclude: ["appicons/", "images/", "qml/", "rpm/", "scripts/", "src/", "translati
 url: "https://uithemer.github.io"
 search_enabled: true
 aux_links:
-    "UI Themer on GitHub":
+    "Muoto on GitHub":
       - "//github.com/uithemer/sailfishos-uithemer"

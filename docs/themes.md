@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Themes
-parent: Using UI Themer
+parent: Using Muoto
 nav_order: 2
 ---
 
@@ -29,10 +29,10 @@ Pulley menu → *Restore theme* — choose whether to restore icons and/or fonts
 
 ## Other pulley actions
 
-* *About UI Themer* — version, changelog, link to pack documentation
+* *About Muoto* — version, changelog, link to pack documentation
 * *Restart homescreen*
 * *Download more themes* — opens Storeman search when Storeman is installed
 
 ## Uninstall
 
-Use the pack item menu to remove an RPM. If that pack is active for icons, UI Themer restores stock icons first.
+Use the pack item menu to remove an RPM. If that pack is active for icons, Muoto restores stock icons first.

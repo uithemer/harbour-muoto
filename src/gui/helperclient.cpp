@@ -16,10 +16,10 @@
 
 namespace
 {
-    const char* kServiceName = "org.uithemer.UiThemer1";
-    const char* kObjectPath  = "/org/uithemer/UiThemer1";
-    const char* kIfaceThemes  = "org.uithemer.UiThemer1.Themes";
-    const char* kIfacePacks   = "org.uithemer.UiThemer1.Packs";
+    const char* kServiceName = "org.muoto.Muoto1";
+    const char* kObjectPath  = "/org/muoto/Muoto1";
+    const char* kIfaceThemes  = "org.muoto.Muoto1.Themes";
+    const char* kIfacePacks   = "org.muoto.Muoto1.Packs";
 }
 
 HelperClient::HelperClient()

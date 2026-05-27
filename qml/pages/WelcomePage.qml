@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.uithemer 1.0
+import harbour.muoto 1.0
 import "../components"
 
 Page
@@ -24,7 +24,7 @@ Page
             id: content
             width: parent.width
 
-            PageHeader { title: qsTr("Welcome to UI Themer") }
+            PageHeader { title: qsTr("Welcome to Muoto") }
 
             Grid {
                 width: parent.width
@@ -41,17 +41,17 @@ Page
                 }
 
             LabelText {
-                text: qsTr("UI Themer lets you customize icons, fonts and pixel density in Sailfish OS.")
+                text: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.")
             }
 
             SectionHeader { text: qsTr("Terms and conditions") }
 
             LabelText {
-                text: qsTr("By using UI Themer, you agree to the <a href='https://www.gnu.org/licenses/gpl-3.0'>GNU GPLv3</a> terms and conditions.")
+                text: qsTr("By using Muoto, you agree to the <a href='https://www.gnu.org/licenses/gpl-3.0'>GNU GPLv3</a> terms and conditions.")
             }
 
             LabelText {
-                text: qsTr("UI Themer DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).")
+                text: qsTr("Muoto DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).")
             }
 
             }
@@ -105,7 +105,7 @@ Page
              Button {
                   id: startuit
                   anchors.horizontalCenter: parent.horizontalCenter
-                  text: qsTr("Start UI Themer")
+                  text: qsTr("Start Muoto")
                   onClicked: {
                       settings.wizardDone = true;
                       pageStack.replace("MainPage.qml");

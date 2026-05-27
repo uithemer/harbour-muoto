@@ -8,7 +8,7 @@ nav_order: 4
 # Sound pack guidelines (removed)
 
 {: .warning }
-**Sound theming was removed in UI Themer 2.4.4.** Packs may still ship a `sound/` directory, but the engine **ignores** it. Do not publish sound-only packs for UI Themer. This page is kept so authors migrating from older Theme pack support documentation can find the former format.
+**Sound theming was removed in Muoto 2.4.4.** Packs may still ship a `sound/` directory, but the engine **ignores** it. Do not publish sound-only packs for Muoto. This page is kept so authors migrating from older Theme pack support documentation can find the former format.
 
 ## Former format
 

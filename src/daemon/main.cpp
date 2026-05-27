@@ -1,6 +1,6 @@
-// sailfishos-uithemer-helperd
+// harbour-muoto-helperd
 // ---------------------------
-// Privileged D-Bus system service that owns org.uithemer.UiThemer1 and
+// Privileged D-Bus system service that owns org.muoto.Muoto1 and
 // exposes the 2 bus-policy-gated interfaces (Themes, Packs) via
 // QDBusAbstractAdaptor subclasses. (2.7.0 retired SystemServices
 // together with OptionsPage's autoupdate timer / one-click-restore.)
@@ -30,15 +30,15 @@
 
 namespace
 {
-    const char* kServiceName = "org.uithemer.UiThemer1";
-    const char* kObjectPath  = "/org/uithemer/UiThemer1";
+    const char* kServiceName = "org.muoto.Muoto1";
+    const char* kObjectPath  = "/org/muoto/Muoto1";
 }
 
 int main(int argc, char* argv[])
 {
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName(
-        QStringLiteral("sailfishos-uithemer-helperd"));
+        QStringLiteral("harbour-muoto-helperd"));
 
     // Accept --bus only for forward-compat with the .service file's Exec
     // line; we have no other modes for now. Anything else is ignored.
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
     QDBusConnection bus = QDBusConnection::systemBus();
     if(!bus.isConnected())
     {
-        qFatal("uithemer-helperd: system bus not available: %s",
+        qFatal("muoto-helperd: system bus not available: %s",
                qPrintable(bus.lastError().message()));
         return 1;
     }
@@ -62,14 +62,14 @@ int main(int argc, char* argv[])
     if(!bus.registerObject(QString::fromLatin1(kObjectPath), &backend,
                            QDBusConnection::ExportAdaptors))
     {
-        qFatal("uithemer-helperd: registerObject failed: %s",
+        qFatal("muoto-helperd: registerObject failed: %s",
                qPrintable(bus.lastError().message()));
         return 1;
     }
 
     if(!bus.registerService(QString::fromLatin1(kServiceName)))
     {
-        qFatal("uithemer-helperd: registerService failed: %s",
+        qFatal("muoto-helperd: registerService failed: %s",
                qPrintable(bus.lastError().message()));
         return 1;
     }
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
     QObject::connect(&backend, &HelperBackend::idleQuit,
                      &app, &QCoreApplication::quit);
 
-    qInfo() << "uithemer-helperd: ready on" << kServiceName
+    qInfo() << "muoto-helperd: ready on" << kServiceName
             << "@" << kObjectPath;
     return app.exec();
 }
