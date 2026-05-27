@@ -13,6 +13,12 @@ SilicaFlickable {
     opacity: settings.isRunning ? 0.2 : 1.0
 
     property bool _dpiRestoreQuiet: false
+    property bool densityReady: false
+
+    function requestDensityUnlock() {
+        densityReady = false
+        Helper.densityEnable()
+    }
 
     // ComboBox display comes from currentIndex/currentItem; index from ConfigurationValue
     // so an unset key (after dconf reset) maps to "System default", not vendor default 108.
@@ -35,6 +41,8 @@ SilicaFlickable {
     }
 
     function syncIconSizeCombo() {
+        if (!densityReady)
+            return
         iconSizeComboSyncTimer.targetIndex = iconSizeMenuIndex()
         iconSizeComboSyncTimer.restart()
     }
@@ -62,7 +70,12 @@ SilicaFlickable {
         }
     }
 
-    Component.onCompleted: Helper.densityEnable()
+    Component.onCompleted: requestDensityUnlock()
+
+    onVisibleChanged: {
+        if (visible && !densityReady)
+            requestDensityUnlock()
+    }
 
     RemorsePopup { id: remorsepopup }
     ThemePack { id: themepack }
@@ -125,6 +138,23 @@ SilicaFlickable {
         onValueChanged: densityView.syncIconSizeCombo()
     }
 
+    Connections {
+        target: Helper
+        onDensityEnabled: {
+            densityView.densityReady = true
+            densityView.syncDensityUi()
+        }
+        onError: {
+            if (op !== "DensityEnable")
+                return
+            densityView.densityReady = false
+            notification.previewBody = message.length
+                ? message
+                : qsTr("Could not unlock display density settings")
+            notification.publish()
+        }
+    }
+
     PullDownMenu {
         MenuItem {
             text: qsTr("About Muoto")
@@ -169,6 +199,7 @@ SilicaFlickable {
                     id: sldpr
                     width: parent.width
                     label: qsTr("Display scale")
+                    enabled: densityView.densityReady
                     maximumValue: 2.3
                     minimumValue: 0.7
                     stepSize: 0.05
@@ -177,6 +208,8 @@ SilicaFlickable {
                     onPressAndHold: cancel()
 
                     onReleased: {
+                        if (!densityView.densityReady)
+                            return
                         silica.theme_pixel_ratio = value
                     }
                 }
@@ -196,11 +229,10 @@ SilicaFlickable {
                     id: cbiz
                     width: parent.width
                     label: qsTr("Launcher icon size")
+                    enabled: densityView.densityReady
                     description: qsTr("Icons on the home screen and app grid. "
                                       + "System default uses your device's normal size "
                                       + "(often 108 on many phones).")
-
-                    Component.onCompleted: densityView.syncIconSizeCombo()
 
                     menu: ContextMenu {
                         MenuItem {

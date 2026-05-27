@@ -123,7 +123,8 @@ CoverBackground
         Image {
             id: coverimg
             fillMode: Image.PreserveAspectFit
-            source: "../../images/coverbg.png"
+            source: app.isLightTheme ? "../../images/coverbg-light.png"
+                                     : "../../images/coverbg-dark.png"
             opacity: 0.1
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width

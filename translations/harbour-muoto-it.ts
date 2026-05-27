@@ -211,6 +211,10 @@
         <source>Pull down and tap Restart homescreen after changing these settings.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DetailsDrawer</name>

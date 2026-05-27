@@ -1,4 +1,8 @@
 * Wed May 27 2026
+- Density: fix vendor dconf lock relocation when .bk backups exist but SFOS
+  restored silica-configs.txt / ui-configs.txt under vendor.d/locks (spec
+  %post and DensityEnabler); DensityEnable reports failure instead of false
+  success; density tab waits for unlock before allowing scale/icon-size edits.
 - Rename package and app identity from sailfishos-uithemer (UI Themer) to
   harbour-muoto (Muoto).
 - Rename desktop/service/D-Bus/QML module/runtime paths to harbour-muoto and

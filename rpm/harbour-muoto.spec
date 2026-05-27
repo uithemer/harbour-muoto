@@ -242,13 +242,13 @@ rm -rf %{_datadir}/%{name}/backup/font-nonlatin
 # 2.5.4: density customizations are now always enabled. Mirror
 # DensityEnabler::ensureEnabled() at install time so the vendor dconf locks
 # for silica-configs.txt / ui-configs.txt are moved out of the way.
-# Idempotent: per-file move is skipped when the .bk already exists.
+# Idempotent: always move src when present (SFOS may restore locks while .bk exists).
 mkdir -p %{_datadir}/%{name}/backup/dlocks
 for f in silica-configs.txt ui-configs.txt; do
     src=/etc/dconf/db/vendor.d/locks/$f
     bk=%{_datadir}/%{name}/backup/dlocks/$f.bk
-    if [ -f "$src" ] && [ ! -f "$bk" ]; then
-        mv "$src" "$bk" || :
+    if [ -f "$src" ]; then
+        mv -f "$src" "$bk"
     fi
 done
 dconf update || :
