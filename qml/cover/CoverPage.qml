@@ -87,7 +87,8 @@ CoverBackground
     Image {
         id: coverimg
         fillMode: Image.PreserveAspectFit
-        source: "../../images/coverbg.png"
+        source: app.isLightTheme ? "../../images/coverbg-light.png"
+                                 : "../../images/coverbg-dark.png"
         opacity: {
             if (settings.isRunning)
                0.1
