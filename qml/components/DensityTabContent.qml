@@ -13,6 +13,12 @@ SilicaFlickable {
     opacity: settings.isRunning ? 0.2 : 1.0
 
     property bool _dpiRestoreQuiet: false
+    property bool densityReady: false
+
+    function requestDensityUnlock() {
+        densityReady = false
+        Helper.densityEnable()
+    }
 
     // ComboBox display comes from currentIndex/currentItem; index from ConfigurationValue
     // so an unset key (after dconf reset) maps to "System default", not vendor default 108.
@@ -62,7 +68,12 @@ SilicaFlickable {
         }
     }
 
-    Component.onCompleted: Helper.densityEnable()
+    Component.onCompleted: requestDensityUnlock()
+
+    onVisibleChanged: {
+        if (visible && !densityReady)
+            requestDensityUnlock()
+    }
 
     RemorsePopup { id: remorsepopup }
     ThemePack { id: themepack }
@@ -125,6 +136,23 @@ SilicaFlickable {
         onValueChanged: densityView.syncIconSizeCombo()
     }
 
+    Connections {
+        target: Helper
+        onDensityEnabled: {
+            densityView.densityReady = true
+            densityView.syncDensityUi()
+        }
+        onError: {
+            if (op !== "DensityEnable")
+                return
+            densityView.densityReady = false
+            notification.previewBody = message.length
+                ? message
+                : qsTr("Could not unlock display density settings")
+            notification.publish()
+        }
+    }
+
     PullDownMenu {
         MenuItem {
             text: qsTr("About Muoto")
@@ -169,6 +197,7 @@ SilicaFlickable {
                     id: sldpr
                     width: parent.width
                     label: qsTr("Display scale")
+                    enabled: densityView.densityReady
                     maximumValue: 2.3
                     minimumValue: 0.7
                     stepSize: 0.05
@@ -177,6 +206,8 @@ SilicaFlickable {
                     onPressAndHold: cancel()
 
                     onReleased: {
+                        if (!densityView.densityReady)
+                            return
                         silica.theme_pixel_ratio = value
                     }
                 }
@@ -196,6 +227,7 @@ SilicaFlickable {
                     id: cbiz
                     width: parent.width
                     label: qsTr("Launcher icon size")
+                    enabled: densityView.densityReady
                     description: qsTr("Icons on the home screen and app grid. "
                                       + "System default uses your device's normal size "
                                       + "(often 108 on many phones).")
@@ -205,6 +237,7 @@ SilicaFlickable {
                     menu: ContextMenu {
                         MenuItem {
                             text: qsTr("System default")
+                            enabled: densityView.densityReady
                             onClicked: {
                                 densityView._dpiRestoreQuiet = true
                                 themepackmodel.restoreDpi(false, true)
@@ -212,22 +245,27 @@ SilicaFlickable {
                         }
                         MenuItem {
                             text: qsTr("Compact (86)")
+                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 86
                         }
                         MenuItem {
                             text: qsTr("Normal (108)")
+                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 108
                         }
                         MenuItem {
                             text: qsTr("Medium (129)")
+                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 129
                         }
                         MenuItem {
                             text: qsTr("Large (151)")
+                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 151
                         }
                         MenuItem {
                             text: qsTr("Extra large (172)")
+                            enabled: densityView.densityReady
                             onClicked: silica.icon_size_launcher = 172
                         }
                     }

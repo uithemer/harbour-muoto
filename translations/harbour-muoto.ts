@@ -211,6 +211,10 @@
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size (often 108 on many phones).</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DetailsDrawer</name>

@@ -29,10 +29,14 @@ bool DensityEnabler::moveLockToBackup(const QString& fileName)
     const QString dst = QString::fromLatin1(kBackupDir)
                       + QLatin1Char('/') + fileName + QStringLiteral(".bk");
 
-    if(QFileInfo::exists(dst))
-        return true;
     if(!QFileInfo::exists(src))
         return true;
+
+    if(QFileInfo::exists(dst) && !QFile::remove(dst))
+    {
+        qWarning() << "DensityEnabler: failed to replace stale backup" << dst;
+        return false;
+    }
 
     if(!QFile::rename(src, dst))
     {
@@ -60,7 +64,6 @@ void DensityEnabler::ensureEnabled()
     if(!lk.isHeld())
     {
         emit error(QStringLiteral("busy"));
-        emit enabled();
         return;
     }
 
@@ -75,13 +78,14 @@ void DensityEnabler::ensureEnabled()
     bool ok = true;
     ok &= moveLockToBackup(QStringLiteral("silica-configs.txt"));
     ok &= moveLockToBackup(QStringLiteral("ui-configs.txt"));
+
+    runDconfUpdate();
+
     if(!ok)
     {
         emit error(QStringLiteral("failed to relocate one or more vendor locks"));
-        // continue: still refresh dconf
+        return;
     }
-
-    runDconfUpdate();
 
     emit enabled();
 }

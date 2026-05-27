@@ -249,13 +249,21 @@ void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
     }
     _backend->resetIdleTimer();
     DensityEnabler &density = _backend->densityEnabler();
-    auto *conn = new QMetaObject::Connection;
-    *conn = connect(&density, &DensityEnabler::enabled, this, [this, op, conn]()
-                    {
-        emit OperationCompleted(op, true, QString());
-        QObject::disconnect(*conn);
-        delete conn;
-        _backend->resetIdleTimer(); });
+    auto *enabledConn = new QMetaObject::Connection;
+    auto *errorConn = new QMetaObject::Connection;
+    auto finish = [this, op, enabledConn, errorConn](bool ok, const QString &msg)
+    {
+        emit OperationCompleted(op, ok, msg);
+        QObject::disconnect(*enabledConn);
+        QObject::disconnect(*errorConn);
+        delete enabledConn;
+        delete errorConn;
+        _backend->resetIdleTimer();
+    };
+    *enabledConn = connect(&density, &DensityEnabler::enabled, this,
+                           [finish]() { finish(true, QString()); });
+    *errorConn = connect(&density, &DensityEnabler::error, this,
+                         [finish](const QString &message) { finish(false, message); });
     density.ensureEnabled();
     sendMethodReply(message);
 }

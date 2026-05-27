@@ -19,9 +19,9 @@
 // lock files into /usr/share/harbour-muoto/backup/dlocks/<name>.bk,
 // then runs `dconf update`.
 //
-// Idempotent: safe to call repeatedly. If the .bk files already exist
-// (i.e. ensureEnabled() ran before, e.g. from %post on package install),
-// the per-file move is skipped.
+// Idempotent: safe to call repeatedly. If vendor lock files were restored
+// (e.g. after an SFOS upgrade) while .bk backups already exist, src is
+// moved again (stale .bk is replaced).
 //
 // restoreDensity(dpr, iconSize) dconf-resets
 // /desktop/sailfish/silica/{theme_pixel_ratio,icon_size_launcher} via
@@ -42,8 +42,7 @@ public:
 
 public slots:
     // Move vendor dconf locks into the muoto backup dir and refresh the
-    // dconf db. No-op on subsequent calls. Always emits enabled() (success
-    // or logged failure) so QML callers' one-shot connections always drain.
+    // dconf db. Emits enabled() on success or error(QString) on failure.
     void ensureEnabled();
 
     void restoreDensity(bool dpr, bool iconSize);
