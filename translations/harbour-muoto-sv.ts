@@ -24,28 +24,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Opal.About page and tabbed main UI (Themes + Display density). Icon paths: pack jolla/ to silica z/icons/, APK to launcherIcon/. Keyboard shortcuts removed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icon pipeline: stock mirror skips icon-launcher-folder-*; homescreen restart uses remorse when enabled; live APK theming path.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Settings moved to /apps/harbour-muoto dconf namespace; user dconf via defaultuser from helperd/GUI.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Contributors</source>
         <translation type="unfinished">Medverkande</translation>
-    </message>
-    <message>
-        <source>Code</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Testing</source>
@@ -76,7 +56,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Translator credits</source>
+        <source>UI Themer C++</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer porting for Sailfish OS 5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translators</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

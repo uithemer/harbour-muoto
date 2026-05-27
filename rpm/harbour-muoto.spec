@@ -15,7 +15,7 @@ Name:       harbour-muoto
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
 Version:        3.0.0beta3
-Release:        1
+Release:        3
 Group:          Qt/Qt
 License:        GPLv3
 Packager:       fravaccaro <fravaccaro@jollacommunity.it>

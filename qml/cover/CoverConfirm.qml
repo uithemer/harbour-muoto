@@ -69,7 +69,7 @@ CoverBackground
          var p = confirmPage()
          if (!p)
              return
-         if (p.hasFont && p.selectedFont !== "") {
+         if (p.hasFont && p.packName && p.selectedFont !== "") {
              fontloader.visible = true
              fontloader.reload()
          }
@@ -123,7 +123,7 @@ CoverBackground
         Image {
             id: coverimg
             fillMode: Image.PreserveAspectFit
-            source: isLightTheme ? "../../images/coverbg.png" : "../../images/coverbg-light.png"
+            source: "../../images/coverbg.png"
             opacity: 0.1
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
@@ -153,10 +153,8 @@ CoverBackground
         Loader {
             id: fontloader
             active: {
-                var p = pageStack.currentPage
-                if (!p)
-                    return false
-                return p.hasFont === true || p.hasFontNonLatin === true
+                var p = root.confirmPage()
+                return p && p.hasFont && p.packName && p.selectedFont !== ""
             }
             source: ""
             visible: false
@@ -165,8 +163,13 @@ CoverBackground
 
             function reload() {
                 source = ""
-                if (pageStack.currentPage.hasFont || pageStack.currentPage.hasFontNonLatin)
-                    source = "FontPreviewCover.qml"
+                var p = root.confirmPage()
+                if (!p || !p.hasFont || !p.packName || !p.selectedFont)
+                    return
+                setSource("FontPreviewCover.qml", {
+                    "packName": p.packName,
+                    "selectedFont": p.selectedFont
+                })
             }
         }
     }

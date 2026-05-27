@@ -211,7 +211,7 @@ Dialog
 
                 Loader {
                     id: fontloader
-                    active: hasFont || hasFontNonLatin
+                    active: hasFont
                     source: ""
                     width: parent.width
                     height: 350
@@ -219,8 +219,12 @@ Dialog
 
                     function reload() {
                         source = ""
-                        if (hasFont || hasFontNonLatin)
-                            source = "../components/FontPreview.qml"
+                        if (!hasFont || packName === "" || selectedFont === "")
+                            return
+                        setSource("../components/FontPreview.qml", {
+                            "packName": packName,
+                            "selectedFont": selectedFont
+                        })
                     }
                 }
 

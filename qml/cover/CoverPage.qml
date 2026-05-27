@@ -87,7 +87,7 @@ CoverBackground
     Image {
         id: coverimg
         fillMode: Image.PreserveAspectFit
-        source: isLightTheme ? "../../images/coverbg.png" : "../../images/coverbg-light.png"
+        source: "../../images/coverbg.png"
         opacity: {
             if (settings.isRunning)
                0.1
@@ -131,12 +131,12 @@ CoverBackground
         visible: !settings.isRunning
         CoverLabel {
             visible: (settings.activeIconPack && settings.activeIconPack !== 'default')
-            icon: isLightTheme ? "../../images/icon.png" : "../../images/icon-light.png"
+            icon: "../../images/icon.png"
             label: coverRoot.coverPackLabel(settings.activeIconPack)
         }
         CoverLabel {
             visible: (settings.activeFontPack && settings.activeFontPack !== 'default')
-            icon: isLightTheme ? "../../images/font.png" : "../../images/font-light.png"
+            icon: "../../images/font.png"
             label: coverRoot.coverPackLabel(settings.activeFontPack)
         }
     }

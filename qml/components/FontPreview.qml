@@ -5,6 +5,9 @@ Item {
     height: previewlabel.height
     width: parent.width
 
+    property string packName: ""
+    property string selectedFont: ""
+
     function fontWeightFromBasename(name) {
         if (!name || name === "")
             return Font.Normal
@@ -36,7 +39,7 @@ Item {
 
 FontLoader {
     id: previewfont
-    source: (selectedFont !== "" && packName !== "")
+    source: (packName && selectedFont)
             ? ("/usr/share/" + packName + "/font/" + selectedFont + ".ttf")
             : ""
 }
