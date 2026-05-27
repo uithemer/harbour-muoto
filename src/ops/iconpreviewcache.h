@@ -8,7 +8,7 @@
 
 // Process-wide, thread-safe in-memory cache for the ConfirmPage / Cover icon
 // preview. Built by IconApplier::buildPreview and read by IconPreviewProvider
-// when QML resolves an image://uithemer/preview/<packName> URL.
+// when QML resolves an image://muoto/preview/<packName> URL.
 //
 // The cache is intentionally a plain C++ singleton (no QObject parent) so it
 // outlives any Qt object hierarchy and is leak-free at process exit.

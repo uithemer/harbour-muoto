@@ -7,9 +7,9 @@ nav_order: 2
 
 # Font pack guidelines
 
-How to create fonts compatible with **UI Themer**.
+How to create fonts compatible with **Muoto**.
 
-Sailfish OS uses separate font configuration for the system UI and Alien Dalvik; theme packs supply files under `font/` and `font-nonlatin/`. UI Themer writes `~/.config/fontconfig/conf.d/99-uithemer.conf` and runs `fc-cache` for the current user when a font pack is applied.
+Sailfish OS uses separate font configuration for the system UI and Alien Dalvik; theme packs supply files under `font/` and `font-nonlatin/`. Muoto writes `~/.config/fontconfig/conf.d/99-muoto.conf` and runs `fc-cache` for the current user when a font pack is applied.
 
 Download TrueType (`.ttf`) or collection (`.ttc`) fonts of your choice. One typeface family per pack is typical, with multiple weights (Bold, Regular, Light, etc.).
 
@@ -22,7 +22,7 @@ Note: results may vary if the fonts lack glyphs for some characters.
 
 ## Non-Latin fonts
 
-Place files in `font-nonlatin/`. UI Themer maps these filenames to fontconfig language tags:
+Place files in `font-nonlatin/`. Muoto maps these filenames to fontconfig language tags:
 
 | Pack filename | Used for |
 | ------------- | -------- |

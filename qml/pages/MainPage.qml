@@ -2,7 +2,7 @@
 import Sailfish.Silica 1.0
 import org.nemomobile.notifications 1.0
 import org.nemomobile.configuration 1.0
-import harbour.uithemer 1.0
+import harbour.muoto 1.0
 import Nemo.DBus 2.0
 import Opal.Tabs 1.0 as T
 import "../components"
@@ -161,12 +161,12 @@ Page
 
                         PullDownMenu {
                             MenuItem {
-                                text: qsTr("About UI Themer")
+                                text: qsTr("About Muoto")
                                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
                             }
 
                             MenuItem {
-                                text: qsTr("Support UI Themer")
+                                text: qsTr("Support Muoto")
                                 onClicked: app.showSupportDialog()
                             }
 

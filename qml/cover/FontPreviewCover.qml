@@ -5,6 +5,9 @@ Item {
     width: parent.width
     height: previewlabel.height
 
+    property string packName: ""
+    property string selectedFont: ""
+
     function fontWeightFromBasename(name) {
         if (!name || name === "")
             return Font.Normal
@@ -36,8 +39,8 @@ Item {
 
 FontLoader {
     id: previewfont
-    source: (pageStack.currentPage.selectedFont !== "" && pageStack.currentPage.packName !== "")
-            ? ("/usr/share/" + pageStack.currentPage.packName + "/font/" + pageStack.currentPage.selectedFont + ".ttf")
+    source: (packName && selectedFont)
+            ? ("/usr/share/" + packName + "/font/" + selectedFont + ".ttf")
             : ""
 }
 
@@ -46,7 +49,7 @@ Label {
     width: parent.width - (x * 2)
     x: Theme.paddingLarge
     font.family: previewfont.name
-    font.weight: fontWeightFromBasename(pageStack.currentPage.selectedFont)
+    font.weight: fontWeightFromBasename(selectedFont)
     font.pixelSize: Theme.fontSizeExtraSmall
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas imperdiet finibus venenatis."
     verticalAlignment: Text.AlignVCenter

@@ -1,4 +1,4 @@
-TARGET = sailfishos-uithemer
+TARGET = harbour-muoto
 TEMPLATE = app
 
 CONFIG += sailfishapp c++11
@@ -39,7 +39,7 @@ HEADERS += \
     $$PWD/helperclient.h
 
 SOURCES += \
-    $$PWD/sailfishos-uithemer.cpp \
+    $$PWD/harbour-muoto.cpp \
     $$PWD/themepack.cpp \
     $$PWD/themepackmodel.cpp \
     $$PWD/fontweightmodel.cpp \
@@ -52,7 +52,7 @@ ROOT = $$PWD/../..
 include($$ROOT/libs/opal.pri)
 
 OTHER_FILES += \
-    $$ROOT/qml/sailfishos-uithemer.qml \
+    $$ROOT/qml/harbour-muoto.qml \
     $$ROOT/qml/common/Settings.qml \
     $$ROOT/qml/components/AboutLanguage.qml \
     $$ROOT/qml/components/AboutTranslator.qml \
@@ -69,14 +69,14 @@ OTHER_FILES += \
     $$ROOT/qml/cover/FontPreviewCover.qml \
     $$ROOT/qml/pages/ConfirmPage.qml \
     $$ROOT/qml/components/DensityTabContent.qml \
-    $$ROOT/qml/components/UIThemerSupportDialog.qml \
+    $$ROOT/qml/components/MuotoSupportDialog.qml \
     $$ROOT/qml/pages/MainPage.qml \
     $$ROOT/qml/pages/RestorePage.qml \
     $$ROOT/qml/pages/RestoreDDPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
     $$ROOT/rpm/* \
-    $$ROOT/sailfishos-uithemer.desktop
+    $$ROOT/harbour-muoto.desktop
 
 # --- translations (manual; replaces sailfishapp_i18n.prf) ---
 # We don't use sailfishapp_i18n.prf (see comment near `load(sailfishapp)`).
@@ -131,14 +131,14 @@ images.path  = /usr/share/$$TARGET/images
 # because the glob has nothing to match. The QML tree and the per-size
 # app icons would be missing too.
 
-# QML tree at <root>/qml -> /usr/share/sailfishos-uithemer/qml
+# QML tree at <root>/qml -> /usr/share/harbour-muoto/qml
 qml.files = $$ROOT/qml
 
-# .desktop at <root>/sailfishos-uithemer.desktop -> /usr/share/applications
-desktop.files = $$ROOT/sailfishos-uithemer.desktop
+# .desktop at <root>/harbour-muoto.desktop -> /usr/share/applications
+desktop.files = $$ROOT/harbour-muoto.desktop
 
 # Replace sailfishapp.prf's default `icon` rule (which would look for
-# sailfishos-uithemer.png next to gui.pro) with explicit per-size rules
+# harbour-muoto.png next to gui.pro) with explicit per-size rules
 # pulling from <root>/appicons/<size>/apps/. The earlier `appicons` rule
 # (non-recursive $$files() over a subdir-only tree) was a no-op, so app
 # icons never made it into the buildroot.
@@ -159,18 +159,18 @@ icon256.path  = /usr/share/icons/hicolor/256x256/apps
 # --- daemon plumbing assets ---
 # Shipped here (not in daemon.pro) so the GUI subproject owns the package
 # data layout. The daemon binary itself installs through daemon.pro.
-dbusconf.files    = $$ROOT/dbus/org.uithemer.UiThemer1.conf
+dbusconf.files    = $$ROOT/dbus/org.muoto.Muoto1.conf
 dbusconf.path     = /etc/dbus-1/system.d
 
-dbusservice.files = $$ROOT/dbus/org.uithemer.UiThemer1.service
+dbusservice.files = $$ROOT/dbus/org.muoto.Muoto1.service
 dbusservice.path  = /usr/share/dbus-1/system-services
 
 dbusxml.files = \
-    $$ROOT/dbus/org.uithemer.UiThemer1.Themes.xml \
-    $$ROOT/dbus/org.uithemer.UiThemer1.Packs.xml
+    $$ROOT/dbus/org.muoto.Muoto1.Themes.xml \
+    $$ROOT/dbus/org.muoto.Muoto1.Packs.xml
 dbusxml.path  = /usr/share/dbus-1/interfaces
 
-# No polkit hand-off. See dbus/org.uithemer.UiThemer1.conf
+# No polkit hand-off. See dbus/org.muoto.Muoto1.conf
 # for the new policy and src/daemon/helperservice.cpp for the
 # matching no-op authorize() stubs.
 

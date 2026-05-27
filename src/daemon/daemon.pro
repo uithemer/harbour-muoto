@@ -1,4 +1,4 @@
-TARGET = sailfishos-uithemer-helperd
+TARGET = harbour-muoto-helperd
 TEMPLATE = app
 
 CONFIG += c++11 console
@@ -21,7 +21,7 @@ SOURCES += \
     $$PWD/main.cpp \
     $$PWD/helperservice.cpp
 
-# The bus policy (/etc/dbus-1/system.d/org.uithemer.UiThemer1.conf) is the
+# The bus policy (/etc/dbus-1/system.d/org.muoto.Muoto1.conf) is the
 # only gate. Once a method call has cleared dbus-daemon it is
 # trusted, no PolkitQt1::checkAuthorizationSync round-trip. This
 # removes the dependency on a polkit auth-agent being present in

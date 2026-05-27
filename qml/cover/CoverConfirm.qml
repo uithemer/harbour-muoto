@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import org.nemomobile.notifications 1.0
-import harbour.uithemer 1.0
+import harbour.muoto 1.0
 import "../components"
 
 CoverBackground
@@ -41,7 +41,7 @@ CoverBackground
          if (_coverPreviewPack === pack && coverimgpreview.status === Image.Ready)
              return
          _coverPreviewPack = pack
-         coverimgpreview.source = "image://uithemer/preview/" + pack + "?t=" + Date.now()
+         coverimgpreview.source = "image://muoto/preview/" + pack + "?t=" + Date.now()
      }
 
      function refreshCoverIconPreviewFromCache() {
@@ -69,7 +69,7 @@ CoverBackground
          var p = confirmPage()
          if (!p)
              return
-         if (p.hasFont && p.selectedFont !== "") {
+         if (p.hasFont && p.packName && p.selectedFont !== "") {
              fontloader.visible = true
              fontloader.reload()
          }
@@ -123,7 +123,7 @@ CoverBackground
         Image {
             id: coverimg
             fillMode: Image.PreserveAspectFit
-            source: isLightTheme ? "../../images/coverbg.png" : "../../images/coverbg-light.png"
+            source: "../../images/coverbg.png"
             opacity: 0.1
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
@@ -153,10 +153,8 @@ CoverBackground
         Loader {
             id: fontloader
             active: {
-                var p = pageStack.currentPage
-                if (!p)
-                    return false
-                return p.hasFont === true || p.hasFontNonLatin === true
+                var p = root.confirmPage()
+                return p && p.hasFont && p.packName && p.selectedFont !== ""
             }
             source: ""
             visible: false
@@ -165,8 +163,13 @@ CoverBackground
 
             function reload() {
                 source = ""
-                if (pageStack.currentPage.hasFont || pageStack.currentPage.hasFontNonLatin)
-                    source = "FontPreviewCover.qml"
+                var p = root.confirmPage()
+                if (!p || !p.hasFont || !p.packName || !p.selectedFont)
+                    return
+                setSource("FontPreviewCover.qml", {
+                    "packName": p.packName,
+                    "selectedFont": p.selectedFont
+                })
             }
         }
     }

@@ -9,9 +9,9 @@ has_toc: true
 
 # Create theme packs
 
-Information on how to create theme packs compatible with **UI Themer**. Use the [dummy package](https://github.com/uithemer/harbour-themepack-dummy) as a reference — it includes the basic directory tree and an example spec file.
+Information on how to create theme packs compatible with **Muoto**. Use the [dummy package](https://github.com/uithemer/harbour-themepack-dummy) as a reference — it includes the basic directory tree and an example spec file.
 
-For **using** the app (apply themes, display density, restore), see **[Using UI Themer](guide)**.
+For **using** the app (apply themes, display density, restore), see **[Using Muoto](guide)**.
 
 ## Requisites
 
@@ -23,7 +23,7 @@ Read the page for the part of the theme you are creating, then return here for p
 
 * [Icons](icons)
 * [Fonts](fonts)
-* [Sounds](sounds) — **not supported** in current UI Themer releases (format kept for reference and migration)
+* [Sounds](sounds) — **not supported** in current Muoto releases (format kept for reference and migration)
 
 ## .spec file
 
@@ -64,4 +64,4 @@ If you are familiar with the Sailfish SDK, you can use the [companion app](https
 
 You are ready to build and publish. The usual channel is [OpenRepos](https://openrepos.net).
 
-In your package description or store notice, tell users to install **UI Themer** (this app replaces the old standalone *Theme pack support* / `harbour-themepacksupport` package). Theme packs must follow the `harbour-themepack-*` naming convention and the layout described in the guidelines linked above.
+In your package description or store notice, tell users to install **Muoto** (this app replaces the old standalone *Theme pack support* / `harbour-themepacksupport` package). Theme packs must follow the `harbour-themepack-*` naming convention and the layout described in the guidelines linked above.

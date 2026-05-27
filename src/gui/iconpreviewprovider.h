@@ -4,7 +4,7 @@
 #include <QQuickImageProvider>
 
 // Serves the icon-pack preview QImage cached in IconPreviewCache through QML
-// image:// URLs of the form "image://uithemer/preview/<packName>?t=<ts>".
+// image:// URLs of the form "image://muoto/preview/<packName>?t=<ts>".
 //
 // The "?t=..." query is treated as an opaque cache buster: QML strips it
 // before reaching us, but we also drop everything from the first '?' just in

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Display density
-parent: Using UI Themer
+parent: Using Muoto
 nav_order: 3
 ---
 
@@ -17,7 +17,7 @@ The **Display density** tab adjusts how much UI fits on screen.
 
 ## Pulley menu
 
-* *About UI Themer*
+* *About Muoto*
 * *Restart homescreen*
 * **Restore** display density (same pattern as the Themes tab)
 

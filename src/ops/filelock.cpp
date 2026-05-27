@@ -11,7 +11,7 @@
 
 QString FileLock::defaultLockPath()
 {
-    return QStringLiteral("/usr/share/sailfishos-uithemer/icon-ops.lock");
+    return QStringLiteral("/usr/share/harbour-muoto/icon-ops.lock");
 }
 
 bool FileLock::tryProbe(const QString& path)

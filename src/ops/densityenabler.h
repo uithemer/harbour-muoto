@@ -13,10 +13,10 @@
 //   /etc/dconf/db/vendor.d/locks/silica-configs.txt
 //   /etc/dconf/db/vendor.d/locks/ui-configs.txt
 // that pin Silica/UI keys (e.g. icon_size_launcher, theme_pixel_ratio)
-// to their vendor defaults. UI Themer needs to mutate those keys for the
+// to their vendor defaults. Muoto needs to mutate those keys for the
 // "Display density" page to take effect, so the lock files have to be
 // moved out of the way. ensureEnabled() does that once: it relocates the
-// lock files into /usr/share/sailfishos-uithemer/backup/dlocks/<name>.bk,
+// lock files into /usr/share/harbour-muoto/backup/dlocks/<name>.bk,
 // then runs `dconf update`.
 //
 // Idempotent: safe to call repeatedly. If the .bk files already exist
@@ -41,7 +41,7 @@ public:
     explicit DensityEnabler(QObject* parent = nullptr);
 
 public slots:
-    // Move vendor dconf locks into the uithemer backup dir and refresh the
+    // Move vendor dconf locks into the muoto backup dir and refresh the
     // dconf db. No-op on subsequent calls. Always emits enabled() (success
     // or logged failure) so QML callers' one-shot connections always drain.
     void ensureEnabled();

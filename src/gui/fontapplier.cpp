@@ -62,7 +62,7 @@ QString FontApplier::confDir() const
 
 QString FontApplier::confPath() const
 {
-    return confDir() + QStringLiteral("/99-uithemer.conf");
+    return confDir() + QStringLiteral("/99-muoto.conf");
 }
 
 QString FontApplier::packDir(const QString& packName) const
@@ -98,7 +98,7 @@ QString FontApplier::buildConfXml(const QString& packName,
     xml += QStringLiteral("<?xml version=\"1.0\"?>\n");
     xml += QStringLiteral("<!DOCTYPE fontconfig SYSTEM \"fonts.dtd\">\n");
     xml += QStringLiteral("<fontconfig>\n");
-    xml += QStringLiteral("    <description>UI Themer alias for theme '")
+    xml += QStringLiteral("    <description>Muoto alias for theme '")
          + xmlEscape(packName) + QStringLiteral("' weight '")
          + xmlEscape(weightBasename) + QStringLiteral("'</description>\n");
 

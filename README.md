@@ -6,9 +6,9 @@ description: "Enables customization of icons, fonts and pixel density in Sailfis
 permalink: /
 ---
 
-# UI Themer
+# Muoto
 
-UI Themer lets you customize icons, fonts and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (systemd services, privileged helper, and compatibility with `harbour-themepack-*` packages) in a single app.
+Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (systemd services, privileged helper, and compatibility with `harbour-themepack-*` packages) in a single app.
 
 [![GitHub license](https://img.shields.io/github/license/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/releases/latest) [![Donate on Liberapay](https://img.shields.io/badge/Donate-Liberapay-orange.svg)](https://liberapay.com/fravaccaro)
 
@@ -22,9 +22,9 @@ UI Themer lets you customize icons, fonts and pixel density in Sailfish OS. It b
 - Font theming.
 - Display density (pixel ratio, Android DPI, launcher icon size).
 
-## Using UI Themer
+## Using Muoto
 
-[Using UI Themer](docs/guide) — apply themes, display density, restore, and other app features.
+[Using Muoto](docs/guide) — apply themes, display density, restore, and other app features.
 
 ## Create theme packs
 
@@ -37,6 +37,13 @@ Request a new language or contribute on the [Transifex project page](https://exp
 ## Builds
 
 Builds for aarch64, armv7hl and i486 are available on [OpenRepos](https://openrepos.net/content/fravaccaro/ui-themer).
+
+## Migration from UI Themer
+
+- Restore your current theme from UI Themer before changing package.
+- Uninstall `sailfishos-uithemer`.
+- Install `harbour-muoto`.
+- Re-apply your preferred theme pack in Muoto.
 
 ## Credits
 

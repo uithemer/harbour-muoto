@@ -9,7 +9,7 @@
 
 namespace
 {
-    const char *kUithemerShare = "/usr/share/sailfishos-uithemer";
+    const char *kMuotoShare = "/usr/share/harbour-muoto";
     const char *kPackPrefix = "/usr/share/harbour-themepack-";
     const char *kJollaRoot = "/usr/share/themes/sailfish-default/silica";
     const char *kHicolorRoot = "/usr/share/icons/hicolor";
@@ -130,19 +130,19 @@ namespace
     }
 }
 
-QString IconPaths::uithemerShare()
+QString IconPaths::muotoShare()
 {
-    return QString::fromLatin1(kUithemerShare);
+    return QString::fromLatin1(kMuotoShare);
 }
 
 QString IconPaths::backupIconsRoot()
 {
-    return uithemerShare() + QStringLiteral("/backup/icons");
+    return muotoShare() + QStringLiteral("/backup/icons");
 }
 
 QString IconPaths::tmpDir()
 {
-    return uithemerShare() + QStringLiteral("/tmp");
+    return muotoShare() + QStringLiteral("/tmp");
 }
 
 QString IconPaths::packDir(const QString &packName)

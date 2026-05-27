@@ -1,0 +1,10 @@
+[D-BUS Service]
+Name=org.muoto.Muoto1
+# Exec= must be a path according to the spec, but with SystemdService=
+# present the actual launch is delegated to systemd. /bin/false is the
+# canonical "delegate to systemd" placeholder. This stops dbus-daemon 
+# from racing systemd by trying to fork the binary directly with no 
+# environment / restart policy.
+Exec=/bin/false
+User=root
+SystemdService=harbour-muoto-helperd.service

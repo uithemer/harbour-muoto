@@ -8,7 +8,7 @@
 // any D-Bus/systemd caller. Concurrent ops are refused (LOCK_NB), not queued.
 //
 // Sentinel (sibling to the manifest):
-//   /usr/share/sailfishos-uithemer/icon-ops.lock
+//   /usr/share/harbour-muoto/icon-ops.lock
 //
 // Usage:
 //   if (!FileLock::tryProbe()) { ... busy ... }
