@@ -39,7 +39,7 @@ Dialog
             id: column
             width: parent.width
 
-            ConfirmHeader { text: qsTr("Restore") }
+            MuotoHeaderLabel { text: qsTr("Restore") }
 
             Grid {
                 width: parent.width

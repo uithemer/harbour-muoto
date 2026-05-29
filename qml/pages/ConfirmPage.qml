@@ -176,7 +176,7 @@ Dialog
             id: content
             width: parent.width
 
-            ConfirmHeader { text: dlgconfirm.confirmheadername }
+            MuotoHeaderLabel { text: dlgconfirm.confirmheadername }
 
             SectionHeader {
                 text: qsTr("Icons")
@@ -219,7 +219,10 @@ Dialog
                     }
                 }
 
-                Label {
+
+            LabelSpacer { }
+
+                MuotoTextLabel {
                     id: imgpreviewfallback
                     visible: false
                     anchors.centerIn: parent
@@ -294,7 +297,10 @@ Dialog
                     }
                 }
 
-                Label {
+
+            LabelSpacer { }
+
+                MuotoTextLabel {
                     id: vphfont
                     width: parent.width - (x * 2)
                     height: 350
@@ -335,7 +341,7 @@ Dialog
 
                 SectionHeader { text: qsTr("Font weight") }
 
-                LabelText {
+                MuotoTextLabel {
                     text: qsTr("Choose the main font weight for the UI.")
                 }
 
@@ -367,6 +373,8 @@ Dialog
             }
 
                 }
+
+
 
             } // grid
 

@@ -12,7 +12,7 @@ Column {
 
     SectionHeader { text: qsTr("Restart homescreen") }
 
-    LabelText {
+    MuotoTextLabel {
         text: explanation
     }
 

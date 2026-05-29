@@ -103,7 +103,7 @@ Page
                   value: "rui kon"
               }
 
-              LabelText {
+              MuotoTextLabel {
                   text: qsTr("Request a new language or contribute to existing languages on the Transifex project page.")
               }
 

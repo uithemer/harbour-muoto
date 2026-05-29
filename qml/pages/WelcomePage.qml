@@ -24,8 +24,8 @@ Page
             id: content
             width: parent.width
 
-            PageHeader { title: qsTr("Welcome to Muoto") }
-
+            PageHeader { }
+            
             Grid {
                 width: parent.width
                 columns: isLandscape ? 2 : 1
@@ -40,17 +40,21 @@ Page
                     Image { id: appicon; anchors.horizontalCenter: parent.horizontalCenter; source: "../../images/appinfo.png" }
                 }
 
-            LabelText {
+            MuotoHeaderLabel {
+                text: qsTr("Welcome to Muoto")
+            }
+
+            MuotoTextLabel {
                 text: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.")
             }
 
             SectionHeader { text: qsTr("Terms and conditions") }
 
-            LabelText {
+            MuotoTextLabel {
                 text: qsTr("By using Muoto, you agree to the <a href='https://www.gnu.org/licenses/gpl-3.0'>GNU GPLv3</a> terms and conditions.")
             }
 
-            LabelText {
+            MuotoTextLabel {
                 text: qsTr("Muoto DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).")
             }
 
@@ -62,7 +66,7 @@ Page
 
             SectionHeader { text: qsTr("Support") }
 
-            LabelText {
+            MuotoTextLabel {
                 text: qsTr("If you like my work and want to buy me a beer, feel free to do it!")
             }
 
