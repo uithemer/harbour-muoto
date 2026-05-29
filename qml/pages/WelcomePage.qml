@@ -105,9 +105,20 @@ Page
 
             LabelSpacer { }
 
+            MuotoTextLabel {
+                text: qsTr("This software is provided \"as is\", without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.")
+            }
+
+            IconTextSwitch {
+                id: itsdisclaimer
+                automaticCheck: true
+                text: qsTr("I understand and accept")
+                checked: false
+            }
+
              MuotoButton {
                   id: startuit
-                  enabled: vDon
+                  enabled: vDon && itsdisclaimer.checked
                   text: qsTr("Start Muoto")
                   onClicked: {
                       settings.wizardDone = true;

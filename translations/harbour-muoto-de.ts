@@ -689,5 +689,13 @@
         <source>Muoto DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
         <translation>Muoto versendet KEINE Daten. Einige wichtige Informationen (z.Bsp. das aktuelle Theme) werden gesammelt und NUR lokal gespeichert. Diese Daten werden für das richtige funktionieren der App (z. Bsp. das aktuelle Theme in der App anzeigen) verwendet.</translation>
     </message>
+    <message>
+        <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I understand and accept</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
