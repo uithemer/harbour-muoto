@@ -102,14 +102,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Apply icon overlay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The theme supports overlays.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -131,6 +123,14 @@
     </message>
     <message>
         <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style missing app icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

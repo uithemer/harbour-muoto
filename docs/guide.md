@@ -19,7 +19,7 @@ Revert themes and display-density changes **before** updating Sailfish OS. If yo
 
 The app opens on two tabs:
 
-* **[Themes](themes)** — apply icon and font packs, overlays, restore, uninstall
+* **[Themes](themes)** — apply icon and font packs, missing icon styling, restore, uninstall
 * **[Display density](density)** — pixel ratio, Android DPI, launcher icon size
 
 ## Cover

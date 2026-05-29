@@ -252,8 +252,8 @@ Dialog
             IconTextSwitch {
                 id: itsiconoverlay
                 automaticCheck: true
-                text: qsTr("Apply icon overlay")
-                description: qsTr("The theme supports overlays.")
+                text: qsTr("Style missing app icons")
+                description: qsTr("Uses this theme's look for apps that don't have a custom icon in the pack.")
                 visible: hasIconOverlay
                 checked: hasIconOverlay
                 enabled: hasIconOverlay
