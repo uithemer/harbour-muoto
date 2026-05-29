@@ -5,16 +5,28 @@ env:
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+    branches:
+      - dev
+      - main
+  release:
+    types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
 
     - name: Checkout
       uses: actions/checkout@v4
 
     - name: Prepare
-      run: mkdir RPMS
+      run: mkdir -p RPMS
 
     - name: Build aarch64
       uses: coderus/github-sfos-build@sfos5
@@ -37,3 +49,9 @@ jobs:
       with:
         name: RPM-build-results_SFOS${{ env.RELEASE }}+
         path: RPMS/
+
+    - name: Upload RPMs to GitHub Release
+      if: github.event_name == 'release'
+      uses: softprops/action-gh-release@v2
+      with:
+        files: RPMS/*.rpm
