@@ -180,18 +180,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>About Muoto</source>
-        <translation type="unfinished">Info su Muoto</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Display scale</source>
         <translation type="unfinished"></translation>
     </message>
@@ -248,59 +236,29 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>No themes yet</source>
-        <translation>Nessun tema</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme first</source>
-        <translation>Installa un tema compatibile</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>Densità display</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation>Ripristina tema</translation>
     </message>
     <message>
         <source>Themes</source>
         <translation>Temi</translation>
     </message>
+</context>
+<context>
+    <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
         <translation type="unfinished">Info su Muoto</translation>
     </message>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation type="unfinished">Riavvia configurazione guidata</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">Impostazioni applicate.</translation>
-    </message>
-    <message>
-        <source>Operation failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
-    </message>
+</context>
+<context>
+    <name>MuotoRestartHomescreenMenuItem</name>
     <message>
         <source>Restart homescreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Download more themes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Support Muoto</source>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -623,6 +581,45 @@
     <message>
         <source>fonts</source>
         <translation>font</translation>
+    </message>
+</context>
+<context>
+    <name>ThemesTabContent</name>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished">Impostazioni applicate.</translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support Muoto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">Riavvia configurazione guidata</translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore theme</source>
+        <translation type="unfinished">Ripristina tema</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No themes yet</source>
+        <translation type="unfinished">Nessun tema</translation>
+    </message>
+    <message>
+        <source>Install a compatible theme first</source>
+        <translation type="unfinished">Installa un tema compatibile</translation>
     </message>
 </context>
 <context>

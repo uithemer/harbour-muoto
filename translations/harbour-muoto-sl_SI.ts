@@ -180,18 +180,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>About Muoto</source>
-        <translation type="unfinished">O programu Muoto</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Display scale</source>
         <translation type="unfinished"></translation>
     </message>
@@ -248,59 +236,29 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>No themes yet</source>
-        <translation>Ni tem</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme first</source>
-        <translation>Najprej namestite združljivo temo</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>Gostota zaslona</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation>Obnovi temo</translation>
     </message>
     <message>
         <source>Themes</source>
         <translation>Teme</translation>
     </message>
+</context>
+<context>
+    <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
         <translation type="unfinished">O programu Muoto</translation>
     </message>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation type="unfinished">Ponovno zaženi čarovnika za prvi zagon</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">Nastavitve so uveljavljene</translation>
-    </message>
-    <message>
-        <source>Operation failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
-    </message>
+</context>
+<context>
+    <name>MuotoRestartHomescreenMenuItem</name>
     <message>
         <source>Restart homescreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Download more themes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Support Muoto</source>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -627,6 +585,45 @@
     <message>
         <source>fonts</source>
         <translation>pisave</translation>
+    </message>
+</context>
+<context>
+    <name>ThemesTabContent</name>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished">Nastavitve so uveljavljene</translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support Muoto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">Ponovno zaženi čarovnika za prvi zagon</translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore theme</source>
+        <translation type="unfinished">Obnovi temo</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No themes yet</source>
+        <translation type="unfinished">Ni tem</translation>
+    </message>
+    <message>
+        <source>Install a compatible theme first</source>
+        <translation type="unfinished">Najprej namestite združljivo temo</translation>
     </message>
 </context>
 <context>

@@ -10,7 +10,7 @@
 class HelperClient;
 
 // ThemePackModel: list-model of installed harbour-themepack-* packs +
-// the orchestration glue used by MainPage / DensityPage.
+// the orchestration glue used by ThemesTabContent / DensityTabContent.
 //
 // 2.7.0: the OCR (one-click-restore) state machine and the Recovery
 // dialog are retired together with OptionsPage; the surface here is

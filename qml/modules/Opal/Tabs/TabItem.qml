@@ -16,7 +16,7 @@ property bool allowDeletion:true
 readonly property bool isCurrentItem:_tabContainer&&_tabContainer.PagedView.isCurrentItem
 property Item _tabContainer:parent._ctxTabContainer||_ctxTabContainer||root
 property Item _page:parent._ctxPage||_ctxPage
-readonly property real _yOffset:flickable&&flickable.pullDownMenu?flickable.contentY-flickable.originY:0
+readonly property real _yOffset:flickable&&flickable.pullDownMenu&&isCurrentItem?flickable.contentY-(flickable.originY||0):0
 property alias _cacheExpiry:cleanupTimer.interval
 property bool _hasPullDownMenu:!!flickable&&!!flickable.pullDownMenu
 property bool _hasPushUpMenu:!!flickable&&!!flickable.pushUpMenu
@@ -31,8 +31,8 @@ Component.onCompleted:{if(_tabContainer&&!!_tabContainer.DelegateModel){_tabCont
 break
 }}}}Binding{target:!!flickable&&!!flickable.pullDownMenu?flickable.pullDownMenu:null
 property:"y"
-when:topMargin>0
-value:flickable.originY-(!!flickable.pullDownMenu?flickable.pullDownMenu.height:0)-root.topMargin+(_page.orientation&Orientation.PortraitMask?0:Theme.paddingMedium)
+when:topMargin>0&&flickable&&flickable.pullDownMenu&&isCurrentItem
+value:(flickable.originY||0)-(flickable.pullDownMenu.height||0)-root.topMargin+(_page&&(_page.orientation&Orientation.PortraitMask)?0:Theme.paddingMedium)
 }Timer{id:cleanupTimer
 running:root.allowDeletion&&root._tabContainer&&!root._tabContainer.PagedView.exposed
 interval:30000

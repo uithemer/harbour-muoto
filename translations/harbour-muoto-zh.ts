@@ -180,18 +180,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>About Muoto</source>
-        <translation type="unfinished">关于 Muoto</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Display scale</source>
         <translation type="unfinished"></translation>
     </message>
@@ -248,59 +236,29 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>No themes yet</source>
-        <translation>尚未安装主题</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme first</source>
-        <translation>请先安装一个兼容的主题</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>显示密度</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation>恢复主题</translation>
     </message>
     <message>
         <source>Themes</source>
         <translation>主题</translation>
     </message>
+</context>
+<context>
+    <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
         <translation type="unfinished">关于 Muoto</translation>
     </message>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation type="unfinished">重启首次运行向导</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">设置已应用</translation>
-    </message>
-    <message>
-        <source>Operation failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
-    </message>
+</context>
+<context>
+    <name>MuotoRestartHomescreenMenuItem</name>
     <message>
         <source>Restart homescreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Download more themes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Support Muoto</source>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -621,6 +579,45 @@
     <message>
         <source>fonts</source>
         <translation>字体</translation>
+    </message>
+</context>
+<context>
+    <name>ThemesTabContent</name>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished">设置已应用</translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support Muoto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">重启首次运行向导</translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore theme</source>
+        <translation type="unfinished">恢复主题</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No themes yet</source>
+        <translation type="unfinished">尚未安装主题</translation>
+    </message>
+    <message>
+        <source>Install a compatible theme first</source>
+        <translation type="unfinished">请先安装一个兼容的主题</translation>
     </message>
 </context>
 <context>

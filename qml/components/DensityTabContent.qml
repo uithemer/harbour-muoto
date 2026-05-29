@@ -12,6 +12,8 @@ SilicaFlickable {
     enabled: !settings.isRunning
     opacity: settings.isRunning ? 0.2 : 1.0
 
+    property bool tabActive: true
+
     property bool _dpiRestoreQuiet: false
     property bool densityReady: false
 
@@ -156,16 +158,14 @@ SilicaFlickable {
     }
 
     PullDownMenu {
-        MenuItem {
-            text: qsTr("About Muoto")
-            onClicked: pageStack.push(Qt.resolvedUrl("../pages/AboutPage.qml"))
-        }
+        flickable: densityView
+        enabled: tabActive
 
-        MenuItem {
-            text: qsTr("Restart homescreen")
-            onClicked: remorsepopup.execute(qsTr("Restarting homescreen"), function() {
-                themepack.restartHomescreen()
-            })
+        MuotoAboutMenuItem { }
+
+        MuotoRestartHomescreenMenuItem {
+            remorsePopup: remorsepopup
+            themePack: themepack
         }
 
         MenuItem {

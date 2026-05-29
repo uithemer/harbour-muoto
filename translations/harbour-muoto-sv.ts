@@ -180,18 +180,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>About Muoto</source>
-        <translation type="unfinished">Om Muoto</translation>
-    </message>
-    <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Display scale</source>
         <translation type="unfinished"></translation>
     </message>
@@ -248,59 +236,29 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>No themes yet</source>
-        <translation>Inga teman ännu</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme first</source>
-        <translation>Installera ett kompatibelt tema först</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation>Skärmupplösning</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation>Återställ tema</translation>
     </message>
     <message>
         <source>Themes</source>
         <translation>Teman</translation>
     </message>
+</context>
+<context>
+    <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
         <translation type="unfinished">Om Muoto</translation>
     </message>
-    <message>
-        <source>Restart first run wizard</source>
-        <translation type="unfinished">Starta om första startguiden</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">Inställningarna tillämpas.</translation>
-    </message>
-    <message>
-        <source>Operation failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
-    </message>
+</context>
+<context>
+    <name>MuotoRestartHomescreenMenuItem</name>
     <message>
         <source>Restart homescreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Download more themes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Support Muoto</source>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -623,6 +581,45 @@
     <message>
         <source>fonts</source>
         <translation>teckensnitt</translation>
+    </message>
+</context>
+<context>
+    <name>ThemesTabContent</name>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished">Inställningarna tillämpas.</translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support Muoto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart first run wizard</source>
+        <translation type="unfinished">Starta om första startguiden</translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore theme</source>
+        <translation type="unfinished">Återställ tema</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No themes yet</source>
+        <translation type="unfinished">Inga teman ännu</translation>
+    </message>
+    <message>
+        <source>Install a compatible theme first</source>
+        <translation type="unfinished">Installera ett kompatibelt tema först</translation>
     </message>
 </context>
 <context>
