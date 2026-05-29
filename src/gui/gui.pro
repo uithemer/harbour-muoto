@@ -59,6 +59,7 @@ OTHER_FILES += \
     $$ROOT/qml/components/BackgroundRectangle.qml \
     $$ROOT/qml/components/BusyState.qml \
     $$ROOT/qml/components/FontPreview.qml \
+    $$ROOT/qml/components/FontWeightSwitch.qml \
     $$ROOT/qml/components/LabelSpacer.qml \
     $$ROOT/qml/components/LabelText.qml \
     $$ROOT/qml/components/Notification.qml \

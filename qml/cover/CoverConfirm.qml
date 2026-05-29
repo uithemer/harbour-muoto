@@ -35,6 +35,31 @@ CoverBackground
      }
 
      property string _coverPreviewPack: ""
+     property int _fontPreviewRetries: 0
+
+     Timer {
+         id: fontPreviewRetry
+         interval: 50
+         repeat: true
+         onTriggered: {
+             var p = confirmPage()
+             if (!p || !p.hasFont) {
+                 stop()
+                 _fontPreviewRetries = 0
+                 return
+             }
+             if (p.previewFontBasename !== "") {
+                 stop()
+                 _fontPreviewRetries = 0
+                 refreshCoverFontPreview()
+                 return
+             }
+             if (++_fontPreviewRetries > 40) {
+                 stop()
+                 _fontPreviewRetries = 0
+             }
+         }
+     }
 
      function setCoverPreviewSource(pack) {
          // Image.source is a QUrl — no .indexOf(); only skip when already showing this pack.
@@ -69,10 +94,27 @@ CoverBackground
          var p = confirmPage()
          if (!p)
              return
-         if (p.hasFont && p.packName && p.selectedFont !== "") {
+         var basename = p.previewFontBasename
+         if (p.packName && basename !== "") {
+             fontPreviewRetry.stop()
+             _fontPreviewRetries = 0
              fontloader.visible = true
              fontloader.reload()
+         } else {
+             fontloader.source = ""
+             fontloader.visible = false
+             if (p.hasFont && p.packName && !fontPreviewRetry.running) {
+                 _fontPreviewRetries = 0
+                 fontPreviewRetry.start()
+             } else {
+                 fontPreviewRetry.stop()
+             }
          }
+     }
+
+     Component.onCompleted: {
+         refreshCoverIconPreviewFromCache()
+         refreshCoverFontPreview()
      }
 
      Connections {
@@ -81,6 +123,7 @@ CoverBackground
              refreshCoverIconPreview(app.coverIconPreviewPack,
                                      app.coverIconPreviewOk)
          }
+         onCoverFontPreviewSeqChanged: refreshCoverFontPreview()
      }
 
      Connections {
@@ -155,21 +198,29 @@ CoverBackground
             id: fontloader
             active: {
                 var p = root.confirmPage()
-                return p && p.hasFont && p.packName && p.selectedFont !== ""
+                return p && p.packName && p.previewFontBasename !== ""
             }
             source: ""
             visible: false
             width: root.width
             height: root.height
 
+            onActiveChanged: {
+                if (active)
+                    reload()
+            }
+
             function reload() {
                 source = ""
                 var p = root.confirmPage()
-                if (!p || !p.hasFont || !p.packName || !p.selectedFont)
+                if (!p || !p.packName)
+                    return
+                var basename = p.previewFontBasename
+                if (!basename)
                     return
                 setSource("FontPreviewCover.qml", {
                     "packName": p.packName,
-                    "selectedFont": p.selectedFont
+                    "selectedFont": basename
                 })
             }
         }

@@ -2,6 +2,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import harbour.muoto 1.0
 import "../common"
+import "../common/fontWeightUtils.js" as FontWeightUtils
 import "../components"
 
 Dialog
@@ -84,6 +85,69 @@ Dialog
     }
 
     FontWeightModel { id: fontweightmodel; packName: dlgconfirm.packName }
+
+    // Cover / in-page preview basename: explicit pick, else first file in pack /font/.
+    readonly property string previewFontBasename: {
+        if (selectedFont !== "")
+            return selectedFont
+        return FontWeightUtils.fontBasenameFromFilename(fontweightmodel.firstWeight)
+    }
+
+    readonly property bool hasLatinFontFiles: fontweightmodel.rowCount() > 0
+
+    function applyDefaultFontWeight() {
+        if (selectedFont !== "" || !hasFont || fontweightmodel.rowCount() === 0)
+            return
+        var base = FontWeightUtils.fontBasenameFromFilename(fontweightmodel.firstWeight)
+        if (base === "")
+            return
+        selectedFont = base
+        for (var i = 0; i < views.count; i++) {
+            var item = views.itemAt(i)
+            if (item)
+                item.checked = item.fontWeight === base
+        }
+    }
+
+    property string _coverFontNotifyKey: ""
+
+    function notifyCoverFontPreviewReady() {
+        if (previewFontBasename === "" || app.coverMode !== "confirmDialog")
+            return
+        var key = packName + "\0" + previewFontBasename
+        if (_coverFontNotifyKey === key)
+            return
+        _coverFontNotifyKey = key
+        app.coverFontPreviewSeq++
+    }
+
+    onPackNameChanged: _coverFontNotifyKey = ""
+
+    Connections {
+        target: fontweightmodel
+        onFirstWeightChanged: {
+            applyDefaultFontWeight()
+            notifyCoverFontPreviewReady()
+        }
+    }
+
+    Connections {
+        target: Qt.application
+        onStateChanged: {
+            // Swipe to cover: re-notify so CoverConfirm picks up fonts even if seq
+            // was bumped before the cover Connections existed (first confirm open).
+            if (state !== Qt.ApplicationActive && app.coverMode === "confirmDialog") {
+                applyDefaultFontWeight()
+                _coverFontNotifyKey = ""
+                notifyCoverFontPreviewReady()
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        applyDefaultFontWeight()
+        notifyCoverFontPreviewReady()
+    }
 
     DialogHeader {
         id: header
@@ -277,9 +341,11 @@ Dialog
                     id: views
                     model: fontweightmodel
 
-                    delegate: IconTextSwitch {
+                    delegate: FontWeightSwitch {
                         automaticCheck: true
                         enabled: itsfonts.checked
+                        packName: dlgconfirm.packName
+                        fontWeight: model.fontWeight
                         text: model.fontDisplayWeight
 
                         onClicked: {

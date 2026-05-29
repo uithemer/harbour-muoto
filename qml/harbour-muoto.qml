@@ -13,6 +13,7 @@ ApplicationWindow
     property string coverIconPreviewPack: ""
     property bool coverIconPreviewOk: false
     property int coverIconPreviewSeq: 0
+    property int coverFontPreviewSeq: 0
 
     Component {
         id: mainpage
