@@ -103,6 +103,7 @@ Page
 
              MuotoButton {
                   id: startuit
+                  enabled: vDon
                   text: qsTr("Start Muoto")
                   onClicked: {
                       settings.wizardDone = true;
