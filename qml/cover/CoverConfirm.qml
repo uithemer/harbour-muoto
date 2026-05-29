@@ -61,6 +61,11 @@ CoverBackground
          }
      }
 
+     function clearCoverIconPreview() {
+         _coverPreviewPack = ""
+         coverimgpreview.source = ""
+     }
+
      function setCoverPreviewSource(pack) {
          // Image.source is a QUrl — no .indexOf(); only skip when already showing this pack.
          if (_coverPreviewPack === pack && coverimgpreview.status === Image.Ready)
@@ -73,9 +78,14 @@ CoverBackground
          var p = confirmPage()
          if (!p)
              return
-         if (!(p.hasIcons || p.hasIconOverlay) || !p.packName)
+         if (!(p.hasIcons || p.hasIconOverlay) || !p.packName) {
+             clearCoverIconPreview()
              return
-         setCoverPreviewSource(p.packName)
+         }
+         if (p.iconPreviewAvailable)
+             setCoverPreviewSource(p.packName)
+         else
+             clearCoverIconPreview()
      }
 
      function refreshCoverIconPreview(previewPack, ok) {

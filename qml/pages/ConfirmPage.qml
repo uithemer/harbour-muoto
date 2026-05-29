@@ -30,6 +30,8 @@ Dialog
     property bool wantsIconOps: itsicons.checked || itsiconoverlay.checked
     property string _previewBuiltPack: ""
     property string _previewLoadedPack: ""
+    readonly property bool iconPreviewAvailable: _previewLoadedPack !== ""
+                                         && _previewLoadedPack === packName
     id: dlgconfirm
     canAccept: wantsIconOps
         || (itsfonts.checked && hasFont && selectedFont !== "")
