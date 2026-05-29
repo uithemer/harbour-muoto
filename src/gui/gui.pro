@@ -62,6 +62,10 @@ OTHER_FILES += \
     $$ROOT/qml/components/FontWeightSwitch.qml \
     $$ROOT/qml/components/LabelSpacer.qml \
     $$ROOT/qml/components/LabelText.qml \
+    $$ROOT/qml/components/MuotoButton.qml \
+    $$ROOT/qml/components/MuotoRestartHomescreenButton.qml \
+    $$ROOT/qml/components/HomescreenRestartSection.qml \
+    $$ROOT/qml/components/homescreenRestart.js \
     $$ROOT/qml/components/Notification.qml \
     $$ROOT/qml/components/themepacklistview/ThemePackItem.qml \
     $$ROOT/qml/cover/CoverPage.qml \

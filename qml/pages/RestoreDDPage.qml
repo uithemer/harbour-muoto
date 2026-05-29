@@ -63,16 +63,9 @@ Dialog
                 }
             }
 
-            LabelText {
-                text: "<br>" + qsTr("Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).")
-            }
-
-            TextSwitch {
-                text: qsTr("Restart homescreen (fallback)")
-                checked: settings.homeRefresh
-                onCheckedChanged: {
-                    settings.homeRefresh = checked;
-                }
+            HomescreenRestartSection {
+                settings: dlgrestore.settings
+                explanation: qsTr("Restart the homescreen after restoring display density so all apps pick up the changes.")
             }
 
             Item {

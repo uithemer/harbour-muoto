@@ -130,11 +130,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart homescreen (fallback)</source>
+        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -196,11 +192,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pull down and tap Restart homescreen after changing these settings.</source>
+        <source>Could not unlock display density settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Could not unlock display density settings</source>
+        <source>When you are done, restart the homescreen to apply these changes. You can also use Restart homescreen in the pulley menu.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -227,6 +223,17 @@
     </message>
 </context>
 <context>
+    <name>HomescreenRestartSection</name>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LicenseListPart</name>
     <message>
         <source>License text</source>
@@ -249,6 +256,17 @@
     <message>
         <source>About Muoto</source>
         <translation type="unfinished">Info su Muoto</translation>
+    </message>
+</context>
+<context>
+    <name>MuotoRestartHomescreenButton</name>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restarting homescreen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -510,11 +528,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart homescreen (fallback)</source>
+        <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -537,11 +551,7 @@
         <translation>Font predefiniti</translation>
     </message>
     <message>
-        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart homescreen (fallback)</source>
+        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

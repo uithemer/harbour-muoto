@@ -60,7 +60,7 @@ Dialog
     }
 
     onAccepted: {
-        settings.homeRefresh = tshomerefresh.checked;
+        settings.homeRefresh = restartSection.homeRefreshSwitch.checked;
     }
 
     Connections {
@@ -370,13 +370,10 @@ Dialog
 
             } // grid
 
-                LabelText {
-                    text: "<br>" + qsTr("Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).")
-                }
-
-                TextSwitch { id: tshomerefresh
-                    text: qsTr("Restart homescreen (fallback)")
-                    checked: settings.homeRefresh
+                HomescreenRestartSection {
+                    id: restartSection
+                    settings: dlgconfirm.settings
+                    explanation: qsTr("Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.")
                 }
 
                 Item {

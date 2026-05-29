@@ -109,8 +109,7 @@ Page
 
             LabelSpacer { }
 
-              Button {
-                  anchors.horizontalCenter: parent.horizontalCenter
+              MuotoButton {
                   text: qsTr("Transifex")
                   onClicked: Qt.openUrlExternally("https://explore.transifex.com/fravaccaro/ui-themer")
               }

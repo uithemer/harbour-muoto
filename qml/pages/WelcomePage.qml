@@ -68,9 +68,8 @@ Page
 
             LabelSpacer { }
 
-            Button {
+            MuotoButton {
                 id: donate
-                anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Donate")
                 onClicked: {
                     Qt.openUrlExternally("https://liberapay.com/fravaccaro");
@@ -102,9 +101,8 @@ Page
 
             LabelSpacer { }
 
-             Button {
+             MuotoButton {
                   id: startuit
-                  anchors.horizontalCenter: parent.horizontalCenter
                   text: qsTr("Start Muoto")
                   onClicked: {
                       settings.wizardDone = true;

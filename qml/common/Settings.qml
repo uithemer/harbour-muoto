@@ -17,8 +17,8 @@ Item
         // the user opted in. Cleared on restore so it cannot leak across
         // theme generations.
         property bool iconOverlay
-        // Optional full homescreen restart fallback (default off).
-        property bool homeRefresh
+        // Optional full homescreen restart after apply/restore (default on).
+        property bool homeRefresh: true
     }
 
     property alias wizardDone: conf.wizardDone
