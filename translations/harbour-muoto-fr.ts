@@ -20,10 +20,6 @@
         <translation type="unfinished">UI themer vous permet de personnaliser les icônes, les polices et la densité des pixels dans Sailfish OS.</translation>
     </message>
     <message>
-        <source>Released under the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; license.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Contributors</source>
         <translation type="unfinished">Contributeurs</translation>
     </message>
@@ -682,19 +678,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>By using Muoto, you agree to the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; terms and conditions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Muoto DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>I understand and accept</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

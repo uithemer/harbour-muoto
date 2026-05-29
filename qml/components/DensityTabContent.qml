@@ -266,13 +266,9 @@ SilicaFlickable {
                 }
 
                 MuotoTextLabel {
-                    text: qsTr("When you are done, restart the homescreen to apply these changes. You can also use Restart homescreen in the pulley menu.")
+                    text: qsTr("When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.")
                 }
 
-                MuotoRestartHomescreenButton {
-                    remorsePopup: remorsepopup
-                    themePack: themepack
-                }
             }
         }
 

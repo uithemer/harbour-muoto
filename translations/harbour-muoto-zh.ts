@@ -20,10 +20,6 @@
         <translation type="unfinished">Muoto 让你定制旗鱼系统的图标、字体和像素密度</translation>
     </message>
     <message>
-        <source>Released under the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; license.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Contributors</source>
         <translation type="unfinished"></translation>
     </message>
@@ -680,19 +676,15 @@
         <translation>条款</translation>
     </message>
     <message>
-        <source>By using Muoto, you agree to the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; terms and conditions.</source>
-        <translation>使用 Muoto，即意味着你接受&lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; 条款</translation>
-    </message>
-    <message>
-        <source>Muoto DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
-        <translation>Muoto 不会发送任何数据。一些基本信息 (例如当前主题) 仅会收集和存储在本地, 以用于应用程序的正常运行 (例如, 在软件显示当前主题)。</translation>
-    </message>
-    <message>
         <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>I understand and accept</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
