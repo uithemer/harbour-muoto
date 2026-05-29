@@ -1,3 +1,13 @@
+* Fri May 29 2026 3.0.0beta4-2
+- UI: Opal-style action buttons (MuotoButton); shared homescreen-restart
+  section on apply/restore dialogs with clearer copy; inline Restart
+  homescreen on density tab; homeRefresh defaults on.
+- UI: Welcome page MuotoHeaderLabel/MuotoTextLabel styling; Start Muoto
+  requires donate/skip and disclaimer acceptance.
+- UI: Rename user-facing "icon overlay" to "Style missing app icons";
+  docs and README updated.
+- About page label updated.
+
 * Wed May 27 2026
 - Density: fix vendor dconf lock relocation when .bk backups exist but SFOS
   restored silica-configs.txt / ui-configs.txt under vendor.d/locks (spec

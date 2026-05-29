@@ -13,7 +13,7 @@ How to create icons compatible with **Muoto**.
 
 1. Use the [dummy package](https://github.com/uithemer/harbour-themepack-dummy) as a template.
 2. Place launcher and app icons under `native/<size>/apps/`, `jolla/<z>/icons/`, and/or `apk/<size>/` using the **same basename** as the stock PNG (e.g. `icon-launcher-camera.png`).
-3. Optional: add `overlay/*.png` (see [Overlays](#overlays) below).
+3. Optional: add `overlay/*.png` (see [Style missing app icons (`overlay/`)](#style-missing-app-icons-overlay) below).
 4. Build with `harbour-themepack-*` naming and publish; users need **Muoto** installed.
 
 ## Theme pack layout
@@ -131,7 +131,7 @@ When support returns, Muoto will apply these only if DynCal is installed.
 2. Edit them as you like.
 3. Place them in `dynclock/256x256/`.
 
-## Overlays
+## Style missing app icons (`overlay/`)
 
 If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto stock icons **not** already covered by the pack. Use a canvas sized for the target (recommended **192×192** or **172×172** for app icons).
 
@@ -152,4 +152,4 @@ The old Android-only overlay trick (root file `type` containing `android`) is **
 | Native app | 172×172 (preferred), down to 86×86 |
 | Jolla / ambient | per silica z tier in the pack |
 | APK app | 192×192 (preferred), down to 86×86 |
-| Overlay | 192×192 / 172×172 composite canvas |
+| Missing-icon frame | 192×192 / 172×172 composite canvas |

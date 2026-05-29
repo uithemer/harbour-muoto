@@ -60,7 +60,7 @@ Dialog
     }
 
     onAccepted: {
-        settings.homeRefresh = tshomerefresh.checked;
+        settings.homeRefresh = restartSection.homeRefreshSwitch.checked;
     }
 
     Connections {
@@ -176,7 +176,7 @@ Dialog
             id: content
             width: parent.width
 
-            ConfirmHeader { text: dlgconfirm.confirmheadername }
+            MuotoHeaderLabel { text: dlgconfirm.confirmheadername }
 
             SectionHeader {
                 text: qsTr("Icons")
@@ -219,7 +219,10 @@ Dialog
                     }
                 }
 
-                Label {
+
+            LabelSpacer { }
+
+                MuotoTextLabel {
                     id: imgpreviewfallback
                     visible: false
                     anchors.centerIn: parent
@@ -249,8 +252,8 @@ Dialog
             IconTextSwitch {
                 id: itsiconoverlay
                 automaticCheck: true
-                text: qsTr("Apply icon overlay")
-                description: qsTr("The theme supports overlays.")
+                text: qsTr("Style missing app icons")
+                description: qsTr("Uses this theme's look for apps that don't have a custom icon in the pack.")
                 visible: hasIconOverlay
                 checked: hasIconOverlay
                 enabled: hasIconOverlay
@@ -294,7 +297,10 @@ Dialog
                     }
                 }
 
-                Label {
+
+            LabelSpacer { }
+
+                MuotoTextLabel {
                     id: vphfont
                     width: parent.width - (x * 2)
                     height: 350
@@ -335,7 +341,7 @@ Dialog
 
                 SectionHeader { text: qsTr("Font weight") }
 
-                LabelText {
+                MuotoTextLabel {
                     text: qsTr("Choose the main font weight for the UI.")
                 }
 
@@ -368,15 +374,14 @@ Dialog
 
                 }
 
+
+
             } // grid
 
-                LabelText {
-                    text: "<br>" + qsTr("Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).")
-                }
-
-                TextSwitch { id: tshomerefresh
-                    text: qsTr("Restart homescreen (fallback)")
-                    checked: settings.homeRefresh
+                HomescreenRestartSection {
+                    id: restartSection
+                    settings: dlgconfirm.settings
+                    explanation: qsTr("Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.")
                 }
 
                 Item {

@@ -12,8 +12,8 @@ A.AboutPageBase {
     appName: "Muoto"
     appIcon: Qt.resolvedUrl("../../images/appinfo.png")
     appVersion: "3.0.0"
-    appRelease: "beta 3"
-    description: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.") + "<br><br>" + qsTr("Released under the <a href='https://www.gnu.org/licenses/gpl-3.0'>GNU GPLv3</a> license.")
+    appRelease: "beta 4"
+    description: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.")
     authors: ["fravaccaro"]
     homepageUrl: "https://uithemer.github.io/sailfishos-uithemer/"
     sourcesUrl: "https://github.com/uithemer/sailfishos-uithemer"
