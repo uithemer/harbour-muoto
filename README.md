@@ -51,10 +51,16 @@ Builds for aarch64, armv7hl and i486 are available on [OpenRepos](https://openre
 - [Opal](https://github.com/Pretty-SFOS/opal) QML modules (About, Tabs, SupportMe, LinkHandler) by [Mirian Margiani](https://github.com/Pretty-SFOS/opal-about).
 - Theme pack support engine by fravaccaro (formerly separate `themepacksupport-sailfishos` package).
 - Partially based on [Icon pack support GUI](https://github.com/RikudouSage/sailfish-iconpacksupport-gui).
-- App icon by [Free Vectors](http://www.freevectors.com/blue-painting-roller/).
-- Iconography by [Retinaicons](https://www.flaticon.com/authors/retinaicons).
 - Thanks to Dax89 for C++ and QML help.
 - Thanks to Eugenio_g7 for the *One-click restore* service.
 - Thanks to LQS for Android DPI on Xperia XA2.
 - Thanks to [dt.iki.fi/sailfish-os-change-default-font](https://dt.iki.fi/sailfish-os-change-default-font).
 - Thanks to all testers.
+
+## AI disclosure
+
+- **Human foundation.** Theme pack support and UI Themer — the engine behind icon, font, and density theming on Sailfish OS — were authored, designed, and developed without AI input.
+- **Cursor-assisted work.** During the Muoto rename and ongoing maintenance of this repository, [Cursor](https://cursor.com) was used as an IDE with AI assistance for tasks such as documentation updates, code exploration, UI polish, translation cleanup, and RPM packaging tweaks. Output was always reviewed and edited by the maintainer before commit.
+- **Not a substitute for testing.** AI suggestions do not replace rigorous testing on Sailfish OS hardware, reading the code, or applying your own knowledge. Generated changes are treated like any other patch: understand it, test it, then ship it.
+
+*Muoto's theming engine is human-built; Cursor helped maintain and polish what wraps it.*

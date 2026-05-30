@@ -15,14 +15,8 @@ Item {
 
     Label {
         id: previewlabel
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-            leftMargin: Theme.paddingLarge
-            rightMargin: Theme.paddingLarge
-        }
-        height: 350
+        anchors.fill: parent
+        anchors.margins: Theme.paddingLarge
         font.family: previewfont.name
         font.weight: FontWeightUtils.fontWeightFromBasename(selectedFont)
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas imperdiet finibus venenatis. Suspendisse mollis urna sed luctus sodales."

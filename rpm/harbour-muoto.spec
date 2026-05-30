@@ -15,7 +15,7 @@ Name:       harbour-muoto
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
 Version:        3.0.0beta6
-Release:        2
+Release:        6
 Group:          Qt/Qt
 License:        GPLv3
 Packager:       fravaccaro <me@fravaccaro.com>
@@ -301,6 +301,10 @@ su defaultuser -c "dconf reset /desktop/lipstick/sailfishos-uithemer/iconSizeLau
 
 %preun
 if [ $1 -eq 0 ]; then
+    # Full stock restore while helperd + backup tree still on disk
+    # (icons, fonts, Muoto dconf, silica density, vendor locks).
+    /usr/bin/harbour-muoto-oneshot-restore || true
+
     rm -rf /home/defaultuser/.local/share/%{name}
     rm -rf /home/defaultuser/.cache/%{name}
 
@@ -323,36 +327,6 @@ if [ $1 -eq 0 ]; then
     fi
     rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
     rmdir /etc/systemd/system/sailfish-upgrade-ui.service.d 2>/dev/null || :
-    # 2.7.0: OptionsPage retirement dropped the headless icond binary
-    # plus the autoupdate/systemupgrade units; the on-uninstall
-    # auto-restore of themed .desktop files went with them. Users
-    # should run "Restore theme" from the app before uninstalling.
-
-    # 2.5.0 font theming is just a per-user fontconfig conf file; revert by
-    # removing it and refreshing the cache as defaultuser. No-op if absent.
-    f=/home/defaultuser/.config/fontconfig/conf.d/99-muoto.conf
-    if [ -f "$f" ]; then
-        rm -f "$f"
-        su defaultuser -c "fc-cache -f" || true
-    fi
-
-    # 2.5.6: scripts/restore_dpi.sh + tps/restore_dpr.sh + tps/restore_iz.sh
-    # were retired in favour of two inline dconf resets so uninstall still
-    # brings DPR + icon_size_launcher back to the vendor default.
-    su defaultuser -c "dconf reset /desktop/sailfish/silica/theme_pixel_ratio" || true
-    su defaultuser -c "dconf reset /desktop/sailfish/silica/icon_size_launcher" || true
-
-    # 2.5.4: enable-dpi.sh / disable-dpi.sh were dropped; the equivalent
-    # uninstall step (restore vendor dconf locks moved by %post) now runs
-    # inline. No-op when the .bk files are absent.
-    for f in silica-configs.txt ui-configs.txt; do
-        bk=%{_datadir}/%{name}/backup/dlocks/$f.bk
-        dst=/etc/dconf/db/vendor.d/locks/$f
-        if [ -f "$bk" ]; then
-            mv "$bk" "$dst" || :
-        fi
-    done
-    dconf update || :
 fi
 
 %postun
