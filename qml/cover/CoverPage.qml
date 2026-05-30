@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import org.nemomobile.notifications 1.0
 import harbour.muoto 1.0
 import "../components"
 
@@ -40,7 +39,6 @@ CoverBackground
         return dir;
     }
 
-     Notification { id: notification }
      // Cover sync re-runs ApplyIcons for the active pack (same as main UI
      // apply), using the overlay flag saved at last apply. ThemePackModel
      // is still needed because coverPackLabel() resolves the active
@@ -57,23 +55,21 @@ CoverBackground
              settings.isRunning = false;
              if (coverRoot.iconOpFromCover) {
                  coverRoot.iconOpFromCover = false;
-                 notification.previewBody = qsTr("Settings applied.");
-                 notification.publish();
+                 app.showToast(qsTr("Settings applied."));
              }
          }
          onIconsRestored: {
              settings.isRunning = false;
              if (coverRoot.iconOpFromCover) {
                  coverRoot.iconOpFromCover = false;
-                 notification.publish();
+                 app.showToast(qsTr("Settings applied."));
              }
          }
          onError: {
              if (op === "ApplyIcons" || op === "RestoreIcons") {
-                 notification.previewBody = message.length
+                 app.showToast(message.length
                      ? message
-                     : qsTr("Operation failed");
-                 notification.publish();
+                     : qsTr("Operation failed"));
                  settings.isRunning = false;
                  coverRoot.iconOpFromCover = false;
              }

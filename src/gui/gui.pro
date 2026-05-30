@@ -67,7 +67,7 @@ OTHER_FILES += \
     $$ROOT/qml/components/MuotoRestartHomescreenButton.qml \
     $$ROOT/qml/components/HomescreenRestartSection.qml \
     $$ROOT/qml/components/homescreenRestart.js \
-    $$ROOT/qml/components/Notification.qml \
+    $$ROOT/qml/components/MuotoNotification.qml \
     $$ROOT/qml/components/themepacklistview/ThemePackItem.qml \
     $$ROOT/qml/cover/CoverPage.qml \
     $$ROOT/qml/cover/CoverConfirm.qml \

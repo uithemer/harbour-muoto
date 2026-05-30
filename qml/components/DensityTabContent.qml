@@ -1,7 +1,6 @@
+import Nemo.Configuration 1.0
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import org.nemomobile.notifications 1.0
-import org.nemomobile.configuration 1.0
 import harbour.muoto 1.0
 import "."
 
@@ -81,7 +80,6 @@ SilicaFlickable {
 
     RemorsePopup { id: remorsepopup }
     ThemePack { id: themepack }
-    Notification { id: notification }
 
     ThemePackModel {
         function applyDone() {
@@ -91,7 +89,7 @@ SilicaFlickable {
         }
         function notifyDone() {
             settings.isRunning = false
-            notification.publish()
+            app.showToast(qsTr("Settings applied."))
         }
 
         id: themepackmodel
@@ -150,10 +148,9 @@ SilicaFlickable {
             if (op !== "DensityEnable")
                 return
             densityView.densityReady = false
-            notification.previewBody = message.length
+            app.showToast(message.length
                 ? message
-                : qsTr("Could not unlock display density settings")
-            notification.publish()
+                : qsTr("Could not unlock display density settings"))
         }
     }
 

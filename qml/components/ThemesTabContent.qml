@@ -1,6 +1,6 @@
+import Nemo.Notifications 1.0
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import org.nemomobile.notifications 1.0
 import harbour.muoto 1.0
 import Nemo.DBus 2.0
 import "themepacklistview"
@@ -50,10 +50,23 @@ SilicaListView {
             _finalise()
         }
     }
+    function beginManualThemeWork(progressBody) {
+        app.showProgressNotification(
+            qsTr("Applying theme"),
+            progressBody,
+            Notification.ProgressIndeterminate)
+    }
+
+    function _abortThemeWork(errMsg) {
+        _waitForFinalise = false
+        _pendingOps = 0
+        settings.isRunning = false
+        app.showToast(errMsg.length ? errMsg : qsTr("Operation failed"))
+    }
+
     function _finalise() {
         settings.isRunning = false
-        notification.previewBody = qsTr("Settings applied.")
-        notification.publish()
+        app.showToast(qsTr("Settings applied."))
         settings.syncToDisk()
         if (settings.homeRefresh === true)
             lipstickRestartTimer.start()
@@ -61,7 +74,6 @@ SilicaListView {
 
     RemorsePopup { id: remorsepopup }
     ThemePack { id: themepack }
-    Notification { id: notification }
 
     Timer {
         id: lipstickRestartTimer
@@ -88,17 +100,14 @@ SilicaListView {
             themesView._opDone()
         }
         onError: {
-            notification.previewBody = message.length
-                ? message
-                : qsTr("Operation failed")
             if (op === "ApplyIcons") {
                 themesView._pendingIconPack = ""
-                themesView._opDone()
+                themesView._abortThemeWork(message)
             } else if (op === "RestoreIcons") {
                 themesView._pendingIconRestore = false
                 themesView._uninstallAfterIconRestore = false
                 themesView._uninstallPackIndex = -1
-                themesView._opDone()
+                themesView._abortThemeWork(message)
             }
         }
     }
@@ -106,7 +115,7 @@ SilicaListView {
     ThemePackModel {
         function notifyDone() {
             settings.isRunning = false
-            notification.publish()
+            app.showToast(qsTr("Settings applied."))
         }
 
         id: themepackmodel
@@ -175,6 +184,7 @@ SilicaListView {
                         return
 
                     settings.isRunning = true
+                    themesView.beginManualThemeWork(qsTr("Restoring theme…"))
                     themesView._armApply(nOps)
                     settings.syncToDisk()
 
@@ -215,6 +225,7 @@ SilicaListView {
                     return
 
                 settings.isRunning = true
+                themesView.beginManualThemeWork(qsTr("Applying theme…"))
                 themesView._armApply(nOps)
                 settings.syncToDisk()
 
@@ -239,6 +250,7 @@ SilicaListView {
                 qsTr("Uninstalling %1").arg(model.packName),
                 function() {
                     settings.isRunning = true
+                    themesView.beginManualThemeWork(qsTr("Uninstalling theme…"))
 
                     if (iconInstalled) {
                         themesView._pendingIconRestore = true

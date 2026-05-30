@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import harbour.muoto 1.0
-import org.nemomobile.configuration 1.0
+import Nemo.Configuration 1.0
 
 Item
 {

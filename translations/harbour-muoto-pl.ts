@@ -127,6 +127,13 @@
     </message>
 </context>
 <context>
+    <name>CoverConfirm</name>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CoverPage</name>
     <message>
         <source>Settings applied.</source>
@@ -189,6 +196,10 @@
     </message>
     <message>
         <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings applied.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -328,13 +339,6 @@
     </message>
     <message>
         <source>Send a tip or recurring support on Liberapay.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Notification</name>
-    <message>
-        <source>Settings applied.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -623,6 +627,22 @@
     </message>
     <message>
         <source>Install a compatible theme to start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restoring theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalling theme…</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
