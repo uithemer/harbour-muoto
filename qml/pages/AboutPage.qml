@@ -17,7 +17,6 @@ A.AboutPageBase {
     authors: ["fravaccaro"]
     homepageUrl: "https://uithemer.github.io/sailfishos-uithemer/"
     sourcesUrl: "https://github.com/uithemer/sailfishos-uithemer"
-    translationsUrl: "https://explore.transifex.com/fravaccaro/ui-themer"
     donations.text: donations.defaultTextCoffee
     // changelogItems: []
     contributionSections: [
@@ -75,7 +74,7 @@ A.AboutPageBase {
             text: qsTr("Credits for existing translations and how to contribute.")
             buttons: [
                 A.InfoButton {
-                    text: qsTr("Translators")
+                    text: qsTr("Translations")
                     onClicked: pageStack.push(Qt.resolvedUrl("TranslatorPage.qml"))
                 }
             ]
