@@ -10,6 +10,7 @@ Item {
 
     HighlightImage {
         id: coverIcon
+        highlighted: true
         anchors {
             left: parent.left
             leftMargin: Theme.paddingMedium

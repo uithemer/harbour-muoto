@@ -93,7 +93,7 @@ CoverBackground
             if (settings.isRunning)
                0.1
             else
-               ((settings.activeIconPack !== 'default') || (settings.activeFontPack !== 'default')) ? 0.1 : 0.3
+               (settings.hasActiveIconPack() || settings.hasActiveFontPack()) ? 0.1 : 0.3
         }
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
@@ -131,20 +131,22 @@ CoverBackground
         anchors.topMargin: Theme.paddingLarge
         visible: !settings.isRunning
         CoverLabel {
-            visible: (settings.activeIconPack && settings.activeIconPack !== 'default')
-            icon: "../../images/icon.png"
+            visible: settings.hasActiveIconPack()
+            icon: app.isLightTheme ? "../../images/icon-light.png"
+                                 : "../../images/icon-dark.png"
             label: coverRoot.coverPackLabel(settings.activeIconPack)
         }
         CoverLabel {
-            visible: (settings.activeFontPack && settings.activeFontPack !== 'default')
-            icon: "../../images/font.png"
+            visible: settings.hasActiveFontPack()
+            icon: app.isLightTheme ? "../../images/font-light.png"
+                                 : "../../images/font-dark.png"
             label: coverRoot.coverPackLabel(settings.activeFontPack)
         }
     }
 
     CoverActionList {
         iconBackground: true
-        enabled: (settings.activeIconPack !== 'default') && !settings.isRunning
+        enabled: settings.hasActiveIconPack() && !settings.isRunning
         CoverAction {
             iconSource: "image://theme/icon-cover-sync"
             onTriggered: {

@@ -9,8 +9,8 @@ Item
         id: conf
         path: "/apps/harbour-muoto"
         property bool wizardDone
-        property string activeIconPack
-        property string activeFontPack
+        property string activeIconPack: "default"
+        property string activeFontPack: "default"
         // Mirror of the user's "apply icon overlay" choice at the last
         // ApplyIcons(pack, runPack, overlay). Cover sync and main-page apply pass
         // runPack/overlay so overlay-composited icons are included when
@@ -32,6 +32,12 @@ Item
     function deactivateIcon() { activeIconPack = "default"; }
     function deactivateFont() { activeFontPack = "default"; }
 
+    function packIdIsActive(packId) {
+        return packId && packId !== "" && packId !== "default"
+    }
+    function hasActiveIconPack() { return packIdIsActive(activeIconPack) }
+    function hasActiveFontPack() { return packIdIsActive(activeFontPack) }
+
     function syncToDisk() { conf.sync(); }
 
     id: settings
@@ -44,5 +50,9 @@ Item
 
     Component.onCompleted: {
         conf.sync();
+        if (!packIdIsActive(activeIconPack))
+            activeIconPack = "default";
+        if (!packIdIsActive(activeFontPack))
+            activeFontPack = "default";
     }
 }
