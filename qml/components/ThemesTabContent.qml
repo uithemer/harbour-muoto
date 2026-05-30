@@ -151,12 +151,16 @@ SilicaListView {
         }
 
         MenuItem {
-            text: qsTr("Support Muoto")
+            // debug
+            visible: false
+            text: "Support Muoto"
             onClicked: app.showSupportDialog()
         }
 
         MenuItem {
-            text: qsTr("Restart first run wizard")
+            // debug
+            visible: false
+            text: "Restart first run wizard"
             onClicked: {
                 settings.wizardDone = false
                 pageStack.replaceAbove(null, Qt.resolvedUrl("../pages/WelcomePage.qml"))
