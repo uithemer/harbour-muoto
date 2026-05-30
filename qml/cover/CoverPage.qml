@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import org.nemomobile.notifications 1.0
 import harbour.muoto 1.0
 import "../components"
 
@@ -40,7 +39,6 @@ CoverBackground
         return dir;
     }
 
-     Notification { id: notification }
      // Cover sync re-runs ApplyIcons for the active pack (same as main UI
      // apply), using the overlay flag saved at last apply. ThemePackModel
      // is still needed because coverPackLabel() resolves the active
@@ -57,23 +55,21 @@ CoverBackground
              settings.isRunning = false;
              if (coverRoot.iconOpFromCover) {
                  coverRoot.iconOpFromCover = false;
-                 notification.previewBody = qsTr("Settings applied.");
-                 notification.publish();
+                 app.showToast(qsTr("Settings applied."));
              }
          }
          onIconsRestored: {
              settings.isRunning = false;
              if (coverRoot.iconOpFromCover) {
                  coverRoot.iconOpFromCover = false;
-                 notification.publish();
+                 app.showToast(qsTr("Settings applied."));
              }
          }
          onError: {
              if (op === "ApplyIcons" || op === "RestoreIcons") {
-                 notification.previewBody = message.length
+                 app.showToast(message.length
                      ? message
-                     : qsTr("Operation failed");
-                 notification.publish();
+                     : qsTr("Operation failed"));
                  settings.isRunning = false;
                  coverRoot.iconOpFromCover = false;
              }
@@ -93,7 +89,7 @@ CoverBackground
             if (settings.isRunning)
                0.1
             else
-               ((settings.activeIconPack !== 'default') || (settings.activeFontPack !== 'default')) ? 0.1 : 0.3
+               (settings.hasActiveIconPack() || settings.hasActiveFontPack()) ? 0.1 : 0.3
         }
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
@@ -131,20 +127,22 @@ CoverBackground
         anchors.topMargin: Theme.paddingLarge
         visible: !settings.isRunning
         CoverLabel {
-            visible: (settings.activeIconPack && settings.activeIconPack !== 'default')
-            icon: "../../images/icon.png"
+            visible: settings.hasActiveIconPack()
+            icon: app.isLightTheme ? "../../images/icon-light.png"
+                                 : "../../images/icon-dark.png"
             label: coverRoot.coverPackLabel(settings.activeIconPack)
         }
         CoverLabel {
-            visible: (settings.activeFontPack && settings.activeFontPack !== 'default')
-            icon: "../../images/font.png"
+            visible: settings.hasActiveFontPack()
+            icon: app.isLightTheme ? "../../images/font-light.png"
+                                 : "../../images/font-dark.png"
             label: coverRoot.coverPackLabel(settings.activeFontPack)
         }
     }
 
     CoverActionList {
         iconBackground: true
-        enabled: (settings.activeIconPack !== 'default') && !settings.isRunning
+        enabled: settings.hasActiveIconPack() && !settings.isRunning
         CoverAction {
             iconSource: "image://theme/icon-cover-sync"
             onTriggered: {

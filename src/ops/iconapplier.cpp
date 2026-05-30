@@ -4,10 +4,6 @@
 #include "iconpreviewcache.h"
 #include "imageutil.h"
 
-#include <QDir>
-#include <QFileInfo>
-#include <QSet>
-
 IconApplier::IconApplier(QObject* parent)
     : QObject(parent)
 {
@@ -16,43 +12,6 @@ IconApplier::IconApplier(QObject* parent)
 QString IconApplier::packDir(const QString& packName) const
 {
     return IconPaths::packDir(packName);
-}
-
-int IconApplier::nativeMatchCount(const QString& packName) const
-{
-    if(packName.isEmpty())
-        return 0;
-
-    const QSet<QString> live = IconPaths::liveHicolorAppKeys();
-    const QSet<QString> pack = IconPaths::packIconKeys(packName);
-    int count = 0;
-    for(const QString& k : live)
-    {
-        if(pack.contains(k))
-            ++count;
-    }
-    return count;
-}
-
-int IconApplier::apkMatchCount(const QString& packName) const
-{
-    if(packName.isEmpty())
-        return 0;
-
-    const QSet<QString> pack = IconPaths::packApkKeys(packName);
-    QDir apk(IconPaths::liveApkLauncherDir());
-    if(!apk.exists())
-        return 0;
-
-    int count = 0;
-    const QStringList pngs = apk.entryList(QStringList() << QStringLiteral("*.png"),
-                                           QDir::Files);
-    for(const QString& f : pngs)
-    {
-        if(pack.contains(QFileInfo(f).completeBaseName()))
-            ++count;
-    }
-    return count;
 }
 
 void IconApplier::applyIcons(const QString& packName, bool runPack, bool overlay)
@@ -77,11 +36,6 @@ void IconApplier::restoreIcons()
     pipeline.restore();
     emit progress(1, 1);
     emit restored(true, QString());
-}
-
-void IconApplier::refreshOriginals()
-{
-    emit originalsRefreshed(true, QString());
 }
 
 void IconApplier::buildPreview(const QString& packName)

@@ -1,3 +1,21 @@
+* Sat May 30 2026 3.0.0beta6-1
+- Dead code: drop unused QML components, IconApplier match counters,
+  RefreshOriginals D-Bus path, and FontApplier QML registration.
+- QML: MuotoNotification component; migrate to Nemo.Notifications and
+  Nemo.Configuration; themes tab uses indeterminate progress on manual apply.
+- Cover: icon/font glyphs follow light/dark ambience; hide cover sync when
+  activeIconPack is missing or default on first install.
+- Auto-apply: PackageKit Role-based listener; oneshot-restore dconf session
+  bus fix; RestoreIcons without dbus-monitor wait; helperd idle suspend
+  during icon ops; RPM restarts install-listener after upgrade.
+
+* Wed May 29 2026
+- Auto-apply: harbour-muoto-update-icons script + boot oneshot; user
+  install-listener (apkd, PackageKit, installationhandler, containerReady);
+  harbour-muoto-oneshot-restore before system upgrade (icons, fonts, Muoto
+  and silica dconf, vendor lock restore). Helperd on-demand (no enable at
+  boot); ApplyIcons blocked when /tmp/os-update-running.
+
 * Fri May 29 2026 3.0.0beta5-1
 - UI: Opal-style action buttons (MuotoButton); shared homescreen-restart
   section on apply/restore dialogs with clearer copy; inline Restart

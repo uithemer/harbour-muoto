@@ -12,6 +12,8 @@ bool applyApkPhase(const QString& packName, bool runPack, bool overlay,
 
 void removeApkCustomDir();
 
+void unstampApkLauncherIconTimestamps();
+
 void notifyLauncherAfterIconOp(bool apkIconsTouched = false);
 
 #endif // LIPSTICKREFRESH_H

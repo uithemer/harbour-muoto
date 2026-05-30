@@ -1,0 +1,15 @@
+[Unit]
+Description=Muoto install listener (D-Bus to update-icons)
+After=dbus.service
+PartOf=default.target
+
+[Service]
+Type=simple
+ExecStart=/usr/libexec/harbour-muoto-install-listener
+Restart=on-failure
+RestartSec=5
+StartLimitBurst=5
+StartLimitIntervalSec=120
+
+[Install]
+WantedBy=default.target
