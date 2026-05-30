@@ -258,7 +258,7 @@ SilicaListView {
     ViewPlaceholder {
         enabled: themesView.count == 0
         text: qsTr("No themes yet")
-        hintText: qsTr("Install a compatible theme first")
+        hintText: qsTr("Install a compatible theme to start")
     }
 
     Item {
