@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include <QFile>
 #include <QProcess>
 #include <QStringList>
 #include <QMetaObject>
@@ -30,6 +31,13 @@ namespace
     const char *kLogin1Service = "org.freedesktop.login1";
     const char *kLogin1Path    = "/org/freedesktop/login1";
     const char *kLogin1Manager = "org.freedesktop.login1.Manager";
+
+    const char *kOsUpdateSentinel = "/tmp/os-update-running";
+
+    bool osUpdateRunning()
+    {
+        return QFile::exists(QString::fromLatin1(kOsUpdateSentinel));
+    }
 }
 
 // =====================================================================
@@ -182,6 +190,12 @@ void ThemesAdaptor::ApplyIcons(const QString &pack, bool runPack, bool overlay,
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        sendMethodReply(message);
+        return;
+    }
+    if (osUpdateRunning())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("upgrade in progress"));
         sendMethodReply(message);
         return;
     }

@@ -1,0 +1,16 @@
+[Unit]
+Description=Re-apply Muoto icon theme after boot
+Documentation=https://github.com/uithemer/sailfishos-uithemer
+After=dbus.service apkd.service appsupport@defaultuser.service home.mount
+Wants=apkd.service
+ConditionPathExists=!/tmp/os-update-running
+RequiresMountsFor=/home
+
+[Service]
+Type=oneshot
+# Run as root: dbus-monitor for OperationCompleted; dconf via muoto_run_as_user.
+TimeoutStartSec=600
+ExecStart=/usr/bin/harbour-muoto-update-icons
+
+[Install]
+WantedBy=multi-user.target

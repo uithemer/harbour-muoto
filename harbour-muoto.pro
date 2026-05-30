@@ -10,10 +10,11 @@ TEMPLATE = subdirs
 # /usr/libexec/harbour-muoto-helperd. (2.7.0 retired the headless
 # /usr/bin/harbour-muoto-icond binary along with OptionsPage's
 # autoupdate/systemupgrade/boot-reassert units.)
-SUBDIRS = gui daemon
+SUBDIRS = gui daemon listener
 
 gui.subdir     = src/gui
 daemon.subdir  = src/daemon
+listener.subdir = src/listener
 
 # Both binaries pull in src/ops/ops.pri at compile-time, so there is no
 # inter-subdir build-order dependency. Listing the depends here anyway

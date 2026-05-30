@@ -63,10 +63,6 @@
         <source>UI Themer porting for Sailfish OS 5</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Translators</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>AskForSupport</name>
@@ -192,7 +188,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>When you are done, restart the homescreen to apply these changes. You can also use Restart homescreen in the pulley menu.</source>
+        <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -624,8 +620,8 @@
         <translation type="unfinished">Κανένα θέμα ακόμα</translation>
     </message>
     <message>
-        <source>Install a compatible theme first</source>
-        <translation type="unfinished">Εγκαταστήστε ένα σθμβατό θέμα πρώτα</translation>
+        <source>Install a compatible theme to start</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

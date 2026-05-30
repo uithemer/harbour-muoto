@@ -1,3 +1,10 @@
+* Wed May 29 2026
+- Auto-apply: harbour-muoto-update-icons script + boot oneshot; user
+  install-listener (apkd, PackageKit, installationhandler, containerReady);
+  harbour-muoto-oneshot-restore before system upgrade (icons, fonts, Muoto
+  and silica dconf, vendor lock restore). Helperd on-demand (no enable at
+  boot); ApplyIcons blocked when /tmp/os-update-running.
+
 * Fri May 29 2026 3.0.0beta5-1
 - UI: Opal-style action buttons (MuotoButton); shared homescreen-restart
   section on apply/restore dialogs with clearer copy; inline Restart
