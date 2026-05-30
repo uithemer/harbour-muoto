@@ -9,7 +9,7 @@ has_toc: true
 
 # Create theme packs
 
-Information on how to create theme packs compatible with **Muoto**. Use the [dummy package](https://github.com/uithemer/harbour-themepack-dummy) as a reference — it includes the basic directory tree and an example spec file.
+Information on how to create theme packs compatible with **Muoto**. Use the [example package](https://github.com/uithemer/harbour-themepack-example) as a reference — it includes the basic directory tree and an example spec file.
 
 For **using** the app (apply themes, display density, restore), see **[Using Muoto](guide)**.
 
@@ -54,11 +54,11 @@ A theme pack is mostly icons and fonts, so build it **architecture agnostic**. A
 
 ## Themepack helper
 
-To resize SVG icons you can use [themepack-helper](https://github.com/uithemer/themepack-helper).
+To resize SVG icons you can use [themepack-helper](https://github.com/uithemer/harbour-themepack-example/themehelper).
 
 ## Companion app
 
-If you are familiar with the Sailfish SDK, you can use the [companion app](https://github.com/uithemer/harbour-themepack-companion) model. It includes a script that lists missing icons and opens an email draft with a predefined address. Feel free to fork it for your own projects.
+If you are familiar with the Sailfish SDK, you can use the [companion app](https://github.com/uithemer/harbour-themepack-example/companion) model. It includes a script that lists missing icons and opens an email draft with a predefined address. Feel free to fork it for your own projects.
 
 ## Releasing
 
