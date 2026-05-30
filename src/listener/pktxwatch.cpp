@@ -14,6 +14,11 @@ PkTxWatch::PkTxWatch(const QString& path, InstallListener* listener, QObject* pa
 {
 }
 
+void PkTxWatch::markRelevant()
+{
+    _relevant = true;
+}
+
 void PkTxWatch::onPackage(uint info, const QStringList& packageIds, const QString& summary)
 {
     Q_UNUSED(packageIds);

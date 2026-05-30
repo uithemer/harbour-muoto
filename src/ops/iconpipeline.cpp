@@ -91,6 +91,7 @@ bool IconPipeline::restore() const
     IconStockBackup stock;
     stock.restore();
     removeApkCustomDir();
+    unstampApkLauncherIconTimestamps();
     notifyLauncherAfterIconOp(false);
     return true;
 }

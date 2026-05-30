@@ -228,6 +228,7 @@ if [ -n "$MUOTO_UID" ]; then
     if [ -d "/run/user/$MUOTO_UID" ]; then
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user daemon-reload" 2>/dev/null || :
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user enable --now harbour-muoto-install-listener.service" 2>/dev/null || :
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-install-listener.service" 2>/dev/null || :
     else
         su defaultuser -c "systemctl --user daemon-reload" 2>/dev/null || :
         su defaultuser -c "systemctl --user enable harbour-muoto-install-listener.service" 2>/dev/null || :

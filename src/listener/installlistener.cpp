@@ -1,6 +1,10 @@
 #include "installlistener.h"
 #include "pktxwatch.h"
 
+#include <QDBusMessage>
+#include <QDBusObjectPath>
+#include <QDBusReply>
+#include <QDBusVariant>
 #include <QDBusServiceWatcher>
 #include <QFile>
 #include <QDebug>
@@ -28,6 +32,17 @@ namespace
     const char* kOsUpdateSentinel = "/tmp/os-update-running";
 
     constexpr uint PK_EXIT_SUCCESS = 1;
+
+    // org.freedesktop.PackageKit.Transaction Role (u); 11 seen on SFOS for install-packages.
+    constexpr uint PK_ROLE_INSTALL_PACKAGES = 7;
+    constexpr uint PK_ROLE_UPDATE_PACKAGES = 8;
+    constexpr uint PK_ROLE_INSTALL_PACKAGES_SFOS = 11;
+
+    bool pkRoleImpliesIconApply(uint role)
+    {
+        return role == PK_ROLE_INSTALL_PACKAGES || role == PK_ROLE_UPDATE_PACKAGES
+               || role == PK_ROLE_INSTALL_PACKAGES_SFOS;
+    }
 }
 
 InstallListener::InstallListener(QObject* parent)
@@ -64,6 +79,20 @@ InstallListener::InstallListener(QObject* parent)
             this, [this](const QString&, const QString&, const QString&) {
                 qInfo() << "muoto-listener: installationhandler owner changed, re-subscribing";
                 subscribeSession();
+            });
+
+    auto* pkWatch =
+        new QDBusServiceWatcher(QString::fromLatin1(kPkService),
+                                _system,
+                                QDBusServiceWatcher::WatchForOwnerChange,
+                                this);
+    connect(pkWatch, &QDBusServiceWatcher::serviceOwnerChanged,
+            this, [this](const QString&, const QString& newOwner, const QString&) {
+                if(!newOwner.isEmpty())
+                {
+                    qInfo() << "muoto-listener: PackageKit appeared, syncing transactions";
+                    syncPkTransactions();
+                }
             });
 }
 
@@ -135,19 +164,67 @@ void InstallListener::subscribeSystem()
         return;
     }
 
-    _system.connect(QString::fromLatin1(kPkService),
-                    QString::fromLatin1(kPkPath),
-                    QString::fromLatin1(kPkIface),
-                    QStringLiteral("TransactionListChanged"),
-                    this,
-                    SLOT(onPkTransactionListChanged(QStringList)));
+    if(!_system.connect(QString::fromLatin1(kPkService),
+                        QString::fromLatin1(kPkPath),
+                        QString::fromLatin1(kPkIface),
+                        QStringLiteral("TransactionListChanged"),
+                        this,
+                        SLOT(onPkTransactionListChanged(QStringList))))
+        qWarning() << "muoto-listener: failed to connect TransactionListChanged";
 
-    _system.connect(QString::fromLatin1(kLogin1Service),
+    syncPkTransactions();
+
+    if(!_system.connect(QString::fromLatin1(kLogin1Service),
                     QString::fromLatin1(kLogin1Path),
                     QString::fromLatin1(kLogin1Mgr),
                     QStringLiteral("PrepareForShutdown"),
                     this,
-                    SLOT(onPrepareForShutdown(bool)));
+                    SLOT(onPrepareForShutdown(bool))))
+        qWarning() << "muoto-listener: failed to connect PrepareForShutdown";
+}
+
+void InstallListener::syncPkTransactions()
+{
+    QDBusMessage msg = QDBusMessage::createMethodCall(QString::fromLatin1(kPkService),
+                                                      QString::fromLatin1(kPkPath),
+                                                      QString::fromLatin1(kPkIface),
+                                                      QStringLiteral("GetTransactionList"));
+    const QDBusMessage reply = _system.call(msg);
+    if(reply.type() != QDBusMessage::ReplyMessage)
+    {
+        qInfo() << "muoto-listener: GetTransactionList unavailable (PackageKit not running?)";
+        return;
+    }
+
+    QStringList paths;
+    const QVariant arg = reply.arguments().value(0);
+    if(arg.canConvert<QStringList>())
+        paths = arg.toStringList();
+    else
+    {
+        const QList<QDBusObjectPath> opaths = qdbus_cast<QList<QDBusObjectPath>>(arg);
+        for(const QDBusObjectPath& p : opaths)
+            paths.append(p.path());
+    }
+
+    qInfo() << "muoto-listener: sync PK transactions" << paths.size();
+    for(const QString& path : paths)
+        trackPkTransaction(path);
+}
+
+uint InstallListener::queryPkTransactionRole(const QString& path) const
+{
+    QDBusMessage msg = QDBusMessage::createMethodCall(QString::fromLatin1(kPkService),
+                                                      path,
+                                                      QStringLiteral("org.freedesktop.DBus.Properties"),
+                                                      QStringLiteral("Get"));
+    msg << QString::fromLatin1(kPkTxIface) << QStringLiteral("Role");
+    const QDBusMessage reply = _system.call(msg);
+    if(reply.type() != QDBusMessage::ReplyMessage || reply.arguments().isEmpty())
+        return 0;
+
+    const QVariant v = qdbus_cast<QDBusVariant>(reply.arguments().value(0)).variant();
+    return v.toUInt();
 }
 
 void InstallListener::trackPkTransaction(const QString& path)
@@ -155,9 +232,17 @@ void InstallListener::trackPkTransaction(const QString& path)
     if(path.isEmpty() || _pkTransactions.contains(path))
         return;
 
+    const uint role = queryPkTransactionRole(path);
+    const bool roleRelevant = pkRoleImpliesIconApply(role);
+
     _pkTransactions.insert(path);
     auto* watch = new PkTxWatch(path, this, this);
+    if(roleRelevant)
+        watch->markRelevant();
     _pkWatches.append(watch);
+
+    qInfo() << "muoto-listener: tracking PK transaction" << path << "role=" << role
+            << "roleRelevant=" << roleRelevant;
 
     _system.connect(QString::fromLatin1(kPkService),
                     path,
@@ -187,6 +272,9 @@ void InstallListener::onPkFinished(const QString& path, uint exitCode, bool rele
 
     if(exitCode == PK_EXIT_SUCCESS && relevant)
         scheduleApply("packagekit");
+    else
+        qInfo() << "muoto-listener: PK finished ignored path=" << path << "exit=" << exitCode
+                << "relevant=" << relevant;
 }
 
 bool InstallListener::guardsBlockApply() const
@@ -241,6 +329,7 @@ void InstallListener::onInstallationFinished(bool success, const QString& errorS
 
 void InstallListener::onPkTransactionListChanged(const QStringList& transactions)
 {
+    qInfo() << "muoto-listener: TransactionListChanged" << transactions.size() << "transactions";
     for(const QString& path : transactions)
         trackPkTransaction(path);
 }

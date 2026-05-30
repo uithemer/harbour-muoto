@@ -13,6 +13,7 @@ public:
     PkTxWatch(const QString& path, InstallListener* listener, QObject* parent = nullptr);
 
     QString path() const { return _path; }
+    void markRelevant();
 
 public slots:
     void onPackage(uint info, const QStringList& packageIds, const QString& summary);

@@ -34,7 +34,9 @@ private:
     bool guardsBlockApply() const;
     void subscribeSession();
     void subscribeSystem();
+    void syncPkTransactions();
     void trackPkTransaction(const QString& path);
+    uint queryPkTransactionRole(const QString& path) const;
 
     QTimer _debounce;
     QDBusConnection _session;
