@@ -25,7 +25,7 @@ SupportDialog {
         icon: Qt.resolvedUrl("../../images/support-git.png")
         title: qsTr("Report issues on GitHub")
         description: qsTr("File bugs, suggest features, or follow development.")
-        link: "https://github.com/uithemer/sailfishos-uithemer/issues"
+        link: "https://github.com/uithemer/harbour-muoto/issues"
     }
 
     DetailsDrawer {

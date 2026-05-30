@@ -12,12 +12,11 @@ A.AboutPageBase {
     appName: "Muoto"
     appIcon: Qt.resolvedUrl("../../images/appinfo.png")
     appVersion: "3.0.0"
-    appRelease: "beta 4"
+    appRelease: "beta 6"
     description: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.")
     authors: ["fravaccaro"]
-    homepageUrl: "https://uithemer.github.io/sailfishos-uithemer/"
-    sourcesUrl: "https://github.com/uithemer/sailfishos-uithemer"
-    translationsUrl: "https://explore.transifex.com/fravaccaro/ui-themer"
+    homepageUrl: "https://uithemer.github.io/harbour-muoto/"
+    sourcesUrl: "https://github.com/uithemer/harbour-muoto"
     donations.text: donations.defaultTextCoffee
     // changelogItems: []
     contributionSections: [
@@ -56,7 +55,7 @@ A.AboutPageBase {
             buttons: [
                 A.InfoButton {
                     text: qsTr("Documentation")
-                    onClicked: Qt.openUrlExternally("https://uithemer.github.io/sailfishos-uithemer/docs/getstarted")
+                    onClicked: Qt.openUrlExternally("https://uithemer.github.io/harbour-muoto/docs/getstarted")
                 }
             ]
         },
@@ -66,7 +65,7 @@ A.AboutPageBase {
             buttons: [
                 A.InfoButton {
                     text: qsTr("Issues")
-                    onClicked: Qt.openUrlExternally("https://github.com/uithemer/sailfishos-uithemer/issues")
+                    onClicked: Qt.openUrlExternally("https://github.com/uithemer/harbour-muoto/issues")
                 }
             ]
         },
@@ -75,7 +74,7 @@ A.AboutPageBase {
             text: qsTr("Credits for existing translations and how to contribute.")
             buttons: [
                 A.InfoButton {
-                    text: qsTr("Translators")
+                    text: qsTr("Translations")
                     onClicked: pageStack.push(Qt.resolvedUrl("TranslatorPage.qml"))
                 }
             ]

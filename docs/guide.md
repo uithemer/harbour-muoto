@@ -28,7 +28,7 @@ The app cover shows the active icon/font pack when set. After applying from the 
 
 ## Further help
 
-* [Report an issue](https://github.com/uithemer/sailfishos-uithemer/issues)
+* [Report an issue](https://github.com/uithemer/harbour-muoto/issues)
 
 ## For theme pack authors
 

@@ -1,19 +1,20 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import org.nemomobile.notifications 1.0
 import harbour.muoto 1.0
 import "../components"
 
 CoverBackground
 {
     id: root
-     Notification { id: notification }
      // 2.6.0: icon ops route through HelperClient and the daemon, so
      // listen for its bridged signals instead of iconapplier's local
      // ones.
      Connections {
          target: Helper
-         onIconsRestored: { settings.isRunning = false; notification.publish(); }
+         onIconsRestored: {
+             settings.isRunning = false
+             app.showToast(qsTr("Settings applied."))
+         }
          onError: {
              if (op === "RestoreIcons") {
                  settings.isRunning = false;
@@ -22,8 +23,8 @@ CoverBackground
      }
      ThemePack {
          function notifyDone() {
-             settings.isRunning = false;
-             notification.publish();
+             settings.isRunning = false
+             app.showToast(qsTr("Settings applied."))
          }
          id: themepack
          onHomescreenRestarted: notifyDone()

@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include <QFile>
 #include <QProcess>
 #include <QStringList>
 #include <QMetaObject>
@@ -30,6 +31,13 @@ namespace
     const char *kLogin1Service = "org.freedesktop.login1";
     const char *kLogin1Path    = "/org/freedesktop/login1";
     const char *kLogin1Manager = "org.freedesktop.login1.Manager";
+
+    const char *kOsUpdateSentinel = "/tmp/os-update-running";
+
+    bool osUpdateRunning()
+    {
+        return QFile::exists(QString::fromLatin1(kOsUpdateSentinel));
+    }
 }
 
 // =====================================================================
@@ -68,11 +76,31 @@ HelperBackend::HelperBackend(QObject *parent) : QObject(parent)
 
 void HelperBackend::resetIdleTimer()
 {
-    _idleTimer.start();
+    if(_idleSuspendCount == 0)
+        _idleTimer.start();
+}
+
+void HelperBackend::suspendIdleTimer()
+{
+  ++_idleSuspendCount;
+    _idleTimer.stop();
+}
+
+void HelperBackend::resumeIdleTimer()
+{
+    if(_idleSuspendCount > 0)
+        --_idleSuspendCount;
+    if(_idleSuspendCount == 0 && !_shuttingDown)
+        _idleTimer.start();
 }
 
 void HelperBackend::onIdleTimeout()
 {
+    if(_idleSuspendCount > 0)
+    {
+        _idleTimer.start();
+        return;
+    }
     qInfo() << "muoto-helperd: idle timeout, quitting";
     emit idleQuit();
 }
@@ -130,12 +158,13 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
                                   std::function<void(IconApplier &)> start,
                                   void (IconApplier::*doneSignal)(bool, const QString &))
 {
-    _backend->resetIdleTimer();
+    _backend->suspendIdleTimer();
 
     const auto lock = std::make_shared<FileLock>(FileLock::defaultLockPath(), false);
     if(!lock->isHeld())
     {
         emit OperationCompleted(op, false, QStringLiteral("busy"));
+        _backend->resumeIdleTimer();
         return;
     }
 
@@ -149,7 +178,7 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
                         emit OperationCompleted(op, ok, message);
                         QObject::disconnect(*conn);
                         delete conn;
-                        _backend->resetIdleTimer();
+                        _backend->resumeIdleTimer();
                     });
 
     auto *progressConn = new QMetaObject::Connection;
@@ -157,7 +186,6 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
                             [this, op](int done, int total)
                             {
                                 emit Progress(op, done, total);
-                                _backend->resetIdleTimer();
                             });
     // Disconnect progress when done. Schedule it via a one-shot
     // single-shot timer chained to the done signal. Simpler: also
@@ -182,6 +210,12 @@ void ThemesAdaptor::ApplyIcons(const QString &pack, bool runPack, bool overlay,
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        sendMethodReply(message);
+        return;
+    }
+    if (osUpdateRunning())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("upgrade in progress"));
         sendMethodReply(message);
         return;
     }
@@ -211,25 +245,6 @@ void ThemesAdaptor::RestoreIcons(const QDBusMessage &message)
     }
     runIconOpVoid(op, [](IconApplier &a)
                   { a.restoreIcons(); }, &IconApplier::restored);
-    sendMethodReply(message);
-}
-
-void ThemesAdaptor::RefreshOriginals(const QDBusMessage &message)
-{
-    const QString op = QStringLiteral("RefreshOriginals");
-    if (_backend->shuttingDown())
-    {
-        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
-        sendMethodReply(message);
-        return;
-    }
-    if (!authorize(message, op))
-    {
-        sendMethodReply(message);
-        return;
-    }
-    runIconOpVoid(op, [](IconApplier &a)
-                  { a.refreshOriginals(); }, &IconApplier::originalsRefreshed);
     sendMethodReply(message);
 }
 

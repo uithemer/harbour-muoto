@@ -63,10 +63,6 @@
         <source>UI Themer porting for Sailfish OS 5</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Translators</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>AskForSupport</name>
@@ -127,6 +123,13 @@
     </message>
     <message>
         <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CoverConfirm</name>
+    <message>
+        <source>Settings applied.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -192,7 +195,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>When you are done, restart the homescreen to apply these changes. You can also use Restart homescreen in the pulley menu.</source>
+        <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings applied.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -332,13 +339,6 @@
     </message>
     <message>
         <source>Send a tip or recurring support on Liberapay.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Notification</name>
-    <message>
-        <source>Settings applied.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -622,7 +622,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Install a compatible theme first</source>
+        <source>Install a compatible theme to start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restoring theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalling theme…</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -54,20 +54,17 @@ include($$ROOT/libs/opal.pri)
 OTHER_FILES += \
     $$ROOT/qml/harbour-muoto.qml \
     $$ROOT/qml/common/Settings.qml \
-    $$ROOT/qml/components/AboutLanguage.qml \
-    $$ROOT/qml/components/AboutTranslator.qml \
-    $$ROOT/qml/components/BackgroundRectangle.qml \
     $$ROOT/qml/components/BusyState.qml \
     $$ROOT/qml/components/FontPreview.qml \
     $$ROOT/qml/components/FontWeightSwitch.qml \
     $$ROOT/qml/components/LabelSpacer.qml \
     $$ROOT/qml/components/MuotoButton.qml \
-    $$ROOT/qml/components/MuotoGreetingLabel.qml \
-    $$ROOT/qml/components/MuotoHookLabel.qml \
+    $$ROOT/qml/components/MuotoHeaderLabel.qml \
+    $$ROOT/qml/components/MuotoTextLabel.qml \
     $$ROOT/qml/components/MuotoRestartHomescreenButton.qml \
     $$ROOT/qml/components/HomescreenRestartSection.qml \
     $$ROOT/qml/components/homescreenRestart.js \
-    $$ROOT/qml/components/Notification.qml \
+    $$ROOT/qml/components/MuotoNotification.qml \
     $$ROOT/qml/components/themepacklistview/ThemePackItem.qml \
     $$ROOT/qml/cover/CoverPage.qml \
     $$ROOT/qml/cover/CoverConfirm.qml \
@@ -125,8 +122,25 @@ for(ts_path, TS_SOURCES) {
 # every privileged op now). Only the systemd unit files, image assets
 # and app icons need explicit install rules.
 
-service.files = $$files($$ROOT/service/*)
+service.files = \
+    $$ROOT/service/harbour-muoto-helperd.service \
+    $$ROOT/service/harbour-muoto-update-icons.service \
+    $$ROOT/service/harbour-muoto-oneshot-restore.service \
+    $$ROOT/service/muoto-dbus-wait.sh
 service.path  = /usr/share/$$TARGET/service
+
+autobin.files = \
+    $$ROOT/service/harbour-muoto-update-icons \
+    $$ROOT/service/harbour-muoto-oneshot-restore
+autobin.path = /usr/bin
+
+upgrade_dropin.files = \
+    $$ROOT/service/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
+upgrade_dropin.path = /usr/share/$$TARGET/service/sailfish-upgrade-ui.service.d
+
+userunit.files = \
+    $$ROOT/service/systemd/user/harbour-muoto-install-listener.service
+userunit.path = /usr/share/$$TARGET/systemd/user
 
 images.files = $$files($$ROOT/images/*)
 images.path  = /usr/share/$$TARGET/images
@@ -189,7 +203,7 @@ dbusxml.path  = /usr/share/dbus-1/interfaces
 # `target`, `qml` and `desktop` are already on INSTALLS via sailfishapp.prf
 # (we only redirected their .files above). Add the per-size icon* rules
 # and our own asset rules here.
-INSTALLS += service images \
+INSTALLS += service autobin upgrade_dropin userunit images \
             icon86 icon108 icon128 icon172 icon256 \
             dbusconf dbusservice dbusxml \
             qm

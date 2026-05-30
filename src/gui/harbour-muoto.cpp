@@ -11,7 +11,6 @@
 #include "themepackmodel.h"
 #include "fontweightmodel.h"
 #include "iconapplier.h"
-#include "fontapplier.h"
 #include "helperclient.h"
 #include "iconpreviewprovider.h"
 
@@ -37,7 +36,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<ThemePackModel>("harbour.muoto", 1, 0, "ThemePackModel");
     qmlRegisterType<FontWeightModel>("harbour.muoto", 1, 0, "FontWeightModel");
     qmlRegisterType<IconApplier>("harbour.muoto", 1, 0, "IconApplier");
-    qmlRegisterType<FontApplier>("harbour.muoto", 1, 0, "FontApplier");
     qmlRegisterSingletonType<HelperClient>("harbour.muoto", 1, 0, "Helper",
                                            &HelperClient::qmlSingleton);
 

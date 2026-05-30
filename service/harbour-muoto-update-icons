@@ -1,0 +1,53 @@
+#!/bin/sh
+# Re-apply active Muoto icon theme (cover-sync). No-op when activeIconPack is default.
+set -eu
+
+. /usr/share/harbour-muoto/service/muoto-dbus-wait.sh
+
+if muoto_os_update_running; then
+    exit 0
+fi
+
+pack=$(muoto_dconf_as_user "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+pack=${pack#\'}
+pack=${pack%\'}
+
+overlay=$(muoto_dconf_as_user "dconf read /apps/harbour-muoto/iconOverlay" 2>/dev/null || true)
+case "$overlay" in
+    true) o=true ;;
+    *) o=false ;;
+esac
+
+if [ -z "$pack" ] || [ "$pack" = "default" ]; then
+    exit 0
+fi
+
+if [ ! -d "/usr/share/harbour-themepack-$pack" ]; then
+    exit 0
+fi
+
+_apply_once() {
+    muoto_wait_op_begin ApplyIcons 180
+    dbus-send --system --type=method_call \
+        --dest="$MUOTO_SERVICE" \
+        "$MUOTO_PATH" \
+        "$MUOTO_THEMES.ApplyIcons" \
+        "string:$pack" "boolean:true" "boolean:$o" \
+        >/dev/null 2>&1 || {
+        muoto_wait_op_end ApplyIcons || true
+        return 1
+    }
+    muoto_wait_op_end ApplyIcons
+}
+
+if _apply_once; then
+    exit 0
+fi
+
+# One retry after busy (common when GUI and automation overlap).
+sleep 3
+if _apply_once; then
+    exit 0
+fi
+
+exit 1

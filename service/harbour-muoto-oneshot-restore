@@ -1,0 +1,41 @@
+#!/bin/sh
+# Full stock restore before system upgrade: icons, fonts, Muoto + silica dconf, vendor locks.
+# Order mirrors GUI Restore theme (ThemesTabContent.qml): fonts first, then icons, then dconf commit.
+set -eu
+
+. /usr/share/harbour-muoto/service/muoto-dbus-wait.sh
+
+DATADIR=/usr/share/harbour-muoto
+
+# 1) Fonts — deactivateFont + restoreFonts (GUI order)
+muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/activeFontPack \"'default'\""
+muoto_run_as_user_or_die 'rm -f ~/.config/fontconfig/conf.d/99-muoto.conf; fc-cache -f'
+
+# 2) Icons — RestoreIcons runs synchronously in helperd; method reply means done.
+if ! dbus-send --system --type=method_call \
+    --dest="$MUOTO_SERVICE" \
+    "$MUOTO_PATH" \
+    "$MUOTO_THEMES.RestoreIcons"; then
+    echo "harbour-muoto-oneshot-restore: RestoreIcons dbus-send failed" >&2
+    exit 1
+fi
+
+# 3) Icons dconf — _commitPendingIconRestore after successful RestoreIcons
+muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/activeIconPack \"'default'\""
+muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/iconOverlay false"
+
+# 4) Silica density (upgrade-only; not in GUI Restore dialog)
+muoto_dconf_as_user_or_die "dconf reset /desktop/sailfish/silica/theme_pixel_ratio"
+muoto_dconf_as_user_or_die "dconf reset /desktop/sailfish/silica/icon_size_launcher"
+
+# 5) Vendor dconf locks — optional files
+for f in silica-configs.txt ui-configs.txt; do
+    bk="$DATADIR/backup/dlocks/$f.bk"
+    dst="/etc/dconf/db/vendor.d/locks/$f"
+    if [ -f "$bk" ]; then
+        mv "$bk" "$dst" || true
+    fi
+done
+dconf update || true
+
+exit 0

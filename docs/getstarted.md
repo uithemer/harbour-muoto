@@ -64,4 +64,4 @@ If you are familiar with the Sailfish SDK, you can use the [companion app](https
 
 You are ready to build and publish. The usual channel is [OpenRepos](https://openrepos.net).
 
-In your package description or store notice, tell users to install **Muoto** (this app replaces the old standalone *Theme pack support* / `harbour-themepacksupport` package). Theme packs must follow the `harbour-themepack-*` naming convention and the layout described in the guidelines linked above.
+In your package description or store notice, tell users to install **Muoto** from [OpenRepos](https://openrepos.net/content/fravaccaro/muoto-ui-themer) (this app replaces the old *Theme pack support* / `harbour-themepacksupport` and *UI Themer* / `sailfishos-uithemer` packages). Theme packs must follow the `harbour-themepack-*` naming convention and the layout described in the guidelines linked above.

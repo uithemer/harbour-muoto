@@ -14,12 +14,12 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.0.0beta5
-Release:        1
+Version:        3.0.0beta6
+Release:        2
 Group:          Qt/Qt
 License:        GPLv3
-Packager:       fravaccaro <fravaccaro@jollacommunity.it>
-URL:            https://github.com/uithemer/sailfishos-uithemer
+Packager:       fravaccaro <me@fravaccaro.com>
+URL:            https://github.com/uithemer/harbour-muoto
 Source0:        %{name}-%{version}.tar.bz2
 Source100:      harbour-muoto.yaml
 
@@ -102,7 +102,7 @@ if [ -f "$fc_old" ]; then
     else
         rm -f "$fc_old" || :
     fi
-    su - defaultuser -c "fc-cache -f" 2>/dev/null || :
+    su defaultuser -c "fc-cache -f" 2>/dev/null || :
 fi
 
 %build
@@ -121,6 +121,9 @@ rm -rf %{buildroot}
 # >> install pre
 # << install pre
 %qmake5_install
+chmod 755 %{buildroot}%{_bindir}/harbour-muoto-update-icons 2>/dev/null || :
+chmod 755 %{buildroot}%{_bindir}/harbour-muoto-oneshot-restore 2>/dev/null || :
+chmod 755 %{buildroot}%{_datadir}/%{name}/service/muoto-dbus-wait.sh 2>/dev/null || :
 
 # >> install post
 # << install post
@@ -137,7 +140,10 @@ desktop-file-install --delete-original       \
 # being launched as root by dbus-daemon, not by the binary itself).
 # 2.7.0: the headless harbour-muoto-icond binary is retired.
 %attr(0755,root,root) %{_bindir}/%{name}
+%attr(0755,root,root) %{_bindir}/harbour-muoto-update-icons
+%attr(0755,root,root) %{_bindir}/harbour-muoto-oneshot-restore
 %attr(0755,root,root) /usr/libexec/harbour-muoto-helperd
+%attr(0755,root,root) /usr/libexec/harbour-muoto-install-listener
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
@@ -162,6 +168,11 @@ systemctl disable --now sailfishos-uithemer-helperd.service 2>/dev/null || :
 systemctl stop sailfishos-uithemer-helperd.service 2>/dev/null || :
 
 mv -f %{_datadir}/%{name}/service/harbour-muoto-helperd.service /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/harbour-muoto-update-icons.service /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/harbour-muoto-oneshot-restore.service /etc/systemd/system/
+mkdir -p /etc/systemd/system/sailfish-upgrade-ui.service.d
+cp -f %{_datadir}/%{name}/service/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf \
+    /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
 # 2.6.1: drop the old boot unit + binary name (reassert -> icond).
 systemctl disable --now sailfishos-uithemer-reassert.service 2>/dev/null || :
 rm -f /etc/systemd/system/sailfishos-uithemer-reassert.service
@@ -190,10 +201,39 @@ rm -f /usr/share/dbus-1/interfaces/org.uithemer.UiThemer1.Packs.xml
 # (older systemd / community ports may not honour reload dbus).
 systemctl daemon-reload
 systemctl reload dbus            2>/dev/null || :
-# 2.6.2: the helperd is now always-on (Before=systemd-user-sessions
-# and Restart=always). Enable + start it so
-# the GUI's first call after install does not race bus-activation.
-systemctl enable --now harbour-muoto-helperd.service 2>/dev/null || :
+# 3.x: helperd is dbus-activated on demand (Restart=no); do not enable at boot.
+systemctl disable harbour-muoto-helperd.service 2>/dev/null || :
+systemctl stop harbour-muoto-helperd.service 2>/dev/null || :
+
+systemctl enable harbour-muoto-update-icons.service 2>/dev/null || :
+systemctl enable harbour-muoto-oneshot-restore.service 2>/dev/null || :
+
+# If a theme is already active, run boot apply once (no need to wait for reboot).
+pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+pack=${pack#\'}; pack=${pack%\'}
+if [ -n "$pack" ] && [ "$pack" != "default" ]; then
+    # Do not block RPM install on a full icon re-apply (can take minutes).
+    systemctl start --no-block harbour-muoto-update-icons.service 2>/dev/null \
+        || ( systemctl start harbour-muoto-update-icons.service >/dev/null 2>&1 & )
+fi
+
+MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
+if [ -n "$MUOTO_UID" ]; then
+    _wait=0
+    while [ "$_wait" -lt 2 ] && [ ! -d "/run/user/$MUOTO_UID" ]; do
+        sleep 2
+        _wait=$((_wait + 1))
+    done
+    su defaultuser -c "mkdir -p ~/.config/systemd/user && ln -sf %{_datadir}/%{name}/systemd/user/harbour-muoto-install-listener.service ~/.config/systemd/user/" 2>/dev/null || :
+    if [ -d "/run/user/$MUOTO_UID" ]; then
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user daemon-reload" 2>/dev/null || :
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user enable --now harbour-muoto-install-listener.service" 2>/dev/null || :
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-install-listener.service" 2>/dev/null || :
+    else
+        su defaultuser -c "systemctl --user daemon-reload" 2>/dev/null || :
+        su defaultuser -c "systemctl --user enable harbour-muoto-install-listener.service" 2>/dev/null || :
+    fi
+fi
 # Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
 rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
 
@@ -257,7 +297,7 @@ dconf update || :
 # in dconf as iconSizeLauncherSeed; 2.5.6 retired the seed entirely (restore
 # now resets icon_size_launcher to vendor default). Drop both leftovers.
 rm -f %{_datadir}/%{name}/icon-z
-su - defaultuser -c "dconf reset /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed" 2>/dev/null || :
+su defaultuser -c "dconf reset /desktop/lipstick/sailfishos-uithemer/iconSizeLauncherSeed" 2>/dev/null || :
 
 %preun
 if [ $1 -eq 0 ]; then
@@ -275,6 +315,14 @@ if [ $1 -eq 0 ]; then
     # /home/defaultuser/.local/share/sailfishos-uithemer below) and
     # systemd would retry a service whose binary is about to vanish.
     systemctl disable --now harbour-muoto-rescan.path 2>/dev/null || :
+    systemctl disable --now harbour-muoto-update-icons.service 2>/dev/null || :
+    systemctl disable --now harbour-muoto-oneshot-restore.service 2>/dev/null || :
+    MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
+    if [ -n "$MUOTO_UID" ]; then
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-install-listener.service" 2>/dev/null || :
+    fi
+    rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
+    rmdir /etc/systemd/system/sailfish-upgrade-ui.service.d 2>/dev/null || :
     # 2.7.0: OptionsPage retirement dropped the headless icond binary
     # plus the autoupdate/systemupgrade units; the on-uninstall
     # auto-restore of themed .desktop files went with them. Users
@@ -285,14 +333,14 @@ if [ $1 -eq 0 ]; then
     f=/home/defaultuser/.config/fontconfig/conf.d/99-muoto.conf
     if [ -f "$f" ]; then
         rm -f "$f"
-        su - defaultuser -c "fc-cache -f" || true
+        su defaultuser -c "fc-cache -f" || true
     fi
 
     # 2.5.6: scripts/restore_dpi.sh + tps/restore_dpr.sh + tps/restore_iz.sh
     # were retired in favour of two inline dconf resets so uninstall still
     # brings DPR + icon_size_launcher back to the vendor default.
-    su - defaultuser -c "dconf reset /desktop/sailfish/silica/theme_pixel_ratio" || true
-    su - defaultuser -c "dconf reset /desktop/sailfish/silica/icon_size_launcher" || true
+    su defaultuser -c "dconf reset /desktop/sailfish/silica/theme_pixel_ratio" || true
+    su defaultuser -c "dconf reset /desktop/sailfish/silica/icon_size_launcher" || true
 
     # 2.5.4: enable-dpi.sh / disable-dpi.sh were dropped; the equivalent
     # uninstall step (restore vendor dconf locks moved by %post) now runs
@@ -315,6 +363,9 @@ if [ $1 -eq 0 ]; then
     # under %{_datadir}/%{name} are removed by RPM automatically.
     rm -f /etc/systemd/system/harbour-muoto-rescan.path
     rm -f /etc/systemd/system/harbour-muoto-rescan.service
+    rm -f /etc/systemd/system/harbour-muoto-update-icons.service
+    rm -f /etc/systemd/system/harbour-muoto-oneshot-restore.service
+    rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
     systemctl daemon-reload
     # 2.6.0: refresh dbus so the just-removed system bus name drops
     # from the registry. 2.6.2: polkit reload dropped.
