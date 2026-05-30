@@ -1,6 +1,6 @@
 [Unit]
 Description=Muoto one-shot restore before system update (icons, fonts, dconf)
-Documentation=https://github.com/uithemer/sailfishos-uithemer
+Documentation=https://github.com/uithemer/harbour-muoto
 Before=sailfish-upgrade-ui.service
 After=dbus.service home.mount
 DefaultDependencies=no

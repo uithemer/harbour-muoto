@@ -1,6 +1,6 @@
 [Unit]
 Description=Sailfish OS Muoto privileged helper
-Documentation=https://github.com/uithemer/sailfishos-uithemer
+Documentation=https://github.com/uithemer/harbour-muoto
 Requires=dbus.service
 After=dbus.service
 

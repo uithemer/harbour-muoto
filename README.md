@@ -10,7 +10,7 @@ permalink: /
 
 Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (systemd services, privileged helper, and compatibility with `harbour-themepack-*` packages) in a single app.
 
-[![GitHub license](https://img.shields.io/github/license/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/sailfishos-uithemer.svg)](https://github.com/uithemer/sailfishos-uithemer/releases/latest) [![Donate on Liberapay](https://img.shields.io/badge/Donate-Liberapay-orange.svg)](https://liberapay.com/fravaccaro)
+[![GitHub license](https://img.shields.io/github/license/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/releases/latest) [![Donate on Liberapay](https://img.shields.io/badge/Donate-Liberapay-orange.svg)](https://liberapay.com/fravaccaro)
 
 ## Features
 
@@ -36,14 +36,15 @@ Request a new language or contribute on the [Transifex project page](https://exp
 
 ## Builds
 
-Builds for aarch64, armv7hl and i486 are available on [OpenRepos](https://openrepos.net/content/fravaccaro/ui-themer).
+Builds for aarch64, armv7hl and i486 are available on [OpenRepos](https://openrepos.net/content/fravaccaro/muoto-ui-themer).
 
 ## Migration from UI Themer
 
-- Restore your current theme from UI Themer before changing package.
+- Restore your current theme from **UI Themer** (`sailfishos-uithemer`) before swapping packages.
 - Uninstall `sailfishos-uithemer`.
-- Install `harbour-muoto`.
-- Re-apply your preferred theme pack in Muoto.
+- Install `harbour-muoto` (also replaces the merged **Theme pack support** / `harbour-themepacksupport` package).
+- Re-apply your preferred theme packs in Muoto.
+- App settings are not auto-migrated; re-apply packs if needed after upgrading.
 
 ## Credits
 

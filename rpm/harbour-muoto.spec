@@ -15,11 +15,11 @@ Name:       harbour-muoto
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
 Version:        3.0.0beta6
-Release:        1
+Release:        2
 Group:          Qt/Qt
 License:        GPLv3
-Packager:       fravaccaro <fravaccaro@jollacommunity.it>
-URL:            https://github.com/uithemer/sailfishos-uithemer
+Packager:       fravaccaro <me@fravaccaro.com>
+URL:            https://github.com/uithemer/harbour-muoto
 Source0:        %{name}-%{version}.tar.bz2
 Source100:      harbour-muoto.yaml
 
