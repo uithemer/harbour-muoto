@@ -392,7 +392,7 @@ Dialog
                 HomescreenRestartSection {
                     id: restartSection
                     settings: dlgconfirm.settings
-                    explanation: qsTr("Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.")
+                    explanation: qsTr("Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.")
                 }
 
                 Item {
