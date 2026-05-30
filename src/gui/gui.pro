@@ -54,16 +54,13 @@ include($$ROOT/libs/opal.pri)
 OTHER_FILES += \
     $$ROOT/qml/harbour-muoto.qml \
     $$ROOT/qml/common/Settings.qml \
-    $$ROOT/qml/components/AboutLanguage.qml \
-    $$ROOT/qml/components/AboutTranslator.qml \
-    $$ROOT/qml/components/BackgroundRectangle.qml \
     $$ROOT/qml/components/BusyState.qml \
     $$ROOT/qml/components/FontPreview.qml \
     $$ROOT/qml/components/FontWeightSwitch.qml \
     $$ROOT/qml/components/LabelSpacer.qml \
     $$ROOT/qml/components/MuotoButton.qml \
-    $$ROOT/qml/components/MuotoGreetingLabel.qml \
-    $$ROOT/qml/components/MuotoHookLabel.qml \
+    $$ROOT/qml/components/MuotoHeaderLabel.qml \
+    $$ROOT/qml/components/MuotoTextLabel.qml \
     $$ROOT/qml/components/MuotoRestartHomescreenButton.qml \
     $$ROOT/qml/components/HomescreenRestartSection.qml \
     $$ROOT/qml/components/homescreenRestart.js \

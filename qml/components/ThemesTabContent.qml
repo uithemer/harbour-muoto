@@ -141,7 +141,7 @@ SilicaListView {
 
     PullDownMenu {
         flickable: themesView
-        enabled: tabActive
+        enabled: tabActive && !settings.isRunning
 
         MuotoAboutMenuItem { }
 

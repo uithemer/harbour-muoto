@@ -41,7 +41,6 @@ public slots:
     // -- Themes interface (manage-themes) --
     void applyIcons(const QString& pack, bool runPack, bool overlay);
     void restoreIcons();
-    void refreshOriginals();
     void densityEnable();
 
     // -- Packs interface (manage-packs) --
@@ -55,7 +54,6 @@ signals:
     // when the work was still done in-process.
     void iconsApplied();
     void iconsRestored();
-    void originalsRefreshed();
     void densityEnabled();
     void packUninstalled(const QString& rpmName);
 

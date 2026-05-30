@@ -1,4 +1,6 @@
 * Sat May 30 2026 3.0.0beta6-1
+- Dead code: drop unused QML components, IconApplier match counters,
+  RefreshOriginals D-Bus path, and FontApplier QML registration.
 - QML: MuotoNotification component; migrate to Nemo.Notifications and
   Nemo.Configuration; themes tab uses indeterminate progress on manual apply.
 - Cover: icon/font glyphs follow light/dark ambience; hide cover sync when

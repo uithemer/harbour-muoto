@@ -190,7 +190,6 @@ void HelperClient::asyncCall(const QString& op, const QVariantList& args)
     const bool themesOp =
         (op == QLatin1String("ApplyIcons")
          || op == QLatin1String("RestoreIcons")
-         || op == QLatin1String("RefreshOriginals")
          || op == QLatin1String("DensityEnable"));
     QDBusInterface* iface = themesOp ? themesIface()
                         : (op == QLatin1String("UninstallPack") ? packsIface()
@@ -253,14 +252,6 @@ void HelperClient::restoreIcons()
     asyncCall(op, QVariantList());
 }
 
-void HelperClient::refreshOriginals()
-{
-    const QString op = QStringLiteral("RefreshOriginals");
-    if(!beginIconOpOrError(op))
-        return;
-    asyncCall(op, QVariantList());
-}
-
 void HelperClient::densityEnable()
 {
     asyncCall(QStringLiteral("DensityEnable"), QVariantList());
@@ -292,11 +283,6 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
     {
         Q_UNUSED(message);
         emit iconsRestored();
-    }
-    else if(op == QLatin1String("RefreshOriginals"))
-    {
-        Q_UNUSED(message);
-        emit originalsRefreshed();
     }
     else if(op == QLatin1String("DensityEnable"))
         emit densityEnabled();

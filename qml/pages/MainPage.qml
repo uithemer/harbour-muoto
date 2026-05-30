@@ -16,6 +16,8 @@ Page
         id: tabs
         anchors.fill: parent
         tabBarPosition: Qt.AlignTop
+        enabled: !settings.isRunning
+        interactive: !settings.isRunning
 
         T.Tab {
             title: qsTr("Themes")
@@ -48,4 +50,6 @@ Page
             }
         }
     }
+
+    BusyState { id: busyindicator }
 }

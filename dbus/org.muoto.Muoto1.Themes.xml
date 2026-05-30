@@ -18,7 +18,6 @@
       <arg name="overlay" direction="in" type="b"/>
     </method>
     <method name="RestoreIcons"/>
-    <method name="RefreshOriginals"/>
     <method name="DensityEnable"/>
     <signal name="OperationCompleted">
       <arg name="op" type="s"/>

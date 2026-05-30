@@ -12,19 +12,14 @@ public:
     explicit IconApplier(QObject* parent = 0);
 
 public slots:
-    int nativeMatchCount(const QString& packName) const;
-    int apkMatchCount(const QString& packName) const;
-
     void applyIcons(const QString& packName, bool runPack, bool overlay);
     void restoreIcons();
-    void refreshOriginals();
     void buildPreview(const QString& packName);
 
 signals:
     void progress(int done, int total);
     void applied(bool ok, const QString& message);
     void restored(bool ok, const QString& message);
-    void originalsRefreshed(bool ok, const QString& message);
     void previewReady(const QString& packName, bool ok);
 
 private:

@@ -248,25 +248,6 @@ void ThemesAdaptor::RestoreIcons(const QDBusMessage &message)
     sendMethodReply(message);
 }
 
-void ThemesAdaptor::RefreshOriginals(const QDBusMessage &message)
-{
-    const QString op = QStringLiteral("RefreshOriginals");
-    if (_backend->shuttingDown())
-    {
-        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
-        sendMethodReply(message);
-        return;
-    }
-    if (!authorize(message, op))
-    {
-        sendMethodReply(message);
-        return;
-    }
-    runIconOpVoid(op, [](IconApplier &a)
-                  { a.refreshOriginals(); }, &IconApplier::originalsRefreshed);
-    sendMethodReply(message);
-}
-
 void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
 {
     const QString op = QStringLiteral("DensityEnable");

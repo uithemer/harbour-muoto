@@ -74,7 +74,6 @@ public slots:
     void ApplyIcons(const QString& pack, bool runPack, bool overlay,
                     const QDBusMessage& message);
     void RestoreIcons(const QDBusMessage& message);
-    void RefreshOriginals(const QDBusMessage& message);
     void DensityEnable(const QDBusMessage& message);
 
 signals:

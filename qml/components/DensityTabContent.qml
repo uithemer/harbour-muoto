@@ -156,7 +156,7 @@ SilicaFlickable {
 
     PullDownMenu {
         flickable: densityView
-        enabled: tabActive
+        enabled: tabActive && !settings.isRunning
 
         MuotoAboutMenuItem { }
 
