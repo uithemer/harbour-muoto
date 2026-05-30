@@ -8,7 +8,7 @@ Headless icon re-apply after app installs and at boot, plus a full stock restore
 | -------- | ---- |
 | `/usr/bin/harbour-muoto-update-icons` | Read dconf → `ApplyIcons` (cover-sync); waits for `OperationCompleted` |
 | `/usr/bin/harbour-muoto-oneshot-restore` | Pre-upgrade: `RestoreIcons`, fonts, Muoto + silica dconf, vendor locks |
-| `harbour-muoto-update-icons.service` | Boot oneshot (`User=defaultuser`) |
+| `harbour-muoto-update-icons.service` | Boot oneshot (runs as **root**; dconf via `su defaultuser`) |
 | `harbour-muoto-oneshot-restore.service` | Before `sailfish-upgrade-ui` |
 | `harbour-muoto-install-listener` | User D-Bus hooks → exec update script |
 | `org.muoto.Muoto1` helperd | D-Bus activation on demand; `ApplyIcons` blocked during OS update |
@@ -19,15 +19,16 @@ Headless icon re-apply after app installs and at boot, plus a full stock restore
 2. Install a native app (`pkcon install …`) or APK — icons should re-theme within ~2 s.
 3. Restart AppSupport — `containerReady: true` should trigger apply.
 4. Reboot — boot oneshot re-applies if theme still active.
-5. Run `harbour-muoto-oneshot-restore` as root before upgrade — stock icons/fonts/density; dconf `default`.
+5. System update triggers `harbour-muoto-oneshot-restore.service` as **root** (no `sudo` package) — stock icons/fonts/density; dconf `default`.
 6. After upgrade, boot apply no-ops until theme applied again in the app.
 
 ```bash
-# Manual apply (theme must be active in dconf)
+# Manual apply as root (same as boot unit; theme must be active in dconf)
 /usr/bin/harbour-muoto-update-icons
 
-# Manual pre-upgrade restore
-sudo /usr/bin/harbour-muoto-oneshot-restore
+# Manual pre-upgrade restore as root (e.g. devel-su shell on device — not sudo, which is
+# not installed by default). Needs defaultuser session: /run/user/<uid>/dbus/user_bus_socket
+/usr/bin/harbour-muoto-oneshot-restore
 
 # Listener status + live journal (after logging fix)
 MUOTO_UID=$(id -u defaultuser)

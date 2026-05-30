@@ -76,11 +76,31 @@ HelperBackend::HelperBackend(QObject *parent) : QObject(parent)
 
 void HelperBackend::resetIdleTimer()
 {
-    _idleTimer.start();
+    if(_idleSuspendCount == 0)
+        _idleTimer.start();
+}
+
+void HelperBackend::suspendIdleTimer()
+{
+  ++_idleSuspendCount;
+    _idleTimer.stop();
+}
+
+void HelperBackend::resumeIdleTimer()
+{
+    if(_idleSuspendCount > 0)
+        --_idleSuspendCount;
+    if(_idleSuspendCount == 0 && !_shuttingDown)
+        _idleTimer.start();
 }
 
 void HelperBackend::onIdleTimeout()
 {
+    if(_idleSuspendCount > 0)
+    {
+        _idleTimer.start();
+        return;
+    }
     qInfo() << "muoto-helperd: idle timeout, quitting";
     emit idleQuit();
 }
@@ -138,12 +158,13 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
                                   std::function<void(IconApplier &)> start,
                                   void (IconApplier::*doneSignal)(bool, const QString &))
 {
-    _backend->resetIdleTimer();
+    _backend->suspendIdleTimer();
 
     const auto lock = std::make_shared<FileLock>(FileLock::defaultLockPath(), false);
     if(!lock->isHeld())
     {
         emit OperationCompleted(op, false, QStringLiteral("busy"));
+        _backend->resumeIdleTimer();
         return;
     }
 
@@ -157,7 +178,7 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
                         emit OperationCompleted(op, ok, message);
                         QObject::disconnect(*conn);
                         delete conn;
-                        _backend->resetIdleTimer();
+                        _backend->resumeIdleTimer();
                     });
 
     auto *progressConn = new QMetaObject::Connection;
@@ -165,7 +186,6 @@ void ThemesAdaptor::runIconOpVoid(const QString &op,
                             [this, op](int done, int total)
                             {
                                 emit Progress(op, done, total);
-                                _backend->resetIdleTimer();
                             });
     // Disconnect progress when done. Schedule it via a one-shot
     // single-shot timer chained to the done signal. Simpler: also

@@ -32,6 +32,9 @@ public:
     // QCoreApplication to exit; systemd / dbus-daemon spin us back up
     // on the next call.
     void resetIdleTimer();
+    // Stop idle-quit while RestoreIcons / ApplyIcons run (can exceed 30 s).
+    void suspendIdleTimer();
+    void resumeIdleTimer();
 
     // True once login1.Manager.PrepareForShutdown(true) has fired. The
     // adaptors check this gate at method entry and refuse to dispatch
@@ -52,6 +55,7 @@ private:
     IconApplier    _iconApplier;
     DensityEnabler _densityEnabler;
     QTimer         _idleTimer;
+    int            _idleSuspendCount = 0;
     bool           _shuttingDown = false;
 };
 

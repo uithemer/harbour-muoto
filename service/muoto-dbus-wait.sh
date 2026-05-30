@@ -145,11 +145,45 @@ muoto_wait_op_end() {
     return 1
 }
 
+# defaultuser session bus (SFOS: …/dbus/user_bus_socket, not …/bus).
+muoto_defaultuser_uid() {
+    id -u defaultuser 2>/dev/null || echo 100000
+}
+
+muoto_user_env_prefix() {
+    _uid=$(muoto_defaultuser_uid)
+    _rdir="/run/user/$_uid"
+    if [ ! -d "$_rdir" ]; then
+        return 1
+    fi
+    printf 'XDG_RUNTIME_DIR=%s HOME=/home/defaultuser' "$_rdir"
+    return 0
+}
+
+# dconf under su(1) from root must use the user session bus (SFOS: …/dbus/user_bus_socket).
+muoto_dconf_env_prefix() {
+    _pref=$(muoto_user_env_prefix) || return 1
+    _rdir="/run/user/$(muoto_defaultuser_uid)"
+    if [ -S "$_rdir/dbus/user_bus_socket" ]; then
+        _pref="$_pref DBUS_SESSION_BUS_ADDRESS=unix:path=$_rdir/dbus/user_bus_socket"
+    fi
+    printf '%s' "$_pref"
+    return 0
+}
+
 muoto_run_as_user() {
     if [ "$(id -un)" = "defaultuser" ]; then
+        if [ -z "${XDG_RUNTIME_DIR:-}" ]; then
+            export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+        fi
+        export HOME="${HOME:-/home/defaultuser}"
         sh -c "$1"
     else
-        su defaultuser -c "$1"
+        _pref=$(muoto_user_env_prefix) || {
+            echo "muoto: no defaultuser session (missing /run/user/<uid>); cannot run: $1" >&2
+            return 1
+        }
+        su defaultuser -c "$_pref $1"
     fi
 }
 
@@ -161,9 +195,24 @@ muoto_run_as_user_or_die() {
 }
 
 muoto_dconf_as_user() {
-    muoto_run_as_user "$1"
+    if [ "$(id -un)" = "defaultuser" ]; then
+        if [ -z "${XDG_RUNTIME_DIR:-}" ]; then
+            export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+        fi
+        export HOME="${HOME:-/home/defaultuser}"
+        sh -c "$1"
+    else
+        _pref=$(muoto_dconf_env_prefix) || {
+            echo "muoto: no defaultuser session (missing /run/user/<uid>); cannot run: $1" >&2
+            return 1
+        }
+        su defaultuser -c "$_pref $1"
+    fi
 }
 
 muoto_dconf_as_user_or_die() {
-    muoto_run_as_user_or_die "$1"
+    if ! muoto_dconf_as_user "$1"; then
+        echo "muoto: command failed as defaultuser: $1" >&2
+        exit 1
+    fi
 }
