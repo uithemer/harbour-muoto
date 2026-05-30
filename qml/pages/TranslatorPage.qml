@@ -103,14 +103,13 @@ Page
                   value: "rui kon"
               }
 
-              LabelText {
+              MuotoTextLabel {
                   text: qsTr("Request a new language or contribute to existing languages on the Transifex project page.")
               }
 
             LabelSpacer { }
 
-              Button {
-                  anchors.horizontalCenter: parent.horizontalCenter
+              MuotoButton {
                   text: qsTr("Transifex")
                   onClicked: Qt.openUrlExternally("https://explore.transifex.com/fravaccaro/ui-themer")
               }

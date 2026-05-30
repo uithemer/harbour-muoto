@@ -214,7 +214,7 @@ SilicaFlickable {
                     }
                 }
 
-                LabelText {
+                MuotoTextLabel {
                     text: qsTr("Controls how large Sailfish UI elements appear. "
                                + "Lower = more on screen; higher = larger text and buttons.")
                 }
@@ -265,9 +265,10 @@ SilicaFlickable {
                     }
                 }
 
-                LabelText {
-                    text: qsTr("Pull down and tap Restart homescreen after changing these settings.")
+                MuotoTextLabel {
+                    text: qsTr("When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.")
                 }
+
             }
         }
 

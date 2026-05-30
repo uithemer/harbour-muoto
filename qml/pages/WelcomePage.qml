@@ -24,8 +24,8 @@ Page
             id: content
             width: parent.width
 
-            PageHeader { title: qsTr("Welcome to Muoto") }
-
+            PageHeader { }
+            
             Grid {
                 width: parent.width
                 columns: isLandscape ? 2 : 1
@@ -40,19 +40,20 @@ Page
                     Image { id: appicon; anchors.horizontalCenter: parent.horizontalCenter; source: "../../images/appinfo.png" }
                 }
 
-            LabelText {
+            MuotoHeaderLabel {
+                text: qsTr("Welcome to Muoto")
+            }
+
+            MuotoTextLabel {
                 text: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.")
             }
 
             SectionHeader { text: qsTr("Terms and conditions") }
 
-            LabelText {
-                text: qsTr("By using Muoto, you agree to the <a href='https://www.gnu.org/licenses/gpl-3.0'>GNU GPLv3</a> terms and conditions.")
+            MuotoTextLabel {
+                text: qsTr("This software is provided \"as is\", without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.")
             }
 
-            LabelText {
-                text: qsTr("Muoto DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).")
-            }
 
             }
 
@@ -60,17 +61,28 @@ Page
             {
                 width: isLandscape ? parent.width/2 : parent.width
 
+            MuotoTextLabel {
+                text: qsTr("Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).")
+            }
+            
+
+            IconTextSwitch {
+                id: itsdisclaimer
+                automaticCheck: true
+                text: qsTr("I understand and accept")
+                checked: false
+            }
+
             SectionHeader { text: qsTr("Support") }
 
-            LabelText {
+            MuotoTextLabel {
                 text: qsTr("If you like my work and want to buy me a beer, feel free to do it!")
             }
 
             LabelSpacer { }
 
-            Button {
+            MuotoButton {
                 id: donate
-                anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Donate")
                 onClicked: {
                     Qt.openUrlExternally("https://liberapay.com/fravaccaro");
@@ -102,9 +114,9 @@ Page
 
             LabelSpacer { }
 
-             Button {
+             MuotoButton {
                   id: startuit
-                  anchors.horizontalCenter: parent.horizontalCenter
+                  enabled: vDon && itsdisclaimer.checked
                   text: qsTr("Start Muoto")
                   onClicked: {
                       settings.wizardDone = true;

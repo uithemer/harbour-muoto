@@ -39,7 +39,7 @@ Dialog
             id: column
             width: parent.width
 
-            ConfirmHeader { text: qsTr("Restore") }
+            MuotoHeaderLabel { text: qsTr("Restore") }
 
             Grid {
                 width: parent.width
@@ -80,16 +80,9 @@ Dialog
             }
             } // grid
 
-            LabelText {
-                text: "<br>" + qsTr("Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).")
-            }
-
-            TextSwitch {
-                text: qsTr("Restart homescreen (fallback)")
-                checked: settings.homeRefresh
-                onCheckedChanged: {
-                    settings.homeRefresh = checked;
-                }
+            HomescreenRestartSection {
+                settings: dlgrestore.settings
+                explanation: qsTr("Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.")
             }
 
             Item {

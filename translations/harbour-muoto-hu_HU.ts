@@ -20,10 +20,6 @@
         <translation type="unfinished">Az Muoto-rel testreszabhatod a Sailfish OS ikonjait, betűit, és a pixelsűrűséget.</translation>
     </message>
     <message>
-        <source>Released under the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; license.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Contributors</source>
         <translation type="unfinished">Közreműködők</translation>
     </message>
@@ -102,14 +98,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Apply icon overlay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The theme supports overlays.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -130,11 +118,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Launcher icons refresh automatically when you apply. Enable below only if icons stay stale (full lipstick restart).</source>
+        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restart homescreen (fallback)</source>
+        <source>Style missing app icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -196,11 +188,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pull down and tap Restart homescreen after changing these settings.</source>
+        <source>Could not unlock display density settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Could not unlock display density settings</source>
+        <source>When you are done, restart the homescreen to apply these changes. You can also use Restart homescreen in the pulley menu.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -227,6 +219,17 @@
     </message>
 </context>
 <context>
+    <name>HomescreenRestartSection</name>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart homescreen automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LicenseListPart</name>
     <message>
         <source>License text</source>
@@ -248,6 +251,17 @@
     <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MuotoRestartHomescreenButton</name>
+    <message>
+        <source>Restart homescreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restarting homescreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -508,11 +522,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart homescreen (fallback)</source>
+        <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -535,11 +545,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Launcher icons refresh automatically when you restore. Enable below only if icons stay stale (full lipstick restart).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart homescreen (fallback)</source>
+        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -670,11 +676,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>By using Muoto, you agree to the &lt;a href=&apos;https://www.gnu.org/licenses/gpl-3.0&apos;&gt;GNU GPLv3&lt;/a&gt; terms and conditions.</source>
+        <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Muoto DOES NOT send any data. Some essential info (e.g. the current theme) are collected and stored EXCLUSIVELY locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
+        <source>I understand and accept</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
