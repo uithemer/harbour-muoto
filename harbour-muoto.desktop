@@ -7,6 +7,6 @@ Name=Muoto
 
 
 [X-Sailjail]
-OrganizationName=org.harbour.muoto
+OrganizationName=org.uithemer.muoto
 ApplicationName=harbour-muoto
 Sandboxing=Disabled

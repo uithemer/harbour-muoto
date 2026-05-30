@@ -67,9 +67,7 @@ CoverBackground
          }
          onError: {
              if (op === "ApplyIcons" || op === "RestoreIcons") {
-                 app.showToast(message.length
-                     ? message
-                     : qsTr("Operation failed"));
+                 app.showHelperError(message);
                  settings.isRunning = false;
                  coverRoot.iconOpFromCover = false;
              }

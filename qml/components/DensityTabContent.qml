@@ -148,9 +148,8 @@ SilicaFlickable {
             if (op !== "DensityEnable")
                 return
             densityView.densityReady = false
-            app.showToast(message.length
-                ? message
-                : qsTr("Could not unlock display density settings"))
+            app.showHelperError(message,
+                qsTr("Could not unlock display density settings"))
         }
     }
 

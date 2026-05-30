@@ -196,7 +196,7 @@ Dialog
                 id: iconpreview
                 width: parent.width
                 height: Math.min(parent.width,
-                                Math.max(450, flickable.height * 0.45))
+                                Math.max(450, flickable.height * 0.40))
 
                 BusyIndicator {
                     id: busyimg
@@ -236,6 +236,12 @@ Dialog
             Column
             {
                 width: isLandscape ? parent.width/2 : parent.width
+
+
+                Item {
+                    width: parent.width
+                    height: Theme.paddingLarge
+                }
 
             IconTextSwitch {
                 id: itsicons
@@ -313,6 +319,11 @@ Dialog
                     color: Theme.highlightColor
                     font.pixelSize: Theme.fontSizeLarge
                     visible: hasFont
+                }
+
+                Item {
+                    width: parent.width
+                    height: Theme.paddingLarge
                 }
 
                 }

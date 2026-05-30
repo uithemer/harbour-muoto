@@ -1,3 +1,8 @@
+* Sat May 30 2026 3.0.0beta6-2
+- Spec %preun: run harbour-muoto-oneshot-restore on full uninstall (icons,
+  fonts, Muoto dconf, density, vendor locks); drop redundant inline revert
+  steps.
+
 * Sat May 30 2026 3.0.0beta6-1
 - Dead code: drop unused QML components, IconApplier match counters,
   RefreshOriginals D-Bus path, and FontApplier QML registration.
