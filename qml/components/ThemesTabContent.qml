@@ -61,7 +61,7 @@ SilicaListView {
         _waitForFinalise = false
         _pendingOps = 0
         settings.isRunning = false
-        app.showToast(errMsg.length ? errMsg : qsTr("Operation failed"))
+        app.showHelperError(errMsg)
     }
 
     function _finalise() {

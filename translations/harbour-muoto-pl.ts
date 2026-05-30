@@ -139,10 +139,6 @@
         <source>Settings applied.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Operation failed</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>DensityTabContent</name>
@@ -598,10 +594,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Operation failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Support Muoto</source>
         <translation type="unfinished"></translation>
     </message>
@@ -705,6 +697,57 @@
     </message>
     <message>
         <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>harbour-muoto</name>
+    <message>
+        <source>Busy...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot apply changes while shutting down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wait for the system update to finish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Try again in a moment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This theme pack cannot be used</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No icons to apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Theme pack is not installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not style missing app icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No icons could be installed from this theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Something went wrong</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Operation failed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
