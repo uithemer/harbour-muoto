@@ -20,15 +20,19 @@ Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundl
 - Icon theming (native, Jolla, Android).
 - Style missing app icons (theme look for apps not in the pack).
 - Font theming.
-- Display density (pixel ratio, Android DPI, launcher icon size).
+- Display density (pixel ratio, launcher icon size).
 
 ## Using Muoto
 
 [Using Muoto](docs/guide.md) — apply themes, display density, restore, and other app features.
 
+## Download theme packs
+
+Download theme packs from [OpenRepos](https://openrepos.net/tags/themepack).
+
 ## Create theme packs
 
-[Create theme packs](docs/getstarted.md) — author documentation (icons, fonts, packaging with the Sailfish SDK).
+[Create theme packs](docs/getstarted.md) — documentation (icons, fonts, packaging with the Sailfish SDK).
 
 ## Translate
 

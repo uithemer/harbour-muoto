@@ -342,7 +342,7 @@
     <name>Opal.About</name>
     <message>
         <source>About</source>
-        <translation>In riguardo</translation>
+        <translation>Informazioni</translation>
     </message>
     <message>
         <source>Version %1</source>
