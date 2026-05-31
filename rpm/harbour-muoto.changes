@@ -1,3 +1,14 @@
+* Sun May 31 2026 3.0.1-1
+- First stable 3.0.x release.
+- Theme apply/restore: commit font pack only after successful apply; clear
+  pending state on failure.
+- ConfirmPage: font weight selection fix.
+- About: acknowledge per-user fontconfig guide (dt.iki.fi); homepage URL
+  update.
+- Translations: complete Italian localization.
+- Documentation and screenshots updated.
+- Version 3.0.1; About page label updated.
+
 * Sat May 30 2026 3.0.0beta6-2
 - Spec %preun: run harbour-muoto-oneshot-restore on full uninstall (icons,
   fonts, Muoto dconf, density, vendor locks); drop redundant inline revert

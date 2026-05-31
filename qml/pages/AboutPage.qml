@@ -11,8 +11,8 @@ A.AboutPageBase {
     opacity: settings.isRunning ? 0.2 : 1
     appName: "Muoto"
     appIcon: Qt.resolvedUrl("../../images/appinfo.png")
-    appVersion: "3.0.0"
-    appRelease: "beta 6"
+    appVersion: "3.0.1"
+    appRelease: ""
     description: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.")
     authors: ["fravaccaro"]
     homepageUrl: "https://uithemer.github.io"
