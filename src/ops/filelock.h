@@ -7,7 +7,7 @@
 // Serialises theme/icon/font/density mutations across GUI, helperd, and
 // any D-Bus/systemd caller. Concurrent ops are refused (LOCK_NB), not queued.
 //
-// Sentinel (sibling to the manifest):
+// Sentinel (co-located with stock icon backup under harbour-muoto/backup/):
 //   /usr/share/harbour-muoto/icon-ops.lock
 //
 // Usage:

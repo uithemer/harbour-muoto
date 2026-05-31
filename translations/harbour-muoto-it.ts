@@ -17,219 +17,219 @@
     </message>
     <message>
         <source>Muoto lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation type="unfinished">Muoto ti permette di personalizzare le icone, i font e la densità di pixel in Sailfish OS.</translation>
+        <translation>Muoto ti permette di personalizzare le icone, i font e la densità di pixel in Sailfish OS.</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation type="unfinished">Collaboratori</translation>
+        <translation>Collaboratori</translation>
     </message>
     <message>
         <source>Testing</source>
-        <translation type="unfinished"></translation>
+        <translation>Test</translation>
     </message>
     <message>
         <source>Community testers</source>
-        <translation type="unfinished"></translation>
+        <translation>Tester della community</translation>
     </message>
     <message>
         <source>Theme packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Pacchetti tema</translation>
     </message>
     <message>
         <source>If you want to create a theme compatible with Muoto, please read the documentation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Se vuoi creare un tema compatibile con Muoto, leggi la documentazione.</translation>
     </message>
     <message>
         <source>Feedback</source>
-        <translation type="unfinished"></translation>
+        <translation>Feedback</translation>
     </message>
     <message>
         <source>If you want to provide feedback or report an issue, please use GitHub.</source>
-        <translation type="unfinished"></translation>
+        <translation>Se vuoi inviare feedback o segnalare un problema, usa GitHub.</translation>
     </message>
     <message>
         <source>Credits for existing translations and how to contribute.</source>
-        <translation type="unfinished"></translation>
+        <translation>Crediti per le traduzioni esistenti e come contribuire.</translation>
     </message>
     <message>
         <source>UI Themer C++</source>
-        <translation type="unfinished"></translation>
+        <translation>UI Themer C++</translation>
     </message>
     <message>
         <source>UI Themer Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Servizi UI Themer</translation>
     </message>
     <message>
         <source>UI Themer porting for Sailfish OS 5</source>
-        <translation type="unfinished"></translation>
+        <translation>Porting UI Themer per Sailfish OS 5</translation>
     </message>
 </context>
 <context>
     <name>AskForSupport</name>
     <message>
         <source>Please take a moment to consider if you can contribute to this project in one way or another.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prenditi un momento per valutare se puoi contribuire a questo progetto in un modo o nell&apos;altro.</translation>
     </message>
 </context>
 <context>
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annulla</translation>
+        <translation>Annulla</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Applica</translation>
     </message>
     <message>
         <source>Icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Icone</translation>
     </message>
     <message>
         <source>No preview available</source>
-        <translation type="unfinished"></translation>
+        <translation>Anteprima non disponibile</translation>
     </message>
     <message>
         <source>Apply icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Applica icone</translation>
     </message>
     <message>
         <source>Fonts</source>
-        <translation type="unfinished"></translation>
+        <translation>Font</translation>
     </message>
     <message>
         <source>Choose a font weight to preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Scegli uno stile del font per l&apos;anteprima</translation>
     </message>
     <message>
         <source>Apply fonts</source>
-        <translation type="unfinished"></translation>
+        <translation>Applica font</translation>
     </message>
     <message>
         <source>Font weight</source>
-        <translation type="unfinished"></translation>
+        <translation>Stile del font</translation>
     </message>
     <message>
         <source>Choose the main font weight for the UI.</source>
-        <translation type="unfinished"></translation>
+        <translation>Scegli lo stile del font principale per l&apos;interfaccia.</translation>
     </message>
     <message>
         <source>Style missing app icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Stilizza le icone mancanti</translation>
     </message>
     <message>
         <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa lo stile di questo tema per le app che non hanno un&apos;icona personalizzata nel pacchetto.</translation>
     </message>
     <message>
         <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia la schermata iniziale per aggiornare icone e font del launcher e completare l&apos;applicazione del tema.</translation>
     </message>
 </context>
 <context>
     <name>CoverConfirm</name>
     <message>
         <source>Settings applied.</source>
-        <translation type="unfinished">Impostazioni applicate.</translation>
+        <translation>Impostazioni applicate.</translation>
     </message>
 </context>
 <context>
     <name>CoverPage</name>
     <message>
         <source>Settings applied.</source>
-        <translation type="unfinished">Impostazioni applicate.</translation>
+        <translation>Impostazioni applicate.</translation>
     </message>
 </context>
 <context>
     <name>DensityTabContent</name>
     <message>
         <source>Restore display density</source>
-        <translation type="unfinished">Ripristina densità display</translation>
+        <translation>Ripristina densità display</translation>
     </message>
     <message>
         <source>System default</source>
-        <translation type="unfinished"></translation>
+        <translation>Predefinito di sistema</translation>
     </message>
     <message>
         <source>Compact (86)</source>
-        <translation type="unfinished"></translation>
+        <translation>Compatto (86)</translation>
     </message>
     <message>
         <source>Normal (108)</source>
-        <translation type="unfinished"></translation>
+        <translation>Normale (108)</translation>
     </message>
     <message>
         <source>Medium (129)</source>
-        <translation type="unfinished"></translation>
+        <translation>Medio (129)</translation>
     </message>
     <message>
         <source>Large (151)</source>
-        <translation type="unfinished"></translation>
+        <translation>Grande (151)</translation>
     </message>
     <message>
         <source>Extra large (172)</source>
-        <translation type="unfinished"></translation>
+        <translation>Molto grande (172)</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Scaling display</translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation type="unfinished"></translation>
+        <translation>Controlla quanto grandi appaiono gli elementi dell&apos;interfaccia Sailfish. Valore più basso = più elementi sullo schermo; valore più alto = testo e pulsanti più grandi.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size (often 108 on many phones).</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimensione icone del launcher</translation>
     </message>
     <message>
         <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile sbloccare le impostazioni di densità display</translation>
     </message>
     <message>
         <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>Quando hai finito, riavvia la schermata iniziale per applicare queste modifiche. Puoi riavviarla dal menu a trascinamento.</translation>
     </message>
     <message>
         <source>Settings applied.</source>
-        <translation type="unfinished">Impostazioni applicate.</translation>
+        <translation>Impostazioni applicate.</translation>
+    </message>
+    <message>
+        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
+        <translation>Icone sulla schermata iniziale e nella griglia delle app. Il predefinito di sistema usa la dimensione normale del dispositivo.</translation>
     </message>
 </context>
 <context>
     <name>DetailsDrawer</name>
     <message>
         <source>show less</source>
-        <translation type="unfinished"></translation>
+        <translation>mostra meno</translation>
     </message>
     <message>
         <source>show more</source>
-        <translation type="unfinished"></translation>
+        <translation>mostra di più</translation>
     </message>
 </context>
 <context>
     <name>ExternalUrlPage</name>
     <message>
         <source>Swipe left to preview.</source>
-        <translation type="unfinished"></translation>
+        <translation>Scorri a sinistra per l&apos;anteprima.</translation>
     </message>
     <message>
         <source>You are using a mobile data connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Stai usando una connessione dati mobile.</translation>
     </message>
 </context>
 <context>
     <name>HomescreenRestartSection</name>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia schermata iniziale</translation>
     </message>
     <message>
         <source>Restart homescreen automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia automaticamente la schermata iniziale</translation>
     </message>
 </context>
 <context>
@@ -254,95 +254,95 @@
     <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
-        <translation type="unfinished">Info su Muoto</translation>
+        <translation>Info su Muoto</translation>
     </message>
 </context>
 <context>
     <name>MuotoRestartHomescreenButton</name>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia schermata iniziale</translation>
     </message>
     <message>
         <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvio schermata iniziale</translation>
     </message>
 </context>
 <context>
     <name>MuotoRestartHomescreenMenuItem</name>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia schermata iniziale</translation>
     </message>
     <message>
         <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvio schermata iniziale</translation>
     </message>
 </context>
 <context>
     <name>MuotoSupportDialog</name>
     <message>
         <source>Hi there!</source>
-        <translation type="unfinished"></translation>
+        <translation>Ciao!</translation>
     </message>
     <message>
         <source>Thank you for using Muoto! If you find it useful, consider supporting its development.</source>
-        <translation type="unfinished"></translation>
+        <translation>Grazie per usare Muoto! Se ti è utile, considera di sostenerne lo sviluppo.</translation>
     </message>
     <message>
         <source>Thank you for your support!</source>
-        <translation type="unfinished"></translation>
+        <translation>Grazie per il tuo supporto!</translation>
     </message>
     <message>
         <source>Donate via Liberapay</source>
-        <translation type="unfinished"></translation>
+        <translation>Dona tramite Liberapay</translation>
     </message>
     <message>
         <source>Help with translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Aiuta con le traduzioni</translation>
     </message>
     <message>
         <source>Improve Muoto in your language on Transifex.</source>
-        <translation type="unfinished"></translation>
+        <translation>Migliora Muoto nella tua lingua su Transifex.</translation>
     </message>
     <message>
         <source>Report issues on GitHub</source>
-        <translation type="unfinished"></translation>
+        <translation>Segnala problemi su GitHub</translation>
     </message>
     <message>
         <source>File bugs, suggest features, or follow development.</source>
-        <translation type="unfinished"></translation>
+        <translation>Segnala bug, suggerisci funzionalità o segui lo sviluppo.</translation>
     </message>
     <message>
         <source>Why support this app?</source>
-        <translation type="unfinished"></translation>
+        <translation>Perché sostenere questa app?</translation>
     </message>
     <message>
         <source>Muoto is free software (GPLv3) for customizing Sailfish icons, fonts, and display density. It is maintained in spare time alongside other projects.</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto è software libero (GPLv3) per personalizzare icone, font e densità display di Sailfish. È mantenuto nel tempo libero insieme ad altri progetti.</translation>
     </message>
     <message>
         <source>Donations and contributions help keep the app compatible with new Sailfish releases and theme packs from the community.</source>
-        <translation type="unfinished"></translation>
+        <translation>Donazioni e contributi aiutano a mantenere l&apos;app compatibile con le nuove versioni di Sailfish e i pacchetti tema della community.</translation>
     </message>
     <message>
         <source>Other ways to help</source>
-        <translation type="unfinished"></translation>
+        <translation>Altri modi per aiutare</translation>
     </message>
     <message>
         <source>Share theme packs, write documentation, test beta builds, or star the project on GitHub — every bit helps.</source>
-        <translation type="unfinished"></translation>
+        <translation>Condividi pacchetti tema, scrivi documentazione, testa versioni beta o metti una stella al progetto su GitHub — ogni contributo conta.</translation>
     </message>
     <message>
         <source>Send a tip or recurring support on Liberapay.</source>
-        <translation type="unfinished"></translation>
+        <translation>Invia una mancia o un supporto ricorrente su Liberapay.</translation>
     </message>
 </context>
 <context>
     <name>Opal.About</name>
     <message>
         <source>About</source>
-        <translation>In riguardo</translation>
+        <translation>Informazioni</translation>
     </message>
     <message>
         <source>Version %1</source>
@@ -425,7 +425,7 @@
     </message>
     <message>
         <source>You are using a mobile data connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Stai usando una connessione dati mobile.</translation>
     </message>
     <message numerus="yes">
         <source>License(s)</source>
@@ -486,19 +486,19 @@
     </message>
     <message>
         <source>Copy link</source>
-        <translation type="unfinished"></translation>
+        <translation>Copia collegamento</translation>
     </message>
     <message>
         <source>Copy text</source>
-        <translation type="unfinished"></translation>
+        <translation>Copia testo</translation>
     </message>
     <message>
         <source>No preview available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Anteprima non disponibile.</translation>
     </message>
     <message>
         <source>The page is taking too long to load.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il caricamento della pagina sta impiegando troppo tempo.</translation>
     </message>
 </context>
 <context>
@@ -517,11 +517,11 @@
     </message>
     <message>
         <source>Default icon size</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimensione icone predefinita</translation>
     </message>
     <message>
         <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia la schermata iniziale dopo aver ripristinato la densità display, così tutte le app recepiscono le modifiche.</translation>
     </message>
 </context>
 <context>
@@ -544,30 +544,30 @@
     </message>
     <message>
         <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
-        <translation type="unfinished"></translation>
+        <translation>La maggior parte delle modifiche appare subito. Riavvia la schermata iniziale per aggiornare icone e font del launcher dopo aver ripristinato i predefiniti.</translation>
     </message>
 </context>
 <context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
-        <translation type="unfinished"></translation>
+        <translation>Ciao!</translation>
     </message>
     <message>
         <source>Thank you for using my little app! Maybe you can contribute back?</source>
-        <translation type="unfinished"></translation>
+        <translation>Grazie per usare la mia piccola app! Forse puoi ricambiare con un contributo?</translation>
     </message>
     <message>
         <source>Thank you for your support!</source>
-        <translation type="unfinished"></translation>
+        <translation>Grazie per il tuo supporto!</translation>
     </message>
     <message>
         <source>Remind me later</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricordamelo più tardi</translation>
     </message>
     <message>
         <source>Don&apos;t ask me again</source>
-        <translation type="unfinished"></translation>
+        <translation>Non chiedermelo più</translation>
     </message>
 </context>
 <context>
@@ -589,43 +589,43 @@
     <name>ThemesTabContent</name>
     <message>
         <source>Settings applied.</source>
-        <translation type="unfinished">Impostazioni applicate.</translation>
+        <translation>Impostazioni applicate.</translation>
     </message>
     <message>
         <source>Download more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Scarica altri temi</translation>
     </message>
     <message>
         <source>Restore theme</source>
-        <translation type="unfinished">Ripristina tema</translation>
+        <translation>Ripristina tema</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Disinstallazione di %1</translation>
     </message>
     <message>
         <source>No themes yet</source>
-        <translation type="unfinished">Nessun tema</translation>
+        <translation>Nessun tema</translation>
     </message>
     <message>
         <source>Install a compatible theme to start</source>
-        <translation type="unfinished"></translation>
+        <translation>Installa un tema compatibile per iniziare</translation>
     </message>
     <message>
         <source>Applying theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Applicazione tema</translation>
     </message>
     <message>
         <source>Restoring theme…</source>
-        <translation type="unfinished"></translation>
+        <translation>Ripristino tema…</translation>
     </message>
     <message>
         <source>Applying theme…</source>
-        <translation type="unfinished"></translation>
+        <translation>Applicazione tema…</translation>
     </message>
     <message>
         <source>Uninstalling theme…</source>
-        <translation type="unfinished"></translation>
+        <translation>Disinstallazione tema…</translation>
     </message>
 </context>
 <context>
@@ -679,66 +679,66 @@
     </message>
     <message>
         <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
-        <translation type="unfinished"></translation>
+        <translation>Questo software è fornito &quot;così com&apos;è&quot;, senza garanzie di alcun tipo, espresse o implicite. In nessun caso gli autori o i titolari del copyright saranno responsabili per qualsiasi reclamo, danno o altra responsabilità derivante da, collegata a o in connessione con il software. Sei l&apos;unico responsabile della sicurezza dei tuoi dati.</translation>
     </message>
     <message>
         <source>I understand and accept</source>
-        <translation type="unfinished"></translation>
+        <translation>Ho capito e accetto</translation>
     </message>
     <message>
         <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto non invia alcun dato. Alcune informazioni essenziali (ad es. il tema corrente) vengono raccolte e archiviate esclusivamente in locale e usate solo per il corretto funzionamento dell&apos;app (ad es. per mostrare il tema corrente nell&apos;app).</translation>
     </message>
 </context>
 <context>
     <name>harbour-muoto</name>
     <message>
         <source>Busy...</source>
-        <translation type="unfinished"></translation>
+        <translation>Occupato…</translation>
     </message>
     <message>
         <source>Cannot apply changes while shutting down</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile applicare le modifiche durante lo spegnimento</translation>
     </message>
     <message>
         <source>Wait for the system update to finish</source>
-        <translation type="unfinished"></translation>
+        <translation>Attendi il completamento dell&apos;aggiornamento di sistema</translation>
     </message>
     <message>
         <source>Try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Riprova tra un momento</translation>
     </message>
     <message>
         <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile sbloccare le impostazioni di densità display</translation>
     </message>
     <message>
         <source>This theme pack cannot be used</source>
-        <translation type="unfinished"></translation>
+        <translation>Questo pacchetto tema non può essere usato</translation>
     </message>
     <message>
         <source>No icons to apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Nessuna icona da applicare</translation>
     </message>
     <message>
         <source>Theme pack is not installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Il pacchetto tema non è installato</translation>
     </message>
     <message>
         <source>Could not style missing app icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile stilizzare le icone mancanti</translation>
     </message>
     <message>
         <source>No icons could be installed from this theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Nessuna icona installabile da questo tema</translation>
     </message>
     <message>
         <source>Something went wrong</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualcosa è andato storto</translation>
     </message>
     <message>
         <source>Operation failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Operazione non riuscita</translation>
     </message>
 </context>
 </TS>
