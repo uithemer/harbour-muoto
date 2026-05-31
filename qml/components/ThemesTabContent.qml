@@ -18,6 +18,8 @@ SilicaListView {
     property string _pendingIconPack: ""
     property bool _pendingIconOverlay: false
     property bool _pendingIconRestore: false
+    property string _pendingFontPack: ""
+    property bool _pendingFontRestore: false
     property bool _uninstallAfterIconRestore: false
     property int _uninstallPackIndex: -1
 
@@ -33,6 +35,18 @@ SilicaListView {
             settings.deactivateIcon()
             settings.iconOverlay = false
             _pendingIconRestore = false
+        }
+    }
+    function _commitPendingFontApply() {
+        if (_pendingFontPack !== "") {
+            settings.activeFontPack = _pendingFontPack
+            _pendingFontPack = ""
+        }
+    }
+    function _commitPendingFontRestore() {
+        if (_pendingFontRestore) {
+            settings.deactivateFont()
+            _pendingFontRestore = false
         }
     }
 
@@ -60,6 +74,12 @@ SilicaListView {
     function _abortThemeWork(errMsg) {
         _waitForFinalise = false
         _pendingOps = 0
+        _pendingIconPack = ""
+        _pendingFontPack = ""
+        _pendingIconRestore = false
+        _pendingFontRestore = false
+        _uninstallAfterIconRestore = false
+        _uninstallPackIndex = -1
         settings.isRunning = false
         app.showHelperError(errMsg)
     }
@@ -119,8 +139,16 @@ SilicaListView {
         }
 
         id: themepackmodel
-        onThemeApplied: themesView._opDone()
-        onThemeRestored: themesView._opDone()
+        onThemeApplied: {
+            themesView._commitPendingFontApply()
+            themesView._opDone()
+        }
+        onThemeApplyFailed: themesView._abortThemeWork(message)
+        onThemeRestored: {
+            themesView._commitPendingFontRestore()
+            themesView._opDone()
+        }
+        onThemeRestoreFailed: themesView._abortThemeWork(message)
         onUninstallCompleted: notifyDone()
     }
 
@@ -193,7 +221,7 @@ SilicaListView {
                     settings.syncToDisk()
 
                     if (dlgrestore.restoreFonts) {
-                        settings.deactivateFont()
+                        themesView._pendingFontRestore = true
                         themepackmodel.restoreTheme(dlgrestore.restoreFonts)
                     }
                     if (dlgrestore.restoreIcons) {
@@ -234,7 +262,7 @@ SilicaListView {
                 settings.syncToDisk()
 
                 if (dlgconfirm.fontsSelected) {
-                    settings.activeFontPack = model.packName
+                    themesView._pendingFontPack = model.packName
                     themepackmodel.applyTheme(index,
                         dlgconfirm.fontsSelected,
                         dlgconfirm.selectedFont)

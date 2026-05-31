@@ -79,12 +79,28 @@ void ThemePackModel::applyTheme(int index, bool font, const QString& weight)
         emit themeApplied();
         return;
     }
-    QMetaObject::Connection* conn = new QMetaObject::Connection;
-    *conn = QObject::connect(&_fonts, &FontApplier::applied, this,
-                             [this, conn](const QString&) {
-        emit themeApplied();
-        QObject::disconnect(*conn);
-        delete conn;
+    auto* failed = new bool(false);
+    QMetaObject::Connection* errConn = new QMetaObject::Connection;
+    QMetaObject::Connection* okConn = new QMetaObject::Connection;
+    *errConn = QObject::connect(&_fonts, &FontApplier::error, this,
+                                [this, failed, errConn, okConn](const QString& message) {
+        *failed = true;
+        emit themeApplyFailed(message);
+        QObject::disconnect(*errConn);
+        QObject::disconnect(*okConn);
+        delete errConn;
+        delete okConn;
+        delete failed;
+    });
+    *okConn = QObject::connect(&_fonts, &FontApplier::applied, this,
+                               [this, failed, errConn, okConn](const QString&) {
+        if(!*failed)
+            emit themeApplied();
+        QObject::disconnect(*errConn);
+        QObject::disconnect(*okConn);
+        delete errConn;
+        delete okConn;
+        delete failed;
     });
     _fonts.applyFromPack(RAW_PACK_NAME(this->_packlist[index]), weight);
 }
@@ -96,12 +112,28 @@ void ThemePackModel::restoreTheme(bool font)
         emit themeRestored();
         return;
     }
-    QMetaObject::Connection* conn = new QMetaObject::Connection;
-    *conn = QObject::connect(&_fonts, &FontApplier::restored, this,
-                             [this, conn]() {
-        emit themeRestored();
-        QObject::disconnect(*conn);
-        delete conn;
+    auto* failed = new bool(false);
+    QMetaObject::Connection* errConn = new QMetaObject::Connection;
+    QMetaObject::Connection* okConn = new QMetaObject::Connection;
+    *errConn = QObject::connect(&_fonts, &FontApplier::error, this,
+                                [this, failed, errConn, okConn](const QString& message) {
+        *failed = true;
+        emit themeRestoreFailed(message);
+        QObject::disconnect(*errConn);
+        QObject::disconnect(*okConn);
+        delete errConn;
+        delete okConn;
+        delete failed;
+    });
+    *okConn = QObject::connect(&_fonts, &FontApplier::restored, this,
+                               [this, failed, errConn, okConn]() {
+        if(!*failed)
+            emit themeRestored();
+        QObject::disconnect(*errConn);
+        QObject::disconnect(*okConn);
+        delete errConn;
+        delete okConn;
+        delete failed;
     });
     _fonts.restoreFonts();
 }

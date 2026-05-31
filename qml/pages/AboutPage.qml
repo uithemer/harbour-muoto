@@ -15,7 +15,7 @@ A.AboutPageBase {
     appRelease: "beta 6"
     description: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.")
     authors: ["fravaccaro"]
-    homepageUrl: "https://uithemer.github.io/harbour-muoto/"
+    homepageUrl: "https://uithemer.github.io"
     sourcesUrl: "https://github.com/uithemer/harbour-muoto"
     donations.text: donations.defaultTextCoffee
     // changelogItems: []
@@ -86,6 +86,10 @@ A.AboutPageBase {
             entries: ["RikudouSennin"]
             homepage: "https://github.com/RikudouSage/sailfish-iconpacksupport-gui"
 
+        },
+        A.Attribution {
+            name: "Per-user font theming via fontconfig"
+            homepage: "https://dt.iki.fi/sailfish-os-change-default-font"
         }
     ]
 

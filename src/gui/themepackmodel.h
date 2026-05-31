@@ -57,7 +57,9 @@ class ThemePackModel : public QAbstractListModel
 
     signals:
         void themeApplied();
+        void themeApplyFailed(const QString& message);
         void themeRestored();
+        void themeRestoreFailed(const QString& message);
         void uninstallCompleted();
         void dpiRestored();
 
