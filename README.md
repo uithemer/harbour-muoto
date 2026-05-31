@@ -28,7 +28,7 @@ Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundl
 
 ## Create theme packs
 
-[Create theme packs](docs/getstarted.md) — author documentation (icons, fonts, packaging).
+[Create theme packs](docs/getstarted.md) — author documentation (icons, fonts, packaging with the Sailfish SDK).
 
 ## Translate
 

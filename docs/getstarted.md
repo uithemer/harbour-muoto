@@ -9,13 +9,14 @@ has_toc: true
 
 # Create theme packs
 
-Information on how to create theme packs compatible with **Muoto**. Use the [example package](https://github.com/uithemer/harbour-themepack-example) as a reference — it includes the basic directory tree and an example spec file.
+Information on how to create theme packs compatible with **Muoto**. Use the [example package](https://github.com/uithemer/harbour-themepack-example) as a reference — it includes starter templates for icon-only, font-only, and combined packs (`icon-theme/`, `font-theme/`, `full-theme/`), each with a `theme/` asset tree and `rpm/*.spec` for building with the Sailfish SDK.
 
 For **using** the app (apply themes, display density, restore), see **[Using Muoto](guide)**.
 
 ## Requisites
 
-* Basic knowledge of the Linux terminal and how to build RPM packages.
+* [Sailfish SDK](https://developer.sailfishos.com/develop/sdk/) with `sfdk` on your PATH (often `~/SailfishOS/bin/sfdk`)
+* Basic knowledge of the Linux terminal; familiarity with RPM packaging is helpful but not required for the sfdk workflow
 
 ## Icons, fonts, sounds
 
@@ -25,9 +26,22 @@ Read the page for the part of the theme you are creating, then return here for p
 * [Fonts](fonts)
 * [Sounds](sounds) — **not supported** in current Muoto releases (format kept for reference and migration)
 
+## Project layout
+
+Each theme pack project has two top-level directories:
+
+```
+harbour-themepack-mypackage/
+├── theme/           ← pack assets (icons, fonts, package file)
+└── rpm/
+    └── harbour-themepack-mypackage.spec
+```
+
+Place icons and fonts under `theme/` (see the [icon](icons) and [font](fonts) guidelines). The `theme/package` file holds the human-readable display name (one line). The spec's `%install` section copies `theme/` into `/usr/share/harbour-themepack-mypackage/` at build time.
+
 ## .spec file
 
-Open the `.spec` file and edit these lines:
+Open `rpm/harbour-themepack-mypackage.spec` and edit these lines:
 
 * **Name**: the name used in the system to identify your package.
 * **Version**: the version of the package.
@@ -42,15 +56,44 @@ Open the `.spec` file and edit these lines:
 ### Notes
 
 * The package name must start with `harbour-themepack-`, e.g. `harbour-themepack-mypackage`.
-* The file `package` contains the human-readable name of your theme pack, e.g. *My theme pack*. Keep it on one line.
+* The file `theme/package` contains the human-readable name of your theme pack, e.g. *My theme pack*. Keep it on one line.
 
 ## Building
 
-[This guide](http://talk.maemo.org/showthread.php?t=92963) is a useful introduction to building Sailfish packages.
+1. Fork or copy a template from [harbour-themepack-example](https://github.com/uithemer/harbour-themepack-example) (`icon-theme/`, `font-theme/`, or `full-theme/`).
+2. Place your assets under `theme/` and edit metadata in `rpm/*.spec`.
+3. Select an SDK build target and run `sfdk build` (see below).
+4. Publish the resulting `RPMS/*.noarch.rpm` on [OpenRepos](https://openrepos.net).
 
-A theme pack is mostly icons and fonts, so build it **architecture agnostic**. Append `--target noarch` to rpmbuild:
+### Select a build target
 
-`rpmbuild --bb --target noarch PATHOFTHESPECFILE/harbour-themepack-mypackage.spec`
+List installed SDK tooling and available targets:
+
+```bash
+~/SailfishOS/bin/sfdk tools list
+```
+
+Each target name encodes the Sailfish OS version and CPU architecture, for example `SailfishOS-5.0.0.62-armv7hl` or `SailfishOS-5.0.0.62-armv7hl.default`. Pick the target that matches your SDK installation and device (most phones use `armv7hl`; newer devices may use `aarch64`). Theme packs are `BuildArch: noarch` — the target arch only selects which SDK chroot builds the RPM, not the package contents.
+
+Use the exact target string shown by `tools list` (including a `.default` suffix if present).
+
+### Build commands
+
+From your pack project root:
+
+```bash
+~/SailfishOS/bin/sfdk config target=SailfishOS-5.0.0.62-armv7hl
+~/SailfishOS/bin/sfdk config target   # verify active target
+~/SailfishOS/bin/sfdk build
+```
+
+Output: `RPMS/harbour-themepack-mypackage-<version>-<release>.noarch.rpm`
+
+Optional — install on a connected device via the SDK:
+
+```bash
+~/SailfishOS/bin/sfdk deploy --sdk
+```
 
 ## Themepack helper
 
@@ -58,7 +101,7 @@ To resize SVG icons you can use [themepack-helper](https://github.com/uithemer/h
 
 ## Companion app
 
-If you are familiar with the Sailfish SDK, you can use the [companion app](https://github.com/uithemer/harbour-themepack-example/companion) model. It includes a script that lists missing icons and opens an email draft with a predefined address. Feel free to fork it for your own projects.
+If you are familiar with the Sailfish SDK, you can use the [companion app](https://github.com/uithemer/harbour-themepack-example/tree/master/companion) model. It ships a small Sailfish app alongside the theme pack (icon requests, docs links, translations). Build it with `cd companion && sfdk build` — see the [companion section](https://github.com/uithemer/harbour-themepack-example#companion-app) in the example repo README.
 
 ## Releasing
 

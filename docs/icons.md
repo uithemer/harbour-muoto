@@ -11,35 +11,36 @@ How to create icons compatible with **Muoto**.
 
 ## Author checklist
 
-1. Use the [example package](https://github.com/uithemer/harbour-themepack-example) as a template.
-2. Place launcher and app icons under `native/<size>/apps/`, `jolla/<z>/icons/`, and/or `apk/<size>/` using the **same basename** as the stock PNG (e.g. `icon-launcher-camera.png`).
-3. Optional: add `overlay/*.png` (see [Style missing app icons (`overlay/`)](#style-missing-app-icons-overlay) below).
-4. Build with `harbour-themepack-*` naming and publish; users need **Muoto** installed.
+1. Copy the [`icon-theme/`](https://github.com/uithemer/harbour-themepack-example/tree/master/icon-theme) or [`full-theme/`](https://github.com/uithemer/harbour-themepack-example/tree/master/full-theme) template from the example repo.
+2. Place launcher and app icons under `theme/native/<size>/apps/`, `theme/jolla/<z>/icons/`, and/or `theme/apk/<size>/` using the **same basename** as the stock PNG (e.g. `icon-launcher-camera.png`).
+3. Optional: add `theme/overlay/*.png` (see [Style missing app icons (`overlay/`)](#style-missing-app-icons-overlay) below). Export SVG sources with [themepack-helper](https://github.com/uithemer/harbour-themepack-example/tree/master/themehelper).
+4. Build with the Sailfish SDK — see [Building](getstarted#building) in the getstarted guide. Publish on OpenRepos; users need **Muoto** installed.
 
 ## Theme pack layout
 
-Inside `/usr/share/harbour-themepack-<name>/`:
+When authoring a pack, place assets under `theme/` in your project (see [Project layout](getstarted#project-layout)). After installation on a device, Muoto reads them from `/usr/share/harbour-themepack-<name>/`:
 
 ```
-native/
-  256x256/apps/<icon-key>.png
-  172x172/apps/<icon-key>.png
-  ...
+theme/                         →  /usr/share/harbour-themepack-<name>/
+  native/
+    256x256/apps/<icon-key>.png
+    172x172/apps/<icon-key>.png
+    ...
 
-jolla/
-  z2.0/icons/<icon-key>.png
-  z1.5/icons/<icon-key>.png
-  ...
+  jolla/
+    z2.0/icons/<icon-key>.png
+    z1.5/icons/<icon-key>.png
+    ...
 
-apk/
-  192x192/<launcher_id>.png
-  ...
+  apk/
+    192x192/<launcher_id>.png
+    ...
 
-overlay/
-  *.png
+  overlay/
+    *.png
 
-dyncal/256x256/          (planned — ignored today)
-dynclock/256x256/        (planned — ignored today)
+  dyncal/256x256/          (planned — ignored today)
+  dynclock/256x256/        (planned — ignored today)
 ```
 
 ### Matching
@@ -51,10 +52,10 @@ Provide `jolla/` tiers (`z1.0`, `z1.5`, `z2.0`, …) as needed; Muoto uses the b
 ## Create your icons
 
 1. Create icons with the image editor of your choice.
-2. Place them in `jolla/` (Jolla stock / ambient keys), `native/` (third-party apps), or `apk/` (Android). Example sizes:
-   - Native: `native/172x172/apps/`, `native/86x86/apps/`, …
-   - Jolla: `jolla/z2.0/icons/` (172×172), `jolla/z1.5/icons/` (129×129), `jolla/z1.0/icons/` (86×86)
-   - Android: `apk/192x192/`, `apk/128x128/`, `apk/86x86/`
+2. Place them in `theme/jolla/` (Jolla stock / ambient keys), `theme/native/` (third-party apps), or `theme/apk/` (Android). Example sizes:
+   - Native: `theme/native/172x172/apps/`, `theme/native/86x86/apps/`, …
+   - Jolla: `theme/jolla/z2.0/icons/` (172×172), `theme/jolla/z1.5/icons/` (129×129), `theme/jolla/z1.0/icons/` (86×86)
+   - Android: `theme/apk/192x192/`, `theme/apk/128x128/`, `theme/apk/86x86/`
 
 Stock reference paths on device (read-only):
 
