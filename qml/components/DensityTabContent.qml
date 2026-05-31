@@ -227,8 +227,7 @@ SilicaFlickable {
                     label: qsTr("Launcher icon size")
                     enabled: densityView.densityReady
                     description: qsTr("Icons on the home screen and app grid. "
-                                      + "System default uses your device's normal size "
-                                      + "(often 108 on many phones).")
+                                      + "System default uses your device's normal size.")
 
                     menu: ContextMenu {
                         MenuItem {

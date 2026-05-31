@@ -9,7 +9,7 @@ nav_order: 2
 
 How to create fonts compatible with **Muoto**.
 
-Sailfish OS uses separate font configuration for the system UI and Alien Dalvik; theme packs supply files under `font/` and `font-nonlatin/`. Muoto writes `~/.config/fontconfig/conf.d/99-muoto.conf` and runs `fc-cache` for the current user when a font pack is applied.
+Sailfish OS uses separate font configuration for the system UI and Alien Dalvik; theme packs supply files under `theme/font/` and `theme/font-nonlatin/`. Muoto writes `~/.config/fontconfig/conf.d/99-muoto.conf` and runs `fc-cache` for the current user when a font pack is applied.
 
 Download TrueType (`.ttf`) or collection (`.ttc`) fonts of your choice. One typeface family per pack is typical, with multiple weights (Bold, Regular, Light, etc.).
 
@@ -18,11 +18,15 @@ Note: results may vary if the fonts lack glyphs for some characters.
 ## Latin / UI weights
 
 1. Rename files as `Regular.ttf`, `Light.ttf`, `ExtraLight.ttf`, and so on (matching the weight names you expose in the apply dialog).
-2. Place them in the pack `font/` directory.
+2. Place them in `theme/font/`.
+
+## Building
+
+Copy the [`font-theme/`](https://github.com/uithemer/harbour-themepack-example/tree/master/font-theme) template from the example repo, add your fonts under `theme/`, edit `rpm/*.spec` metadata, then build with the Sailfish SDK — see [Building](getstarted#building) in the getstarted guide.
 
 ## Non-Latin fonts
 
-Place files in `font-nonlatin/`. Muoto maps these filenames to fontconfig language tags:
+Place files in `theme/font-nonlatin/`. Muoto maps these filenames to fontconfig language tags:
 
 | Pack filename | Used for |
 | ------------- | -------- |

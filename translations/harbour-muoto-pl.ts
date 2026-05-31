@@ -114,15 +114,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Style missing app icons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -183,10 +183,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size (often 108 on many phones).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Could not unlock display density settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -196,6 +192,10 @@
     </message>
     <message>
         <source>Settings applied.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -591,14 +591,6 @@
     <name>ThemesTabContent</name>
     <message>
         <source>Settings applied.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Support Muoto</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart first run wizard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

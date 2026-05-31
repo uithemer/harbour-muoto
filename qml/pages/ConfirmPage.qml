@@ -97,20 +97,6 @@ Dialog
 
     readonly property bool hasLatinFontFiles: fontweightmodel.rowCount() > 0
 
-    function applyDefaultFontWeight() {
-        if (selectedFont !== "" || !hasFont || fontweightmodel.rowCount() === 0)
-            return
-        var base = FontWeightUtils.fontBasenameFromFilename(fontweightmodel.firstWeight)
-        if (base === "")
-            return
-        selectedFont = base
-        for (var i = 0; i < views.count; i++) {
-            var item = views.itemAt(i)
-            if (item)
-                item.checked = item.fontWeight === base
-        }
-    }
-
     property string _coverFontNotifyKey: ""
 
     function notifyCoverFontPreviewReady() {
@@ -127,10 +113,7 @@ Dialog
 
     Connections {
         target: fontweightmodel
-        onFirstWeightChanged: {
-            applyDefaultFontWeight()
-            notifyCoverFontPreviewReady()
-        }
+        onFirstWeightChanged: notifyCoverFontPreviewReady()
     }
 
     Connections {
@@ -139,17 +122,13 @@ Dialog
             // Swipe to cover: re-notify so CoverConfirm picks up fonts even if seq
             // was bumped before the cover Connections existed (first confirm open).
             if (state !== Qt.ApplicationActive && app.coverMode === "confirmDialog") {
-                applyDefaultFontWeight()
                 _coverFontNotifyKey = ""
                 notifyCoverFontPreviewReady()
             }
         }
     }
 
-    Component.onCompleted: {
-        applyDefaultFontWeight()
-        notifyCoverFontPreviewReady()
-    }
+    Component.onCompleted: notifyCoverFontPreviewReady()
 
     DialogHeader {
         id: header
@@ -378,6 +357,7 @@ Dialog
                             vphfont.visible = false
                             fontloader.visible = true
                             fontloader.reload()
+                            notifyCoverFontPreviewReady()
                         }
                     }
                 }

@@ -11,13 +11,26 @@ DATADIR=/usr/share/harbour-muoto
 muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/activeFontPack \"'default'\""
 muoto_run_as_user_or_die 'rm -f ~/.config/fontconfig/conf.d/99-muoto.conf; fc-cache -f'
 
-# 2) Icons — RestoreIcons runs synchronously in helperd; method reply means done.
-if ! dbus-send --system --type=method_call \
-    --dest="$MUOTO_SERVICE" \
-    "$MUOTO_PATH" \
-    "$MUOTO_THEMES.RestoreIcons"; then
-    echo "harbour-muoto-oneshot-restore: RestoreIcons dbus-send failed" >&2
-    exit 1
+# 2) Icons — wait for OperationCompleted; do not touch icon dconf unless restore succeeded.
+_restore_icons_once() {
+    muoto_wait_op_begin RestoreIcons 180
+    dbus-send --system --type=method_call \
+        --dest="$MUOTO_SERVICE" \
+        "$MUOTO_PATH" \
+        "$MUOTO_THEMES.RestoreIcons" \
+        >/dev/null 2>&1 || {
+        muoto_wait_op_end RestoreIcons || true
+        return 1
+    }
+    muoto_wait_op_end RestoreIcons
+}
+
+if ! _restore_icons_once; then
+    sleep 3
+    if ! _restore_icons_once; then
+        echo "harbour-muoto-oneshot-restore: RestoreIcons failed" >&2
+        exit 1
+    fi
 fi
 
 # 3) Icons dconf — _commitPendingIconRestore after successful RestoreIcons
