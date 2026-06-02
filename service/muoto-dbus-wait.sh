@@ -6,67 +6,71 @@ MUOTO_SERVICE=org.muoto.Muoto1
 MUOTO_PATH=/org/muoto/Muoto1
 MUOTO_THEMES=org.muoto.Muoto1.Themes
 OS_UPDATE_SENTINEL=/tmp/os-update-running
+MUOTO_BACKUP_ICONS=/usr/share/harbour-muoto/backup/icons
 
 muoto_os_update_running() {
     [ -f "$OS_UPDATE_SENTINEL" ]
 }
 
-# Start dbus-monitor for OperationCompleted; call before dbus-send.
-# Usage: muoto_wait_op_begin ApplyIcons 180
+# Stock icon backup tree (IconPaths::backupIconsRoot in C++):
+#   $MUOTO_BACKUP_ICONS/jolla/<z>/icons/*.png
+#   $MUOTO_BACKUP_ICONS/native/<size>/apps/*.png
+#   $MUOTO_BACKUP_ICONS/apk/*.png
+# Populated on ApplyIcons via IconStockBackup::backup; cleared on RestoreIcons.
+muoto_icons_backup_present() {
+    [ -d "$MUOTO_BACKUP_ICONS" ] || return 1
+    if find "$MUOTO_BACKUP_ICONS" -name '*.png' -print -quit 2>/dev/null | grep -q .; then
+        return 0
+    fi
+    return 1
+}
+
+# Log when dconf says themed but backup tree has no PNGs (stale state).
+muoto_warn_if_themed_without_backup() {
+    pack=$(muoto_dconf_as_user "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+    pack=${pack#\'}
+    pack=${pack%\'}
+    if [ -n "$pack" ] && [ "$pack" != "default" ]; then
+        echo "muoto: activeIconPack='$pack' but no backup/icons PNGs; skipping RestoreIcons" >&2
+    fi
+}
+
+# Start helperd before dbus-send (activation alone can fail during rpm %preun).
+muoto_ensure_helperd() {
+    systemctl start harbour-muoto-helperd.service 2>/dev/null || true
+    i=0
+    while [ "$i" -lt 15 ]; do
+        if dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
+            org.freedesktop.DBus.GetNameOwner "string:$MUOTO_SERVICE" >/dev/null 2>&1; then
+            return 0
+        fi
+        sleep 1
+        i=$((i + 1))
+    done
+    return 1
+}
+
+muoto_wait_op_cancel() {
+    if [ -n "${_WAIT_FD:-}" ]; then
+        eval "exec ${_WAIT_FD}>&-" 2>/dev/null || true
+        _WAIT_FD=
+    fi
+}
+
+# Set expected op and flock timeout (seconds) before dbus-send.
+# Uninstall restore uses 60; boot apply and pre-upgrade restore use 180.
+# Usage: muoto_wait_op_begin RestoreIcons 60
 #        dbus-send ...
-#        muoto_wait_op_end ApplyIcons -> exit 0 on success, 1 on failure
-_WAIT_TMP=
-_WAIT_MON_PID=
+#        muoto_wait_op_end RestoreIcons
 _WAIT_OP=
 _WAIT_TIMEOUT=
 
-# Parse dbus-monitor lines: signal header -> op string -> boolean -> message.
-_dbus_parse_monitor_line() {
-    line="$1"
-    case "$line" in
-        *member=OperationCompleted*)
-            _dbus_state=1
-            _dbus_got_op=
-            return 0
-            ;;
-    esac
-
-    case "${_dbus_state:-0}" in
-        1)
-            case "$line" in
-                *string*)
-                    _dbus_got_op=$(printf '%s\n' "$line" | sed -n 's/.*string "\([^"]*\)".*/\1/p')
-                    _dbus_state=2
-                    ;;
-            esac
-            ;;
-        2)
-            case "$line" in
-                *boolean*true*)
-                    if [ "$_dbus_got_op" = "$_WAIT_OP" ]; then
-                        echo ok >"$_WAIT_TMP"
-                        exit 0
-                    fi
-                    _dbus_state=0
-                    ;;
-                *boolean*false*)
-                    if [ "$_dbus_got_op" = "$_WAIT_OP" ]; then
-                        echo fail >"$_WAIT_TMP"
-                        exit 1
-                    fi
-                    _dbus_state=0
-                    ;;
-            esac
-            ;;
-    esac
-}
-
-# defaultuser cannot BecomeMonitor on the system bus; wait on icon-ops.lock instead.
 _muoto_wait_flock() {
     _lock=/usr/share/harbour-muoto/icon-ops.lock
     touch "$_lock" 2>/dev/null || true
     # shellcheck disable=SC3028
     exec 200>"$_lock"
+    _WAIT_FD=200
     held=0
     i=0
     while [ "$i" -lt 15 ]; do
@@ -87,62 +91,29 @@ _muoto_wait_flock() {
     while [ "$i" -lt "${_WAIT_TIMEOUT:-180}" ]; do
         if flock -n 200; then
             flock -u 200
+            muoto_wait_op_cancel
             return 0
         fi
         sleep 1
         i=$((i + 1))
     done
-    echo "muoto: timed out waiting for icon op lock ($_WAIT_OP)" >&2
+    echo "muoto: timed out waiting for icon op lock (${_WAIT_OP:-?})" >&2
+    muoto_wait_op_cancel
     return 1
 }
 
 muoto_wait_op_begin() {
     _WAIT_OP="$1"
     _WAIT_TIMEOUT="${2:-180}"
-    if [ "$(id -un)" = "defaultuser" ]; then
-        return 0
-    fi
-    _WAIT_TMP=$(mktemp)
-    (
-        dbus-monitor --system \
-            "type='signal',path='${MUOTO_PATH}',interface='${MUOTO_THEMES}',member='OperationCompleted'" \
-        | while read -r line; do
-            _dbus_parse_monitor_line "$line"
-        done
-    ) &
-    _WAIT_MON_PID=$!
-    sleep 0.3
 }
 
 muoto_wait_op_end() {
     expected="${1:-$_WAIT_OP}"
-    if [ "$(id -un)" = "defaultuser" ]; then
-        _muoto_wait_flock
-        return $?
+    if [ -n "$expected" ] && [ "$expected" != "${_WAIT_OP:-}" ]; then
+        echo "muoto: wait_op_end expected '$expected' but began '$_WAIT_OP'" >&2
+        return 1
     fi
-    i=0
-    while [ "$i" -lt "${_WAIT_TIMEOUT:-180}" ]; do
-        if [ -f "$_WAIT_TMP" ]; then
-            res=$(cat "$_WAIT_TMP" 2>/dev/null) || res=
-            kill "$_WAIT_MON_PID" 2>/dev/null || true
-            wait "$_WAIT_MON_PID" 2>/dev/null || true
-            rm -f "$_WAIT_TMP" 2>/dev/null || true
-            case "$res" in
-                ok) return 0 ;;
-                fail)
-                    echo "muoto: OperationCompleted($expected) failed" >&2
-                    return 1
-                    ;;
-            esac
-        fi
-        sleep 1
-        i=$((i + 1))
-    done
-    kill "$_WAIT_MON_PID" 2>/dev/null || true
-    wait "$_WAIT_MON_PID" 2>/dev/null || true
-    rm -f "$_WAIT_TMP" 2>/dev/null || true
-    echo "muoto: timed out waiting for OperationCompleted($expected)" >&2
-    return 1
+    _muoto_wait_flock
 }
 
 # defaultuser session bus (SFOS: …/dbus/user_bus_socket, not …/bus).

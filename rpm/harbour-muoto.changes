@@ -1,3 +1,17 @@
+* Tue Jun  2 2026 3.0.2-1
+- Version 3.0.2 release.
+- Uninstall: quiesce update-icons and install-listener before restore;
+  `harbour-muoto-oneshot-restore --uninstall` skips RestoreIcons when no
+  backup PNGs; abort package removal if restore fails when backup present.
+- Shell scripts: flock wait on icon-ops.lock for all users (no dbus-monitor
+  hang); cancel wait immediately when dbus-send fails.
+- Stuck package manager on older builds: restart the device, then update or
+  retry uninstall.
+- Documentation: automation waits/timeouts and uninstall behaviour.
+
+* Tue Jun  2 2026 3.0.1-2
+- Uninstall restore redesign (device-tested); superseded by 3.0.2-1.
+
 * Sun May 31 2026 3.0.1-1
 - First stable 3.0.x release.
 - Theme apply/restore: commit font pack only after successful apply; clear

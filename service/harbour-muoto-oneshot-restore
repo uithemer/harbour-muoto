@@ -1,43 +1,81 @@
 #!/bin/sh
-# Full stock restore before system upgrade: icons, fonts, Muoto + silica dconf, vendor locks.
-# Order mirrors GUI Restore theme (ThemesTabContent.qml): fonts first, then icons, then dconf commit.
+# Stock restore: system upgrade (no args) or package uninstall (--uninstall).
+# Order mirrors GUI Restore theme: fonts, icons (when backed up), dconf, silica density, vendor locks.
 set -eu
 
 . /usr/share/harbour-muoto/service/muoto-dbus-wait.sh
 
 DATADIR=/usr/share/harbour-muoto
+UNINSTALL=false
+ICON_WAIT_SEC=180
+
+for arg in "$@"; do
+    case "$arg" in
+        --uninstall)
+            UNINSTALL=true
+            ICON_WAIT_SEC=60
+            ;;
+        -h|--help)
+            echo "Usage: harbour-muoto-oneshot-restore [--uninstall]" >&2
+            exit 0
+            ;;
+        *)
+            echo "harbour-muoto-oneshot-restore: unknown option: $arg" >&2
+            exit 2
+            ;;
+    esac
+done
 
 # 1) Fonts — deactivateFont + restoreFonts (GUI order)
 muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/activeFontPack \"'default'\""
 muoto_run_as_user_or_die 'rm -f ~/.config/fontconfig/conf.d/99-muoto.conf; fc-cache -f'
 
-# 2) Icons — wait for OperationCompleted; do not touch icon dconf unless restore succeeded.
+# 2) Icons — helperd RestoreIcons when backup exists (uninstall) or always (upgrade)
 _restore_icons_once() {
-    muoto_wait_op_begin RestoreIcons 180
-    dbus-send --system --type=method_call \
+    if ! muoto_ensure_helperd; then
+        echo "harbour-muoto-oneshot-restore: helperd not available" >&2
+        return 1
+    fi
+    muoto_wait_op_begin RestoreIcons "$ICON_WAIT_SEC"
+    if ! dbus-send --system --type=method_call \
         --dest="$MUOTO_SERVICE" \
         "$MUOTO_PATH" \
         "$MUOTO_THEMES.RestoreIcons" \
-        >/dev/null 2>&1 || {
-        muoto_wait_op_end RestoreIcons || true
+        >/dev/null 2>&1; then
+        muoto_wait_op_cancel
         return 1
-    }
+    fi
     muoto_wait_op_end RestoreIcons
 }
 
-if ! _restore_icons_once; then
-    sleep 3
+_run_icon_restore() {
     if ! _restore_icons_once; then
+        sleep 3
+        _restore_icons_once
+    fi
+}
+
+NEED_ICON_RESTORE=false
+if muoto_icons_backup_present; then
+    NEED_ICON_RESTORE=true
+elif [ "$UNINSTALL" = true ]; then
+    muoto_warn_if_themed_without_backup
+else
+    NEED_ICON_RESTORE=true
+fi
+
+if [ "$NEED_ICON_RESTORE" = true ]; then
+    if ! _run_icon_restore; then
         echo "harbour-muoto-oneshot-restore: RestoreIcons failed" >&2
         exit 1
     fi
 fi
 
-# 3) Icons dconf — _commitPendingIconRestore after successful RestoreIcons
+# 3) Icons dconf — after successful restore or when icons were skipped
 muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/activeIconPack \"'default'\""
 muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/iconOverlay false"
 
-# 4) Silica density (upgrade-only; not in GUI Restore dialog)
+# 4) Silica density
 muoto_dconf_as_user_or_die "dconf reset /desktop/sailfish/silica/theme_pixel_ratio"
 muoto_dconf_as_user_or_die "dconf reset /desktop/sailfish/silica/icon_size_launcher"
 

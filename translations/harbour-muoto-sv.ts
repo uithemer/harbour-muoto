@@ -4,12 +4,16 @@
 <context>
     <name>AboutPage</name>
     <message>
-        <source>Documentation</source>
-        <translation>Dokumentation</translation>
+        <source>Feedback</source>
+        <translation>Återkoppling</translation>
+    </message>
+    <message>
+        <source>If you want to provide feedback or report an issue, please use GitHub.</source>
+        <translation>Om du vill återkoppla eller rapportera ett problem, vänligen använd GitHub.</translation>
     </message>
     <message>
         <source>Issues</source>
-        <translation>Frågor</translation>
+        <translation>Problem</translation>
     </message>
     <message>
         <source>Translations</source>
@@ -17,11 +21,23 @@
     </message>
     <message>
         <source>Muoto lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation type="unfinished">Muoto låter dig anpassa ikoner, teckensnitt och skärmupplösning i Sailfish OS.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation type="unfinished">Medverkande</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer C++</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer porting for Sailfish OS 5</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Testing</source>
@@ -40,27 +56,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Feedback</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you want to provide feedback or report an issue, please use GitHub.</source>
+        <source>Documentation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Credits for existing translations and how to contribute.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer C++</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer Services</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer porting for Sailfish OS 5</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -94,6 +94,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Style missing app icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -114,14 +122,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Style missing app icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -130,21 +130,45 @@
     <name>CoverConfirm</name>
     <message>
         <source>Settings applied.</source>
-        <translation type="unfinished">Inställningarna tillämpas.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>CoverPage</name>
     <message>
         <source>Settings applied.</source>
-        <translation type="unfinished">Inställningarna tillämpas.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DensityTabContent</name>
     <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restore display density</source>
-        <translation type="unfinished">Återställ skärmupplösning</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>System default</source>
@@ -171,31 +195,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Display scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Launcher icon size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">Inställningarna tillämpas.</translation>
-    </message>
-    <message>
-        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -214,11 +214,11 @@
     <name>ExternalUrlPage</name>
     <message>
         <source>Swipe left to preview.</source>
-        <translation>Svep vänster för att förhandsgranska.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>You are using a mobile data connection.</source>
-        <translation>Du använder en mobil dataanslutning.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -236,25 +236,25 @@
     <name>LicenseListPart</name>
     <message>
         <source>License text</source>
-        <translation>Licenstext</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainPage</name>
     <message>
-        <source>Display density</source>
-        <translation>Skärmupplösning</translation>
+        <source>Themes</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Themes</source>
-        <translation>Teman</translation>
+        <source>Display density</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
-        <translation type="unfinished">Om Muoto</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -298,6 +298,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Send a tip or recurring support on Liberapay.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Help with translations</source>
         <translation type="unfinished"></translation>
     </message>
@@ -333,187 +337,183 @@
         <source>Share theme packs, write documentation, test beta builds, or star the project on GitHub — every bit helps.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Send a tip or recurring support on Liberapay.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Opal.About</name>
     <message>
         <source>About</source>
-        <translation>Om</translation>
+        <translation type="unfinished">Om</translation>
     </message>
     <message>
         <source>Version %1</source>
-        <translation>Version %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Development</source>
-        <translation>Utveckling</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>show contributors</source>
-        <translation>visa medverkande</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Homepage</source>
-        <translation>Hemsida</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Changelog</source>
-        <translation>Ändringslogg</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation>Översättningar</translation>
+        <translation type="unfinished">Översättningar</translation>
     </message>
     <message>
         <source>Source Code</source>
-        <translation>Källkod</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Donations</source>
-        <translation>Donationer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>License</source>
-        <translation>Licens</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
         <source>show license(s)</source>
-        <translation>
-            <numerusform>visa licens</numerusform>
-            <numerusform>visa licenser</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <source>News</source>
-        <translation>Nyheter</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Changes since version %1</source>
-        <translation>Ändrat sedan version %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>show details</source>
-        <translation>visa detaljerat</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Thank you!</source>
-        <translation>Tack!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Details</source>
-        <translation>Detaljerat</translation>
+        <translation type="unfinished">Detaljerat</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation>Medverkande</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Acknowledgements</source>
-        <translation>Bekräftelser</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Please refer to &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
-        <translation>Se &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Download license texts</source>
-        <translation>Ladda ner licenstexter</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>You are using a mobile data connection.</source>
-        <translation>Du använder en mobil dataanslutning.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
         <source>License(s)</source>
-        <translation>
-            <numerusform>Licens</numerusform>
-            <numerusform>Licenser</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <source>Note: please check the source code for most accurate information.</source>
-        <translation>Notis: Kontrollera källkoden för mest korrekt information.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Opal.About.Common</name>
     <message>
         <source>If you want to support my work, you can buy me a cup of coffee.</source>
-        <translation>Om du vill stödja mitt arbete, kan du bjuda mig på en kopp kaffe.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>You can support this project by contributing, or by donating using any of these services.</source>
-        <translation>Du kan stödja projektet genom kodbidrag eller donation med hjälp av dessa tjänster.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Your contributions to translations or code would be most welcome.</source>
-        <translation>Kodbidrag eller översättningar är väldigt välkommet.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Opal.LinkHandler</name>
     <message>
         <source>Copied to clipboard: %1</source>
-        <translation>Kopierat till urklipp: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Share link</source>
-        <translation>Dela länk</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Phone number</source>
-        <translation>Telefonnummer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>External link</source>
-        <translation>Extern länk</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open in browser</source>
-        <translation>Öppna i webbläsare</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open externally</source>
-        <translation>Öppna externt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Share</source>
-        <translation>Dela</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Copy link</source>
-        <translation>Kopiera länk</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Copy text</source>
-        <translation>Kopiera text</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No preview available.</source>
-        <translation>Ingen förhandsvisning tillgänglig.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>The page is taking too long to load.</source>
-        <translation>Sidan tar för lång tid att läsa in.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>RestoreDDPage</name>
     <message>
         <source>Restore</source>
-        <translation>Återställ</translation>
+        <translation type="unfinished">Återställ</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Avbryt</translation>
+        <translation type="unfinished">Avbryt</translation>
     </message>
     <message>
         <source>Default device pixel ratio</source>
-        <translation>Enhetens normala bildpunktsförhållande</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Default icon size</source>
@@ -532,15 +532,15 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Avbryt</translation>
+        <translation type="unfinished">Avbryt</translation>
     </message>
     <message>
         <source>Default icons</source>
-        <translation>Standardikoner</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Default fonts</source>
-        <translation>Standardteckensnitt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
@@ -573,23 +573,27 @@
 <context>
     <name>ThemePackItem</name>
     <message>
-        <source>Uninstall</source>
-        <translation>Avinstallera</translation>
-    </message>
-    <message>
         <source>icons</source>
-        <translation>ikoner</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>fonts</source>
-        <translation>teckensnitt</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ThemesTabContent</name>
     <message>
+        <source>Applying theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Settings applied.</source>
-        <translation type="unfinished">Inställningarna tillämpas.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Download more themes</source>
@@ -597,22 +601,6 @@
     </message>
     <message>
         <source>Restore theme</source>
-        <translation type="unfinished">Återställ tema</translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No themes yet</source>
-        <translation type="unfinished">Inga teman ännu</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme to start</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Applying theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -624,7 +612,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Uninstalling theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No themes yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Install a compatible theme to start</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -632,53 +632,37 @@
     <name>TranslatorPage</name>
     <message>
         <source>Translations</source>
-        <translation>Översättningar</translation>
+        <translation type="unfinished">Översättningar</translation>
     </message>
     <message>
         <source>Request a new language or contribute to existing languages on the Transifex project page.</source>
-        <translation>Föreslå ett nytt språk eller bidra till ett befintligt, på Transifex projektsida.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Transifex</source>
-        <translation>Transifex</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>WelcomePage</name>
     <message>
         <source>Welcome to Muoto</source>
-        <translation>Välkommen till Muoto</translation>
-    </message>
-    <message>
-        <source>Donate</source>
-        <translation>Donera</translation>
-    </message>
-    <message>
-        <source>I don&apos;t care donating</source>
-        <translation>Jag bryr mig inte om att donera</translation>
-    </message>
-    <message>
-        <source>Start Muoto</source>
-        <translation>Starta Muoto</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Muoto lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation>Muoto låter dig anpassa ikoner, teckensnitt och skärmupplösning i Sailfish OS.</translation>
-    </message>
-    <message>
-        <source>If you like my work and want to buy me a beer, feel free to do it!</source>
-        <translation>Om du gillar mitt arbete och vill bjuda mig på en öl, får du gärna göra det!</translation>
-    </message>
-    <message>
-        <source>Support</source>
-        <translation>Support</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Terms and conditions</source>
-        <translation>Regler och villkor</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
+        <translation type="unfinished">Denna programvara tillhandahålls &quot;som den är&quot;, utan någon som helst garanti, vare sig uttrycklig eller underförstådd. Under inga omständigheter ska författarna eller upphovsrättsinnehavarna hållas ansvariga för några anspråk, skador eller annat ansvar som uppstår från, ut av eller i samband med programvaran. Du är ensam ansvarig för säkerheten för din data.</translation>
+    </message>
+    <message>
+        <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -686,7 +670,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
+        <source>Support</source>
+        <translation type="unfinished">Support</translation>
+    </message>
+    <message>
+        <source>If you like my work and want to buy me a beer, feel free to do it!</source>
+        <translation type="unfinished">Om du gillar mitt arbete, får du gärna bjuda mig på en öl!</translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation type="unfinished">Donera</translation>
+    </message>
+    <message>
+        <source>I don&apos;t care donating</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Muoto</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
