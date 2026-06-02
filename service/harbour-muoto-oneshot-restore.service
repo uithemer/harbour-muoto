@@ -7,6 +7,7 @@ DefaultDependencies=no
 
 [Service]
 Type=oneshot
+# Pre-upgrade restore (no --uninstall): flock wait up to 180s per RestoreIcons; unit cap 600s.
 ExecStart=/usr/bin/harbour-muoto-oneshot-restore
 TimeoutStartSec=600
 

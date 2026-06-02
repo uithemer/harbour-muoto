@@ -8,7 +8,7 @@ RequiresMountsFor=/home
 
 [Service]
 Type=oneshot
-# Run as root: dbus-monitor for OperationCompleted; dconf via muoto_run_as_user.
+# Run as root: waits on icon-ops.lock (flock) while helperd runs ApplyIcons; dconf via su defaultuser.
 TimeoutStartSec=600
 ExecStart=/usr/bin/harbour-muoto-update-icons
 

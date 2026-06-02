@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="sv">
+<TS version="2.1" language="en">
 <context>
     <name>AboutPage</name>
     <message>
-        <source>Feedback</source>
-        <translation>Återkoppling</translation>
-    </message>
-    <message>
-        <source>If you want to provide feedback or report an issue, please use GitHub.</source>
-        <translation>Om du vill återkoppla eller rapportera ett problem, vänligen använd GitHub.</translation>
+        <source>Documentation</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Issues</source>
-        <translation>Problem</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation>Översättningar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Muoto lets you customize icons, fonts and pixel density in Sailfish OS.</source>
@@ -25,18 +21,6 @@
     </message>
     <message>
         <source>Contributors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer C++</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer Services</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>UI Themer porting for Sailfish OS 5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -56,11 +40,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Documentation</source>
+        <source>Feedback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you want to provide feedback or report an issue, please use GitHub.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Credits for existing translations and how to contribute.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer C++</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Themer porting for Sailfish OS 5</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -75,7 +75,7 @@
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Avbryt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Apply</source>
@@ -91,14 +91,6 @@
     </message>
     <message>
         <source>Apply icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Style missing app icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -119,6 +111,14 @@
     </message>
     <message>
         <source>Choose the main font weight for the UI.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style missing app icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -143,31 +143,7 @@
 <context>
     <name>DensityTabContent</name>
     <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Restore display density</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Display scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Launcher icon size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -195,7 +171,31 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Display scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -242,11 +242,11 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>Themes</source>
+        <source>Display density</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Display density</source>
+        <source>Themes</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -298,10 +298,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Send a tip or recurring support on Liberapay.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Help with translations</source>
         <translation type="unfinished"></translation>
     </message>
@@ -337,12 +333,16 @@
         <source>Share theme packs, write documentation, test beta builds, or star the project on GitHub — every bit helps.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Send a tip or recurring support on Liberapay.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Opal.About</name>
     <message>
         <source>About</source>
-        <translation type="unfinished">Om</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Version %1</source>
@@ -366,7 +366,7 @@
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished">Översättningar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Source Code</source>
@@ -405,7 +405,7 @@
     </message>
     <message>
         <source>Details</source>
-        <translation type="unfinished">Detaljerat</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Contributors</source>
@@ -505,11 +505,11 @@
     <name>RestoreDDPage</name>
     <message>
         <source>Restore</source>
-        <translation type="unfinished">Återställ</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Avbryt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Default device pixel ratio</source>
@@ -528,11 +528,11 @@
     <name>RestorePage</name>
     <message>
         <source>Restore</source>
-        <translation>Återställ</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Avbryt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Default icons</source>
@@ -573,6 +573,10 @@
 <context>
     <name>ThemePackItem</name>
     <message>
+        <source>Uninstall</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>icons</source>
         <translation type="unfinished"></translation>
     </message>
@@ -580,17 +584,9 @@
         <source>fonts</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Uninstall</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ThemesTabContent</name>
-    <message>
-        <source>Applying theme</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Settings applied.</source>
         <translation type="unfinished"></translation>
@@ -604,19 +600,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restoring theme…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Applying theme…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uninstalling theme…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -627,12 +611,28 @@
         <source>Install a compatible theme to start</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Applying theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restoring theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalling theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TranslatorPage</name>
     <message>
         <source>Translations</source>
-        <translation type="unfinished">Översättningar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Request a new language or contribute to existing languages on the Transifex project page.</source>
@@ -650,7 +650,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Donate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I don&apos;t care donating</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Muoto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Muoto lets you customize icons, fonts and pixel density in Sailfish OS.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you like my work and want to buy me a beer, feel free to do it!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -659,10 +679,6 @@
     </message>
     <message>
         <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
-        <translation type="unfinished">Denna programvara tillhandahålls &quot;som den är&quot;, utan någon som helst garanti, vare sig uttrycklig eller underförstådd. Under inga omständigheter ska författarna eller upphovsrättsinnehavarna hållas ansvariga för några anspråk, skador eller annat ansvar som uppstår från, ut av eller i samband med programvaran. Du är ensam ansvarig för säkerheten för din data.</translation>
-    </message>
-    <message>
-        <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -670,23 +686,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Support</source>
-        <translation type="unfinished">Support</translation>
-    </message>
-    <message>
-        <source>If you like my work and want to buy me a beer, feel free to do it!</source>
-        <translation type="unfinished">Om du gillar mitt arbete, får du gärna bjuda mig på en öl!</translation>
-    </message>
-    <message>
-        <source>Donate</source>
-        <translation type="unfinished">Donera</translation>
-    </message>
-    <message>
-        <source>I don&apos;t care donating</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Start Muoto</source>
+        <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

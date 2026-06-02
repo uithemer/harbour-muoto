@@ -14,7 +14,7 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.0.1
+Version:        3.0.2
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -301,9 +301,14 @@ su defaultuser -c "dconf reset /desktop/lipstick/sailfishos-uithemer/iconSizeLau
 
 %preun
 if [ $1 -eq 0 ]; then
-    # Full stock restore while helperd + backup tree still on disk
-    # (icons, fonts, Muoto dconf, silica density, vendor locks).
-    /usr/bin/harbour-muoto-oneshot-restore || true
+    # Quiesce automation before restore (avoid ApplyIcons vs RestoreIcons on icon-ops.lock).
+    systemctl stop harbour-muoto-update-icons.service 2>/dev/null || true
+    MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
+    if [ -n "$MUOTO_UID" ]; then
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-install-listener.service" 2>/dev/null || true
+    fi
+    # Full stock restore while helperd + backup still on disk; non-zero aborts removal.
+    /usr/bin/harbour-muoto-oneshot-restore --uninstall
 
     rm -rf /home/defaultuser/.local/share/%{name}
     rm -rf /home/defaultuser/.cache/%{name}
@@ -321,10 +326,6 @@ if [ $1 -eq 0 ]; then
     systemctl disable --now harbour-muoto-rescan.path 2>/dev/null || :
     systemctl disable --now harbour-muoto-update-icons.service 2>/dev/null || :
     systemctl disable --now harbour-muoto-oneshot-restore.service 2>/dev/null || :
-    MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
-    if [ -n "$MUOTO_UID" ]; then
-        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-install-listener.service" 2>/dev/null || :
-    fi
     rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
     rmdir /etc/systemd/system/sailfish-upgrade-ui.service.d 2>/dev/null || :
 fi

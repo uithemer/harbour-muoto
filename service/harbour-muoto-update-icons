@@ -27,16 +27,19 @@ if [ ! -d "/usr/share/harbour-themepack-$pack" ]; then
 fi
 
 _apply_once() {
+    if ! muoto_ensure_helperd; then
+        return 1
+    fi
     muoto_wait_op_begin ApplyIcons 180
-    dbus-send --system --type=method_call \
+    if ! dbus-send --system --type=method_call \
         --dest="$MUOTO_SERVICE" \
         "$MUOTO_PATH" \
         "$MUOTO_THEMES.ApplyIcons" \
         "string:$pack" "boolean:true" "boolean:$o" \
-        >/dev/null 2>&1 || {
-        muoto_wait_op_end ApplyIcons || true
+        >/dev/null 2>&1; then
+        muoto_wait_op_cancel
         return 1
-    }
+    fi
     muoto_wait_op_end ApplyIcons
 }
 
