@@ -36,13 +36,22 @@ muoto_warn_if_themed_without_backup() {
 }
 
 # Start helperd before dbus-send. Root: systemctl (reliable during rpm %preun).
-# Non-root (install listener): D-Bus StartService — systemctl start prompts for PIN.
+# Non-root: no systemctl (Polkit PIN). StartService is missing on some SFOS dbus;
+# Introspect or the icon op dbus-send activates via org.muoto.Muoto1.service.
 muoto_ensure_helperd() {
+    _as_root=false
     if [ "$(id -u)" -eq 0 ]; then
+        _as_root=true
         systemctl start harbour-muoto-helperd.service 2>/dev/null || true
     else
+        if dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
+            org.freedesktop.DBus.GetNameOwner "string:$MUOTO_SERVICE" >/dev/null 2>&1; then
+            return 0
+        fi
         dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
             org.freedesktop.DBus.StartService "string:$MUOTO_SERVICE" >/dev/null 2>&1 || true
+        dbus-send --system --type=method_call --dest="$MUOTO_SERVICE" "$MUOTO_PATH" \
+            org.freedesktop.DBus.Introspectable.Introspect >/dev/null 2>&1 || true
     fi
     i=0
     while [ "$i" -lt 15 ]; do
@@ -53,7 +62,10 @@ muoto_ensure_helperd() {
         sleep 1
         i=$((i + 1))
     done
-    return 1
+    if [ "$_as_root" = true ]; then
+        return 1
+    fi
+    return 0
 }
 
 muoto_wait_op_cancel() {

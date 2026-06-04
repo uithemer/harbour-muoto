@@ -23,7 +23,7 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 | Per icon op (flock) | **180s** | Boot `update-icons` and pre-upgrade `oneshot-restore` (`ApplyIcons` / `RestoreIcons`) |
 | Per icon op (flock) | **60s** | `harbour-muoto-oneshot-restore --uninstall` only |
 | Lock “did not start” | **~15s** | Poll until helperd holds `icon-ops.lock`; else fail fast (busy / rejected) |
-| Helperd bus name | **15s** | `muoto_ensure_helperd`: root uses `systemctl start harbour-muoto-helperd`; defaultuser (install listener) uses D-Bus `StartService` (no security-code prompt) |
+| Helperd bus name | **15s** | Root: `systemctl start harbour-muoto-helperd`. defaultuser: optional `StartService` (if supported), `Introspect` to activate, then poll; if still down, icon-op `dbus-send` activates (no PIN, no hard fail) |
 | Icon op retry gap | **3s** | Sleep between one retry on failed restore or apply |
 | systemd unit | **600s** | `TimeoutStartSec` on `harbour-muoto-update-icons.service` and `harbour-muoto-oneshot-restore.service` (whole oneshot run) |
 

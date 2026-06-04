@@ -1,3 +1,8 @@
+* Thu Jun  4 2026 3.0.2-3
+- Auto-apply: SFOS dbus lacks StartService; trigger helperd via Introspect or
+  proceed to ApplyIcons/RestoreIcons (dbus activation). Avoid silent failure
+  when ensure_helperd timed out without starting the daemon.
+
 * Thu Jun  4 2026 3.0.2-2
 - Fix repeated security-code prompt when auto-applying icons after app installs:
   `muoto_ensure_helperd` uses D-Bus StartService as defaultuser (install listener);
