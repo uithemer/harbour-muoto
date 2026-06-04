@@ -373,6 +373,8 @@ void InstallListener::runUpdateScript()
             this,
             &InstallListener::onUpdateScriptFinished);
     proc->setProgram(QString::fromLatin1(kUpdateScript));
+    // Forward script stderr (muoto_log) into this unit's journal.
+    proc->setProcessChannelMode(QProcess::ForwardedChannels);
     proc->start();
     if(!proc->waitForStarted(5000))
     {

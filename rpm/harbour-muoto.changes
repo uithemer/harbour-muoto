@@ -2,6 +2,8 @@
 - Auto-apply: SFOS dbus lacks StartService; trigger helperd via Introspect or
   proceed to ApplyIcons/RestoreIcons (dbus activation). Avoid silent failure
   when ensure_helperd timed out without starting the daemon.
+- update-icons: muoto_log lines on stderr; install-listener forwards child
+  stderr to the user journal for easier debugging.
 
 * Thu Jun  4 2026 3.0.2-2
 - Fix repeated security-code prompt when auto-applying icons after app installs:

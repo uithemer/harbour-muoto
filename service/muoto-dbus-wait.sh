@@ -8,6 +8,11 @@ MUOTO_THEMES=org.muoto.Muoto1.Themes
 OS_UPDATE_SENTINEL=/tmp/os-update-running
 MUOTO_BACKUP_ICONS=/usr/share/harbour-muoto/backup/icons
 
+# stderr → journal when run under harbour-muoto-install-listener (ForwardedChannels).
+muoto_log() {
+    echo "muoto: $*" >&2
+}
+
 muoto_os_update_running() {
     [ -f "$OS_UPDATE_SENTINEL" ]
 }
@@ -42,12 +47,15 @@ muoto_ensure_helperd() {
     _as_root=false
     if [ "$(id -u)" -eq 0 ]; then
         _as_root=true
+        muoto_log "ensure_helperd: systemctl start (uid=0)"
         systemctl start harbour-muoto-helperd.service 2>/dev/null || true
     else
         if dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
             org.freedesktop.DBus.GetNameOwner "string:$MUOTO_SERVICE" >/dev/null 2>&1; then
+            muoto_log "ensure_helperd: $MUOTO_SERVICE already on bus"
             return 0
         fi
+        muoto_log "ensure_helperd: dbus activate (uid=$(id -u), no systemctl)"
         dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
             org.freedesktop.DBus.StartService "string:$MUOTO_SERVICE" >/dev/null 2>&1 || true
         dbus-send --system --type=method_call --dest="$MUOTO_SERVICE" "$MUOTO_PATH" \
@@ -57,14 +65,17 @@ muoto_ensure_helperd() {
     while [ "$i" -lt 15 ]; do
         if dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
             org.freedesktop.DBus.GetNameOwner "string:$MUOTO_SERVICE" >/dev/null 2>&1; then
+            muoto_log "ensure_helperd: $MUOTO_SERVICE ready (${i}s)"
             return 0
         fi
         sleep 1
         i=$((i + 1))
     done
     if [ "$_as_root" = true ]; then
+        muoto_log "ensure_helperd: failed after 15s (root)"
         return 1
     fi
+    muoto_log "ensure_helperd: not on bus after 15s; icon dbus-send may activate"
     return 0
 }
 

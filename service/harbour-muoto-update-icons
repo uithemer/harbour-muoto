@@ -4,7 +4,10 @@ set -eu
 
 . /usr/share/harbour-muoto/service/muoto-dbus-wait.sh
 
+muoto_log "update-icons: start uid=$(id -u)"
+
 if muoto_os_update_running; then
+    muoto_log "update-icons: skip (OS update sentinel)"
     exit 0
 fi
 
@@ -18,18 +21,25 @@ case "$overlay" in
     *) o=false ;;
 esac
 
+muoto_log "update-icons: pack='$pack' overlay=$o"
+
 if [ -z "$pack" ] || [ "$pack" = "default" ]; then
+    muoto_log "update-icons: no-op (no active theme)"
     exit 0
 fi
 
 if [ ! -d "/usr/share/harbour-themepack-$pack" ]; then
+    muoto_log "update-icons: no-op (missing /usr/share/harbour-themepack-$pack)"
     exit 0
 fi
 
 _apply_once() {
+    _attempt="${1:-1}"
     if ! muoto_ensure_helperd; then
+        muoto_log "update-icons: attempt $_attempt failed (ensure_helperd)"
         return 1
     fi
+    muoto_log "update-icons: attempt $_attempt ApplyIcons pack=$pack overlay=$o"
     muoto_wait_op_begin ApplyIcons 180
     if ! dbus-send --system --type=method_call \
         --dest="$MUOTO_SERVICE" \
@@ -38,19 +48,29 @@ _apply_once() {
         "string:$pack" "boolean:true" "boolean:$o" \
         >/dev/null 2>&1; then
         muoto_wait_op_cancel
+        muoto_log "update-icons: attempt $_attempt dbus-send ApplyIcons rejected"
         return 1
     fi
-    muoto_wait_op_end ApplyIcons
+    if ! muoto_wait_op_end ApplyIcons; then
+        muoto_log "update-icons: attempt $_attempt wait lock failed"
+        return 1
+    fi
+    muoto_log "update-icons: attempt $_attempt finished (lock released)"
+    return 0
 }
 
-if _apply_once; then
+if _apply_once 1; then
+    muoto_log "update-icons: success"
     exit 0
 fi
 
 # One retry after busy (common when GUI and automation overlap).
+muoto_log "update-icons: retry in 3s"
 sleep 3
-if _apply_once; then
+if _apply_once 2; then
+    muoto_log "update-icons: success (retry)"
     exit 0
 fi
 
+muoto_log "update-icons: failed"
 exit 1

@@ -61,12 +61,12 @@ If Storeman or `pkcon` reports “system management is locked” on an **older**
 # Same restore path as RPM uninstall (from devel-su)
 /usr/bin/harbour-muoto-oneshot-restore --uninstall
 
-# Listener status + live journal (after logging fix)
+# Listener status + live journal (script stderr forwarded as muoto: lines)
 MUOTO_UID=$(id -u defaultuser)
 export XDG_RUNTIME_DIR=/run/user/$MUOTO_UID
 systemctl --user status harbour-muoto-install-listener
-journalctl --user -f -t harbour-muoto-install-listener 2>/dev/null \
-  || journalctl -f | grep muoto-listener
+journalctl --user -f 2>/dev/null | grep -E 'muoto-listener|muoto:' \
+  || journalctl -f | grep -E 'muoto-listener|muoto:'
 ```
 
 If the listener is not active after RPM install from SSH, enable manually:
