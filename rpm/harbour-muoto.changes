@@ -1,3 +1,8 @@
+* Thu Jun  4 2026 3.0.2-2
+- Fix repeated security-code prompt when auto-applying icons after app installs:
+  `muoto_ensure_helperd` uses D-Bus StartService as defaultuser (install listener);
+  keep `systemctl start` for root scripts only (boot oneshot, RPM uninstall).
+
 * Tue Jun  2 2026 3.0.2-1
 - Version 3.0.2 release.
 - Uninstall: quiesce update-icons and install-listener before restore;

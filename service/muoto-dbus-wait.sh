@@ -35,9 +35,15 @@ muoto_warn_if_themed_without_backup() {
     fi
 }
 
-# Start helperd before dbus-send (activation alone can fail during rpm %preun).
+# Start helperd before dbus-send. Root: systemctl (reliable during rpm %preun).
+# Non-root (install listener): D-Bus StartService — systemctl start prompts for PIN.
 muoto_ensure_helperd() {
-    systemctl start harbour-muoto-helperd.service 2>/dev/null || true
+    if [ "$(id -u)" -eq 0 ]; then
+        systemctl start harbour-muoto-helperd.service 2>/dev/null || true
+    else
+        dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
+            org.freedesktop.DBus.StartService "string:$MUOTO_SERVICE" >/dev/null 2>&1 || true
+    fi
     i=0
     while [ "$i" -lt 15 ]; do
         if dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
