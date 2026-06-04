@@ -7,7 +7,7 @@ set -eu
 muoto_log "update-icons: start uid=$(id -u)"
 
 if muoto_os_update_running; then
-    muoto_log "update-icons: skip (OS update sentinel)"
+    muoto_log "update-icons: skip (OS update in progress)"
     exit 0
 fi
 

@@ -27,7 +27,8 @@ HEADERS += \
     $$PWD/dconfsettings.h \
     $$PWD/dconfuser.h \
     $$PWD/densityenabler.h \
-    $$PWD/lipstickrefresh.h
+    $$PWD/lipstickrefresh.h \
+    $$PWD/osupdateguard.h
 
 SOURCES += \
     $$PWD/iconapplier.cpp \
@@ -42,4 +43,5 @@ SOURCES += \
     $$PWD/spawner.cpp \
     $$PWD/dconfuser.cpp \
     $$PWD/densityenabler.cpp \
-    $$PWD/lipstickrefresh.cpp
+    $$PWD/lipstickrefresh.cpp \
+    $$PWD/osupdateguard.cpp

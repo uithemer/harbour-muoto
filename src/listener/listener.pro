@@ -6,6 +6,8 @@ CONFIG -= app_bundle
 
 QT += core dbus
 
+include(../ops/ops.pri)
+
 SOURCES += \
     main.cpp \
     installlistener.cpp \

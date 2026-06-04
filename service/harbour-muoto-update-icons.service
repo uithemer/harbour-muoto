@@ -3,7 +3,7 @@ Description=Re-apply Muoto icon theme after boot
 Documentation=https://github.com/uithemer/harbour-muoto
 After=dbus.service apkd.service appsupport@defaultuser.service home.mount
 Wants=apkd.service
-ConditionPathExists=!/tmp/os-update-running
+ConditionPathExists=!/run/defaultuser/osupdate_running
 RequiresMountsFor=/home
 
 [Service]

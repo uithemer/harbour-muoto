@@ -1,3 +1,9 @@
+* Thu Jun  4 2026 3.0.4-1
+- OS update guard: detect upgrade via `/run/defaultuser/osupdate_running` and
+  active `system-update.target` / `sailfish-upgrade-ui.service` (replaces
+  non-existent `/tmp/os-update-running`). ApplyIcons, install-listener, and
+  boot `update-icons` skip during update; pre-upgrade oneshot-restore unchanged.
+
 * Thu Jun  4 2026 3.0.3-1
 - Version 3.0.3 release.
 - Fix repeated security-code prompt on auto-apply after app installs (no

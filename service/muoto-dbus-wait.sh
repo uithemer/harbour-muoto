@@ -5,7 +5,7 @@
 MUOTO_SERVICE=org.muoto.Muoto1
 MUOTO_PATH=/org/muoto/Muoto1
 MUOTO_THEMES=org.muoto.Muoto1.Themes
-OS_UPDATE_SENTINEL=/tmp/os-update-running
+OS_UPDATE_FLAG=/run/defaultuser/osupdate_running
 MUOTO_BACKUP_ICONS=/usr/share/harbour-muoto/backup/icons
 
 # stderr → journal when run under harbour-muoto-install-listener (ForwardedChannels).
@@ -13,8 +13,19 @@ muoto_log() {
     echo "muoto: $*" >&2
 }
 
+# SFOS: defaultuser runtime flag and/or upgrade systemd units (not /tmp/os-update-running).
 muoto_os_update_running() {
-    [ -f "$OS_UPDATE_SENTINEL" ]
+    if [ -f "$OS_UPDATE_FLAG" ]; then
+        muoto_log "os update: $OS_UPDATE_FLAG present"
+        return 0
+    fi
+    for _u in system-update.target sailfish-upgrade-ui.service; do
+        if systemctl is-active --quiet "$_u" 2>/dev/null; then
+            muoto_log "os update: $_u active"
+            return 0
+        fi
+    done
+    return 1
 }
 
 # Stock icon backup tree (IconPaths::backupIconsRoot in C++):
