@@ -28,14 +28,16 @@ Dialog
     property string selectedFont: ""
     property string confirmheadername: "%1".arg(packDisplayName)
     property bool wantsIconOps: itsicons.checked || itsiconoverlay.checked
+    readonly property bool fontsApplyOk: !itsfonts.checked
+        || (hasFont && selectedFont !== "")
+        || (!hasFont && hasFontNonLatin)
+    readonly property bool hasApplyTarget: wantsIconOps || itsfonts.checked
     property string _previewBuiltPack: ""
     property string _previewLoadedPack: ""
     readonly property bool iconPreviewAvailable: _previewLoadedPack !== ""
                                          && _previewLoadedPack === packName
     id: dlgconfirm
-    canAccept: wantsIconOps
-        || (itsfonts.checked && hasFont && selectedFont !== "")
-        || (itsfonts.checked && !hasFont && hasFontNonLatin)
+    canAccept: fontsApplyOk && hasApplyTarget
 
     BusyState { id: busyindicator }
 
