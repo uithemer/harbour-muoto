@@ -287,6 +287,11 @@ Dialog
 
             LabelSpacer { }
 
+                Item {
+                    width: parent.width
+                    height: Theme.paddingLarge
+                }
+
                 MuotoTextLabel {
                     id: vphfont
                     width: parent.width - (x * 2)
