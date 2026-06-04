@@ -1,4 +1,4 @@
-* Thu Jun  4 2026 3.0.4-1
+* Thu Jun  4 2026 3.0.3-4
 - OS update guard: detect upgrade via `/run/defaultuser/osupdate_running` and
   active `system-update.target` / `sailfish-upgrade-ui.service` (replaces
   non-existent `/tmp/os-update-running`). ApplyIcons, install-listener, and
