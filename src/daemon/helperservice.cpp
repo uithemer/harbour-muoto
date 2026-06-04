@@ -1,9 +1,9 @@
 #include "helperservice.h"
 #include "filelock.h"
+#include "osupdateguard.h"
 
 #include <memory>
 
-#include <QFile>
 #include <QProcess>
 #include <QStringList>
 #include <QMetaObject>
@@ -32,12 +32,6 @@ namespace
     const char *kLogin1Path    = "/org/freedesktop/login1";
     const char *kLogin1Manager = "org.freedesktop.login1.Manager";
 
-    const char *kOsUpdateSentinel = "/tmp/os-update-running";
-
-    bool osUpdateRunning()
-    {
-        return QFile::exists(QString::fromLatin1(kOsUpdateSentinel));
-    }
 }
 
 // =====================================================================
@@ -213,7 +207,7 @@ void ThemesAdaptor::ApplyIcons(const QString &pack, bool runPack, bool overlay,
         sendMethodReply(message);
         return;
     }
-    if (osUpdateRunning())
+    if (OsUpdateGuard::running())
     {
         emit OperationCompleted(op, false, QStringLiteral("upgrade in progress"));
         sendMethodReply(message);

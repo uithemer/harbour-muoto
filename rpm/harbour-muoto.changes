@@ -1,3 +1,33 @@
+* Thu Jun  4 2026 3.0.3-4
+- OS update guard: detect upgrade via `/run/defaultuser/osupdate_running` and
+  active `system-update.target` / `sailfish-upgrade-ui.service` (replaces
+  non-existent `/tmp/os-update-running`). ApplyIcons, install-listener, and
+  boot `update-icons` skip during update; pre-upgrade oneshot-restore unchanged.
+
+* Thu Jun  4 2026 3.0.3-1
+- Version 3.0.3 release.
+- Fix repeated security-code prompt on auto-apply after app installs (no
+  systemctl start as defaultuser; D-Bus activation via Introspect when
+  StartService is unavailable).
+- update-icons: muoto_log on stderr; install-listener forwards script output
+  to the user journal.
+- ConfirmPage: Apply disabled when Apply fonts is on but no font weight is
+  selected (cannot bypass via icons-only canAccept).
+- Confirm cover: dim icon preview only on packs that include fonts; icons-only
+  packs keep previous cover opacity.
+
+* Thu Jun  4 2026 3.0.2-3
+- Auto-apply: SFOS dbus lacks StartService; trigger helperd via Introspect or
+  proceed to ApplyIcons/RestoreIcons (dbus activation). Avoid silent failure
+  when ensure_helperd timed out without starting the daemon.
+- update-icons: muoto_log lines on stderr; install-listener forwards child
+  stderr to the user journal for easier debugging.
+
+* Thu Jun  4 2026 3.0.2-2
+- Fix repeated security-code prompt when auto-applying icons after app installs:
+  `muoto_ensure_helperd` uses D-Bus StartService as defaultuser (install listener);
+  keep `systemctl start` for root scripts only (boot oneshot, RPM uninstall).
+
 * Tue Jun  2 2026 3.0.2-1
 - Version 3.0.2 release.
 - Uninstall: quiesce update-icons and install-listener before restore;

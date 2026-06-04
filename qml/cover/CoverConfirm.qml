@@ -35,6 +35,14 @@ CoverBackground
          return p && p.confirmheadername !== undefined ? p : null
      }
 
+     // Lower cover icon preview only when the pack also has fonts; icons-only stays 0.8 / 0.1.
+     function coverDimIconPreview() {
+         var p = confirmPage()
+         if (!p || !p.hasFont)
+             return false
+         return coverimgpreview.source !== ""
+     }
+
      property string _coverPreviewPack: ""
      property int _fontPreviewRetries: 0
 
@@ -179,7 +187,7 @@ CoverBackground
             fillMode: Image.PreserveAspectFit
             source: app.isLightTheme ? "../../images/coverbg-light.png"
                                      : "../../images/coverbg-dark.png"
-            opacity: 0.1
+            opacity: root.coverDimIconPreview() ? 0.05 : 0.1
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             height: sourceSize.height * width / sourceSize.width
@@ -187,7 +195,7 @@ CoverBackground
 
         Image {
             id: coverimgpreview
-            opacity: 0.8
+            opacity: root.coverDimIconPreview() ? 0.45 : 0.8
             fillMode: Image.PreserveAspectFit
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter

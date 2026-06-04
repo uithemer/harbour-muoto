@@ -1,12 +1,12 @@
 #include "installlistener.h"
 #include "pktxwatch.h"
+#include "osupdateguard.h"
 
 #include <QDBusMessage>
 #include <QDBusObjectPath>
 #include <QDBusReply>
 #include <QDBusVariant>
 #include <QDBusServiceWatcher>
-#include <QFile>
 #include <QDebug>
 
 namespace
@@ -29,7 +29,6 @@ namespace
     const char* kLogin1Mgr = "org.freedesktop.login1.Manager";
 
     const char* kUpdateScript = "/usr/bin/harbour-muoto-update-icons";
-    const char* kOsUpdateSentinel = "/tmp/os-update-running";
 
     constexpr uint PK_EXIT_SUCCESS = 1;
 
@@ -281,7 +280,7 @@ bool InstallListener::guardsBlockApply() const
 {
     if(_shuttingDown)
         return true;
-    if(QFile::exists(QString::fromLatin1(kOsUpdateSentinel)))
+    if(OsUpdateGuard::running())
         return true;
     return false;
 }
@@ -373,6 +372,8 @@ void InstallListener::runUpdateScript()
             this,
             &InstallListener::onUpdateScriptFinished);
     proc->setProgram(QString::fromLatin1(kUpdateScript));
+    // Forward script stderr (muoto_log) into this unit's journal.
+    proc->setProcessChannelMode(QProcess::ForwardedChannels);
     proc->start();
     if(!proc->waitForStarted(5000))
     {

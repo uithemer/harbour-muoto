@@ -11,8 +11,29 @@ Headless icon re-apply after app installs and at boot, plus a full stock restore
 | `/usr/bin/harbour-muoto-oneshot-restore` | Pre-upgrade (no args) or RPM uninstall (`--uninstall`): fonts, conditional `RestoreIcons`, dconf, density, vendor locks |
 | `harbour-muoto-update-icons.service` | Boot oneshot (runs as **root**; dconf via `su defaultuser`) |
 | `harbour-muoto-oneshot-restore.service` | Before `sailfish-upgrade-ui` |
-| `harbour-muoto-install-listener` | User D-Bus hooks → exec update script |
+| `harbour-muoto-install-listener` | User D-Bus hooks → exec `harbour-muoto-update-icons` as **defaultuser** |
 | `org.muoto.Muoto1` helperd | D-Bus activation on demand; `ApplyIcons` blocked during OS update |
+
+## OS update guard
+
+While Sailfish OS is upgrading, Muoto must not re-apply icons (that raced with pre-upgrade restore). Detection uses signals SFOS actually exposes:
+
+| Signal | Used by |
+| ------ | ------- |
+| `/run/defaultuser/osupdate_running` | `muoto_os_update_running`, `OsUpdateGuard`, `harbour-muoto-update-icons.service` `ConditionPathExists` |
+| `system-update.target` active | Shell + C++ (when flag absent but upgrade target is up) |
+| `sailfish-upgrade-ui.service` active | Shell + C++ |
+
+**Not gated:** `harbour-muoto-oneshot-restore` still runs `RestoreIcons` before `sailfish-upgrade-ui` (stock restore is intentional during update).
+
+During **Settings → Sailfish OS update**, expect `harbour-muoto-oneshot-restore` first (dconf → `default`), listener `apply skipped (guard)` on app installs, and `update-icons: skip (OS update in progress)` if the boot script is triggered manually.
+
+```bash
+ls -l /run/defaultuser/osupdate_running
+systemctl is-active system-update.target sailfish-upgrade-ui.service
+```
+
+After reboot the flag should be gone; boot `update-icons` no-ops until a theme is applied again in the app.
 
 ## Waits and timeouts
 
@@ -23,7 +44,7 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 | Per icon op (flock) | **180s** | Boot `update-icons` and pre-upgrade `oneshot-restore` (`ApplyIcons` / `RestoreIcons`) |
 | Per icon op (flock) | **60s** | `harbour-muoto-oneshot-restore --uninstall` only |
 | Lock “did not start” | **~15s** | Poll until helperd holds `icon-ops.lock`; else fail fast (busy / rejected) |
-| Helperd bus name | **15s** | `muoto_ensure_helperd` after `systemctl start harbour-muoto-helperd` |
+| Helperd bus name | **15s** | Root: `systemctl start harbour-muoto-helperd`. defaultuser: optional `StartService` (if supported), `Introspect` to activate, then poll; if still down, icon-op `dbus-send` activates (no PIN, no hard fail) |
 | Icon op retry gap | **3s** | Sleep between one retry on failed restore or apply |
 | systemd unit | **600s** | `TimeoutStartSec` on `harbour-muoto-update-icons.service` and `harbour-muoto-oneshot-restore.service` (whole oneshot run) |
 
@@ -37,7 +58,7 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 2. Install a native app (`pkcon install …`) or APK — icons should re-theme within ~2 s.
 3. Restart AppSupport — `containerReady: true` should trigger apply.
 4. Reboot — boot oneshot re-applies if theme still active.
-5. System update triggers `harbour-muoto-oneshot-restore.service` as **root** (no `sudo` package) — stock icons/fonts/density; dconf `default`.
+5. System update: confirm `/run/defaultuser/osupdate_running` and/or upgrade units active; `harbour-muoto-oneshot-restore` runs (dconf `default`); auto-apply and `update-icons` are skipped; helperd `ApplyIcons` returns “upgrade in progress”.
 6. After upgrade, boot apply no-ops until theme applied again in the app.
 7. **Remove Muoto (RPM):** `%preun` stops `harbour-muoto-update-icons` and disables `harbour-muoto-install-listener`, then runs `harbour-muoto-oneshot-restore --uninstall`. If `/usr/share/harbour-muoto/backup/icons` contains PNGs, `RestoreIcons` must succeed or the transaction aborts and the package stays installed. With no backup PNGs, icon D-Bus restore is skipped (fonts, dconf, density still run). Close the Muoto app before uninstall if a theme apply is in progress.
 
@@ -61,12 +82,12 @@ If Storeman or `pkcon` reports “system management is locked” on an **older**
 # Same restore path as RPM uninstall (from devel-su)
 /usr/bin/harbour-muoto-oneshot-restore --uninstall
 
-# Listener status + live journal (after logging fix)
+# Listener status + live journal (script stderr forwarded as muoto: lines)
 MUOTO_UID=$(id -u defaultuser)
 export XDG_RUNTIME_DIR=/run/user/$MUOTO_UID
 systemctl --user status harbour-muoto-install-listener
-journalctl --user -f -t harbour-muoto-install-listener 2>/dev/null \
-  || journalctl -f | grep muoto-listener
+journalctl --user -f 2>/dev/null | grep -E 'muoto-listener|muoto:' \
+  || journalctl -f | grep -E 'muoto-listener|muoto:'
 ```
 
 If the listener is not active after RPM install from SSH, enable manually:
