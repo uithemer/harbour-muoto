@@ -1,6 +1,7 @@
 #include "launchericonops.h"
 #include "dynamicicon.h"
 #include "dynamicicon_p.h"
+#include "folderambient.h"
 #include "harbourthemepack.h"
 #include "iconpackfactory.h"
 #include "iconpaths.h"
@@ -181,8 +182,6 @@ IconUpdater* createIconUpdater(const QString& desktopPath)
         if(dyn)
             return dyn;
 
-        // Dynamic disabled/unavailable (e.g. calendar with dynamicCalendarEnabled=false):
-        // fall back to the active pack / overlay like a normal icon-pack URI.
         const QString pack = activeIconPackConf()->value(QStringLiteral("default")).toString();
         if(pack.isEmpty() || pack == QLatin1String("default"))
             return nullptr;
@@ -324,7 +323,7 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
         return;
     }
 
-    emit progress(0, 2);
+    emit progress(0, 3);
 
     // Overlay styles apps missing from the pack — only valid with pack apply.
     if(overlay && !runPack)
@@ -336,9 +335,11 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
     if(activeIconPackConf()->value(QStringLiteral("default")).toString() != pack)
         activeIconPackConf()->set(pack);
 
-    emit progress(1, 2);
+    emit progress(1, 3);
     rebuildIconUpdaters();
-    emit progress(2, 2);
+    emit progress(2, 3);
+    FolderAmbient::apply(pack, overlay);
+    emit progress(3, 3);
     qInfo() << "muoto-launcher: ApplyIcons done ok=true msg= updaters=" << s_updaters.size();
     emit applied(true, QString());
 }
@@ -355,9 +356,9 @@ void LauncherIconOps::restoreIcons()
         return;
     }
 
-    emit progress(0, 2);
+    emit progress(0, 3);
     clearUpdaters(false);
-    emit progress(1, 2);
+    emit progress(1, 3);
 
     const bool restoredOk = LauncherManifest::restoreAll();
 
@@ -379,11 +380,14 @@ void LauncherIconOps::restoreIcons()
             QFile::remove(generated.absoluteFilePath(f));
     }
 
+    FolderAmbient::restore();
+    emit progress(2, 3);
+
     mgconfSetBool("/apps/harbour-muoto/iconOverlay", false);
     activeIconPackConf()->set(QStringLiteral("default"));
     m_applyPackIcons = true;
 
-    emit progress(2, 2);
+    emit progress(3, 3);
     if(!restoredOk)
     {
         qInfo() << "muoto-launcher: RestoreIcons done ok=false msg=inplace restore failed";

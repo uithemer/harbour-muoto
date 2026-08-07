@@ -2,6 +2,9 @@
 - Drop bulk silica ambient, hicolor, and apkd-bridge icon apply; launcher
   daemon owns all icon theming via session D-Bus (org.muoto.Launcher1).
 - Overlay reimplemented as launcher redirect composites (stock PNGs untouched).
+- Theme homescreen folder glyphs via scoped silica writeback for
+  icon-launcher-folder-01..16 (pack jolla or overlay); backup under
+  backup/folder-icons/.
 - Slim root helperd to DensityEnable + UninstallPack only.
 - 3.1→3.2 migration restores bulk backup/icons once via migrate-bulk-icons.
 - Removed launcherInstantApply setting (daemon always on when pack active).

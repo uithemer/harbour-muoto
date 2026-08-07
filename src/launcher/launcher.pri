@@ -21,6 +21,7 @@ HEADERS += \
     $$PWD/iconresolve.h \
     $$PWD/overlayrender.h \
     $$PWD/overlayiconprovider.h \
+    $$PWD/folderambient.h \
     $$PWD/launchericonops.h \
     $$PWD/launcherservice.h
 
@@ -41,6 +42,7 @@ SOURCES += \
     $$PWD/iconresolve.cpp \
     $$PWD/overlayrender.cpp \
     $$PWD/overlayiconprovider.cpp \
+    $$PWD/folderambient.cpp \
     $$PWD/launchericonops.cpp \
     $$PWD/launcherservice.cpp \
     $$PWD/../ops/iconpaths.cpp \

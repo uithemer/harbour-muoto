@@ -69,6 +69,8 @@ From **Muoto 3.2**, only **`icon-launcher-*`** keys under `jolla/<z>/icons/` are
 
 Ship launcher keys under `jolla/<z>/icons/`; the daemon redirects `.desktop` `Icon=` to generated PNGs under `/usr/share/harbour-muoto/launcher-icons/`.
 
+Homescreen **folders** use theme ids `icon-launcher-folder-01` … `16` (`image://theme/` / Lipstick `Folder*.directory`). Muoto themes those by scoped writeback into sailfish-default silica (`icon-launcher-folder-NN.png` only), with backups under `/usr/share/harbour-muoto/backup/folder-icons/`. Ship matching PNGs under `jolla/`, or enable overlay to replace stock folder glyphs with the overlay frame alone (no inner stock icon). Folder **picker** and tiles then both show the themed silica assets.
+
 ### DynCal
 
 When a theme pack is active, day-of-month icons from `dyncal/256x256/{01..31}.png` are rendered by the launcher daemon for the Calendar app.

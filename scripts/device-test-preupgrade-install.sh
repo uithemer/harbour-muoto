@@ -1,14 +1,15 @@
 #!/bin/sh
-# harbour-muoto 3.2 — pre-upgrade restore + install/upgrade re-theme (on device).
+# harbour-muoto 3.2 — pre-upgrade, install re-theme, silica folder ambient (on device).
 #
 # Run as defaultuser. Needs devel-su/sudo for oneshot-restore and pkcon.
 # Usage:
 #   bash device-test-preupgrade-install.sh
 #   bash device-test-preupgrade-install.sh --pack haiku
-#   bash device-test-preupgrade-install.sh --skip-install   # only T-20 pre-upgrade
-#   bash device-test-preupgrade-install.sh --skip-preupgrade # only T-21 install
+#   bash device-test-preupgrade-install.sh --skip-install   # skip T-21
+#   bash device-test-preupgrade-install.sh --skip-preupgrade # skip T-20
+#   bash device-test-preupgrade-install.sh --skip-folder    # skip T-22
 #
-# Leaves the device with --pack applied when both tests pass (re-applies after T-20).
+# Leaves the device with --pack applied when tests that re-apply finish.
 set -eu
 
 . /usr/share/harbour-muoto/service/muoto-dbus-wait.sh
@@ -16,6 +17,7 @@ set -eu
 PACK=haiku
 RUN_PREUPGRADE=true
 RUN_INSTALL=true
+RUN_FOLDER=true
 SUDO_PASS=${MUOTO_SUDO_PASS:-rootme}
 PROBE_PKG=${MUOTO_PROBE_PKG:-harbour-file-browser}
 PROBE_DESKTOP=${MUOTO_PROBE_DESKTOP:-/usr/share/applications/harbour-file-browser.desktop}
@@ -29,8 +31,9 @@ while [ $# -gt 0 ]; do
             ;;
         --skip-install) RUN_INSTALL=false ;;
         --skip-preupgrade) RUN_PREUPGRADE=false ;;
+        --skip-folder) RUN_FOLDER=false ;;
         -h|--help)
-            sed -n '2,14p' "$0"
+            sed -n '2,15p' "$0"
             exit 0
             ;;
         *)
@@ -68,6 +71,14 @@ apply_pack() {
         "$MUOTO_LAUNCHER_SERVICE" "$MUOTO_LAUNCHER_PATH" \
         "$MUOTO_LAUNCHER_THEMES.ApplyIcons" \
         string:"$PACK" boolean:true boolean:true
+    sleep 4
+}
+
+restore_icons() {
+    muoto_ensure_launcher_icond
+    muoto_dbus_session_send \
+        "$MUOTO_LAUNCHER_SERVICE" "$MUOTO_LAUNCHER_PATH" \
+        "$MUOTO_LAUNCHER_THEMES.RestoreIcons"
     sleep 4
 }
 
@@ -338,6 +349,108 @@ if [ "$RUN_INSTALL" = true ]; then
         else
             fail T-21-osu-skip "no guard evidence in journal"
         fi
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# T-22 Silica folder ambient (icon-launcher-folder-01..16 writeback)
+# ---------------------------------------------------------------------------
+if [ "$RUN_FOLDER" = true ]; then
+    echo "======== T-22 silica folder ambient ========"
+    FOLDER_ICON=icon-launcher-folder-01
+    SILICA_ROOT=/usr/share/themes/sailfish-default/silica
+    BAK_ROOT=/usr/share/harbour-muoto/backup/folder-icons
+    LIVE=
+    ZSIZE=
+    for z in z1.5 z1.25 z1.0 z1.75 z2.0 z1.5-large; do
+        cand="$SILICA_ROOT/$z/icons/${FOLDER_ICON}.png"
+        if run_root test -f "$cand"; then
+            LIVE=$cand
+            ZSIZE=$z
+            break
+        fi
+    done
+
+    if [ -z "$LIVE" ]; then
+        fail T-22-precondition "no live $FOLDER_ICON under silica"
+    else
+        pass T-22-precondition
+        BEFORE=$(run_root md5sum "$LIVE" | awk '{print $1}')
+        echo "live=$LIVE before=$BEFORE"
+
+        # Leftover redirect cleanup probe
+        LIPDIR="${XDG_CONFIG_HOME:-$HOME/.config}/lipstick"
+        mkdir -p "$LIPDIR"
+        TEST_FOLDER="$LIPDIR/Folder99.directory"
+        printf '%s\n' '[Desktop Entry]' \
+            'Icon=/usr/share/harbour-muoto/launcher-icons/bogus-folder.png' \
+            > "$TEST_FOLDER"
+
+        apply_pack
+        if [ "$(dconf_unquote /apps/harbour-muoto/activeIconPack)" != "$PACK" ]; then
+            fail T-22-apply "activeIconPack not $PACK"
+        else
+            pass T-22-apply
+        fi
+
+        BAK="$BAK_ROOT/$ZSIZE/${FOLDER_ICON}.png"
+        AFTER=$(run_root md5sum "$LIVE" | awk '{print $1}')
+        echo "after=$AFTER"
+        HAS_ASSETS=false
+        if run_root test -f "/usr/share/harbour-themepack-$PACK/jolla/$ZSIZE/icons/${FOLDER_ICON}.png"; then
+            HAS_ASSETS=true
+        elif run_root find "/usr/share/harbour-themepack-$PACK" -path '*/overlay/*.png' 2>/dev/null | head -1 | grep -q .; then
+            HAS_ASSETS=true
+        fi
+
+        if [ "$HAS_ASSETS" = true ]; then
+            if run_root test -f "$BAK" && run_root test -s "$BAK"; then
+                pass T-22-backup
+            else
+                fail T-22-backup "missing $BAK"
+            fi
+            if [ "$AFTER" != "$BEFORE" ]; then
+                pass T-22-live-themed
+            else
+                fail T-22-live-themed "live unchanged despite pack/overlay assets"
+            fi
+        else
+            pass T-22-backup
+            pass T-22-live-themed
+            echo "(soft) pack has no folder icon / overlay for $FOLDER_ICON"
+        fi
+
+        NORM=$(icon_line "$TEST_FOLDER")
+        if [ "$NORM" = "icon-launcher-folder-99" ]; then
+            pass T-22-normalize-redirect
+        else
+            fail T-22-normalize-redirect "Icon=$NORM (expected icon-launcher-folder-99)"
+        fi
+        rm -f "$TEST_FOLDER"
+
+        restore_icons
+        if [ "$(dconf_unquote /apps/harbour-muoto/activeIconPack)" = "default" ] \
+            || [ -z "$(dconf_unquote /apps/harbour-muoto/activeIconPack)" ]; then
+            pass T-22-restore-pack
+        else
+            fail T-22-restore-pack "pack still active"
+        fi
+
+        RESTORED=$(run_root md5sum "$LIVE" | awk '{print $1}')
+        if [ "$RESTORED" = "$BEFORE" ]; then
+            pass T-22-restore-live
+        else
+            fail T-22-restore-live "checksum $RESTORED != before $BEFORE"
+        fi
+
+        if run_root test -e "$BAK_ROOT"; then
+            fail T-22-backup-cleared "folder-icons backup still present"
+        else
+            pass T-22-backup-cleared
+        fi
+
+        # Leave pack applied like other suites that re-apply
+        apply_pack
     fi
 fi
 

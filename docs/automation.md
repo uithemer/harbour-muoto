@@ -67,15 +67,16 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 | Script | What |
 | ------ | ---- |
 | `scripts/device-test-3.2.sh` | Smoke: units, cap, manifest, `update-icons`; `--destructive` restore |
-| `scripts/device-test-preupgrade-install.sh` | **T-20** pre-upgrade restore + **T-21** install/upgrade re-theme |
-| `scripts/pipeline-review-full.sh p10` / `p11` | Same as T-20 / T-21 via the script above |
+| `scripts/device-test-preupgrade-install.sh` | **T-20** pre-upgrade + **T-21** install/upgrade re-theme + **T-22** silica folder ambient |
+| `scripts/pipeline-review-full.sh p10` / `p11` / `p12` | T-20 / T-21 / T-22 |
 
 ```bash
 # On device (defaultuser). Copy the script from the repo if not present.
 bash device-test-preupgrade-install.sh --pack haiku
 # Or separately:
-bash device-test-preupgrade-install.sh --pack haiku --skip-install      # T-20 only
-bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade   # T-21 only
+bash device-test-preupgrade-install.sh --pack haiku --skip-install --skip-folder   # T-20 only
+bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-folder # T-21 only
+bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-install # T-22 only
 ```
 
 **T-20 pre-upgrade (`harbour-muoto-oneshot-restore`)**
@@ -93,6 +94,14 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade   # T-21 o
 | `pkcon install --allow-reinstall` probe pkg (default `harbour-file-browser`) | Journal shows `muoto-listener` trigger / `update-icons finished` |
 | After ~debounce+apply | Pack still active, probe app themed (manifest and/or generated `Icon=`), other launchers still themed |
 | With `/run/defaultuser/osupdate_running` | Apply skipped (guard) |
+
+**T-22 silica folder ambient**
+
+| Check | Expect |
+| ----- | ------ |
+| Apply pack with overlay | Backup under `backup/folder-icons/<z>/icon-launcher-folder-01.png`; live silica PNG checksum changes when pack/overlay has assets |
+| Leftover `Folder*.directory` with `Icon=` under `launcher-icons/` | Normalized back to `icon-launcher-folder-NN` |
+| RestoreIcons | Live checksum restored; `backup/folder-icons` removed |
 
 Override probe with `MUOTO_PROBE_PKG` / `MUOTO_PROBE_DESKTOP`. Sudo password: `MUOTO_SUDO_PASS` (default `rootme`).
 

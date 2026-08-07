@@ -314,4 +314,15 @@ p11|all)
     ;;
 esac
 
+case "$PIPE" in
+p12|all)
+    echo "======== P12 silica folder ambient (T-22) ========"
+    if [ -f "$(dirname "$0")/device-test-preupgrade-install.sh" ]; then
+        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-preupgrade --skip-install
+    else
+        echo "SKIP: copy scripts/device-test-preupgrade-install.sh to device"
+    fi
+    ;;
+esac
+
 echo "======== DONE $PIPE ========"
