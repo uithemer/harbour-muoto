@@ -142,6 +142,8 @@ QString HarbourThemePack::iconByPackageName(const QString& packageName)
         {QStringLiteral("jolla-notes"), QStringLiteral("icon-launcher-notes")},
         {QStringLiteral("jolla-settings"), QStringLiteral("icon-launcher-settings")},
         {QStringLiteral("sailfish-browser"), QStringLiteral("icon-launcher-browser")},
+        {QStringLiteral("sailfish-filemanager"), QStringLiteral("icon-launcher-file-manager")},
+        {QStringLiteral("sailfish-audiorecorder"), QStringLiteral("icon-launcher-audiorecorder")},
         {QStringLiteral("sailfish-office"), QStringLiteral("icon-launcher-office")},
         {QStringLiteral("sailfish-tutorial"), QStringLiteral("icon-launcher-tutorial")},
         {QStringLiteral("sailfish-weather"), QStringLiteral("icon-launcher-weather")},
