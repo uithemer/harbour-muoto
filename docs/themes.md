@@ -21,7 +21,7 @@ If the pack supports it, enable **Style missing app icons** when applying a them
 
 ## Homescreen refresh
 
-After apply or restore, launcher icons usually update automatically. If icons look stale, enable *Restart homescreen* in the confirm dialog, or use **Restart homescreen** from the pulley menu (with remorse).
+After apply or restore, launcher icons follow the active theme pack (and the Dynamic icons toggles for clock/calendar). They usually update automatically. If icons look stale, enable *Restart homescreen* in the confirm dialog, or use **Restart homescreen** from the pulley menu (with remorse).
 
 ## Restore theme
 

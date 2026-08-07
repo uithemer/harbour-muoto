@@ -8,6 +8,8 @@
 - Slim root helperd to DensityEnable + UninstallPack only.
 - 3.1→3.2 migration restores bulk backup/icons once via migrate-bulk-icons.
 - Removed launcherInstantApply setting (daemon always on when pack active).
+- Removed Customize launcher icons (per-app icon-pack:// overrides); dynamic
+  clock/calendar providers unchanged.
 
 * Mon Jun 15 2026 3.1.0-1
 - Instant launcher icon apply without

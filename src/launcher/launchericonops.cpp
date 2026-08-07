@@ -68,8 +68,14 @@ QUrl providerUriForDesktop(const QString& desktopPath)
     const QFileInfo info(desktopPath);
     MGConfItem appConf(LauncherPaths::perAppProviderKey(info.completeBaseName()));
     const QString applicationProvider = appConf.value().toString();
+    // Only dynamic-icon:// (clock/calendar) is still a per-app provider.
+    // Ignore leftover icon-pack:// overrides from the retired Customize UI.
     if(!applicationProvider.isEmpty() && applicationProvider != QLatin1String("<none>"))
-        return QUrl(applicationProvider);
+    {
+        const QUrl uri(applicationProvider);
+        if(uri.scheme() == QLatin1String("dynamic-icon"))
+            return uri;
+    }
 
     const QString iconPack = activeIconPackConf()->value(QStringLiteral("default")).toString();
     if(iconPack.isEmpty() || iconPack == QLatin1String("default"))
@@ -83,7 +89,9 @@ bool hasPerAppProvider(const QString& desktopPath)
     const QFileInfo info(desktopPath);
     MGConfItem appConf(LauncherPaths::perAppProviderKey(info.completeBaseName()));
     const QString applicationProvider = appConf.value().toString();
-    return !applicationProvider.isEmpty() && applicationProvider != QLatin1String("<none>");
+    if(applicationProvider.isEmpty() || applicationProvider == QLatin1String("<none>"))
+        return false;
+    return QUrl(applicationProvider).scheme() == QLatin1String("dynamic-icon");
 }
 
 IconUpdater* createIconPackUpdater(const QString& name,

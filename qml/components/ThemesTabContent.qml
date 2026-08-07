@@ -196,14 +196,6 @@ SilicaListView {
         }
 
         MenuItem {
-            visible: settings.hasActiveIconPack()
-            text: qsTr("Customize launcher icons")
-            onClicked: pageStack.push(Qt.resolvedUrl("../pages/CustomizeLauncherIconsPage.qml"), {
-                "settings": settings
-            })
-        }
-
-        MenuItem {
             visible: themepack.hasStoremanInstalled()
             text: qsTr("Download more themes")
             onClicked: openStore.call('openPage',

@@ -14,7 +14,6 @@
 #include "helperclient.h"
 #include "iconpreviewprovider.h"
 #include "launcherimageprovider.h"
-#include "launchericonhelper.h"
 
 // 2.6.0: setuid(0) is gone from main(). The GUI runs as defaultuser
 // (its packaged .desktop file targets the user session) and gets
@@ -44,8 +43,6 @@ int main(int argc, char *argv[])
     // image://muoto/preview/<packName>?t=<ts> serves the in-memory
     // icon pack preview built by IconApplier::buildPreview. Engine
     // takes ownership.
-    qmlRegisterType<LauncherIconHelper>("harbour.muoto", 1, 0, "LauncherIconHelper");
-
     view->engine()->addImageProvider(QStringLiteral("muoto"),
                                      new IconPreviewProvider);
     view->engine()->addImageProvider(QStringLiteral("muoto-launcher"),

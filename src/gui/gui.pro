@@ -40,8 +40,7 @@ HEADERS += \
     $$PWD/fontapplier.h \
     $$PWD/iconpreviewprovider.h \
     $$PWD/helperclient.h \
-    $$PWD/launcherimageprovider.h \
-    $$PWD/launchericonhelper.h
+    $$PWD/launcherimageprovider.h
 
 SOURCES += \
     $$PWD/harbour-muoto.cpp \
@@ -51,8 +50,7 @@ SOURCES += \
     $$PWD/fontapplier.cpp \
     $$PWD/iconpreviewprovider.cpp \
     $$PWD/helperclient.cpp \
-    $$PWD/launcherimageprovider.cpp \
-    $$PWD/launchericonhelper.cpp
+    $$PWD/launcherimageprovider.cpp
 
 ROOT = $$PWD/../..
 
@@ -88,8 +86,6 @@ OTHER_FILES += \
     $$ROOT/qml/pages/RestoreDDPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
-    $$ROOT/qml/pages/CustomizeLauncherIconsPage.qml \
-    $$ROOT/qml/pages/ChooseLauncherIconDialog.qml \
     $$ROOT/rpm/* \
     $$ROOT/harbour-muoto.desktop
 
