@@ -39,8 +39,8 @@ theme/                         →  /usr/share/harbour-themepack-<name>/
   overlay/
     *.png
 
-  dyncal/256x256/          (planned — ignored today)
-  dynclock/256x256/        (planned — ignored today)
+  dyncal/256x256/          (optional — dynamic calendar)
+  dynclock/256x256/        (optional — dynamic clock)
 ```
 
 ### Matching
@@ -67,7 +67,7 @@ Stock reference paths on device (read-only):
 
 From **Muoto 3.2**, only **`icon-launcher-*`** keys under `jolla/<z>/icons/` are themed (via the launcher daemon). Status bar, covers, in-app `graphic-*`, and other ambient families are **not** bulk-copied into silica anymore.
 
-Ship launcher keys under `jolla/<z>/icons/`; the daemon redirects `.desktop` `Icon=` to generated PNGs under `/usr/share/harbour-muoto/launcher-icons/`.
+Ship launcher keys under `jolla/<z>/icons/`; the daemon redirects `.desktop` `Icon=` to generated PNGs under `/usr/share/harbour-muoto/launcher-icons/`. Engine details: [Architecture](devel/architecture).
 
 Homescreen **folders** use theme ids `icon-launcher-folder-01` … `16` (`image://theme/` / Lipstick `Folder*.directory`). Muoto themes those by scoped writeback into sailfish-default silica (`icon-launcher-folder-NN.png` only), with backups under `/usr/share/harbour-muoto/backup/folder-icons/`. Ship matching PNGs under `jolla/`, or enable overlay to replace stock folder glyphs with the overlay frame alone (no inner stock icon). Folder **picker** and tiles then both show the themed silica assets.
 

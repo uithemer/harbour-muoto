@@ -1,3 +1,10 @@
+---
+layout: default
+title: Automation
+parent: Developers
+nav_order: 4
+---
+
 # Muoto auto-apply automation
 
 Headless icon re-apply after app installs and at boot, plus a full stock restore before system upgrade.
@@ -61,6 +68,8 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 5. System update: confirm `/run/defaultuser/osupdate_running` and/or upgrade units active; `harbour-muoto-oneshot-restore` runs (dconf `default`); auto-apply and `update-icons` are skipped; session `ApplyIcons` returns “upgrade in progress”.
 6. After upgrade, boot apply no-ops until theme applied again in the app.
 7. **Remove Muoto (RPM):** `%preun` stops `harbour-muoto-update-icons` and disables `harbour-muoto-install-listener`, then runs `harbour-muoto-oneshot-restore --uninstall`. Close the Muoto app before uninstall if a theme apply is in progress.
+
+Broader smoke and script inventory: [Testing](testing).
 
 ### Automated scripts
 
