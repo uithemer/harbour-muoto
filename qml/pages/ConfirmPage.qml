@@ -350,7 +350,9 @@ Dialog
                 automaticCheck: true
                 text: qsTr("Apply fonts")
                 visible: hasFont || hasFontNonLatin
-                checked: hasFont || hasFontNonLatin
+                // Packs with icons: leave fonts off until the user opts in.
+                // Font-only packs: still pre-select Apply fonts.
+                checked: (hasFont || hasFontNonLatin) && !hasIconApply
                 enabled: hasFont || hasFontNonLatin
 
                 onClicked: {
