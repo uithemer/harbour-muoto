@@ -10,7 +10,6 @@ HEADERS += \
     $$PWD/imageutil.h \
     $$PWD/filelock.h \
     $$PWD/spawner.h \
-    $$PWD/dconfsettings.h \
     $$PWD/dconfuser.h \
     $$PWD/densityenabler.h \
     $$PWD/osupdateguard.h \

@@ -23,7 +23,6 @@ public:
     QImage requestMinutesHandIcon(const QSize& requestedSize) override;
     QImage requestCalendarIcon(const QDate& date, const QSize& requestedSize) override;
 
-    static QList<IconPack*> loadAll();
     static IconPack* byShortName(const QString& shortName);
 
 private:

@@ -120,25 +120,3 @@ bool ensureLauncherDaemonRunning()
     qInfo() << "muoto-launcher: ensureDaemon binary fallback ok=" << ok;
     return ok;
 }
-
-void requestLauncherDaemonRestart()
-{
-    if(!runSystemctlUser({QStringLiteral("try-restart"), QString::fromLatin1(kUnitName)}))
-    {
-        startLauncherBinaryDetached();
-        waitForLauncherService(10);
-    }
-}
-
-void requestLauncherDaemonStop()
-{
-    runSystemctlUser({QStringLiteral("stop"), QString::fromLatin1(kUnitName)});
-}
-
-void requestLauncherManifestRestore()
-{
-    QProcess p;
-    p.start(QString::fromLatin1(kBinary), {QStringLiteral("--restore-once")});
-    if(!p.waitForFinished(60000))
-        p.kill();
-}

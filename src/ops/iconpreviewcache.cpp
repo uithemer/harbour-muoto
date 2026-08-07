@@ -22,9 +22,3 @@ QImage IconPreviewCache::get(const QString& packName) const
     QMutexLocker lock(&this->_m);
     return this->_cache.value(packName);
 }
-
-void IconPreviewCache::clear()
-{
-    QMutexLocker lock(&this->_m);
-    this->_cache.clear();
-}

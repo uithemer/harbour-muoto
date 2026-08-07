@@ -19,7 +19,6 @@ public:
 
     void put(const QString& packName, const QImage& img);
     QImage get(const QString& packName) const;
-    void clear();
 
 private:
     IconPreviewCache() {}

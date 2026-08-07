@@ -17,12 +17,6 @@ bool mgconfBool(const char* path, bool defaultValue)
     return item.value(defaultValue).toBool();
 }
 
-void mgconfSetBool(const char* path, bool value)
-{
-    MGConfItem item(QString::fromLatin1(path));
-    item.set(value);
-}
-
 } // namespace
 
 QString LauncherSettings::activeIconPack()
@@ -38,11 +32,6 @@ bool LauncherSettings::iconOverlay()
     return mgconfBool("/apps/harbour-muoto/iconOverlay", false);
 }
 
-void LauncherSettings::setIconOverlay(bool enabled)
-{
-    mgconfSetBool("/apps/harbour-muoto/iconOverlay", enabled);
-}
-
 bool LauncherSettings::dynamicClockEnabled()
 {
     return mgconfBool("/apps/harbour-muoto/launcher/dynamicClockEnabled", true);
@@ -51,14 +40,4 @@ bool LauncherSettings::dynamicClockEnabled()
 bool LauncherSettings::dynamicCalendarEnabled()
 {
     return mgconfBool("/apps/harbour-muoto/launcher/dynamicCalendarEnabled", true);
-}
-
-void LauncherSettings::setDynamicClockEnabled(bool enabled)
-{
-    mgconfSetBool("/apps/harbour-muoto/launcher/dynamicClockEnabled", enabled);
-}
-
-void LauncherSettings::setDynamicCalendarEnabled(bool enabled)
-{
-    mgconfSetBool("/apps/harbour-muoto/launcher/dynamicCalendarEnabled", enabled);
 }

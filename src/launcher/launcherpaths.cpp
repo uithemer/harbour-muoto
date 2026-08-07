@@ -1,4 +1,5 @@
 #include "launcherpaths.h"
+#include "iconpaths.h"
 
 #include <QCryptographicHash>
 #include <QStandardPaths>
@@ -7,7 +8,7 @@ namespace LauncherPaths {
 
 QString muotoShare()
 {
-    return QStringLiteral("/usr/share/harbour-muoto");
+    return IconPaths::muotoShare();
 }
 
 QString generatedIconsDir()

@@ -3,10 +3,10 @@
 #include "iconupdater.h"
 #include "launcherpaths.h"
 
-#include <MDesktopEntry>
 #include <MGConfItem>
 #include <QDebug>
 #include <QDir>
+#include <QFile>
 #include <QLibrary>
 #include <QMap>
 #include <QUrl>
@@ -42,9 +42,6 @@ DynamicIconPrivate::DynamicIconPrivate(const QString& packageName,
 {
     desktopPath = QStringLiteral("/usr/share/applications/%1.desktop").arg(packageName);
 
-    MDesktopEntry desktop(desktopPath);
-    displayName = desktop.name();
-
     applicationProvider = new MGConfItem(LauncherPaths::perAppProviderKey(packageName), this);
 
     const QString none = QStringLiteral("<none>");
@@ -65,16 +62,6 @@ QString DynamicIcon::name()
     return d_ptr->name;
 }
 
-QString DynamicIcon::packageName()
-{
-    return d_ptr->packageName;
-}
-
-QString DynamicIcon::displayName()
-{
-    return d_ptr->displayName;
-}
-
 bool DynamicIcon::available()
 {
     return QFile::exists(d_ptr->desktopPath);
@@ -84,12 +71,6 @@ bool DynamicIcon::enabled()
 {
     const QUrl uri(d_ptr->applicationProvider->value().toString());
     return uri.scheme() == QStringLiteral("dynamic-icon") && uri.host() == name();
-}
-
-void DynamicIcon::setEnabled(bool enabled)
-{
-    const QString providerUri = QStringLiteral("dynamic-icon://") + name();
-    d_ptr->applicationProvider->set(enabled ? providerUri : QString());
 }
 
 IconProvider* DynamicIcon::iconProvider()

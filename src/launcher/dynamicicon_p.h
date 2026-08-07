@@ -18,7 +18,6 @@ public:
     IconProvider* iconProvider;
     QString name;
     QString packageName;
-    QString displayName;
     QString desktopPath;
     MGConfItem* applicationProvider;
 };

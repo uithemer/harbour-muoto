@@ -17,11 +17,8 @@ public:
     DynamicIcon(const QString& packageName, const QString& name, QObject* parent = nullptr);
 
     QString name();
-    QString packageName();
-    QString displayName();
     bool available();
     bool enabled();
-    void setEnabled(bool enabled);
 
     IconProvider* iconProvider();
     IconUpdater* iconUpdater();

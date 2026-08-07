@@ -226,30 +226,6 @@ QImage HarbourThemePack::requestCalendarIcon(const QDate& date, const QSize& req
     return requestIcon(m_calendarIcons[date.day() - 1], requestedSize);
 }
 
-QList<IconPack*> HarbourThemePack::loadAll()
-{
-    QList<IconPack*> themePacks;
-
-    QDir dir(QStringLiteral("/usr/share"), QStringLiteral("harbour-themepack-*"));
-    const QFileInfoList themePacksInfo = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-
-    for(const QFileInfo& info : themePacksInfo)
-    {
-        const QString path = info.absoluteFilePath();
-        QDir themePackDir(path);
-        const QStringList dirs = themePackDir.entryList(QDir::Dirs);
-        const bool hasIcons = dirs.contains(QStringLiteral("apk"))
-                              || dirs.contains(QStringLiteral("jolla"))
-                              || dirs.contains(QStringLiteral("native"));
-        if(!hasIcons)
-            continue;
-
-        themePacks.append(new HarbourThemePack(path));
-    }
-
-    return themePacks;
-}
-
 IconPack* HarbourThemePack::byShortName(const QString& shortName)
 {
     if(shortName.isEmpty() || shortName == QLatin1String("default"))

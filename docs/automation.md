@@ -12,7 +12,7 @@ Headless icon re-apply after app installs and at boot, plus a full stock restore
 | `harbour-muoto-update-icons.service` | Boot oneshot (runs as **root**; dconf via `su defaultuser`) |
 | `harbour-muoto-oneshot-restore.service` | Before `sailfish-upgrade-ui` |
 | `harbour-muoto-install-listener` | User D-Bus hooks → exec `harbour-muoto-update-icons` as **defaultuser** |
-| `org.muoto.Muoto1` helperd | D-Bus activation on demand; `ApplyIcons` blocked during OS update |
+| `org.muoto.Muoto1` helperd | D-Bus activation on demand; DensityEnable / UninstallPack (icons use session `Launcher1`) |
 
 ## OS update guard
 
@@ -43,12 +43,12 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 | ----- | ----- | -------------- |
 | Per icon op (flock) | **180s** | Boot `update-icons` and pre-upgrade `oneshot-restore` (`ApplyIcons` / `RestoreIcons`) |
 | Per icon op (flock) | **60s** | `harbour-muoto-oneshot-restore --uninstall` only |
-| Lock “did not start” | **~15s** | Poll until helperd holds `icon-ops.lock`; else fail fast (busy / rejected) |
+| Lock “did not start” | **~15s** | Poll until session launcher-icond holds `icon-ops.lock`; else fail fast (busy / rejected) |
 | Helperd bus name | **15s** | Root: `systemctl start harbour-muoto-helperd`. defaultuser: optional `StartService` (if supported), `Introspect` to activate, then poll; if still down, icon-op `dbus-send` activates (no PIN, no hard fail) |
 | Icon op retry gap | **3s** | Sleep between one retry on failed restore or apply |
 | systemd unit | **600s** | `TimeoutStartSec` on `harbour-muoto-update-icons.service` and `harbour-muoto-oneshot-restore.service` (whole oneshot run) |
 
-**Flock semantics:** scripts wait until `/usr/share/harbour-muoto/icon-ops.lock` is free again. That matches helperd holding the lock for the whole pipeline job (see `FileLock` in C++). It means “operation finished,” not a second read of the D-Bus `OperationCompleted` success flag (the GUI still uses that signal).
+**Flock semantics:** scripts wait until `/usr/share/harbour-muoto/icon-ops.lock` is free again. That matches the launcher icon daemon holding the lock for the whole apply/restore (see `FileLock` in C++). It means “operation finished,” not a second read of the D-Bus `OperationCompleted` success flag (the GUI still uses that signal).
 
 **RPM uninstall:** `%preun` runs `harbour-muoto-oneshot-restore --uninstall` with no `timeout` and no `|| true`. If restore fails when `backup/icons` has PNGs, the script exits non-zero and the package stays installed.
 
@@ -58,7 +58,7 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 2. Install a native app (`pkcon install …`) or APK — icons should re-theme within ~2 s.
 3. Restart AppSupport — `containerReady: true` should trigger apply.
 4. Reboot — boot oneshot re-applies if theme still active.
-5. System update: confirm `/run/defaultuser/osupdate_running` and/or upgrade units active; `harbour-muoto-oneshot-restore` runs (dconf `default`); auto-apply and `update-icons` are skipped; helperd `ApplyIcons` returns “upgrade in progress”.
+5. System update: confirm `/run/defaultuser/osupdate_running` and/or upgrade units active; `harbour-muoto-oneshot-restore` runs (dconf `default`); auto-apply and `update-icons` are skipped; session `ApplyIcons` returns “upgrade in progress”.
 6. After upgrade, boot apply no-ops until theme applied again in the app.
 7. **Remove Muoto (RPM):** `%preun` stops `harbour-muoto-update-icons` and disables `harbour-muoto-install-listener`, then runs `harbour-muoto-oneshot-restore --uninstall`. Close the Muoto app before uninstall if a theme apply is in progress.
 
@@ -108,7 +108,7 @@ Override probe with `MUOTO_PROBE_PKG` / `MUOTO_PROBE_DESKTOP`. Sudo password: `M
 
 | `backup/icons` | `RestoreIcons` | RPM if restore fails |
 | -------------- | -------------- | -------------------- |
-| Has PNGs       | Yes (helperd)  | **Aborts** — Muoto remains installed |
+| Has PNGs       | Yes (session Launcher1) | **Aborts** — Muoto remains installed |
 | Empty / missing | Skipped       | Removes if fonts/dconf succeed |
 
 If Storeman or `pkcon` reports “system management is locked” on an **older** build, **restart the phone**, then update Muoto or retry uninstall.
