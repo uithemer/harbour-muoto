@@ -60,7 +60,41 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 4. Reboot — boot oneshot re-applies if theme still active.
 5. System update: confirm `/run/defaultuser/osupdate_running` and/or upgrade units active; `harbour-muoto-oneshot-restore` runs (dconf `default`); auto-apply and `update-icons` are skipped; helperd `ApplyIcons` returns “upgrade in progress”.
 6. After upgrade, boot apply no-ops until theme applied again in the app.
-7. **Remove Muoto (RPM):** `%preun` stops `harbour-muoto-update-icons` and disables `harbour-muoto-install-listener`, then runs `harbour-muoto-oneshot-restore --uninstall`. If `/usr/share/harbour-muoto/backup/icons` contains PNGs, `RestoreIcons` must succeed or the transaction aborts and the package stays installed. With no backup PNGs, icon D-Bus restore is skipped (fonts, dconf, density still run). Close the Muoto app before uninstall if a theme apply is in progress.
+7. **Remove Muoto (RPM):** `%preun` stops `harbour-muoto-update-icons` and disables `harbour-muoto-install-listener`, then runs `harbour-muoto-oneshot-restore --uninstall`. Close the Muoto app before uninstall if a theme apply is in progress.
+
+### Automated scripts
+
+| Script | What |
+| ------ | ---- |
+| `scripts/device-test-3.2.sh` | Smoke: units, cap, manifest, `update-icons`; `--destructive` restore |
+| `scripts/device-test-preupgrade-install.sh` | **T-20** pre-upgrade restore + **T-21** install/upgrade re-theme |
+| `scripts/pipeline-review-full.sh p10` / `p11` | Same as T-20 / T-21 via the script above |
+
+```bash
+# On device (defaultuser). Copy the script from the repo if not present.
+bash device-test-preupgrade-install.sh --pack haiku
+# Or separately:
+bash device-test-preupgrade-install.sh --pack haiku --skip-install      # T-20 only
+bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade   # T-21 only
+```
+
+**T-20 pre-upgrade (`harbour-muoto-oneshot-restore`)**
+
+| Check | Expect |
+| ----- | ------ |
+| Unit wiring | `Before=sailfish-upgrade-ui.service`, `WantedBy=system-update.target`, drop-in wants the oneshot |
+| After apply + `systemctl start harbour-muoto-oneshot-restore` | `activeIconPack=default`, `iconOverlay=false`, manifest gone, generated PNGs cleared, Jolla `Icon=` back to stock names (e.g. fingerterm → `icon-launcher-shell`) |
+
+**T-21 install/upgrade re-theme (`harbour-muoto-install-listener`)**
+
+| Check | Expect |
+| ----- | ------ |
+| Listener active | `harbour-muoto-install-listener` running |
+| `pkcon install --allow-reinstall` probe pkg (default `harbour-file-browser`) | Journal shows `muoto-listener` trigger / `update-icons finished` |
+| After ~debounce+apply | Pack still active, probe app themed (manifest and/or generated `Icon=`), other launchers still themed |
+| With `/run/defaultuser/osupdate_running` | Apply skipped (guard) |
+
+Override probe with `MUOTO_PROBE_PKG` / `MUOTO_PROBE_DESKTOP`. Sudo password: `MUOTO_SUDO_PASS` (default `rootme`).
 
 ### Uninstall behaviour
 

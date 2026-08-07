@@ -1,6 +1,9 @@
 #!/bin/sh
 # harbour-muoto 3.2 device test checklist (run on device as defaultuser).
 # Usage: bash device-test-3.2.sh [--destructive]
+#
+# Heavier cases (pre-upgrade restore, install/upgrade re-theme):
+#   bash scripts/device-test-preupgrade-install.sh [--pack haiku]
 set -eu
 
 . /usr/share/harbour-muoto/service/muoto-dbus-wait.sh

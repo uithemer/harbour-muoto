@@ -292,4 +292,26 @@ p9|all)
     ;;
 esac
 
+case "$PIPE" in
+p10|all)
+    echo "======== P10 pre-upgrade oneshot-restore (see device-test-preupgrade-install.sh T-20) ========"
+    if [ -f "$(dirname "$0")/device-test-preupgrade-install.sh" ]; then
+        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-install
+    else
+        echo "SKIP: copy scripts/device-test-preupgrade-install.sh to device"
+    fi
+    ;;
+esac
+
+case "$PIPE" in
+p11|all)
+    echo "======== P11 install/upgrade re-theme (see device-test-preupgrade-install.sh T-21) ========"
+    if [ -f "$(dirname "$0")/device-test-preupgrade-install.sh" ]; then
+        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-preupgrade
+    else
+        echo "SKIP: copy scripts/device-test-preupgrade-install.sh to device"
+    fi
+    ;;
+esac
+
 echo "======== DONE $PIPE ========"
