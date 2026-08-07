@@ -64,7 +64,10 @@ Dialog
     }
 
     onAccepted: {
-        settings.homeRefresh = restartSection.homeRefreshSwitch.checked;
+        settings.homeRefresh = restartSection.homeRefreshSwitch.checked
+        // Pack-gated: missing feature or unchecked switch ⇒ disable.
+        settings.dynamicClockEnabled = hasDynClock && itsdynclock.checked
+        settings.dynamicCalendarEnabled = hasDynCalendar && itsdyncal.checked
     }
 
     Connections {
@@ -258,19 +261,20 @@ Dialog
                 id: itsdynclock
                 automaticCheck: true
                 text: qsTr("Dynamic clock icon")
+                description: qsTr("Live clock on the launcher using this theme's clock assets.")
                 visible: hasDynClock
                 checked: settings.dynamicClockEnabled
-                onClicked: settings.dynamicClockEnabled = itsdynclock.checked
             }
 
             IconTextSwitch {
                 id: itsdyncal
                 automaticCheck: true
                 text: qsTr("Dynamic calendar icon")
+                description: qsTr("Shows today's date on the launcher using this theme's calendar assets.")
                 visible: hasDynCalendar
                 checked: settings.dynamicCalendarEnabled
-                onClicked: settings.dynamicCalendarEnabled = itsdyncal.checked
             }
+
             }
             } // grid
 

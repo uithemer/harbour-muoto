@@ -138,8 +138,8 @@ int main(int argc, char* argv[])
     for(DynamicIcon* icon : loadDynamicIcons())
         Q_UNUSED(icon);
 
-    if(!LauncherSettings::activeIconPack().isEmpty())
-        ops->rebuildIconUpdaters();
+    // Pack and/or stock dynamic clock/calendar (works with activeIconPack=default).
+    ops->rebuildIconUpdaters();
 
     qInfo() << "muoto-launcher-icond: ready on" << kLauncherService;
     return app.exec();

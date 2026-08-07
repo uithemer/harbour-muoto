@@ -141,7 +141,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Live clock on the launcher using this theme&apos;s clock assets.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Dynamic calendar icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shows today&apos;s date on the launcher using this theme&apos;s calendar assets.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -237,6 +245,37 @@
     </message>
 </context>
 <context>
+    <name>DynamicIconsTabContent</name>
+    <message>
+        <source>Dynamic icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shows the current time on the Clock launcher icon.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Live clock and calendar on the launcher using the active theme&apos;s assets.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic icons need an active theme that includes clock or calendar assets. Enable them when you apply such a theme.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ExternalUrlPage</name>
     <message>
         <source>Swipe left to preview.</source>
@@ -274,6 +313,10 @@
     <message>
         <source>Themes</source>
         <translation>Temi</translation>
+    </message>
+    <message>
+        <source>Dynamic icons</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

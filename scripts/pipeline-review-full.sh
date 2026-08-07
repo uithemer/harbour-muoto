@@ -296,7 +296,7 @@ case "$PIPE" in
 p10|all)
     echo "======== P10 pre-upgrade oneshot-restore (see device-test-preupgrade-install.sh T-20) ========"
     if [ -f "$(dirname "$0")/device-test-preupgrade-install.sh" ]; then
-        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-install
+        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-install --skip-folder --skip-dyn
     else
         echo "SKIP: copy scripts/device-test-preupgrade-install.sh to device"
     fi
@@ -307,7 +307,7 @@ case "$PIPE" in
 p11|all)
     echo "======== P11 install/upgrade re-theme (see device-test-preupgrade-install.sh T-21) ========"
     if [ -f "$(dirname "$0")/device-test-preupgrade-install.sh" ]; then
-        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-preupgrade
+        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-preupgrade --skip-folder --skip-dyn
     else
         echo "SKIP: copy scripts/device-test-preupgrade-install.sh to device"
     fi
@@ -318,7 +318,18 @@ case "$PIPE" in
 p12|all)
     echo "======== P12 silica folder ambient (T-22) ========"
     if [ -f "$(dirname "$0")/device-test-preupgrade-install.sh" ]; then
-        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-preupgrade --skip-install
+        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-preupgrade --skip-install --skip-dyn
+    else
+        echo "SKIP: copy scripts/device-test-preupgrade-install.sh to device"
+    fi
+    ;;
+esac
+
+case "$PIPE" in
+p13|all)
+    echo "======== P13 dynamic icons (T-23) ========"
+    if [ -f "$(dirname "$0")/device-test-preupgrade-install.sh" ]; then
+        sh "$(dirname "$0")/device-test-preupgrade-install.sh" --pack haiku --skip-preupgrade --skip-install --skip-folder
     else
         echo "SKIP: copy scripts/device-test-preupgrade-install.sh to device"
     fi

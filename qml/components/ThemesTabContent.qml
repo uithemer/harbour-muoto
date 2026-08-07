@@ -233,6 +233,9 @@ SilicaListView {
                         themepackmodel.restoreTheme(dlgrestore.restoreFonts)
                     }
                     if (dlgrestore.restoreIcons) {
+                        // Stock dynamic clock/calendar are available again after restore.
+                        settings.dynamicClockEnabled = true
+                        settings.dynamicCalendarEnabled = true
                         themesView._pendingIconRestore = true
                         Helper.restoreIcons()
                     }
@@ -293,6 +296,8 @@ SilicaListView {
                     themesView.beginManualThemeWork(qsTr("Uninstalling theme…"))
 
                     if (iconInstalled) {
+                        settings.dynamicClockEnabled = true
+                        settings.dynamicCalendarEnabled = true
                         themesView._pendingIconRestore = true
                         themesView._uninstallAfterIconRestore = true
                         themesView._uninstallPackIndex = index

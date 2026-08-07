@@ -227,16 +227,15 @@ void LauncherIconOps::clearUpdaters(bool restoreOnDestroy)
 
 void LauncherIconOps::rebuildIconUpdaters()
 {
-    clearUpdaters(false);
+    // Restore previous redirects before re-attaching so toggling dyn off
+    // (or leaving a pack) does not leave stale generated Icon= values.
+    clearUpdaters(true);
     reloadIconPacks();
 
     const QString active = activeIconPackConf()->value(QStringLiteral("default")).toString();
-    if(active.isEmpty() || active == QLatin1String("default"))
-    {
-        qInfo() << "muoto-launcher: rebuildIconUpdaters active=<empty> count=0";
-        return;
-    }
+    const bool packActive = !active.isEmpty() && active != QLatin1String("default");
 
+    // With no pack, still attach dynamic clock/calendar updaters (stock SVG assets).
     QStringList desktopPaths;
     const QFileInfoList infoList = desktopEntries();
     for(const QFileInfo& info : infoList)
@@ -255,7 +254,8 @@ void LauncherIconOps::rebuildIconUpdaters()
 
     LauncherManifest::pruneOrphans(desktopPaths);
     ensureDesktopWatches();
-    qInfo() << "muoto-launcher: rebuildIconUpdaters active=" << active
+    qInfo() << "muoto-launcher: rebuildIconUpdaters active="
+            << (packActive ? active : QStringLiteral("<default>"))
             << "count=" << s_updaters.size();
 }
 
@@ -375,6 +375,9 @@ void LauncherIconOps::restoreIcons()
     mgconfSetBool("/apps/harbour-muoto/iconOverlay", false);
     activeIconPackConf()->set(QStringLiteral("default"));
     m_applyPackIcons = true;
+
+    // Re-attach stock dynamic clock/calendar after pack restore.
+    rebuildIconUpdaters();
 
     emit progress(3, 3);
     if(!restoredOk)

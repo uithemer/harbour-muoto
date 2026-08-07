@@ -78,6 +78,7 @@ OTHER_FILES += \
     $$ROOT/qml/cover/FontPreviewCover.qml \
     $$ROOT/qml/pages/ConfirmPage.qml \
     $$ROOT/qml/components/DensityTabContent.qml \
+    $$ROOT/qml/components/DynamicIconsTabContent.qml \
     $$ROOT/qml/components/MuotoAboutMenuItem.qml \
     $$ROOT/qml/components/MuotoRestartHomescreenMenuItem.qml \
     $$ROOT/qml/components/ThemesTabContent.qml \

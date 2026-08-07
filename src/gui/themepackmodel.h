@@ -48,6 +48,8 @@ class ThemePackModel : public QAbstractListModel
         bool hasIconOverlay(int index) const;
         bool hasDynClock(int index) const;
         bool hasDynCalendar(int index) const;
+        bool hasDynClockForPack(const QString& packName) const;
+        bool hasDynCalendarForPack(const QString& packName) const;
         bool hasFont(int index) const;
         bool hasFontNonLatin(int index) const;
         void reloadAll();

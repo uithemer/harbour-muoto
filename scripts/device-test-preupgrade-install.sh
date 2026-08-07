@@ -1,5 +1,5 @@
 #!/bin/sh
-# harbour-muoto 3.2 — pre-upgrade, install re-theme, silica folder ambient (on device).
+# harbour-muoto 3.2 — pre-upgrade, install re-theme, silica folder ambient, dynamic icons (on device).
 #
 # Run as defaultuser. Needs devel-su/sudo for oneshot-restore and pkcon.
 # Usage:
@@ -8,6 +8,7 @@
 #   bash device-test-preupgrade-install.sh --skip-install   # skip T-21
 #   bash device-test-preupgrade-install.sh --skip-preupgrade # skip T-20
 #   bash device-test-preupgrade-install.sh --skip-folder    # skip T-22
+#   bash device-test-preupgrade-install.sh --skip-dyn       # skip T-23
 #
 # Leaves the device with --pack applied when tests that re-apply finish.
 set -eu
@@ -18,6 +19,7 @@ PACK=haiku
 RUN_PREUPGRADE=true
 RUN_INSTALL=true
 RUN_FOLDER=true
+RUN_DYN=true
 SUDO_PASS=${MUOTO_SUDO_PASS:-rootme}
 PROBE_PKG=${MUOTO_PROBE_PKG:-harbour-file-browser}
 PROBE_DESKTOP=${MUOTO_PROBE_DESKTOP:-/usr/share/applications/harbour-file-browser.desktop}
@@ -32,8 +34,9 @@ while [ $# -gt 0 ]; do
         --skip-install) RUN_INSTALL=false ;;
         --skip-preupgrade) RUN_PREUPGRADE=false ;;
         --skip-folder) RUN_FOLDER=false ;;
+        --skip-dyn) RUN_DYN=false ;;
         -h|--help)
-            sed -n '2,15p' "$0"
+            sed -n '2,16p' "$0"
             exit 0
             ;;
         *)
@@ -63,6 +66,46 @@ dconf_unquote() {
     v=${v#\'}
     v=${v%\'}
     printf '%s' "$v"
+}
+
+dconf_write_bool() {
+    dconf write "$1" "$2"
+}
+
+pack_has_dyn_cap() {
+    # $1 = capability name (dynclock|dyncal). Non-empty dir under pack or ~/.themepack/.
+    _cap=$1
+    _root="/usr/share/harbour-themepack-$PACK"
+    _home="${HOME:-/home/defaultuser}/.themepack/harbour-themepack-$PACK"
+    for _base in "$_home" "$_root"; do
+        if [ -d "$_base/$_cap" ]; then
+            if find "$_base/$_cap" -type f 2>/dev/null | head -1 | grep -q .; then
+                return 0
+            fi
+        fi
+    done
+    return 1
+}
+
+find_desktop() {
+    # Prefer stock Jolla names; fall back to first match.
+    for _cand in \
+        "/usr/share/applications/$1.desktop" \
+        "/usr/share/applications/sailfish-$1.desktop"; do
+        if [ -f "$_cand" ]; then
+            printf '%s' "$_cand"
+            return 0
+        fi
+    done
+    _m=$(find /usr/share/applications -maxdepth 1 -name "*$1*.desktop" 2>/dev/null | head -1 || true)
+    printf '%s' "$_m"
+}
+
+icon_is_muoto_generated() {
+    case "$(icon_line "$1")" in
+        /usr/share/harbour-muoto/launcher-icons/*) return 0 ;;
+        *) return 1 ;;
+    esac
 }
 
 apply_pack() {
@@ -435,6 +478,128 @@ if [ "$RUN_FOLDER" = true ]; then
 
         # Leave pack applied like other suites that re-apply
         apply_pack
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# T-23 Dynamic icons (Confirm enable/disable contract via dconf + daemon)
+# ---------------------------------------------------------------------------
+if [ "$RUN_DYN" = true ]; then
+    echo "======== T-23 dynamic icons ========"
+
+    HAS_CLOCK=false
+    HAS_CAL=false
+    if pack_has_dyn_cap dynclock; then HAS_CLOCK=true; fi
+    if pack_has_dyn_cap dyncal; then HAS_CAL=true; fi
+
+    if [ "$HAS_CLOCK" = false ] && [ "$HAS_CAL" = false ]; then
+        echo "(soft) pack $PACK has neither dynclock nor dyncal — skip T-23"
+        pass T-23-skip-no-dyn
+    else
+        [ "$HAS_CLOCK" = true ] && pass T-23-pack-dynclock || true
+        [ "$HAS_CAL" = true ] && pass T-23-pack-dyncal || true
+
+        apply_pack
+        if [ "$(dconf_unquote /apps/harbour-muoto/activeIconPack)" != "$PACK" ]; then
+            fail T-23-precondition "activeIconPack != $PACK"
+        else
+            pass T-23-precondition
+        fi
+
+        # Confirm "selected" for features that exist
+        if [ "$HAS_CLOCK" = true ]; then
+            dconf_write_bool /apps/harbour-muoto/launcher/dynamicClockEnabled true
+        else
+            dconf_write_bool /apps/harbour-muoto/launcher/dynamicClockEnabled false
+        fi
+        if [ "$HAS_CAL" = true ]; then
+            dconf_write_bool /apps/harbour-muoto/launcher/dynamicCalendarEnabled true
+        else
+            dconf_write_bool /apps/harbour-muoto/launcher/dynamicCalendarEnabled false
+        fi
+        sleep 3
+
+        CLOCK_DESKTOP=$(find_desktop jolla-clock)
+        CAL_DESKTOP=$(find_desktop jolla-calendar)
+
+        CLK_FLAG=$(dconf_unquote /apps/harbour-muoto/launcher/dynamicClockEnabled)
+        CAL_FLAG=$(dconf_unquote /apps/harbour-muoto/launcher/dynamicCalendarEnabled)
+        if [ "$HAS_CLOCK" = true ] && [ "$CLK_FLAG" = "true" ]; then
+            pass T-23-enable-clock-flag
+        elif [ "$HAS_CLOCK" = false ] && [ "$CLK_FLAG" != "true" ]; then
+            pass T-23-enable-clock-flag
+        else
+            fail T-23-enable-clock-flag "expected has=$HAS_CLOCK flag=$CLK_FLAG"
+        fi
+        if [ "$HAS_CAL" = true ] && [ "$CAL_FLAG" = "true" ]; then
+            pass T-23-enable-cal-flag
+        elif [ "$HAS_CAL" = false ] && [ "$CAL_FLAG" != "true" ]; then
+            pass T-23-enable-cal-flag
+        else
+            fail T-23-enable-cal-flag "expected has=$HAS_CAL flag=$CAL_FLAG"
+        fi
+
+        if [ "$HAS_CLOCK" = true ] && [ -n "$CLOCK_DESKTOP" ]; then
+            if icon_is_muoto_generated "$CLOCK_DESKTOP"; then
+                pass T-23-enable-clock-icon
+            else
+                fail T-23-enable-clock-icon "Icon=$(icon_line "$CLOCK_DESKTOP")"
+            fi
+        else
+            pass T-23-enable-clock-icon
+        fi
+        if [ "$HAS_CAL" = true ] && [ -n "$CAL_DESKTOP" ]; then
+            if icon_is_muoto_generated "$CAL_DESKTOP"; then
+                pass T-23-enable-cal-icon
+            else
+                fail T-23-enable-cal-icon "Icon=$(icon_line "$CAL_DESKTOP")"
+            fi
+        else
+            pass T-23-enable-cal-icon
+        fi
+
+        # Confirm unchecked / disable both
+        dconf_write_bool /apps/harbour-muoto/launcher/dynamicClockEnabled false
+        dconf_write_bool /apps/harbour-muoto/launcher/dynamicCalendarEnabled false
+        sleep 3
+        CLK_FLAG=$(dconf_unquote /apps/harbour-muoto/launcher/dynamicClockEnabled)
+        CAL_FLAG=$(dconf_unquote /apps/harbour-muoto/launcher/dynamicCalendarEnabled)
+        if [ "$CLK_FLAG" != "true" ] && [ "$CAL_FLAG" != "true" ]; then
+            pass T-23-disable-flags
+        else
+            fail T-23-disable-flags "clock=$CLK_FLAG cal=$CAL_FLAG"
+        fi
+
+        # Restore → stock dyn capability re-enabled (Themes restore path)
+        dconf_write_bool /apps/harbour-muoto/launcher/dynamicClockEnabled true
+        dconf_write_bool /apps/harbour-muoto/launcher/dynamicCalendarEnabled true
+        restore_icons
+        pack_now=$(dconf_unquote /apps/harbour-muoto/activeIconPack)
+        if [ "$pack_now" = "default" ] || [ -z "$pack_now" ]; then
+            pass T-23-restore-pack
+        else
+            fail T-23-restore-pack "pack=$pack_now"
+        fi
+        CLK_FLAG=$(dconf_unquote /apps/harbour-muoto/launcher/dynamicClockEnabled)
+        CAL_FLAG=$(dconf_unquote /apps/harbour-muoto/launcher/dynamicCalendarEnabled)
+        if [ "$CLK_FLAG" = "true" ] && [ "$CAL_FLAG" = "true" ]; then
+            pass T-23-restore-dyn-flags
+        else
+            fail T-23-restore-dyn-flags "clock=$CLK_FLAG cal=$CAL_FLAG (expected true)"
+        fi
+
+        # Leave pack applied with Confirm-style enable for present features
+        apply_pack
+        if [ "$HAS_CLOCK" = true ]; then
+            dconf_write_bool /apps/harbour-muoto/launcher/dynamicClockEnabled true
+        else
+            dconf_write_bool /apps/harbour-muoto/launcher/dynamicClockEnabled false
+        fi
+        if [ "$HAS_CAL" = true ]; then
+            dconf_write_bool /apps/harbour-muoto/launcher/dynamicCalendarEnabled true
+        else
+            dconf_write_bool /apps/harbour-muoto/launcher/dynamicCalendarEnabled false
+        fi
     fi
 fi
 

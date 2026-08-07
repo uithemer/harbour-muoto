@@ -67,16 +67,17 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 | Script | What |
 | ------ | ---- |
 | `scripts/device-test-3.2.sh` | Smoke: units, cap, manifest, `update-icons`; `--destructive` restore |
-| `scripts/device-test-preupgrade-install.sh` | **T-20** pre-upgrade + **T-21** install/upgrade re-theme + **T-22** silica folder ambient |
-| `scripts/pipeline-review-full.sh p10` / `p11` / `p12` | T-20 / T-21 / T-22 |
+| `scripts/device-test-preupgrade-install.sh` | **T-20** pre-upgrade + **T-21** install/upgrade re-theme + **T-22** silica folder ambient + **T-23** dynamic icons |
+| `scripts/pipeline-review-full.sh p10` / `p11` / `p12` / `p13` | T-20 / T-21 / T-22 / T-23 |
 
 ```bash
 # On device (defaultuser). Copy the script from the repo if not present.
 bash device-test-preupgrade-install.sh --pack haiku
 # Or separately:
-bash device-test-preupgrade-install.sh --pack haiku --skip-install --skip-folder   # T-20 only
-bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-folder # T-21 only
-bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-install # T-22 only
+bash device-test-preupgrade-install.sh --pack haiku --skip-install --skip-folder --skip-dyn   # T-20 only
+bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-folder --skip-dyn # T-21 only
+bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-install --skip-dyn # T-22 only
+bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-install --skip-folder # T-23 only
 ```
 
 **T-20 pre-upgrade (`harbour-muoto-oneshot-restore`)**
@@ -101,6 +102,15 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 | ----- | ------ |
 | Apply pack with overlay | Backup under `backup/folder-icons/<z>/icon-launcher-folder-01.png`; live silica PNG checksum changes when pack/overlay has assets |
 | RestoreIcons | Live checksum restored; `backup/folder-icons` removed |
+
+**T-23 dynamic icons (Confirm enable/disable contract)**
+
+| Check | Expect |
+| ----- | ------ |
+| Pack has `dynclock/` and/or `dyncal/` | Otherwise T-23 soft-skips (no fail) |
+| dconf enable for present features (Confirm “selected”) | Flags match; clock/calendar `Icon=` under `launcher-icons/` when that feature is enabled |
+| Both dyn flags false | Flags false; clock/calendar `Icon=` not muoto dyn redirects |
+| RestoreIcons + re-enable dyn flags | `activeIconPack=default`, both dyn dconf keys **true** (stock capability) |
 
 Override probe with `MUOTO_PROBE_PKG` / `MUOTO_PROBE_DESKTOP`. Sudo password: `MUOTO_SUDO_PASS` (default `rootme`).
 

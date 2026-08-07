@@ -15,6 +15,8 @@ public:
 
 private:
     QImage iconFromPack(const QString& path, const QSize& requestedSize);
+    QImage dynClock(const QString& packName, const QSize& requestedSize);
+    QImage dynCalendar(const QString& packName, const QSize& requestedSize);
     IconPack* packByName(const QString& name);
 
     QHash<QString, IconPack*> m_iconPacks;

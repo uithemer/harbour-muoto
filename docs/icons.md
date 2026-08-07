@@ -73,16 +73,20 @@ Homescreen **folders** use theme ids `icon-launcher-folder-01` … `16` (`image:
 
 ### DynCal
 
-When a theme pack is active, day-of-month icons from `dyncal/256x256/{01..31}.png` are rendered by the launcher daemon for the Calendar app.
+Day-of-month Calendar launcher icon from the launcher daemon. With a theme pack that ships `dyncal/`, day icons come from `dyncal/256x256/{01..31}.png`.
 
 Pack layout:
 
 * `dd.png` — day of month (`01`–`31`)
 * `mmdd.png` — holiday icons (month + day, optional)
 
+Enable on **Confirm** when applying a pack that includes `dyncal/`, or on the **Dynamic icons** tab while such a pack is active (or after restoring to the default theme, which uses stock assets). The tab is greyed out only when a non-default pack without dyn assets is active.
+
 ### DynClock
 
-When a theme pack is active, pack assets under `dynclock/256x256/` (`bg.png`, `hour.png`, `minute.png`) are used for a live Clock launcher icon.
+Live Clock launcher icon. With a theme pack that ships `dynclock/`, assets under `dynclock/256x256/` (`bg.png`, `hour.png`, `minute.png`) drive the live hands.
+
+Enable on **Confirm** when applying a pack that includes `dynclock/`, or on the **Dynamic icons** tab while such a pack is active (or after restoring to the default theme, which uses stock assets). The tab is greyed out only when a non-default pack without dyn assets is active.
 
 ## Style missing app icons (`overlay/`)
 
@@ -95,7 +99,7 @@ The old Android-only overlay trick (root file `type` containing `android`) is **
 | Path / file | Status |
 |-------------|--------|
 | `sound/` | Removed in 2.4.4 — see [Sounds](sounds) |
-| `dyncal/`, `dynclock/` | Applied via launcher daemon when a pack is active |
+| `dyncal/`, `dynclock/` | Launcher daemon when enabled via Confirm / Dynamic icons tab; pack assets when present |
 | Root `type` (`android` overlay-only packs) | Dropped in 2.7.1 |
 
 ## Icon file size hints

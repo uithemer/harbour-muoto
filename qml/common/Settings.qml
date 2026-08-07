@@ -56,6 +56,8 @@ Item
     onActiveFontPackChanged: conf.sync();
     onIconOverlayChanged: conf.sync();
     onHomeRefreshChanged: conf.sync();
+    onDynamicClockEnabledChanged: launcherConf.sync();
+    onDynamicCalendarEnabledChanged: launcherConf.sync();
 
     Component.onCompleted: {
         conf.sync();
