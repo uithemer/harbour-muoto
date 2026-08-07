@@ -60,10 +60,4 @@ bool isOurGeneratedIconPath(const QString& iconPath)
     return iconPath.startsWith(generatedIconsDir());
 }
 
-QString lipstickConfigDir()
-{
-    return QStringLiteral("%1/lipstick")
-        .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation));
-}
-
 } // namespace LauncherPaths

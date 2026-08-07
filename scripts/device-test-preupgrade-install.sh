@@ -378,14 +378,6 @@ if [ "$RUN_FOLDER" = true ]; then
         BEFORE=$(run_root md5sum "$LIVE" | awk '{print $1}')
         echo "live=$LIVE before=$BEFORE"
 
-        # Leftover redirect cleanup probe
-        LIPDIR="${XDG_CONFIG_HOME:-$HOME/.config}/lipstick"
-        mkdir -p "$LIPDIR"
-        TEST_FOLDER="$LIPDIR/Folder99.directory"
-        printf '%s\n' '[Desktop Entry]' \
-            'Icon=/usr/share/harbour-muoto/launcher-icons/bogus-folder.png' \
-            > "$TEST_FOLDER"
-
         apply_pack
         if [ "$(dconf_unquote /apps/harbour-muoto/activeIconPack)" != "$PACK" ]; then
             fail T-22-apply "activeIconPack not $PACK"
@@ -419,14 +411,6 @@ if [ "$RUN_FOLDER" = true ]; then
             pass T-22-live-themed
             echo "(soft) pack has no folder icon / overlay for $FOLDER_ICON"
         fi
-
-        NORM=$(icon_line "$TEST_FOLDER")
-        if [ "$NORM" = "icon-launcher-folder-99" ]; then
-            pass T-22-normalize-redirect
-        else
-            fail T-22-normalize-redirect "Icon=$NORM (expected icon-launcher-folder-99)"
-        fi
-        rm -f "$TEST_FOLDER"
 
         restore_icons
         if [ "$(dconf_unquote /apps/harbour-muoto/activeIconPack)" = "default" ] \

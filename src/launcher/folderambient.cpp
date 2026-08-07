@@ -1,7 +1,6 @@
 #include "folderambient.h"
 
 #include "iconpaths.h"
-#include "launcherpaths.h"
 #include "overlayrender.h"
 
 #include <QDebug>
@@ -9,8 +8,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QImage>
-#include <QRegularExpression>
-#include <QTextStream>
 
 namespace FolderAmbient {
 
@@ -127,82 +124,8 @@ bool writeOverlayOnly(const QString& sizeRefPath, const QString& overlayBasePath
 
 } // namespace
 
-void normalizeDirectoryRedirects()
-{
-    const QString dirPath = LauncherPaths::lipstickConfigDir();
-    if(dirPath.isEmpty())
-        return;
-
-    QDir dir(dirPath);
-    if(!dir.exists())
-        return;
-
-    const QRegularExpression folderRe(QStringLiteral("^Folder(\\d+)\\.directory$"));
-    const QStringList files = dir.entryList(QStringList() << QStringLiteral("Folder*.directory"),
-                                            QDir::Files);
-    const QString genRoot = LauncherPaths::generatedIconsDir();
-
-    for(const QString& name : files)
-    {
-        const QString path = dir.absoluteFilePath(name);
-        QFile f(path);
-        if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
-            continue;
-        QString content = QString::fromUtf8(f.readAll());
-        f.close();
-
-        QString iconValue;
-        QTextStream in(&content, QIODevice::ReadOnly);
-        QString line;
-        while(in.readLineInto(&line))
-        {
-            if(line.startsWith(QLatin1String("Icon=")))
-            {
-                iconValue = line.mid(5).trimmed();
-                break;
-            }
-        }
-
-        if(iconValue.isEmpty())
-            continue;
-        if(!iconValue.startsWith(genRoot) && !iconValue.contains(QStringLiteral("/launcher-icons/")))
-            continue;
-
-        const QRegularExpressionMatch m = folderRe.match(name);
-        const QString stock = m.hasMatch()
-            ? QStringLiteral("icon-launcher-folder-%1").arg(m.captured(1), 2, QLatin1Char('0'))
-            : QStringLiteral("icon-launcher-folder-01");
-        QString out;
-        QTextStream writer(&out);
-        QTextStream reader(&content, QIODevice::ReadOnly);
-        bool wroteIcon = false;
-        while(reader.readLineInto(&line))
-        {
-            if(line.startsWith(QLatin1String("Icon=")))
-            {
-                writer << QStringLiteral("Icon=") << stock << QLatin1Char('\n');
-                wroteIcon = true;
-            }
-            else
-            {
-                writer << line << QLatin1Char('\n');
-            }
-        }
-        if(!wroteIcon)
-            writer << QStringLiteral("Icon=") << stock << QLatin1Char('\n');
-
-        if(!f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
-            continue;
-        f.write(out.toUtf8());
-        f.close();
-        qDebug() << "FolderAmbient: normalized" << path << "->" << stock;
-    }
-}
-
 void apply(const QString& packShortName, bool overlayEnabled)
 {
-    normalizeDirectoryRedirects();
-
     if(packShortName.isEmpty() || packShortName == QLatin1String("default"))
         return;
 
@@ -257,8 +180,6 @@ void apply(const QString& packShortName, bool overlayEnabled)
 
 void restore()
 {
-    normalizeDirectoryRedirects();
-
     int restored = 0;
     for(const QString& zSize : IconPaths::jollaSizes())
     {

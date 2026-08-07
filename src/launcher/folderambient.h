@@ -5,9 +5,6 @@
 
 namespace FolderAmbient {
 
-/** Normalize leftover Folder*.directory Icon= redirects to icon-launcher-folder-NN. */
-void normalizeDirectoryRedirects();
-
 /**
  * Scoped silica writeback for icon-launcher-folder-01..16 under
  * sailfish-default/silica/<z>/icons/. Backups under backup/folder-icons/.

@@ -19,9 +19,6 @@ MUOTO_LAUNCHER_EXPORT QString iconBackupPath(const QString& iconPath);
 
 MUOTO_LAUNCHER_EXPORT bool isOurGeneratedIconPath(const QString& iconPath);
 
-/** ~/.config/lipstick — used to normalize leftover Folder*.directory redirects */
-MUOTO_LAUNCHER_EXPORT QString lipstickConfigDir();
-
 } // namespace LauncherPaths
 
 #endif // LAUNCHERPATHS_H

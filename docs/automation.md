@@ -100,7 +100,6 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 | Check | Expect |
 | ----- | ------ |
 | Apply pack with overlay | Backup under `backup/folder-icons/<z>/icon-launcher-folder-01.png`; live silica PNG checksum changes when pack/overlay has assets |
-| Leftover `Folder*.directory` with `Icon=` under `launcher-icons/` | Normalized back to `icon-launcher-folder-NN` |
 | RestoreIcons | Live checksum restored; `backup/folder-icons` removed |
 
 Override probe with `MUOTO_PROBE_PKG` / `MUOTO_PROBE_DESKTOP`. Sudo password: `MUOTO_SUDO_PASS` (default `rootme`).

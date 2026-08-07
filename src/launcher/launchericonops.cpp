@@ -3,7 +3,6 @@
 #include "dynamicicon_p.h"
 #include "folderambient.h"
 #include "harbourthemepack.h"
-#include "iconpackfactory.h"
 #include "iconpaths.h"
 #include "iconupdater.h"
 #include "launchermanifest.h"
@@ -254,7 +253,6 @@ void LauncherIconOps::rebuildIconUpdaters()
             s_updaters.insert(desktopPath, updater);
     }
 
-    pruneManifest();
     LauncherManifest::pruneOrphans(desktopPaths);
     ensureDesktopWatches();
     qInfo() << "muoto-launcher: rebuildIconUpdaters active=" << active
@@ -277,15 +275,6 @@ void LauncherIconOps::ensureDesktopWatches()
         watches.insert(desktopPath, conf);
         connect(conf, &MGConfItem::valueChanged, this, &LauncherIconOps::rebuildIconUpdaters);
     }
-}
-
-void LauncherIconOps::pruneManifest()
-{
-    QStringList desktopPaths;
-    const QFileInfoList infoList = desktopEntries();
-    for(const QFileInfo& info : infoList)
-        desktopPaths.append(info.absoluteFilePath());
-    LauncherManifest::pruneOrphans(desktopPaths);
 }
 
 void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay)

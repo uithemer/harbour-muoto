@@ -11,13 +11,11 @@ HEADERS += \
     $$PWD/iconpack.h \
     $$PWD/iconpack_p.h \
     $$PWD/harbourthemepack.h \
-    $$PWD/iconpackfactory.h \
     $$PWD/iconupdater.h \
     $$PWD/iconupdater_p.h \
     $$PWD/aliendalvikwatcher.h \
     $$PWD/dynamicicon.h \
     $$PWD/dynamicicon_p.h \
-    $$PWD/launchercontrol.h \
     $$PWD/iconresolve.h \
     $$PWD/overlayrender.h \
     $$PWD/overlayiconprovider.h \
@@ -34,11 +32,9 @@ SOURCES += \
     $$PWD/svgiconrender.cpp \
     $$PWD/iconpack.cpp \
     $$PWD/harbourthemepack.cpp \
-    $$PWD/iconpackfactory.cpp \
     $$PWD/iconupdater.cpp \
     $$PWD/aliendalvikwatcher.cpp \
     $$PWD/dynamicicon.cpp \
-    $$PWD/launchercontrol.cpp \
     $$PWD/iconresolve.cpp \
     $$PWD/overlayrender.cpp \
     $$PWD/overlayiconprovider.cpp \

@@ -30,11 +30,6 @@ DesktopEntry::~DesktopEntry()
     g_key_file_free(m_keyFile);
 }
 
-QString DesktopEntry::name()
-{
-    return m_desktopEntry->name();
-}
-
 QString DesktopEntry::icon()
 {
     return m_desktopEntry->icon();

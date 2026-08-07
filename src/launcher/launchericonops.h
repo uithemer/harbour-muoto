@@ -21,7 +21,6 @@ public:
     void setRestoreOnUpdaterDestroy(bool v) { m_restoreOnUpdaterDestroy = v; }
 
     void rebuildIconUpdaters();
-    void pruneManifest();
 
 signals:
     void progress(int done, int total);

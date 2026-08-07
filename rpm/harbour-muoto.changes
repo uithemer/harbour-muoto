@@ -10,7 +10,7 @@
 - Removed launcherInstantApply setting (daemon always on when pack active).
 
 * Mon Jun 15 2026 3.1.0-1
-- Launcher daemon (Clockwork-style): instant launcher icon apply without
+- Instant launcher icon apply without
   homescreen restart; `.desktop` Icon= redirect + manifest restore.
 - Dynamic clock/calendar icons from pack `dynclock/` and `dyncal/`.
 - Per-app launcher icon overrides (Customize launcher icons).

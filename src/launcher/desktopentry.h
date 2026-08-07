@@ -13,7 +13,6 @@ public:
     explicit DesktopEntry(const QString& path);
     ~DesktopEntry();
 
-    QString name();
     QString icon();
     void setIcon(const QString& icon);
     bool save();

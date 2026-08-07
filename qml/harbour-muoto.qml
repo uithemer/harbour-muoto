@@ -75,8 +75,8 @@ ApplicationWindow
     ThemePack { id: themepack }
     IconApplier {
         id: iconapplier
-        // Preview only (ConfirmPage buildPreview). Icon apply/restore and
-        // cover refresh go through Helper -> helperd.
+        // Preview only (ConfirmPage buildPreview). Icon apply/restore go
+        // through Helper -> session launcher D-Bus.
     }
 
     Connections {

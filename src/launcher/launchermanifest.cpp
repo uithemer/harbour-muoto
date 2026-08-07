@@ -2,7 +2,6 @@
 #include "desktopentry.h"
 #include "launcherpaths.h"
 
-#include <MDesktopEntry>
 #include <MGConfItem>
 
 #include <sys/stat.h>
