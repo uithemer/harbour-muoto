@@ -24,13 +24,6 @@ void LauncherIconHelper::setIconPackName(const QString& name)
     emit iconPackNameChanged();
 }
 
-bool LauncherIconHelper::iconAvailable(const QString& desktopPath) const
-{
-    if(!m_iconPack)
-        return false;
-    return !m_iconPack->iconByDesktopPath(desktopPath).isEmpty();
-}
-
 QString LauncherIconHelper::iconSource(const QString& desktopPath) const
 {
     if(!m_iconPack)

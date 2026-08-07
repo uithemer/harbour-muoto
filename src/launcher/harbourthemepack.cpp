@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QImage>
 
 namespace {
@@ -51,12 +52,6 @@ HarbourThemePack::HarbourThemePack(const QString& path, QObject* parent)
     : IconPack(QFileInfo(path).fileName().remove(QStringLiteral("harbour-themepack-")), parent)
     , m_path(path)
 {
-    QFile packageFile(path + QStringLiteral("/package"));
-    if(packageFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        m_displayName = packageFile.readLine().trimmed();
-    else
-        m_displayName = name();
-
     const qreal pixelRatio = Silica::Theme::instance()->pixelRatio();
     QString scale = QStringLiteral("z") + QString::number(pixelRatio, 'f', 2);
     if(scale.endsWith(QLatin1Char('0')))
@@ -75,8 +70,6 @@ HarbourThemePack::HarbourThemePack(const QString& path, QObject* parent)
         loadIcons(nativeRoot + QLatin1Char('/'), size, QStringLiteral("/apps"), m_nativeIcons);
     if(!apkRoot.isEmpty())
         loadIcons(apkRoot + QLatin1Char('/'), size, QString(), m_apkIcons);
-
-    loadPreviewIcons();
 
     const QString dynclockRoot = IconPaths::resolvePackCapabilityDir(m_path, QStringLiteral("dynclock"));
     if(!dynclockRoot.isEmpty())
@@ -118,11 +111,6 @@ HarbourThemePack::HarbourThemePack(const QString& path, QObject* parent)
     }
 }
 
-QString HarbourThemePack::displayName()
-{
-    return m_displayName;
-}
-
 QStringList HarbourThemePack::icons()
 {
     if(!m_icons.isEmpty())
@@ -136,11 +124,6 @@ QStringList HarbourThemePack::icons()
         m_icons += findApkIcon(iconName);
 
     return m_icons;
-}
-
-QStringList HarbourThemePack::previewIcons()
-{
-    return m_previewIcons;
 }
 
 QString HarbourThemePack::iconByPackageName(const QString& packageName)
@@ -260,45 +243,4 @@ QString HarbourThemePack::findApkIcon(const QString& iconName)
     if(sz.isEmpty())
         return QString();
     return QStringLiteral("apk/") + sz + QLatin1Char('/') + iconName + QStringLiteral(".png");
-}
-
-void HarbourThemePack::loadPreviewIcons()
-{
-    const int requiredPreviewsCount = 6;
-    static const QStringList suggestedPreviewIcons = {
-        QStringLiteral("icon-launcher-messaging"),
-        QStringLiteral("icon-launcher-weather"),
-        QStringLiteral("icon-launcher-camera"),
-        QStringLiteral("icon-launcher-browser"),
-        QStringLiteral("icon-launcher-clock"),
-        QStringLiteral("icon-launcher-calendar"),
-    };
-
-    for(const QString& iconName : suggestedPreviewIcons)
-    {
-        const QString iconPath = findJollaIcon(iconName);
-        if(iconPath.isEmpty())
-            continue;
-        m_previewIcons.append(iconPath);
-        if(m_previewIcons.size() >= requiredPreviewsCount)
-            return;
-    }
-
-    for(const QString& iconName : m_apkIcons.keys())
-    {
-        if(m_previewIcons.size() >= requiredPreviewsCount)
-            return;
-        const QString iconPath = findApkIcon(iconName);
-        if(!iconPath.isEmpty())
-            m_previewIcons.append(iconPath);
-    }
-
-    for(const QString& iconName : m_nativeIcons.keys())
-    {
-        if(m_previewIcons.size() >= requiredPreviewsCount)
-            return;
-        const QString iconPath = findNativeIcon(iconName);
-        if(!iconPath.isEmpty())
-            m_previewIcons.append(iconPath);
-    }
 }

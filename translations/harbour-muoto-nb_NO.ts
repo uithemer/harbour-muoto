@@ -284,17 +284,6 @@
     </message>
 </context>
 <context>
-    <name>MuotoRestartHomescreenButton</name>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Start startskjermen på nytt</translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation>Starter startskjermen på nytt</translation>
-    </message>
-</context>
-<context>
     <name>MuotoRestartHomescreenMenuItem</name>
     <message>
         <source>Restart homescreen</source>

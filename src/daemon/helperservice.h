@@ -51,7 +51,6 @@ public slots:
 signals:
     void OperationCompleted(const QString& op, bool ok,
                             const QString& message);
-    void Progress(const QString& op, int done, int total);
 
 private:
     bool authorize(const QDBusMessage& message, const QString& op);

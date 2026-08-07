@@ -9,10 +9,5 @@
       <arg name="ok" type="b"/>
       <arg name="message" type="s"/>
     </signal>
-    <signal name="Progress">
-      <arg name="op" type="s"/>
-      <arg name="done" type="i"/>
-      <arg name="total" type="i"/>
-    </signal>
   </interface>
 </node>

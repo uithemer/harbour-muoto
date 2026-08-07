@@ -81,8 +81,8 @@ QImage OverlayIconProvider::requestImage(const QSize& requestedSize)
         return {};
     overlayBase = overlayBase.convertToFormat(QImage::Format_ARGB32_Premultiplied);
 
-    if(IconResolve::isAlienDalvikIcon(stockPath)
-       || IconResolve::isAlienDalvikIcon(IconResolve::resolveIconPath(iconRef)))
+    if(IconResolve::isApkBridgeIcon(stockPath)
+       || IconResolve::isApkBridgeIcon(IconResolve::resolveIconPath(iconRef)))
     {
         const QSize outer(192, 192);
         const QSize inner(122, 122);

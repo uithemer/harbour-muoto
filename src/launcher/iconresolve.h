@@ -7,7 +7,6 @@ namespace IconResolve {
 
 QString apkBridgeLauncherIconDir();
 bool isApkBridgeIcon(const QString& iconPath);
-bool isAlienDalvikIcon(const QString& iconPath);
 bool isMonitoredIcon(const QString& iconPath);
 QString resolveIconPath(const QString& iconId);
 

@@ -17,10 +17,9 @@ class QJSEngine;
 // own match rule on the system bus, and we used to create up to six
 // of them (one per QML element instantiation) — wasteful and noisy.
 //
-// All slots return immediately. Real success / failure / progress
-// comes through the matching Qt signal; if the daemon is not
-// available, the matching error() signal fires synchronously so the
-// GUI's busy spinner clears.
+// All slots return immediately. Real success / failure comes through
+// the matching Qt signal; if the daemon is not available, the matching
+// error() signal fires synchronously so the GUI's busy spinner clears.
 class HelperClient : public QObject
 {
     Q_OBJECT
@@ -57,8 +56,6 @@ signals:
     void densityEnabled();
     void packUninstalled(const QString& rpmName);
 
-    void progress(int done, int total);
-
     // op is the daemon-side method name ("ApplyIcons", "UninstallPack",
     // ...). Fired on daemon error, D-Bus transport failure, or when the
     // theme-op lock is busy. Lets QML clear settings.isRunning.
@@ -67,7 +64,6 @@ signals:
 private slots:
     void onThemesOperationCompleted(const QString& op, bool ok,
                                     const QString& message);
-    void onThemesProgress(const QString& op, int done, int total);
     void onPacksOperationCompleted(const QString& op, bool ok,
                                    const QString& message);
     void onNameOwnerChanged(const QString& name, const QString& oldOwner,
@@ -89,8 +85,8 @@ private:
     // emit error(op, ...) so the GUI's busy state drains.
     void asyncCall(const QString& op, const QVariantList& args);
 
-    // Subscribe to the per-interface OperationCompleted (and Themes
-    // Progress) broadcast signals once, before any method is invoked.
+    // Subscribe to the per-interface OperationCompleted broadcast signals
+    // once, before any method is invoked.
     void hookBroadcastSignals();
 
     bool beginIconOpOrError(const QString& op);

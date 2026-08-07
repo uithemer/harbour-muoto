@@ -195,13 +195,6 @@ void HelperClient::hookBroadcastSignals()
 
         systemBus.connect(QString::fromLatin1(kRootServiceName),
                           QString::fromLatin1(kRootObjectPath),
-                          QString::fromLatin1(kRootIfaceThemes),
-                          QStringLiteral("Progress"),
-                          this,
-                          SLOT(onThemesProgress(QString, int, int)));
-
-        systemBus.connect(QString::fromLatin1(kRootServiceName),
-                          QString::fromLatin1(kRootObjectPath),
                           QString::fromLatin1(kRootIfacePacks),
                           QStringLiteral("OperationCompleted"),
                           this,
@@ -217,13 +210,6 @@ void HelperClient::hookBroadcastSignals()
                            QStringLiteral("OperationCompleted"),
                            this,
                            SLOT(onThemesOperationCompleted(QString, bool, QString)));
-
-        sessionBus.connect(QString::fromLatin1(kLauncherServiceName),
-                           QString::fromLatin1(kLauncherObjectPath),
-                           QString::fromLatin1(kLauncherIfaceThemes),
-                           QStringLiteral("Progress"),
-                           this,
-                           SLOT(onThemesProgress(QString, int, int)));
     }
     else
     {
@@ -329,12 +315,6 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
         emit densityEnabled();
     else
         qWarning() << "HelperClient: unknown Themes op" << op;
-}
-
-void HelperClient::onThemesProgress(const QString& op, int done, int total)
-{
-    Q_UNUSED(op);
-    emit progress(done, total);
 }
 
 void HelperClient::onPacksOperationCompleted(const QString& op, bool ok,

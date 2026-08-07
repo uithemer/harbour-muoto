@@ -17,7 +17,6 @@ public:
     QString iconPackName() const;
     void setIconPackName(const QString& name);
 
-    Q_INVOKABLE bool iconAvailable(const QString& desktopPath) const;
     Q_INVOKABLE QString iconSource(const QString& desktopPath) const;
     Q_INVOKABLE QStringList packIconIds() const;
 

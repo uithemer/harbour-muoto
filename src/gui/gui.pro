@@ -68,7 +68,6 @@ OTHER_FILES += \
     $$ROOT/qml/components/MuotoButton.qml \
     $$ROOT/qml/components/MuotoHeaderLabel.qml \
     $$ROOT/qml/components/MuotoTextLabel.qml \
-    $$ROOT/qml/components/MuotoRestartHomescreenButton.qml \
     $$ROOT/qml/components/HomescreenRestartSection.qml \
     $$ROOT/qml/components/homescreenRestart.js \
     $$ROOT/qml/components/MuotoNotification.qml \

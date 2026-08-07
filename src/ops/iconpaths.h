@@ -14,7 +14,6 @@ namespace IconPaths
 
     const QStringList& jollaSizes();
 
-    QString stockJollaIconsSourceDir(const QString& zSize);
     QString liveJollaIconsDir(const QString& zSize);
 }
 

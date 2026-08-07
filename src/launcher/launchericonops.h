@@ -18,7 +18,6 @@ public:
     bool applyPackIcons() const { return m_applyPackIcons; }
 
     bool restoreOnUpdaterDestroy() const { return m_restoreOnUpdaterDestroy; }
-    void setRestoreOnUpdaterDestroy(bool v) { m_restoreOnUpdaterDestroy = v; }
 
     void rebuildIconUpdaters();
 

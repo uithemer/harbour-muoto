@@ -12,7 +12,6 @@ HEADERS += \
     $$PWD/spawner.h \
     $$PWD/dconfuser.h \
     $$PWD/densityenabler.h \
-    $$PWD/osupdateguard.h \
     $$PWD/launcherdaemonctl.h
 
 SOURCES += \
@@ -24,5 +23,4 @@ SOURCES += \
     $$PWD/spawner.cpp \
     $$PWD/dconfuser.cpp \
     $$PWD/densityenabler.cpp \
-    $$PWD/osupdateguard.cpp \
     $$PWD/launcherdaemonctl.cpp

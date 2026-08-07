@@ -12,9 +12,7 @@ class MUOTO_LAUNCHER_EXPORT HarbourThemePack : public IconPack
 public:
     explicit HarbourThemePack(const QString& path, QObject* parent = nullptr);
 
-    QString displayName() override;
     QStringList icons() override;
-    QStringList previewIcons() override;
     QString iconByPackageName(const QString& packageName) override;
     QString iconByActivity(const QString& activity) override;
     QImage requestIcon(const QString& iconId, const QSize& requestedSize) override;
@@ -29,12 +27,9 @@ private:
     QString findJollaIcon(const QString& iconName);
     QString findNativeIcon(const QString& iconName);
     QString findApkIcon(const QString& iconName);
-    void loadPreviewIcons();
 
     QString m_path;
-    QString m_displayName;
     QStringList m_icons;
-    QStringList m_previewIcons;
 
     QHash<QString, QString> m_jollaIcons;
     QHash<QString, QString> m_nativeIcons;

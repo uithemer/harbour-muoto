@@ -135,12 +135,7 @@ const QStringList &IconPaths::jollaSizes()
     return kJolla;
 }
 
-QString IconPaths::stockJollaIconsSourceDir(const QString &zSize)
-{
-    return QString::fromLatin1(kJollaRoot) + QLatin1Char('/') + zSize + QStringLiteral("/icons/");
-}
-
 QString IconPaths::liveJollaIconsDir(const QString &zSize)
 {
-    return stockJollaIconsSourceDir(zSize);
+    return QString::fromLatin1(kJollaRoot) + QLatin1Char('/') + zSize + QStringLiteral("/icons/");
 }

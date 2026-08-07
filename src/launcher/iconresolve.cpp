@@ -61,11 +61,6 @@ bool isApkBridgeIcon(const QString& iconPath)
     return false;
 }
 
-bool isAlienDalvikIcon(const QString& iconPath)
-{
-    return isApkBridgeIcon(iconPath);
-}
-
 bool isMonitoredIcon(const QString& iconPath)
 {
     static QRegularExpression re(QStringLiteral("/usr/share/icons/hicolor/\\w+/apps/.*"));

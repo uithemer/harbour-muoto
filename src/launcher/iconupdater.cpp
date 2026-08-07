@@ -128,7 +128,7 @@ IconUpdaterPrivate::IconUpdaterPrivate(IconProvider* provider, const QString& de
     }
 
     iconPath = IconResolve::resolveIconPath(iconRef);
-    alienDalvikIcon = IconResolve::isAlienDalvikIcon(iconPath);
+    alienDalvikIcon = IconResolve::isApkBridgeIcon(iconPath);
 
     // Hicolor: inplace so Icon=harbour-* keeps resolving to the stock path.
     // APK bridge: always redirect. Lipstick caches absolute Icon= paths and will
