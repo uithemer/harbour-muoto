@@ -1,6 +1,5 @@
 #include "iconapplier.h"
 #include "iconpaths.h"
-#include "iconpipeline.h"
 #include "iconpreviewcache.h"
 #include "imageutil.h"
 
@@ -9,33 +8,17 @@ IconApplier::IconApplier(QObject* parent)
 {
 }
 
-QString IconApplier::packDir(const QString& packName) const
-{
-    return IconPaths::packDir(packName);
-}
-
 void IconApplier::applyIcons(const QString& packName, bool runPack, bool overlay)
 {
-    if(packName.isEmpty())
-    {
-        emit applied(true, QString());
-        return;
-    }
-
-    emit progress(0, 4);
-    IconPipeline pipeline;
-    const IconApplyResult result = pipeline.apply(packName, runPack, overlay);
-    emit progress(4, 4);
-    emit applied(result.ok, result.message);
+    Q_UNUSED(packName);
+    Q_UNUSED(runPack);
+    Q_UNUSED(overlay);
+    emit applied(false, QStringLiteral("use session launcher D-Bus"));
 }
 
 void IconApplier::restoreIcons()
 {
-    emit progress(0, 1);
-    IconPipeline pipeline;
-    pipeline.restore();
-    emit progress(1, 1);
-    emit restored(true, QString());
+    emit restored(false, QStringLiteral("use session launcher D-Bus"));
 }
 
 void IconApplier::buildPreview(const QString& packName)
@@ -47,7 +30,7 @@ void IconApplier::buildPreview(const QString& packName)
         return;
     }
 
-    const QStringList sample = ImageUtil::samplePackIcons(packDir(packName), 9);
+    const QStringList sample = ImageUtil::samplePackIcons(IconPaths::packDir(packName), 9);
     QImage img = ImageUtil::montage9(sample);
     const bool ok = !img.isNull();
 

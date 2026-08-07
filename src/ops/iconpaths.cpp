@@ -306,6 +306,28 @@ int IconPaths::copyPngDirExistingOnly(const QString &srcDir, const QString &dstD
     return n;
 }
 
+int IconPaths::copyPngDirExistingOnlySkipLauncher(const QString& srcDir, const QString& dstDir)
+{
+    QDir src(srcDir);
+    if(!src.exists())
+        return 0;
+
+    QDir().mkpath(dstDir);
+    int n = 0;
+    const QStringList pngs = src.entryList(QStringList() << QStringLiteral("*.png"),
+                                           QDir::Files);
+    for(const QString& f : pngs)
+    {
+        const QString base = QFileInfo(f).completeBaseName();
+        if(base.startsWith(QStringLiteral("icon-launcher-")))
+            continue;
+
+        if(copyFileExistingOnly(src.absoluteFilePath(f), dstDir + f))
+            ++n;
+    }
+    return n;
+}
+
 void IconPaths::chownApkLauncherTree()
 {
     struct passwd *pw = getpwnam("defaultuser");

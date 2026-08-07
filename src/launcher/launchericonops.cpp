@@ -1,0 +1,396 @@
+#include "launchericonops.h"
+#include "dynamicicon.h"
+#include "dynamicicon_p.h"
+#include "harbourthemepack.h"
+#include "iconpackfactory.h"
+#include "iconpaths.h"
+#include "iconupdater.h"
+#include "launchermanifest.h"
+#include "launchersettings.h"
+#include "launcherpaths.h"
+#include "overlayiconprovider.h"
+#include "filelock.h"
+#include "osupdateguard.h"
+
+#include <MDesktopEntry>
+#include <MGConfItem>
+
+#include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QFileInfoList>
+#include <QHash>
+#include <QSize>
+#include <QStandardPaths>
+#include <QUrl>
+
+namespace {
+
+QHash<QString, IconPack*> s_iconPacks;
+QHash<QString, IconUpdater*> s_updaters;
+
+MGConfItem* activeIconPackConf()
+{
+    static auto* conf = new MGConfItem(QStringLiteral("/apps/harbour-muoto/activeIconPack"));
+    return conf;
+}
+
+void mgconfSetBool(const char* path, bool value)
+{
+    MGConfItem item(QString::fromLatin1(path));
+    item.set(value);
+}
+
+QFileInfoList desktopEntries()
+{
+    QDir globalApplicationsDir(QStringLiteral("/usr/share/applications"));
+    const QString userApplicationsPath = QStringLiteral("%1/applications")
+        .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation));
+    QDir userApplicationsDir(userApplicationsPath);
+
+    return globalApplicationsDir.entryInfoList({QStringLiteral("*.desktop")}, QDir::Files)
+           + userApplicationsDir.entryInfoList({QStringLiteral("*.desktop")}, QDir::Files);
+}
+
+bool packHasOverlayAssets(const QString& packRoot)
+{
+    if(packRoot.isEmpty())
+        return false;
+    const QString overlayDir = IconPaths::resolvePackCapabilityDir(packRoot,
+                                                                 QStringLiteral("overlay"));
+    if(overlayDir.isEmpty())
+        return false;
+    return !QDir(overlayDir).entryList({QStringLiteral("*.png")}, QDir::Files).isEmpty();
+}
+
+QUrl providerUriForDesktop(const QString& desktopPath)
+{
+    const QFileInfo info(desktopPath);
+    MGConfItem appConf(LauncherPaths::perAppProviderKey(info.completeBaseName()));
+    const QString applicationProvider = appConf.value().toString();
+    if(!applicationProvider.isEmpty() && applicationProvider != QLatin1String("<none>"))
+        return QUrl(applicationProvider);
+
+    const QString iconPack = activeIconPackConf()->value(QStringLiteral("default")).toString();
+    if(iconPack.isEmpty() || iconPack == QLatin1String("default"))
+        return QUrl();
+
+    return QUrl(QStringLiteral("icon-pack://") + iconPack);
+}
+
+bool hasPerAppProvider(const QString& desktopPath)
+{
+    const QFileInfo info(desktopPath);
+    MGConfItem appConf(LauncherPaths::perAppProviderKey(info.completeBaseName()));
+    const QString applicationProvider = appConf.value().toString();
+    return !applicationProvider.isEmpty() && applicationProvider != QLatin1String("<none>");
+}
+
+IconUpdater* createIconPackUpdater(const QString& name,
+                                   const QString& desktopPath,
+                                   const QString& iconId = QString())
+{
+    IconPack* iconPack = s_iconPacks.value(name, nullptr);
+    if(!iconPack)
+    {
+        iconPack = HarbourThemePack::byShortName(name);
+        if(iconPack)
+            s_iconPacks.insert(iconPack->name(), iconPack);
+    }
+    if(!iconPack)
+        return nullptr;
+
+    QString resolvedId = iconId;
+    if(resolvedId.isEmpty())
+        resolvedId = iconPack->iconByDesktopPath(desktopPath);
+    if(resolvedId.isEmpty())
+        return nullptr;
+
+    // Pack may advertise an id that fails to load — fall through to overlay.
+    if(iconPack->requestIcon(resolvedId, QSize(1, 1)).isNull())
+        return nullptr;
+
+    return iconPack->iconUpdater(desktopPath, resolvedId);
+}
+
+IconUpdater* createDynamicIconUpdater(const QString& name)
+{
+    static QHash<QString, DynamicIcon*> dynamicIcons;
+    static bool loaded = false;
+    if(!loaded)
+    {
+        for(DynamicIcon* icon : loadDynamicIcons())
+            dynamicIcons.insert(icon->name(), icon);
+        loaded = true;
+    }
+
+    DynamicIcon* dynamicIcon = dynamicIcons.value(name, nullptr);
+    if(!dynamicIcon || !dynamicIcon->available())
+        return nullptr;
+
+    if(name == QLatin1String("muoto-jolla-clock") && !LauncherSettings::dynamicClockEnabled())
+        return nullptr;
+    if(name == QLatin1String("muoto-jolla-calendar") && !LauncherSettings::dynamicCalendarEnabled())
+        return nullptr;
+
+    return dynamicIcon->enabled() ? dynamicIcon->iconUpdater() : nullptr;
+}
+
+IconUpdater* createOverlayUpdater(const QString& packRoot, const QString& desktopPath)
+{
+    auto* provider = new OverlayIconProvider(packRoot, desktopPath);
+    return new IconUpdater(provider, desktopPath, nullptr, IconUpdater::RedirectOnly);
+}
+
+IconUpdater* createPackOrOverlayUpdater(const QString& packName, const QString& desktopPath,
+                                        bool applyPack, const QString& iconId = QString())
+{
+    if(applyPack)
+    {
+        IconUpdater* updater = createIconPackUpdater(packName, desktopPath, iconId);
+        if(updater)
+            return updater;
+    }
+
+    const QString packRoot = IconPaths::packDir(packName);
+    if(LauncherSettings::iconOverlay() && packHasOverlayAssets(packRoot))
+        return createOverlayUpdater(packRoot, desktopPath);
+
+    return nullptr;
+}
+
+IconUpdater* createIconUpdater(const QString& desktopPath)
+{
+    const QUrl uri = providerUriForDesktop(desktopPath);
+    const QString scheme = uri.scheme();
+    const bool perApp = hasPerAppProvider(desktopPath);
+    const bool applyPack = LauncherIconOps::instance()->applyPackIcons() || perApp;
+
+    if(scheme == QStringLiteral("icon-pack"))
+    {
+        QString iconId = uri.path();
+        if(iconId.startsWith(QLatin1Char('/')))
+            iconId = iconId.mid(1);
+
+        return createPackOrOverlayUpdater(uri.host(), desktopPath, applyPack, iconId);
+    }
+
+    if(scheme == QStringLiteral("dynamic-icon"))
+    {
+        IconUpdater* dyn = createDynamicIconUpdater(uri.host());
+        if(dyn)
+            return dyn;
+
+        // Dynamic disabled/unavailable (e.g. calendar with dynamicCalendarEnabled=false):
+        // fall back to the active pack / overlay like a normal icon-pack URI.
+        const QString pack = activeIconPackConf()->value(QStringLiteral("default")).toString();
+        if(pack.isEmpty() || pack == QLatin1String("default"))
+            return nullptr;
+        return createPackOrOverlayUpdater(pack, desktopPath, applyPack);
+    }
+
+    return nullptr;
+}
+
+} // namespace
+
+LauncherIconOps* LauncherIconOps::instance()
+{
+    static LauncherIconOps* s_instance = new LauncherIconOps();
+    return s_instance;
+}
+
+LauncherIconOps::LauncherIconOps(QObject* parent)
+    : QObject(parent)
+{
+}
+
+void LauncherIconOps::reloadIconPacks()
+{
+    qDeleteAll(s_iconPacks);
+    s_iconPacks.clear();
+
+    const QString active = activeIconPackConf()->value(QStringLiteral("default")).toString();
+    if(!active.isEmpty() && active != QLatin1String("default"))
+    {
+        IconPack* pack = HarbourThemePack::byShortName(active);
+        if(pack)
+            s_iconPacks.insert(pack->name(), pack);
+    }
+}
+
+void LauncherIconOps::clearUpdaters(bool restoreOnDestroy)
+{
+    m_restoreOnUpdaterDestroy = restoreOnDestroy;
+    qDeleteAll(s_updaters);
+    s_updaters.clear();
+    m_restoreOnUpdaterDestroy = true;
+}
+
+void LauncherIconOps::rebuildIconUpdaters()
+{
+    clearUpdaters(false);
+    reloadIconPacks();
+
+    const QString active = activeIconPackConf()->value(QStringLiteral("default")).toString();
+    if(active.isEmpty() || active == QLatin1String("default"))
+    {
+        qInfo() << "muoto-launcher: rebuildIconUpdaters active=<empty> count=0";
+        return;
+    }
+
+    QStringList desktopPaths;
+    const QFileInfoList infoList = desktopEntries();
+    for(const QFileInfo& info : infoList)
+    {
+        const QString desktopPath = info.absoluteFilePath();
+        MDesktopEntry desktopEntry(desktopPath);
+        if(desktopEntry.noDisplay())
+            continue;
+
+        desktopPaths.append(desktopPath);
+
+        IconUpdater* updater = createIconUpdater(desktopPath);
+        if(updater)
+            s_updaters.insert(desktopPath, updater);
+    }
+
+    pruneManifest();
+    LauncherManifest::pruneOrphans(desktopPaths);
+    ensureDesktopWatches();
+    qInfo() << "muoto-launcher: rebuildIconUpdaters active=" << active
+            << "count=" << s_updaters.size();
+}
+
+void LauncherIconOps::ensureDesktopWatches()
+{
+    static QHash<QString, MGConfItem*> watches;
+
+    const QFileInfoList infoList = desktopEntries();
+    for(const QFileInfo& info : infoList)
+    {
+        const QString desktopPath = info.absoluteFilePath();
+        if(watches.contains(desktopPath))
+            continue;
+
+        const QFileInfo desktopInfo(desktopPath);
+        auto* conf = new MGConfItem(LauncherPaths::perAppProviderKey(desktopInfo.completeBaseName()), this);
+        watches.insert(desktopPath, conf);
+        connect(conf, &MGConfItem::valueChanged, this, &LauncherIconOps::rebuildIconUpdaters);
+    }
+}
+
+void LauncherIconOps::pruneManifest()
+{
+    QStringList desktopPaths;
+    const QFileInfoList infoList = desktopEntries();
+    for(const QFileInfo& info : infoList)
+        desktopPaths.append(info.absoluteFilePath());
+    LauncherManifest::pruneOrphans(desktopPaths);
+}
+
+void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay)
+{
+    qInfo() << "muoto-launcher: ApplyIcons start pack=" << pack
+            << "runPack=" << runPack << "overlay=" << overlay;
+
+    if(OsUpdateGuard::running())
+    {
+        qInfo() << "muoto-launcher: ApplyIcons done ok=false msg=upgrade in progress updaters=0";
+        emit applied(false, QStringLiteral("upgrade in progress"));
+        return;
+    }
+
+    if(pack.isEmpty() || pack == QLatin1String("default"))
+    {
+        qInfo() << "muoto-launcher: ApplyIcons done ok=true msg=noop updaters=0";
+        emit applied(true, QString());
+        return;
+    }
+
+    const QString packRoot = IconPaths::packDir(pack);
+    if(!QDir(packRoot).exists())
+    {
+        qInfo() << "muoto-launcher: ApplyIcons done ok=false msg=pack not found updaters=0";
+        emit applied(false, QStringLiteral("pack not found"));
+        return;
+    }
+
+    FileLock lock(FileLock::defaultLockPath(), false);
+    if(!lock.isHeld())
+    {
+        qInfo() << "muoto-launcher: ApplyIcons done ok=false msg=busy updaters=0";
+        emit applied(false, QStringLiteral("busy"));
+        return;
+    }
+
+    emit progress(0, 2);
+
+    // Overlay styles apps missing from the pack — only valid with pack apply.
+    if(overlay && !runPack)
+        runPack = true;
+
+    m_applyPackIcons = runPack;
+    mgconfSetBool("/apps/harbour-muoto/iconOverlay", overlay);
+
+    if(activeIconPackConf()->value(QStringLiteral("default")).toString() != pack)
+        activeIconPackConf()->set(pack);
+
+    emit progress(1, 2);
+    rebuildIconUpdaters();
+    emit progress(2, 2);
+    qInfo() << "muoto-launcher: ApplyIcons done ok=true msg= updaters=" << s_updaters.size();
+    emit applied(true, QString());
+}
+
+void LauncherIconOps::restoreIcons()
+{
+    qInfo() << "muoto-launcher: RestoreIcons start";
+
+    FileLock lock(FileLock::defaultLockPath(), false);
+    if(!lock.isHeld())
+    {
+        qInfo() << "muoto-launcher: RestoreIcons done ok=false msg=busy";
+        emit restored(false, QStringLiteral("busy"));
+        return;
+    }
+
+    emit progress(0, 2);
+    clearUpdaters(false);
+    emit progress(1, 2);
+
+    const bool restoredOk = LauncherManifest::restoreAll();
+
+    const QString dataPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+    QDir backup(QStringLiteral("%1/harbour-muoto/launcher-backup").arg(dataPath));
+
+    // Only wipe backups after a fully successful restore — otherwise keep them
+    // so a retry can still recover inplace icons.
+    if(restoredOk && backup.exists())
+        backup.removeRecursively();
+    else if(!restoredOk)
+        qWarning() << "muoto-launcher: keeping launcher-backup after partial restore failure";
+
+    QDir generated(LauncherPaths::generatedIconsDir());
+    if(generated.exists())
+    {
+        const QStringList pngs = generated.entryList({QStringLiteral("*.png")}, QDir::Files);
+        for(const QString& f : pngs)
+            QFile::remove(generated.absoluteFilePath(f));
+    }
+
+    mgconfSetBool("/apps/harbour-muoto/iconOverlay", false);
+    activeIconPackConf()->set(QStringLiteral("default"));
+    m_applyPackIcons = true;
+
+    emit progress(2, 2);
+    if(!restoredOk)
+    {
+        qInfo() << "muoto-launcher: RestoreIcons done ok=false msg=inplace restore failed";
+        emit restored(false, QStringLiteral("inplace restore failed"));
+        return;
+    }
+
+    qInfo() << "muoto-launcher: RestoreIcons done ok=true msg=";
+    emit restored(true, QString());
+}

@@ -1,3 +1,19 @@
+* Mon Jun 15 2026 3.2.0-1
+- Drop bulk silica ambient, hicolor, and apkd-bridge icon apply; launcher
+  daemon owns all icon theming via session D-Bus (org.muoto.Launcher1).
+- Overlay reimplemented as launcher redirect composites (stock PNGs untouched).
+- Slim root helperd to DensityEnable + UninstallPack only.
+- 3.1→3.2 migration restores bulk backup/icons once via migrate-bulk-icons.
+- Removed launcherInstantApply setting (daemon always on when pack active).
+
+* Mon Jun 15 2026 3.1.0-1
+- Launcher daemon (Clockwork-style): instant launcher icon apply without
+  homescreen restart; `.desktop` Icon= redirect + manifest restore.
+- Dynamic clock/calendar icons from pack `dynclock/` and `dyncal/`.
+- Per-app launcher icon overrides (Customize launcher icons).
+- Conflicts with clockwork, harbour-dyncal, harbour-dynclock.
+- Bulk apply skips silica `icon-launcher-*` when launcher instant apply is on.
+
 * Thu Jun  4 2026 3.0.3-4
 - OS update guard: detect upgrade via `/run/defaultuser/osupdate_running` and
   active `system-update.target` / `sailfish-upgrade-ui.service` (replaces
@@ -69,7 +85,7 @@
   bus fix; RestoreIcons without dbus-monitor wait; helperd idle suspend
   during icon ops; RPM restarts install-listener after upgrade.
 
-* Wed May 29 2026
+* Fri May 29 2026 3.0.0beta4-1
 - Auto-apply: harbour-muoto-update-icons script + boot oneshot; user
   install-listener (apkd, PackageKit, installationhandler, containerReady);
   harbour-muoto-oneshot-restore before system upgrade (icons, fonts, Muoto

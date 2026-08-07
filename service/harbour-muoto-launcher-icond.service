@@ -1,0 +1,11 @@
+[Unit]
+Description=Muoto launcher icon daemon
+After=lipstick.service
+
+[Service]
+Type=simple
+ExecStart=/usr/libexec/harbour-muoto-launcher-icond
+Restart=always
+
+[Install]
+WantedBy=user-session.target

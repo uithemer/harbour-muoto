@@ -32,6 +32,7 @@ namespace IconPaths
     bool copyFileExistingOnly(const QString& src, const QString& dst);
     int copyPngDirIgnoreExistingBackup(const QString& srcDir, const QString& dstDir);
     int copyPngDirExistingOnly(const QString& srcDir, const QString& dstDir);
+    int copyPngDirExistingOnlySkipLauncher(const QString& srcDir, const QString& dstDir);
 
     void chownApkLauncherTree();
     QString nativeAppsSourceDir(const QString& packName, const QString& size);

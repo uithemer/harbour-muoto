@@ -231,6 +231,16 @@ bool ThemePackModel::hasIconOverlay(int index) const
     return this->hasCapability(index, "overlay");
 }
 
+bool ThemePackModel::hasDynClock(int index) const
+{
+    return this->hasCapability(index, "dynclock");
+}
+
+bool ThemePackModel::hasDynCalendar(int index) const
+{
+    return this->hasCapability(index, "dyncal");
+}
+
 bool ThemePackModel::hasFont(int index) const
 {
     return this->hasCapability(index, "font");

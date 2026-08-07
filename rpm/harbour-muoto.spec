@@ -14,8 +14,8 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.0.3
-Release:        5
+Version:        3.2.0
+Release:        1
 Group:          Qt/Qt
 License:        GPLv3
 Packager:       fravaccaro <me@fravaccaro.com>
@@ -27,6 +27,9 @@ Requires:       sailfish-version >= 2.1.4
 Obsoletes:      harbour-themepacksupport < 0.8.14
 Provides:       harbour-themepacksupport = 0.8.14
 Conflicts:      harbour-iconpacksupport
+Conflicts:      clockwork
+Conflicts:      harbour-dyncal
+Conflicts:      harbour-dynclock
 Obsoletes:      sailfishos-uithemer < 3.1.0
 Provides:       sailfishos-uithemer = %{version}
 
@@ -36,14 +39,17 @@ BuildRequires:  pkgconfig(Qt5Gui)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5DBus)
+BuildRequires:  pkgconfig(mlite5)
+BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(sailfishsilica)
 BuildRequires:  desktop-file-utils
 
 %description
 Enables customization of icons, fonts and pixel density in Sailfish OS.
 Includes the former Theme pack support engine and CLI (themepacksupport).
-Icons are applied by copying pack PNGs into stock paths (hicolor, silica
-jolla icons, and apkd-bridge launcherIcon) with backup/restore; fonts via
-fontconfig. Compatible with harbour-themepack-* theme packages.
+Icons are themed via the launcher daemon (desktop redirect and selective
+hicolor inplace); fonts via fontconfig. Compatible with harbour-themepack-*
+theme packages.
 
 
 %prep
@@ -123,7 +129,10 @@ rm -rf %{buildroot}
 %qmake5_install
 chmod 755 %{buildroot}%{_bindir}/harbour-muoto-update-icons 2>/dev/null || :
 chmod 755 %{buildroot}%{_bindir}/harbour-muoto-oneshot-restore 2>/dev/null || :
+chmod 755 %{buildroot}%{_bindir}/harbour-muoto-migrate-bulk-icons 2>/dev/null || :
 chmod 755 %{buildroot}%{_datadir}/%{name}/service/muoto-dbus-wait.sh 2>/dev/null || :
+
+mkdir -p %{buildroot}%{_datadir}/%{name}/launcher-icons
 
 # >> install post
 # << install post
@@ -142,8 +151,12 @@ desktop-file-install --delete-original       \
 %attr(0755,root,root) %{_bindir}/%{name}
 %attr(0755,root,root) %{_bindir}/harbour-muoto-update-icons
 %attr(0755,root,root) %{_bindir}/harbour-muoto-oneshot-restore
+%attr(0755,root,root) %{_bindir}/harbour-muoto-migrate-bulk-icons
 %attr(0755,root,root) /usr/libexec/harbour-muoto-helperd
 %attr(0755,root,root) /usr/libexec/harbour-muoto-install-listener
+%attr(0755,root,root) /usr/libexec/harbour-muoto-launcher-icond
+%{_libdir}/libmuoto-launcher.so*
+/usr/include/muoto-launcher
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
@@ -156,6 +169,10 @@ desktop-file-install --delete-original       \
 /usr/share/dbus-1/system-services/org.muoto.Muoto1.service
 /usr/share/dbus-1/interfaces/org.muoto.Muoto1.Themes.xml
 /usr/share/dbus-1/interfaces/org.muoto.Muoto1.Packs.xml
+/usr/share/dbus-1/interfaces/org.muoto.Launcher1.Themes.xml
+%config /etc/dbus-1/session.d/org.muoto.Launcher1.conf
+/usr/lib/systemd/user/harbour-muoto-install-listener.service
+/usr/lib/systemd/user/harbour-muoto-launcher-icond.service
 
 # >> files
 # << files
@@ -224,25 +241,41 @@ if [ -n "$MUOTO_UID" ]; then
         sleep 2
         _wait=$((_wait + 1))
     done
-    su defaultuser -c "mkdir -p ~/.config/systemd/user && ln -sf %{_datadir}/%{name}/systemd/user/harbour-muoto-install-listener.service ~/.config/systemd/user/" 2>/dev/null || :
+    su defaultuser -c "mkdir -p ~/.config/systemd/user && ln -sf /usr/lib/systemd/user/harbour-muoto-install-listener.service ~/.config/systemd/user/ 2>/dev/null || ln -sf %{_datadir}/%{name}/systemd/user/harbour-muoto-install-listener.service ~/.config/systemd/user/; ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/ 2>/dev/null || ln -sf %{_datadir}/%{name}/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/" 2>/dev/null || :
     if [ -d "/run/user/$MUOTO_UID" ]; then
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user daemon-reload" 2>/dev/null || :
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user enable --now harbour-muoto-install-listener.service" 2>/dev/null || :
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-install-listener.service" 2>/dev/null || :
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user enable --now harbour-muoto-launcher-icond.service" 2>/dev/null || :
     else
+        su defaultuser -c "mkdir -p ~/.config/systemd/user && ln -sf %{_datadir}/%{name}/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/" 2>/dev/null || :
         su defaultuser -c "systemctl --user daemon-reload" 2>/dev/null || :
         su defaultuser -c "systemctl --user enable harbour-muoto-install-listener.service" 2>/dev/null || :
+        su defaultuser -c "systemctl --user enable harbour-muoto-launcher-icond.service" 2>/dev/null || :
     fi
 fi
-# Obsolete drop-in from 2.3.0 and earlier (removed in 2.3.1)
-rm -f /etc/systemd/system/aliendalvik.service.d/10-themepacksupport.conf
+setcap cap_dac_override+ep /usr/libexec/harbour-muoto-launcher-icond 2>/dev/null || :
+mkdir -p %{_datadir}/%{name}/launcher-icons 2>/dev/null || :
 
-# Icon ops: stock PNG backup tree + flock sentinel (GUI probe + helperd).
-mkdir -p %{_datadir}/%{name}/backup/icons %{_datadir}/%{name}/tmp 2>/dev/null || :
-rm -f %{_datadir}/%{name}/icon-backup.json
+# 3.2: one-shot bulk stock restore from 3.1 backup/icons, then retire tree.
+/usr/bin/harbour-muoto-migrate-bulk-icons 2>/dev/null || :
+rm -rf %{_datadir}/%{name}/backup/icons 2>/dev/null || :
+
+su defaultuser -c "dconf reset /apps/harbour-muoto/launcherInstantApply" 2>/dev/null || :
+
+MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
+if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
+    _pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+    _pack=${_pack#\'}; _pack=${_pack%\'}
+    if [ -n "$_pack" ] && [ "$_pack" != "default" ]; then
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-launcher-icond.service" 2>/dev/null || :
+    fi
+fi
+
+# Icon ops flock sentinel (GUI probe + launcher-icond).
+mkdir -p %{_datadir}/%{name}/tmp 2>/dev/null || :
 touch %{_datadir}/%{name}/icon-ops.lock 2>/dev/null || :
 chmod 0666 %{_datadir}/%{name}/icon-ops.lock 2>/dev/null || :
-rm -f %{_datadir}/%{name}/icon-backup.lock 2>/dev/null || :
 
 # 2.4.5: the vendor dconf defaults file is no longer shipped. If it was
 # installed by an older version (<= 2.4.4), drop it and refresh the dconf db.
@@ -305,8 +338,15 @@ if [ $1 -eq 0 ]; then
     systemctl stop harbour-muoto-update-icons.service 2>/dev/null || true
     MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
     if [ -n "$MUOTO_UID" ]; then
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-launcher-icond.service" 2>/dev/null || true
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-install-listener.service" 2>/dev/null || true
     fi
+    if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID /usr/libexec/harbour-muoto-launcher-icond --restore-once" 2>/dev/null || true
+    else
+        /usr/libexec/harbour-muoto-launcher-icond --restore-once 2>/dev/null || true
+    fi
+    /usr/bin/harbour-muoto-migrate-bulk-icons 2>/dev/null || true
     # Full stock restore while helperd + backup still on disk; non-zero aborts removal.
     /usr/bin/harbour-muoto-oneshot-restore --uninstall
 
@@ -345,4 +385,12 @@ if [ $1 -eq 0 ]; then
     # 2.6.0: refresh dbus so the just-removed system bus name drops
     # from the registry. 2.6.2: polkit reload dropped.
     systemctl reload dbus    2>/dev/null || :
+fi
+
+%transfiletriggerin -- %{_datadir}
+if grep -qF %{_datadir}/harbour-themepack- ; then
+    MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
+    if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
+        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-launcher-icond.service" 2>/dev/null || :
+    fi
 fi

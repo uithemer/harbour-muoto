@@ -77,10 +77,12 @@ private:
     // dbus-activate helperd and drop stale QDBusInterface proxies when the
     // well-known name leaves the bus (helperd idle-quits after 30 s).
     bool ensureHelperService();
+    bool ensureLauncherService();
     void dropDBusProxies();
 
     // Lazy-construct a per-interface QDBusInterface on the system bus.
     QDBusInterface* themesIface();
+    QDBusInterface* launcherThemesIface();
     QDBusInterface* packsIface();
 
     // Wrap a fire-and-forget D-Bus method call. On transport failure
@@ -99,6 +101,7 @@ private:
     Q_DISABLE_COPY(HelperClient)
 
     QDBusInterface* _themes;
+    QDBusInterface* _launcherThemes;
     QDBusInterface* _packs;
     bool            _hooked;
 };

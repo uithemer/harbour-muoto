@@ -1,5 +1,6 @@
 #include "iconpackrunner.h"
 #include "iconpaths.h"
+#include "launcherapplymode.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -30,8 +31,11 @@ bool IconPackRunner::runSfos(const QString& packName) const
             if(!QDir(src).exists())
                 continue;
 
-            const int n = IconPaths::copyPngDirExistingOnly(
-                src, IconPaths::liveJollaIconsDir(jollaCap.at(i)));
+            const int n = launcherInstantApplyEnabled()
+                ? IconPaths::copyPngDirExistingOnlySkipLauncher(
+                    src, IconPaths::liveJollaIconsDir(jollaCap.at(i)))
+                : IconPaths::copyPngDirExistingOnly(
+                    src, IconPaths::liveJollaIconsDir(jollaCap.at(i)));
             if(n > 0)
                 ok = true;
             break;

@@ -63,78 +63,28 @@ Stock reference paths on device (read-only):
 * `/usr/share/icons/hicolor` — native app icons
 * `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/` — Android launcher icons
 
-### Jolla Ambient
+### Jolla Ambient (launcher icons only in 3.2+)
 
-Jolla Ambient is the set of stock icons used across native apps (controls, status bar, covers, camera, and launchers). In a theme pack, ship them under **`jolla/<z>/icons/<icon-key>.png`**.
+From **Muoto 3.2**, only **`icon-launcher-*`** keys under `jolla/<z>/icons/` are themed (via the launcher daemon). Status bar, covers, in-app `graphic-*`, and other ambient families are **not** bulk-copied into silica anymore.
 
-Ambient artwork is still widely used in packs (prefixes such as `graphic-*`, `icon-status-*`, `icon-launcher-*`, etc.). Ship matching keys under `jolla/<z>/icons/`; Muoto applies them under `/usr/share/themes/sailfish-default/silica/<z>/icons/` where stock files already exist.
-
-Icon families (by filename prefix):
-
-* *graphic-* — general UI and stock app graphics
-* *graphic-service-*, *icon-m-service-*, *icon-s-service-* — account settings
-* *icon-camera-* — camera app
-* *icon-cover-* — cover actions
-* *icon-direction-* — maps
-* *icon-l-*, *icon-m-*, *icon-s-* — general-purpose UI icons
-* *icon-launcher-* — app and folder launchers
-* *icon-lock-* — lock screen notification
-* *icon-lock-emergency-call* / *icon-lockscreen-emergency-call*: emergency call
-* *icon-status-* / *icon-system-* — status bar
-
-#### z1.0
-
-Pack paths: `jolla/z1.0/icons/`. Typical sizes:
-
-* *graphic-* — various dimensions
-* *graphic-service-*: 135×135px; *icon-m-service-* 64×64px; *icon-s-service-* 32×32px
-* *icon-camera-*: mostly 48×48px (shutter 64×64px)
-* *icon-cover-*: 32×32px
-* *icon-direction-*: 128×128px
-* *icon-l-*: 96×96px; *icon-m-* 64×64px (*icon-m-incoming-call* / *icon-m-missed-call* 42×42px); *icon-s-* 32×32px
-* *icon-launcher-*: 86×86px
-* *icon-lock-*: 32×32px
-* *icon-lock-emergency-call* / *icon-lockscreen-emergency-call*: 64×64px
-* *icon-status-* / *icon-system-*: 24×24px
-
-#### z1.5
-
-Pack paths: `jolla/z1.5/icons/`. Sizes are roughly 1.5× the z1.0 list (e.g. *icon-launcher-* 129×129px, *icon-status-* 36×36px).
-
-#### z2.0
-
-Pack paths: `jolla/z2.0/icons/`. Sizes are roughly 2× the z1.0 list (e.g. *icon-launcher-* 172×172px, *icon-status-* 48×48px).
-
-#### References
-
-* [Sailfish documentation — Jolla Ambient](https://sailfishos.org/develop/docs/jolla-ambient/)
+Ship launcher keys under `jolla/<z>/icons/`; the daemon redirects `.desktop` `Icon=` to generated PNGs under `/usr/share/harbour-muoto/launcher-icons/`.
 
 ### DynCal
 
-{: .note }
-**Not applied by Muoto 3.x yet.** Pack `dyncal/` is ignored by the current engine (support was removed in 2.4.0 and is planned to return). You may still ship this layout so packs are ready later.
+When a theme pack is active, day-of-month icons from `dyncal/256x256/{01..31}.png` are rendered by the launcher daemon for the Calendar app.
 
-[DynCal](https://github.com/fravaccaro/harbour-dyncal) skinning: place icons in `dyncal/256x256/`:
+Pack layout:
 
 * `dd.png` — day of month (`01`–`31`)
-* `mmdd.png` — holiday icons (month + day)
-
-When support returns, Muoto will apply these only if DynCal is installed.
+* `mmdd.png` — holiday icons (month + day, optional)
 
 ### DynClock
 
-{: .note }
-**Not applied by Muoto 3.x yet.** Pack `dynclock/` is ignored by the current engine (planned to return).
-
-[DynClock](https://github.com/fravaccaro/harbour-dynclock) skinning:
-
-1. Download `bg.png`, `hour.png`, and `minute.png` from the [DynClock package tree](https://github.com/fravaccaro/harbour-dynclock/tree/master/harbour-dynclock/usr/share/harbour-dynclock).
-2. Edit them as you like.
-3. Place them in `dynclock/256x256/`.
+When a theme pack is active, pack assets under `dynclock/256x256/` (`bg.png`, `hour.png`, `minute.png`) are used for a live Clock launcher icon.
 
 ## Style missing app icons (`overlay/`)
 
-If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto stock icons **not** already covered by the pack. Use a canvas sized for the target (recommended **192×192** or **172×172** for app icons).
+If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto **launcher-visible** stock icons not already covered by the pack, via generated PNGs and `.desktop` redirect — stock files under hicolor and `apkd-bridge/launcherIcon/` are **not** modified.
 
 The old Android-only overlay trick (root file `type` containing `android`) is **no longer supported**.
 
@@ -143,7 +93,7 @@ The old Android-only overlay trick (root file `type` containing `android`) is **
 | Path / file | Status |
 |-------------|--------|
 | `sound/` | Removed in 2.4.4 — see [Sounds](sounds) |
-| `dyncal/`, `dynclock/` | Documented, planned — see above |
+| `dyncal/`, `dynclock/` | Applied via launcher daemon when a pack is active |
 | Root `type` (`android` overlay-only packs) | Dropped in 2.7.1 |
 
 ## Icon file size hints

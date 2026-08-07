@@ -72,6 +72,17 @@
     </message>
 </context>
 <context>
+    <name>ChooseLauncherIconDialog</name>
+    <message>
+        <source>Choose icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use default</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
@@ -125,6 +136,14 @@
         <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
         <translation>Start startskjermen på nytt for å oppdatere app-ikoner og skrifttyper, og fullføre aktiveringen av temaet.</translation>
     </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverConfirm</name>
@@ -138,6 +157,13 @@
     <message>
         <source>Settings applied.</source>
         <translation>Innstillinger tatt i bruk.</translation>
+    </message>
+</context>
+<context>
+    <name>CustomizeLauncherIconsPage</name>
+    <message>
+        <source>Customize launcher icons</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -626,6 +652,10 @@
     <message>
         <source>Uninstalling theme…</source>
         <translation>Avinstallerer tema…</translation>
+    </message>
+    <message>
+        <source>Customize launcher icons</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

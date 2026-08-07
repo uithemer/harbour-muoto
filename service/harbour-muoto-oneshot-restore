@@ -1,6 +1,5 @@
 #!/bin/sh
 # Stock restore: system upgrade (no args) or package uninstall (--uninstall).
-# Order mirrors GUI Restore theme: fonts, icons (when backed up), dconf, silica density, vendor locks.
 set -eu
 
 . /usr/share/harbour-muoto/service/muoto-dbus-wait.sh
@@ -26,22 +25,21 @@ for arg in "$@"; do
     esac
 done
 
-# 1) Fonts — deactivateFont + restoreFonts (GUI order)
+# 1) Fonts
 muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/activeFontPack \"'default'\""
 muoto_run_as_user_or_die 'rm -f ~/.config/fontconfig/conf.d/99-muoto.conf; fc-cache -f'
 
-# 2) Icons — helperd RestoreIcons when backup exists (uninstall) or always (upgrade)
+# 2) Icons — launcher session RestoreIcons (always on upgrade/uninstall)
 _restore_icons_once() {
-    if ! muoto_ensure_helperd; then
-        echo "harbour-muoto-oneshot-restore: helperd not available" >&2
+    if ! muoto_ensure_launcher_icond; then
+        echo "harbour-muoto-oneshot-restore: launcher-icond not available" >&2
         return 1
     fi
     muoto_wait_op_begin RestoreIcons "$ICON_WAIT_SEC"
-    if ! dbus-send --system --type=method_call \
-        --dest="$MUOTO_SERVICE" \
-        "$MUOTO_PATH" \
-        "$MUOTO_THEMES.RestoreIcons" \
-        >/dev/null 2>&1; then
+    if ! muoto_dbus_session_send \
+        "$MUOTO_LAUNCHER_SERVICE" \
+        "$MUOTO_LAUNCHER_PATH" \
+        "$MUOTO_LAUNCHER_THEMES.RestoreIcons"; then
         muoto_wait_op_cancel
         return 1
     fi
@@ -55,23 +53,17 @@ _run_icon_restore() {
     fi
 }
 
-NEED_ICON_RESTORE=false
+# Legacy bulk safety net (3.1 migration path).
 if muoto_icons_backup_present; then
-    NEED_ICON_RESTORE=true
-elif [ "$UNINSTALL" = true ]; then
-    muoto_warn_if_themed_without_backup
-else
-    NEED_ICON_RESTORE=true
+    /usr/bin/harbour-muoto-migrate-bulk-icons || true
 fi
 
-if [ "$NEED_ICON_RESTORE" = true ]; then
-    if ! _run_icon_restore; then
-        echo "harbour-muoto-oneshot-restore: RestoreIcons failed" >&2
-        exit 1
-    fi
+if ! _run_icon_restore; then
+    echo "harbour-muoto-oneshot-restore: RestoreIcons failed" >&2
+    exit 1
 fi
 
-# 3) Icons dconf — after successful restore or when icons were skipped
+# 3) Icons dconf
 muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/activeIconPack \"'default'\""
 muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/iconOverlay false"
 
@@ -79,7 +71,7 @@ muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/iconOverlay false"
 muoto_dconf_as_user_or_die "dconf reset /desktop/sailfish/silica/theme_pixel_ratio"
 muoto_dconf_as_user_or_die "dconf reset /desktop/sailfish/silica/icon_size_launcher"
 
-# 5) Vendor dconf locks — optional files
+# 5) Vendor dconf locks
 for f in silica-configs.txt ui-configs.txt; do
     bk="$DATADIR/backup/dlocks/$f.bk"
     dst="/etc/dconf/db/vendor.d/locks/$f"

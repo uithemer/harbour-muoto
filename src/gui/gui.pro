@@ -1,7 +1,10 @@
 TARGET = harbour-muoto
 TEMPLATE = app
 
-CONFIG += sailfishapp c++11
+CONFIG += sailfishapp c++11 link_pkgconfig
+PKGCONFIG += mlite5 sailfishsilica glib-2.0
+
+LIBS += -L../launcher -lmuoto-launcher
 
 # qmake feature .prfs added via `CONFIG += <name>` are auto-loaded at the end
 # of .pro processing (default_post.prf phase). That means any qml/desktop/icon
@@ -28,7 +31,7 @@ QT += dbus
 # only the QML side ever touches them.
 include(../ops/ops.pri)
 
-INCLUDEPATH += $$PWD
+INCLUDEPATH += $$PWD $$PWD/../launcher $$PWD/../ops
 
 HEADERS += \
     $$PWD/themepack.h \
@@ -36,7 +39,9 @@ HEADERS += \
     $$PWD/fontweightmodel.h \
     $$PWD/fontapplier.h \
     $$PWD/iconpreviewprovider.h \
-    $$PWD/helperclient.h
+    $$PWD/helperclient.h \
+    $$PWD/launcherimageprovider.h \
+    $$PWD/launchericonhelper.h
 
 SOURCES += \
     $$PWD/harbour-muoto.cpp \
@@ -45,7 +50,9 @@ SOURCES += \
     $$PWD/fontweightmodel.cpp \
     $$PWD/fontapplier.cpp \
     $$PWD/iconpreviewprovider.cpp \
-    $$PWD/helperclient.cpp
+    $$PWD/helperclient.cpp \
+    $$PWD/launcherimageprovider.cpp \
+    $$PWD/launchericonhelper.cpp
 
 ROOT = $$PWD/../..
 
@@ -81,6 +88,8 @@ OTHER_FILES += \
     $$ROOT/qml/pages/RestoreDDPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
+    $$ROOT/qml/pages/CustomizeLauncherIconsPage.qml \
+    $$ROOT/qml/pages/ChooseLauncherIconDialog.qml \
     $$ROOT/rpm/* \
     $$ROOT/harbour-muoto.desktop
 
@@ -131,7 +140,8 @@ service.path  = /usr/share/$$TARGET/service
 
 autobin.files = \
     $$ROOT/service/harbour-muoto-update-icons \
-    $$ROOT/service/harbour-muoto-oneshot-restore
+    $$ROOT/service/harbour-muoto-oneshot-restore \
+    $$ROOT/service/harbour-muoto-migrate-bulk-icons
 autobin.path = /usr/bin
 
 upgrade_dropin.files = \
@@ -139,8 +149,11 @@ upgrade_dropin.files = \
 upgrade_dropin.path = /usr/share/$$TARGET/service/sailfish-upgrade-ui.service.d
 
 userunit.files = \
-    $$ROOT/service/systemd/user/harbour-muoto-install-listener.service
-userunit.path = /usr/share/$$TARGET/systemd/user
+    $$ROOT/service/systemd/user/harbour-muoto-install-listener.service \
+    $$ROOT/service/harbour-muoto-launcher-icond.service
+userunit.path = /usr/lib/systemd/user
+
+# launcher-icons dir created in RPM %post
 
 images.files = $$files($$ROOT/images/*)
 images.path  = /usr/share/$$TARGET/images
@@ -190,8 +203,12 @@ dbusservice.path  = /usr/share/dbus-1/system-services
 
 dbusxml.files = \
     $$ROOT/dbus/org.muoto.Muoto1.Themes.xml \
-    $$ROOT/dbus/org.muoto.Muoto1.Packs.xml
+    $$ROOT/dbus/org.muoto.Muoto1.Packs.xml \
+    $$ROOT/dbus/org.muoto.Launcher1.Themes.xml
 dbusxml.path  = /usr/share/dbus-1/interfaces
+
+sessiondbusconf.files = $$ROOT/dbus/org.muoto.Launcher1.conf
+sessiondbusconf.path  = /etc/dbus-1/session.d
 
 # No polkit hand-off. See dbus/org.muoto.Muoto1.conf
 # for the new policy and src/daemon/helperservice.cpp for the
@@ -205,5 +222,5 @@ dbusxml.path  = /usr/share/dbus-1/interfaces
 # and our own asset rules here.
 INSTALLS += service autobin upgrade_dropin userunit images \
             icon86 icon108 icon128 icon172 icon256 \
-            dbusconf dbusservice dbusxml \
+            dbusconf dbusservice dbusxml sessiondbusconf \
             qm

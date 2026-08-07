@@ -18,6 +18,8 @@ Dialog
     property bool hasIcons: themePackModel.hasIcons(themePackIndex)
     property bool hasIconApply: hasNative || hasApk || hasJolla
     property bool hasIconOverlay: themePackModel.hasIconOverlay(themePackIndex)
+    property bool hasDynClock: themePackModel.hasDynClock(themePackIndex)
+    property bool hasDynCalendar: themePackModel.hasDynCalendar(themePackIndex)
     property bool hasFont: themePackModel.hasFont(themePackIndex)
     property bool hasFontNonLatin: themePackModel.hasFontNonLatin(themePackIndex)
     property string packDisplayName: themePackModel.packDisplayName(themePackIndex)
@@ -231,8 +233,11 @@ Dialog
                 visible: hasIconApply
                 checked: hasIconApply
                 enabled: hasIconApply
-                onClicked: {
-                    iconsSelected = itsicons.checked;
+                onCheckedChanged: {
+                    iconsSelected = itsicons.checked
+                    // Overlay only makes sense together with pack icons.
+                    if (!itsicons.checked && itsiconoverlay.checked)
+                        itsiconoverlay.checked = false
                 }
             }
 
@@ -242,11 +247,29 @@ Dialog
                 text: qsTr("Style missing app icons")
                 description: qsTr("Uses this theme's look for apps that don't have a custom icon in the pack.")
                 visible: hasIconOverlay
-                checked: hasIconOverlay
-                enabled: hasIconOverlay
+                checked: hasIconOverlay && hasIconApply
+                enabled: hasIconOverlay && itsicons.checked
                 onClicked: {
                     iconOverlaySelected = itsiconoverlay.checked;
                 }
+            }
+
+            IconTextSwitch {
+                id: itsdynclock
+                automaticCheck: true
+                text: qsTr("Dynamic clock icon")
+                visible: hasDynClock
+                checked: settings.dynamicClockEnabled
+                onClicked: settings.dynamicClockEnabled = itsdynclock.checked
+            }
+
+            IconTextSwitch {
+                id: itsdyncal
+                automaticCheck: true
+                text: qsTr("Dynamic calendar icon")
+                visible: hasDynCalendar
+                checked: settings.dynamicCalendarEnabled
+                onClicked: settings.dynamicCalendarEnabled = itsdyncal.checked
             }
             }
             } // grid
