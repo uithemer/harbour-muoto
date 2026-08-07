@@ -80,13 +80,13 @@ Pack layout:
 * `dd.png` — day of month (`01`–`31`)
 * `mmdd.png` — holiday icons (month + day, optional)
 
-Enable on **Confirm** when applying a pack that includes `dyncal/`, or on the **Dynamic icons** tab while such a pack is active (or after restoring to the default theme, which uses stock assets). The tab is greyed out only when a non-default pack without dyn assets is active.
+Enable on **Confirm** when applying a pack that includes `dyncal/`, or on the **Dynamic icons** tab while such a pack is active (or on default after restore — UI available, switches off until enabled). The tab is greyed out only when a non-default pack without dyn assets is active.
 
 ### DynClock
 
 Live Clock launcher icon. With a theme pack that ships `dynclock/`, assets under `dynclock/256x256/` (`bg.png`, `hour.png`, `minute.png`) drive the live hands.
 
-Enable on **Confirm** when applying a pack that includes `dynclock/`, or on the **Dynamic icons** tab while such a pack is active (or after restoring to the default theme, which uses stock assets). The tab is greyed out only when a non-default pack without dyn assets is active.
+Enable on **Confirm** when applying a pack that includes `dynclock/`, or on the **Dynamic icons** tab while such a pack is active (or on default after restore — UI available, switches off until enabled). The tab is greyed out only when a non-default pack without dyn assets is active.
 
 ## Style missing app icons (`overlay/`)
 

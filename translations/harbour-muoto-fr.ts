@@ -271,7 +271,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Dynamic icons need an active theme that includes clock or calendar assets. Enable them when you apply such a theme.</source>
+        <source>Live clock and calendar on the launcher using stock icons.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This theme has no dynamic clock or calendar assets. Apply a theme that includes them, or restore the default theme.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

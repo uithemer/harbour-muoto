@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Opal.Delegates 1.0 as D
 import harbour.muoto 1.0
 import "."
 
@@ -7,8 +8,8 @@ SilicaFlickable {
     id: dynView
     anchors.fill: parent
     contentHeight: dynContent.height
-    enabled: !settings.isRunning && dynAvailable
-    opacity: (!dynAvailable || settings.isRunning) ? 0.4 : 1.0
+    enabled: !settings.isRunning
+    opacity: settings.isRunning ? 0.4 : 1.0
 
     property bool tabActive: true
     property string previewTick: "0"
@@ -50,12 +51,15 @@ SilicaFlickable {
     Column {
         id: dynContent
         width: parent.width
+        spacing: Theme.paddingLarge
 
         PageHeader {
             title: qsTr("Dynamic icons")
         }
 
         MuotoTextLabel {
+            // Keep intro readable even when no dyn assets (tab still scrollable).
+            opacity: dynView.dynAvailable ? 1.0 : Theme.opacityHigh
             text: dynView.dynAvailable
                   ? (dynView.stockDyn
                      ? qsTr("Live clock and calendar on the launcher using stock icons.")
@@ -63,77 +67,91 @@ SilicaFlickable {
                   : qsTr("This theme has no dynamic clock or calendar assets. Apply a theme that includes them, or restore the default theme.")
         }
 
-        Item {
+        D.TwoLineDelegate {
+            id: clockDelegate
             width: parent.width
-            height: Theme.paddingLarge
-            visible: dynView.hasActiveDynClock
-        }
-
-        Image {
-            id: clockPreview
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: Theme.iconSizeLauncher * 2
-            height: width
-            fillMode: Image.PreserveAspectFit
-            sourceSize.width: width
-            sourceSize.height: height
-            visible: dynView.hasActiveDynClock
-            opacity: settings.dynamicClockEnabled ? 1.0 : 0.4
-            source: visible
-                    ? ("image://muoto-launcher/dyn-clock/" + dynView.activePack
-                       + "?t=" + dynView.previewTick)
-                    : ""
-        }
-
-        IconTextSwitch {
-            id: itsdynclock
-            width: parent.width
-            automaticCheck: true
             visible: dynView.hasActiveDynClock
             enabled: dynView.hasActiveDynClock && !settings.isRunning
+            interactive: false
+            minContentHeight: Theme.itemSizeLarge
             text: qsTr("Dynamic clock icon")
             description: qsTr("Shows the current time on the Clock launcher icon.")
-            checked: dynView.hasActiveDynClock && settings.dynamicClockEnabled
-            onClicked: {
-                if (dynView.hasActiveDynClock)
-                    settings.dynamicClockEnabled = itsdynclock.checked
+            padding.topBottom: Theme.paddingMedium
+
+            Component.onCompleted: descriptionLabel.wrapped = true
+
+            leftItem: Component {
+                TextSwitch {
+                    id: clockSwitch
+                    checked: dynView.hasActiveDynClock && settings.dynamicClockEnabled
+                    enabled: dynView.hasActiveDynClock && !settings.isRunning
+                    width: Theme.itemSizeSmall
+                    height: Theme.itemSizeSmall
+                    leftMargin: 0
+                    rightMargin: 0
+                    onCheckedChanged: {
+                        if (!enabled)
+                            return
+                        if (checked !== settings.dynamicClockEnabled)
+                            settings.dynamicClockEnabled = checked
+                    }
+                }
+            }
+
+            rightItem: Component {
+                Image {
+                    width: Theme.iconSizeLauncher
+                    height: width
+                    fillMode: Image.PreserveAspectFit
+                    sourceSize.width: width
+                    sourceSize.height: height
+                    source: "image://muoto-launcher/dyn-clock/" + dynView.activePack
+                            + "?t=" + dynView.previewTick
+                }
             }
         }
 
-        Item {
+        D.TwoLineDelegate {
+            id: calendarDelegate
             width: parent.width
-            height: Theme.paddingLarge
-            visible: dynView.hasActiveDynCalendar
-        }
-
-        Image {
-            id: calendarPreview
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: Theme.iconSizeLauncher * 2
-            height: width
-            fillMode: Image.PreserveAspectFit
-            sourceSize.width: width
-            sourceSize.height: height
-            visible: dynView.hasActiveDynCalendar
-            opacity: settings.dynamicCalendarEnabled ? 1.0 : 0.4
-            source: visible
-                    ? ("image://muoto-launcher/dyn-calendar/" + dynView.activePack
-                       + "?t=" + dynView.previewTick)
-                    : ""
-        }
-
-        IconTextSwitch {
-            id: itsdyncal
-            width: parent.width
-            automaticCheck: true
             visible: dynView.hasActiveDynCalendar
             enabled: dynView.hasActiveDynCalendar && !settings.isRunning
+            interactive: false
+            minContentHeight: Theme.itemSizeLarge
             text: qsTr("Dynamic calendar icon")
             description: qsTr("Shows today's date on the Calendar launcher icon.")
-            checked: dynView.hasActiveDynCalendar && settings.dynamicCalendarEnabled
-            onClicked: {
-                if (dynView.hasActiveDynCalendar)
-                    settings.dynamicCalendarEnabled = itsdyncal.checked
+            padding.topBottom: Theme.paddingMedium
+
+            Component.onCompleted: descriptionLabel.wrapped = true
+
+            leftItem: Component {
+                TextSwitch {
+                    id: calendarSwitch
+                    checked: dynView.hasActiveDynCalendar && settings.dynamicCalendarEnabled
+                    enabled: dynView.hasActiveDynCalendar && !settings.isRunning
+                    width: Theme.itemSizeSmall
+                    height: Theme.itemSizeSmall
+                    leftMargin: 0
+                    rightMargin: 0
+                    onCheckedChanged: {
+                        if (!enabled)
+                            return
+                        if (checked !== settings.dynamicCalendarEnabled)
+                            settings.dynamicCalendarEnabled = checked
+                    }
+                }
+            }
+
+            rightItem: Component {
+                Image {
+                    width: Theme.iconSizeLauncher
+                    height: width
+                    fillMode: Image.PreserveAspectFit
+                    sourceSize.width: width
+                    sourceSize.height: height
+                    source: "image://muoto-launcher/dyn-calendar/" + dynView.activePack
+                            + "?t=" + dynView.previewTick
+                }
             }
         }
 

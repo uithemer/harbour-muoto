@@ -570,9 +570,9 @@ if [ "$RUN_DYN" = true ]; then
             fail T-23-disable-flags "clock=$CLK_FLAG cal=$CAL_FLAG"
         fi
 
-        # Restore → stock dyn capability re-enabled (Themes restore path)
-        dconf_write_bool /apps/harbour-muoto/launcher/dynamicClockEnabled true
-        dconf_write_bool /apps/harbour-muoto/launcher/dynamicCalendarEnabled true
+        # Restore → stock dyn UI available; flags off (do not auto-apply)
+        dconf_write_bool /apps/harbour-muoto/launcher/dynamicClockEnabled false
+        dconf_write_bool /apps/harbour-muoto/launcher/dynamicCalendarEnabled false
         restore_icons
         pack_now=$(dconf_unquote /apps/harbour-muoto/activeIconPack)
         if [ "$pack_now" = "default" ] || [ -z "$pack_now" ]; then
@@ -582,10 +582,10 @@ if [ "$RUN_DYN" = true ]; then
         fi
         CLK_FLAG=$(dconf_unquote /apps/harbour-muoto/launcher/dynamicClockEnabled)
         CAL_FLAG=$(dconf_unquote /apps/harbour-muoto/launcher/dynamicCalendarEnabled)
-        if [ "$CLK_FLAG" = "true" ] && [ "$CAL_FLAG" = "true" ]; then
+        if [ "$CLK_FLAG" != "true" ] && [ "$CAL_FLAG" != "true" ]; then
             pass T-23-restore-dyn-flags
         else
-            fail T-23-restore-dyn-flags "clock=$CLK_FLAG cal=$CAL_FLAG (expected true)"
+            fail T-23-restore-dyn-flags "clock=$CLK_FLAG cal=$CAL_FLAG (expected false)"
         fi
 
         # Leave pack applied with Confirm-style enable for present features

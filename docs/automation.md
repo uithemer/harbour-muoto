@@ -110,7 +110,7 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 | Pack has `dynclock/` and/or `dyncal/` | Otherwise T-23 soft-skips (no fail) |
 | dconf enable for present features (Confirm “selected”) | Flags match; clock/calendar `Icon=` under `launcher-icons/` when that feature is enabled |
 | Both dyn flags false | Flags false; clock/calendar `Icon=` not muoto dyn redirects |
-| RestoreIcons + re-enable dyn flags | `activeIconPack=default`, both dyn dconf keys **true** (stock capability) |
+| RestoreIcons + dyn flags off | `activeIconPack=default`, both dyn dconf keys **false** (UI usable for stock; live icons not applied until toggled) |
 
 Override probe with `MUOTO_PROBE_PKG` / `MUOTO_PROBE_DESKTOP`. Sudo password: `MUOTO_SUDO_PASS` (default `rootme`).
 
