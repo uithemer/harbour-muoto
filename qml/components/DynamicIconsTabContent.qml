@@ -48,6 +48,13 @@ SilicaFlickable {
 
     VerticalScrollDecorator { }
 
+    PullDownMenu {
+        flickable: dynView
+        enabled: tabActive && !settings.isRunning
+
+        MuotoAboutMenuItem { }
+    }
+
     Column {
         id: dynContent
         width: parent.width
