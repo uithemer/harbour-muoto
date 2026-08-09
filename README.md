@@ -14,7 +14,7 @@ Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundl
 
 ## Features
 
-<a href="docs/screenshots/screenshot1.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot1.png" alt="Themes tab" /></a> <a href="docs/screenshots/screenshot2.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot2.png" alt="Apply icon theme screen" /></a> <a href="docs/screenshots/screenshot3.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot3.png" alt="Apply font theme screen" /></a> <a href="docs/screenshots/screenshot4.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot4.png" alt="Display density tab" /></a> <a href="docs/screenshots/screenshot5.png"><img width="25%" style="float: left;" src="docs/screenshots/screenshot5.png" alt="Dynamic icons tab" /></a>
+<a href="docs/screenshots/screenshot1.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot1.png" alt="Themes tab" /></a> <a href="docs/screenshots/screenshot2.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot2.png" alt="Apply icon theme screen" /></a> <a href="docs/screenshots/screenshot3.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot3.png" alt="Apply font theme screen" /></a> <a href="docs/screenshots/screenshot4.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot4.png" alt="Display density tab" /></a> <a href="docs/screenshots/screenshot5.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot5.png" alt="Dynamic icons tab" /></a>
 <br style="clear: both; height:5px;" />
 
 - Icon theming (native, Jolla, Android).
