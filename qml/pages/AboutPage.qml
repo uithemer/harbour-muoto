@@ -90,6 +90,12 @@ A.AboutPageBase {
         A.Attribution {
             name: "Per-user font theming via fontconfig"
             homepage: "https://dt.iki.fi/sailfish-os-change-default-font"
+        },
+        A.Attribution {
+            name: "Clockwork"
+            entries: ["dseight"]
+            homepage: "https://github.com/dseight/clockwork"
+            licenses: A.License { spdxId: "MIT" }
         }
     ]
 

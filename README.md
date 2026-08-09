@@ -60,6 +60,7 @@ Builds for aarch64, armv7hl and i486 are available on [OpenRepos](https://openre
 - [Opal](https://github.com/Pretty-SFOS/opal) QML modules (About, Tabs, SupportMe, LinkHandler) by [Mirian Margiani](https://github.com/Pretty-SFOS/opal-about).
 - Theme pack support engine by fravaccaro (formerly separate `themepacksupport-sailfishos` package).
 - Partially based on [Icon pack support GUI](https://github.com/RikudouSage/sailfish-iconpacksupport-gui).
+- Dynamic icons implementation and Lipstick nudge for native apps inspired by [Clockwork](https://github.com/dseight/clockwork) by dseight.
 - Thanks to Dax89 for C++ and QML help.
 - Thanks to Eugenio_g7 for the *One-click restore* service.
 - Thanks to LQS for Android DPI on Xperia XA2.
