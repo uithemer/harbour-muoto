@@ -19,6 +19,7 @@ Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundl
 
 - Icon theming (native, Jolla, Android).
 - Style missing app icons (theme look for apps not in the pack).
+- Dynamic clock and calendar icons on the homescreen.
 - Font theming.
 - Display density (pixel ratio, launcher icon size).
 
