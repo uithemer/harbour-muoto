@@ -10,7 +10,7 @@ Muoto lets users apply `harbour-themepack-*` icon/font packs and display density
 
 | Audience | Where |
 | -------- | ----- |
-| End users | [docs/guide.md](docs/guide.md), [docs/themes.md](docs/themes.md), [docs/density.md](docs/density.md) |
+| End users | [docs/guide.md](docs/guide.md), [docs/themes.md](docs/themes.md), [docs/dynamic-icons.md](docs/dynamic-icons.md), [docs/density.md](docs/density.md) |
 | Pack authors | [docs/getstarted.md](docs/getstarted.md), [docs/icons.md](docs/icons.md), [docs/fonts.md](docs/fonts.md) |
 | Maintainers / agents | [docs/devel/](docs/devel/) — [architecture](docs/devel/architecture.md), [testing](docs/devel/testing.md), [debugging](docs/devel/debugging.md), [automation](docs/devel/automation.md) |
 

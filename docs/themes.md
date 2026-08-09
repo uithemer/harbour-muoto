@@ -15,6 +15,8 @@ Tap a pack, choose icons, style for missing icons, and/or fonts (and font weight
 
 You can combine packs — for example icons from one pack and fonts from another (apply each part separately).
 
+If the pack includes live clock or calendar artwork, Confirm also offers **Dynamic clock** / **Dynamic calendar** switches. You can change those later on the **[Dynamic icons](dynamic-icons)** tab.
+
 ## Style missing app icons
 
 If the pack supports it, enable **Style missing app icons** when applying a theme. Muoto uses frames or masks from the pack's `overlay/` folder to style app icons that don't have a custom icon in the pack.

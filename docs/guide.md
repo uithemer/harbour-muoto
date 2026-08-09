@@ -20,7 +20,7 @@ Revert themes and display-density changes **before** updating Sailfish OS. If yo
 The app opens on three tabs:
 
 * **[Themes](themes)** — apply icon and font packs, missing icon styling, restore, uninstall
-* **Dynamic icons** — live clock and calendar when the active pack (or stock default) supports them
+* **[Dynamic icons](dynamic-icons)** — live clock and calendar on the homescreen
 * **[Display density](density)** — pixel ratio, launcher icon size
 
 ## Cover
