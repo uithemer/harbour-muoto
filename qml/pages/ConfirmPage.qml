@@ -65,9 +65,12 @@ Dialog
 
     onAccepted: {
         settings.homeRefresh = restartSection.homeRefreshSwitch.checked
-        // Pack-gated: missing feature or unchecked switch ⇒ disable.
-        settings.dynamicClockEnabled = hasDynClock && itsdynclock.checked
-        settings.dynamicCalendarEnabled = hasDynCalendar && itsdyncal.checked
+        // Only write dyn flags when this pack exposes them (switch visible).
+        // Font-only / no-dyn packs must leave existing clock/calendar state alone.
+        if (hasDynClock)
+            settings.dynamicClockEnabled = itsdynclock.checked
+        if (hasDynCalendar)
+            settings.dynamicCalendarEnabled = itsdyncal.checked
     }
 
     Connections {
