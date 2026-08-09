@@ -72,17 +72,6 @@
     </message>
 </context>
 <context>
-    <name>ChooseLauncherIconDialog</name>
-    <message>
-        <source>Choose icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use default</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
@@ -165,13 +154,6 @@
     <message>
         <source>Settings applied.</source>
         <translation type="unfinished">Instellingen toegepast.</translation>
-    </message>
-</context>
-<context>
-    <name>CustomizeLauncherIconsPage</name>
-    <message>
-        <source>Customize launcher icons</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -687,10 +669,6 @@
     </message>
     <message>
         <source>Uninstalling theme…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Customize launcher icons</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

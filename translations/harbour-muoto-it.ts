@@ -72,17 +72,6 @@
     </message>
 </context>
 <context>
-    <name>ChooseLauncherIconDialog</name>
-    <message>
-        <source>Choose icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use default</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ConfirmPage</name>
     <message>
         <source>Cancel</source>
@@ -138,19 +127,19 @@
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icona Orologio dinamica</translation>
     </message>
     <message>
         <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio, nello stile di questo tema.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icona Calendario dinamica</translation>
     </message>
     <message>
         <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra la data corrente nell&apos;icona Calendario, nello stile di questo tema.</translation>
     </message>
 </context>
 <context>
@@ -165,13 +154,6 @@
     <message>
         <source>Settings applied.</source>
         <translation>Impostazioni applicate.</translation>
-    </message>
-</context>
-<context>
-    <name>CustomizeLauncherIconsPage</name>
-    <message>
-        <source>Customize launcher icons</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -248,35 +230,35 @@
     <name>DynamicIconsTabContent</name>
     <message>
         <source>Dynamic icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Icone dinamiche</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icona Orologio dinamica</translation>
     </message>
     <message>
         <source>Shows the current time on the Clock launcher icon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icona Calendario dinamica</translation>
     </message>
     <message>
         <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra la data corrente nell&apos;icona Calendario.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario.</translation>
     </message>
     <message>
         <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation type="unfinished"></translation>
+        <translation>Questo tema non include le icone dinamiche per l&apos;Orologio o il Calendario. Prova un altro tema o ripristina quello predefinito.</translation>
     </message>
 </context>
 <context>
@@ -320,7 +302,7 @@
     </message>
     <message>
         <source>Dynamic icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Icone dinamiche</translation>
     </message>
 </context>
 <context>
@@ -688,10 +670,6 @@
     <message>
         <source>Uninstalling theme…</source>
         <translation>Disinstallazione tema…</translation>
-    </message>
-    <message>
-        <source>Customize launcher icons</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
