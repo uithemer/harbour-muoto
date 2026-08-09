@@ -1,10 +1,8 @@
 #include "imageutil.h"
 #include "iconpaths.h"
 
-#include <QDir>
 #include <QDirIterator>
 #include <QPainter>
-#include <QFileInfo>
 #include <QtGlobal>
 #include <algorithm>
 #include <random>
@@ -27,38 +25,6 @@ namespace
             all << it.next();
         return all;
     }
-}
-
-QImage composite(const QImage& overlayBase, const QImage& innerIcon,
-                 const QSize& outerSize, const QSize& innerSize)
-{
-    QImage out(outerSize, QImage::Format_ARGB32_Premultiplied);
-    out.fill(Qt::transparent);
-
-    QPainter p(&out);
-    p.setRenderHint(QPainter::SmoothPixmapTransform);
-    p.setRenderHint(QPainter::Antialiasing);
-
-    if(!overlayBase.isNull())
-    {
-        const QImage scaled = overlayBase.scaled(outerSize,
-                                                 Qt::IgnoreAspectRatio,
-                                                 Qt::SmoothTransformation);
-        p.drawImage(QPoint(0, 0), scaled);
-    }
-
-    if(!innerIcon.isNull())
-    {
-        const QImage scaledInner = innerIcon.scaled(innerSize,
-                                                    Qt::KeepAspectRatio,
-                                                    Qt::SmoothTransformation);
-        const int x = (outerSize.width()  - scaledInner.width())  / 2;
-        const int y = (outerSize.height() - scaledInner.height()) / 2;
-        p.drawImage(QPoint(x, y), scaledInner);
-    }
-
-    p.end();
-    return out;
 }
 
 QImage montage9(const QStringList& pngs, const QSize& cell, int pad)
@@ -121,19 +87,6 @@ QStringList samplePackIcons(const QString& packDir, int count)
         all = all.mid(0, count);
 
     return all;
-}
-
-QString randomOverlayBase(const QString& packDir)
-{
-    const QString packRoot = IconPaths::packDir(packDir);
-    const QStringList all = collectPngsUnderCapability(packRoot, QStringLiteral("overlay"));
-    if(all.isEmpty())
-        return QString();
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(0, all.size() - 1);
-    return all[dist(gen)];
 }
 
 } // namespace ImageUtil

@@ -225,6 +225,9 @@ SilicaListView {
                         themepackmodel.restoreTheme(dlgrestore.restoreFonts)
                     }
                     if (dlgrestore.restoreIcons) {
+                        // Stock dyn UI is available again; do not auto-apply live icons.
+                        settings.dynamicClockEnabled = false
+                        settings.dynamicCalendarEnabled = false
                         themesView._pendingIconRestore = true
                         Helper.restoreIcons()
                     }
@@ -285,6 +288,8 @@ SilicaListView {
                     themesView.beginManualThemeWork(qsTr("Uninstalling theme…"))
 
                     if (iconInstalled) {
+                        settings.dynamicClockEnabled = false
+                        settings.dynamicCalendarEnabled = false
                         themesView._pendingIconRestore = true
                         themesView._uninstallAfterIconRestore = true
                         themesView._uninstallPackIndex = index

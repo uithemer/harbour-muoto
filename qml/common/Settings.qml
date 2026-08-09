@@ -21,11 +21,20 @@ Item
         property bool homeRefresh: true
     }
 
+    ConfigurationGroup {
+        id: launcherConf
+        path: "/apps/harbour-muoto/launcher"
+        property bool dynamicClockEnabled: true
+        property bool dynamicCalendarEnabled: true
+    }
+
     property alias wizardDone: conf.wizardDone
     property alias activeIconPack: conf.activeIconPack
     property alias activeFontPack: conf.activeFontPack
     property alias iconOverlay: conf.iconOverlay
     property alias homeRefresh: conf.homeRefresh
+    property alias dynamicClockEnabled: launcherConf.dynamicClockEnabled
+    property alias dynamicCalendarEnabled: launcherConf.dynamicCalendarEnabled
 
     property bool isRunning: false
 
@@ -47,6 +56,8 @@ Item
     onActiveFontPackChanged: conf.sync();
     onIconOverlayChanged: conf.sync();
     onHomeRefreshChanged: conf.sync();
+    onDynamicClockEnabledChanged: launcherConf.sync();
+    onDynamicCalendarEnabledChanged: launcherConf.sync();
 
     Component.onCompleted: {
         conf.sync();

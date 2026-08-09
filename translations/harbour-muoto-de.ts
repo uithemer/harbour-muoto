@@ -125,6 +125,22 @@
         <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverConfirm</name>
@@ -211,6 +227,41 @@
     </message>
 </context>
 <context>
+    <name>DynamicIconsTabContent</name>
+    <message>
+        <source>Dynamic icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shows the current time on the Clock launcher icon.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ExternalUrlPage</name>
     <message>
         <source>Swipe left to preview.</source>
@@ -249,23 +300,16 @@
         <source>Themes</source>
         <translation>Themen</translation>
     </message>
+    <message>
+        <source>Dynamic icons</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
         <translation type="unfinished">Über Muoto </translation>
-    </message>
-</context>
-<context>
-    <name>MuotoRestartHomescreenButton</name>
-    <message>
-        <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

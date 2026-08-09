@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.muoto.Launcher1.Themes">
+    <method name="ApplyIcons">
+      <arg name="pack" direction="in" type="s"/>
+      <arg name="runPack" direction="in" type="b"/>
+      <arg name="overlay" direction="in" type="b"/>
+    </method>
+    <method name="RestoreIcons"/>
+    <signal name="OperationCompleted">
+      <arg name="op" type="s"/>
+      <arg name="ok" type="b"/>
+      <arg name="message" type="s"/>
+    </signal>
+    <signal name="Progress">
+      <arg name="op" type="s"/>
+      <arg name="done" type="i"/>
+      <arg name="total" type="i"/>
+    </signal>
+  </interface>
+</node>

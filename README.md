@@ -34,6 +34,10 @@ Download theme packs from [OpenRepos](https://openrepos.net/tags/themepack).
 
 [Create theme packs](docs/getstarted.md) — documentation (icons, fonts, packaging with the Sailfish SDK).
 
+## Developers
+
+[Developers](docs/devel/) — architecture, testing, debugging, and auto-apply automation (maintainers and contributors). See also **AGENTS.md** at the repository root for coding-agent orientation.
+
 ## Translate
 
 Request a new language or contribute on the [Transifex project page](https://explore.transifex.com/fravaccaro/ui-themer).

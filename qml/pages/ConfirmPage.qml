@@ -18,6 +18,8 @@ Dialog
     property bool hasIcons: themePackModel.hasIcons(themePackIndex)
     property bool hasIconApply: hasNative || hasApk || hasJolla
     property bool hasIconOverlay: themePackModel.hasIconOverlay(themePackIndex)
+    property bool hasDynClock: themePackModel.hasDynClock(themePackIndex)
+    property bool hasDynCalendar: themePackModel.hasDynCalendar(themePackIndex)
     property bool hasFont: themePackModel.hasFont(themePackIndex)
     property bool hasFontNonLatin: themePackModel.hasFontNonLatin(themePackIndex)
     property string packDisplayName: themePackModel.packDisplayName(themePackIndex)
@@ -62,7 +64,10 @@ Dialog
     }
 
     onAccepted: {
-        settings.homeRefresh = restartSection.homeRefreshSwitch.checked;
+        settings.homeRefresh = restartSection.homeRefreshSwitch.checked
+        // Pack-gated: missing feature or unchecked switch ⇒ disable.
+        settings.dynamicClockEnabled = hasDynClock && itsdynclock.checked
+        settings.dynamicCalendarEnabled = hasDynCalendar && itsdyncal.checked
     }
 
     Connections {
@@ -231,8 +236,11 @@ Dialog
                 visible: hasIconApply
                 checked: hasIconApply
                 enabled: hasIconApply
-                onClicked: {
-                    iconsSelected = itsicons.checked;
+                onCheckedChanged: {
+                    iconsSelected = itsicons.checked
+                    // Overlay only makes sense together with pack icons.
+                    if (!itsicons.checked && itsiconoverlay.checked)
+                        itsiconoverlay.checked = false
                 }
             }
 
@@ -242,12 +250,31 @@ Dialog
                 text: qsTr("Style missing app icons")
                 description: qsTr("Uses this theme's look for apps that don't have a custom icon in the pack.")
                 visible: hasIconOverlay
-                checked: hasIconOverlay
-                enabled: hasIconOverlay
+                checked: hasIconOverlay && hasIconApply
+                enabled: hasIconOverlay && itsicons.checked
                 onClicked: {
                     iconOverlaySelected = itsiconoverlay.checked;
                 }
             }
+
+            IconTextSwitch {
+                id: itsdynclock
+                automaticCheck: true
+                text: qsTr("Dynamic clock icon")
+                description: qsTr("Show the current time on the Clock icon, in this theme's style.")
+                visible: hasDynClock
+                checked: settings.dynamicClockEnabled
+            }
+
+            IconTextSwitch {
+                id: itsdyncal
+                automaticCheck: true
+                text: qsTr("Dynamic calendar icon")
+                description: qsTr("Show today's date on the Calendar icon, in this theme's style.")
+                visible: hasDynCalendar
+                checked: settings.dynamicCalendarEnabled
+            }
+
             }
             } // grid
 
@@ -323,7 +350,9 @@ Dialog
                 automaticCheck: true
                 text: qsTr("Apply fonts")
                 visible: hasFont || hasFontNonLatin
-                checked: hasFont || hasFontNonLatin
+                // Packs with icons: leave fonts off until the user opts in.
+                // Font-only packs: still pre-select Apply fonts.
+                checked: (hasFont || hasFontNonLatin) && !hasIconApply
                 enabled: hasFont || hasFontNonLatin
 
                 onClicked: {

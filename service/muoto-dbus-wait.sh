@@ -5,6 +5,9 @@
 MUOTO_SERVICE=org.muoto.Muoto1
 MUOTO_PATH=/org/muoto/Muoto1
 MUOTO_THEMES=org.muoto.Muoto1.Themes
+MUOTO_LAUNCHER_SERVICE=org.muoto.Launcher1
+MUOTO_LAUNCHER_PATH=/org/muoto/Launcher1
+MUOTO_LAUNCHER_THEMES=org.muoto.Launcher1.Themes
 OS_UPDATE_FLAG=/run/defaultuser/osupdate_running
 MUOTO_BACKUP_ICONS=/usr/share/harbour-muoto/backup/icons
 
@@ -32,7 +35,7 @@ muoto_os_update_running() {
 #   $MUOTO_BACKUP_ICONS/jolla/<z>/icons/*.png
 #   $MUOTO_BACKUP_ICONS/native/<size>/apps/*.png
 #   $MUOTO_BACKUP_ICONS/apk/*.png
-# Populated on ApplyIcons via IconStockBackup::backup; cleared on RestoreIcons.
+# Populated on ApplyIcons in 3.1 bulk era; cleared on migration to 3.2.
 muoto_icons_backup_present() {
     [ -d "$MUOTO_BACKUP_ICONS" ] || return 1
     if find "$MUOTO_BACKUP_ICONS" -name '*.png' -print -quit 2>/dev/null | grep -q .; then
@@ -49,6 +52,72 @@ muoto_warn_if_themed_without_backup() {
     if [ -n "$pack" ] && [ "$pack" != "default" ]; then
         echo "muoto: activeIconPack='$pack' but no backup/icons PNGs; skipping RestoreIcons" >&2
     fi
+}
+
+# Session bus dbus-send as defaultuser (launcher-icond).
+muoto_dbus_session_send() {
+    _dest="$1"
+    _path="$2"
+    _iface_method="$3"
+    shift 3
+    _pref=$(muoto_dconf_env_prefix) || return 1
+    if [ "$(id -un)" = "defaultuser" ]; then
+        # shellcheck disable=SC2086
+        sh -c "$_pref dbus-send --session --type=method_call \
+            --dest=$_dest $_path $_iface_method $*"
+        return $?
+    fi
+    # shellcheck disable=SC2086
+    su defaultuser -c "$_pref dbus-send --session --type=method_call \
+        --dest=$_dest $_path $_iface_method $*"
+}
+
+muoto_launcher_service_registered() {
+    if [ "$(id -un)" = "defaultuser" ]; then
+        dbus-send --session --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
+            org.freedesktop.DBus.GetNameOwner "string:$MUOTO_LAUNCHER_SERVICE" >/dev/null 2>&1
+        return $?
+    fi
+    _pref=$(muoto_dconf_env_prefix) || return 1
+    su defaultuser -c "$_pref dbus-send --session --print-reply \
+        --dest=org.freedesktop.DBus /org/freedesktop/DBus \
+        org.freedesktop.DBus.GetNameOwner string:$MUOTO_LAUNCHER_SERVICE" \
+        >/dev/null 2>&1
+}
+
+muoto_ensure_launcher_icond() {
+    if muoto_launcher_service_registered; then
+        muoto_log "ensure_launcher_icond: $MUOTO_LAUNCHER_SERVICE on session bus"
+        return 0
+    fi
+    muoto_log "ensure_launcher_icond: starting user unit"
+    muoto_run_as_user 'systemctl --user start harbour-muoto-launcher-icond.service' || true
+    i=0
+    while [ "$i" -lt 5 ]; do
+        if muoto_launcher_service_registered; then
+            muoto_log "ensure_launcher_icond: ready (${i}s)"
+            return 0
+        fi
+        sleep 1
+        i=$((i + 1))
+    done
+    muoto_log "ensure_launcher_icond: systemctl failed, ensuring unit + binary"
+    if ! muoto_run_as_user 'test -e ~/.config/systemd/user/harbour-muoto-launcher-icond.service'; then
+        muoto_run_as_user 'mkdir -p ~/.config/systemd/user && ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/ 2>/dev/null || ln -sf /usr/share/harbour-muoto/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/' || true
+        muoto_run_as_user 'systemctl --user daemon-reload && systemctl --user start harbour-muoto-launcher-icond.service' || true
+    fi
+    muoto_run_as_user 'nohup /usr/libexec/harbour-muoto-launcher-icond >/dev/null 2>&1 &' || true
+    i=0
+    while [ "$i" -lt 15 ]; do
+        if muoto_launcher_service_registered; then
+            muoto_log "ensure_launcher_icond: ready (${i}s)"
+            return 0
+        fi
+        sleep 1
+        i=$((i + 1))
+    done
+    muoto_log "ensure_launcher_icond: failed after 15s"
+    return 1
 }
 
 # Start helperd before dbus-send. Root: systemctl (reliable during rpm %preun).

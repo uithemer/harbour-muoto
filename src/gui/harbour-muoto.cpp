@@ -13,6 +13,7 @@
 #include "iconapplier.h"
 #include "helperclient.h"
 #include "iconpreviewprovider.h"
+#include "launcherimageprovider.h"
 
 // 2.6.0: setuid(0) is gone from main(). The GUI runs as defaultuser
 // (its packaged .desktop file targets the user session) and gets
@@ -44,6 +45,8 @@ int main(int argc, char *argv[])
     // takes ownership.
     view->engine()->addImageProvider(QStringLiteral("muoto"),
                                      new IconPreviewProvider);
+    view->engine()->addImageProvider(QStringLiteral("muoto-launcher"),
+                                     new LauncherImageProvider);
 
     view->engine()->addImportPath(
         SailfishApp::pathTo(QStringLiteral("qml/modules")).toString());

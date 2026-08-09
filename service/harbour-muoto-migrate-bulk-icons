@@ -1,0 +1,53 @@
+#!/bin/sh
+# One-time 3.1→3.2 migration: restore bulk-themed stock PNGs from backup/icons.
+# Idempotent: no-op when backup tree is absent or empty.
+set -eu
+
+DATADIR=/usr/share/harbour-muoto
+BACKUP="$DATADIR/backup/icons"
+JOLLA_LIVE=/usr/share/themes/sailfish-default/silica
+HICOLOR=/usr/share/icons/hicolor
+APK_LIVE=/home/defaultuser/.local/share/apkd-bridge/launcherIcon
+
+restore_dir() {
+    _src="$1"
+    _dst="$2"
+    [ -d "$_src" ] || return 0
+    mkdir -p "$_dst"
+    find "$_src" -name '*.png' -type f | while read -r f; do
+        rel="${f#$_src/}"
+        rel="${rel#/}"
+        mkdir -p "$_dst/$(dirname "$rel")"
+        cp -f "$f" "$_dst/$rel"
+    done
+}
+
+if ! find "$BACKUP" -name '*.png' -print -quit 2>/dev/null | grep -q .; then
+    exit 0
+fi
+
+echo "muoto-migrate-bulk-icons: restoring stock from $BACKUP" >&2
+
+for z in z2.0 z1.75 z1.5-large z1.5 z1.25 z1.0; do
+    restore_dir "$BACKUP/jolla/$z/icons" "$JOLLA_LIVE/$z/icons"
+done
+
+for size in 256x256 172x172 128x128 108x108 86x86; do
+    restore_dir "$BACKUP/native/$size/apps" "$HICOLOR/$size/apps"
+done
+
+restore_dir "$BACKUP/apk" "$APK_LIVE"
+chown -R defaultuser:defaultuser /home/defaultuser/.local/share/apkd-bridge 2>/dev/null || true
+
+# Strip bulk-era #epoch suffix on APK launcher desktops.
+muoto_uid=$(id -u defaultuser 2>/dev/null || echo "")
+if [ -n "$muoto_uid" ] && [ -d "/run/user/$muoto_uid" ]; then
+  su defaultuser -c 'for f in ~/.local/share/applications/apkd_launcher_*.desktop; do
+    [ -f "$f" ] || continue
+    sed -i "s/^Icon=\\(.*\\)#.*$/Icon=\\1/" "$f"
+  done' 2>/dev/null || true
+fi
+
+rm -rf "$BACKUP"
+echo "muoto-migrate-bulk-icons: done" >&2
+exit 0

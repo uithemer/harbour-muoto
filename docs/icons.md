@@ -39,8 +39,8 @@ theme/                         →  /usr/share/harbour-themepack-<name>/
   overlay/
     *.png
 
-  dyncal/256x256/          (planned — ignored today)
-  dynclock/256x256/        (planned — ignored today)
+  dyncal/256x256/          (optional — dynamic calendar)
+  dynclock/256x256/        (optional — dynamic clock)
 ```
 
 ### Matching
@@ -63,78 +63,34 @@ Stock reference paths on device (read-only):
 * `/usr/share/icons/hicolor` — native app icons
 * `/home/defaultuser/.local/share/apkd-bridge/launcherIcon/` — Android launcher icons
 
-### Jolla Ambient
+### Jolla Ambient (launcher icons only in 3.2+)
 
-Jolla Ambient is the set of stock icons used across native apps (controls, status bar, covers, camera, and launchers). In a theme pack, ship them under **`jolla/<z>/icons/<icon-key>.png`**.
+From **Muoto 3.2**, only **`icon-launcher-*`** keys under `jolla/<z>/icons/` are themed (via the launcher daemon). Status bar, covers, in-app `graphic-*`, and other ambient families are **not** bulk-copied into silica anymore.
 
-Ambient artwork is still widely used in packs (prefixes such as `graphic-*`, `icon-status-*`, `icon-launcher-*`, etc.). Ship matching keys under `jolla/<z>/icons/`; Muoto applies them under `/usr/share/themes/sailfish-default/silica/<z>/icons/` where stock files already exist.
+Ship launcher keys under `jolla/<z>/icons/`. Jolla/system ids are usually applied via **redirect** to `/usr/share/harbour-muoto/launcher-icons/`; harbour/native pack icons under `native/` are applied **inplace** on the launcher-size hicolor PNG (`Icon=` name unchanged). Engine details: [Architecture](devel/architecture).
 
-Icon families (by filename prefix):
-
-* *graphic-* — general UI and stock app graphics
-* *graphic-service-*, *icon-m-service-*, *icon-s-service-* — account settings
-* *icon-camera-* — camera app
-* *icon-cover-* — cover actions
-* *icon-direction-* — maps
-* *icon-l-*, *icon-m-*, *icon-s-* — general-purpose UI icons
-* *icon-launcher-* — app and folder launchers
-* *icon-lock-* — lock screen notification
-* *icon-lock-emergency-call* / *icon-lockscreen-emergency-call*: emergency call
-* *icon-status-* / *icon-system-* — status bar
-
-#### z1.0
-
-Pack paths: `jolla/z1.0/icons/`. Typical sizes:
-
-* *graphic-* — various dimensions
-* *graphic-service-*: 135×135px; *icon-m-service-* 64×64px; *icon-s-service-* 32×32px
-* *icon-camera-*: mostly 48×48px (shutter 64×64px)
-* *icon-cover-*: 32×32px
-* *icon-direction-*: 128×128px
-* *icon-l-*: 96×96px; *icon-m-* 64×64px (*icon-m-incoming-call* / *icon-m-missed-call* 42×42px); *icon-s-* 32×32px
-* *icon-launcher-*: 86×86px
-* *icon-lock-*: 32×32px
-* *icon-lock-emergency-call* / *icon-lockscreen-emergency-call*: 64×64px
-* *icon-status-* / *icon-system-*: 24×24px
-
-#### z1.5
-
-Pack paths: `jolla/z1.5/icons/`. Sizes are roughly 1.5× the z1.0 list (e.g. *icon-launcher-* 129×129px, *icon-status-* 36×36px).
-
-#### z2.0
-
-Pack paths: `jolla/z2.0/icons/`. Sizes are roughly 2× the z1.0 list (e.g. *icon-launcher-* 172×172px, *icon-status-* 48×48px).
-
-#### References
-
-* [Sailfish documentation — Jolla Ambient](https://sailfishos.org/develop/docs/jolla-ambient/)
+Homescreen **folders** use theme ids `icon-launcher-folder-01` … `16` (`image://theme/` / Lipstick `Folder*.directory`). Muoto themes those by scoped writeback into sailfish-default silica (`icon-launcher-folder-NN.png` only), with backups under `/usr/share/harbour-muoto/backup/folder-icons/`. Ship matching PNGs under `jolla/`, or enable overlay to replace stock folder glyphs with the overlay frame alone (no inner stock icon). Folder **picker** and tiles then both show the themed silica assets.
 
 ### DynCal
 
-{: .note }
-**Not applied by Muoto 3.x yet.** Pack `dyncal/` is ignored by the current engine (support was removed in 2.4.0 and is planned to return). You may still ship this layout so packs are ready later.
+Day-of-month Calendar launcher icon from the launcher daemon. With a theme pack that ships `dyncal/`, day icons come from `dyncal/256x256/{01..31}.png`.
 
-[DynCal](https://github.com/fravaccaro/harbour-dyncal) skinning: place icons in `dyncal/256x256/`:
+Pack layout:
 
 * `dd.png` — day of month (`01`–`31`)
-* `mmdd.png` — holiday icons (month + day)
+* `mmdd.png` — holiday icons (month + day, optional)
 
-When support returns, Muoto will apply these only if DynCal is installed.
+Enable on **Confirm** when applying a pack that includes `dyncal/`, or on the **Dynamic icons** tab while such a pack is active (or on default after restore — UI available, switches off until enabled). The tab is greyed out only when a non-default pack without dyn assets is active.
 
 ### DynClock
 
-{: .note }
-**Not applied by Muoto 3.x yet.** Pack `dynclock/` is ignored by the current engine (planned to return).
+Live Clock launcher icon. With a theme pack that ships `dynclock/`, assets under `dynclock/256x256/` (`bg.png`, `hour.png`, `minute.png`) drive the live hands.
 
-[DynClock](https://github.com/fravaccaro/harbour-dynclock) skinning:
-
-1. Download `bg.png`, `hour.png`, and `minute.png` from the [DynClock package tree](https://github.com/fravaccaro/harbour-dynclock/tree/master/harbour-dynclock/usr/share/harbour-dynclock).
-2. Edit them as you like.
-3. Place them in `dynclock/256x256/`.
+Enable on **Confirm** when applying a pack that includes `dynclock/`, or on the **Dynamic icons** tab while such a pack is active (or on default after restore — UI available, switches off until enabled). The tab is greyed out only when a non-default pack without dyn assets is active.
 
 ## Style missing app icons (`overlay/`)
 
-If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto stock icons **not** already covered by the pack. Use a canvas sized for the target (recommended **192×192** or **172×172** for app icons).
+If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto **launcher-visible** stock icons not already covered by the pack. On hicolor that is usually **inplace** (live launcher-size PNG replaced; other sizes untouched). APK bridge targets use **redirect** to `launcher-icons/`.
 
 The old Android-only overlay trick (root file `type` containing `android`) is **no longer supported**.
 
@@ -143,7 +99,7 @@ The old Android-only overlay trick (root file `type` containing `android`) is **
 | Path / file | Status |
 |-------------|--------|
 | `sound/` | Removed in 2.4.4 — see [Sounds](sounds) |
-| `dyncal/`, `dynclock/` | Documented, planned — see above |
+| `dyncal/`, `dynclock/` | Launcher daemon when enabled via Confirm / Dynamic icons tab; pack assets when present |
 | Root `type` (`android` overlay-only packs) | Dropped in 2.7.1 |
 
 ## Icon file size hints

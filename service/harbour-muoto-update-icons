@@ -35,18 +35,17 @@ fi
 
 _apply_once() {
     _attempt="${1:-1}"
-    if ! muoto_ensure_helperd; then
-        muoto_log "update-icons: attempt $_attempt failed (ensure_helperd)"
+    if ! muoto_ensure_launcher_icond; then
+        muoto_log "update-icons: attempt $_attempt failed (launcher-icond not on session bus)"
         return 1
     fi
     muoto_log "update-icons: attempt $_attempt ApplyIcons pack=$pack overlay=$o"
     muoto_wait_op_begin ApplyIcons 180
-    if ! dbus-send --system --type=method_call \
-        --dest="$MUOTO_SERVICE" \
-        "$MUOTO_PATH" \
-        "$MUOTO_THEMES.ApplyIcons" \
-        "string:$pack" "boolean:true" "boolean:$o" \
-        >/dev/null 2>&1; then
+    if ! muoto_dbus_session_send \
+        "$MUOTO_LAUNCHER_SERVICE" \
+        "$MUOTO_LAUNCHER_PATH" \
+        "$MUOTO_LAUNCHER_THEMES.ApplyIcons" \
+        "string:$pack" "boolean:true" "boolean:$o"; then
         muoto_wait_op_cancel
         muoto_log "update-icons: attempt $_attempt dbus-send ApplyIcons rejected"
         return 1
@@ -64,7 +63,6 @@ if _apply_once 1; then
     exit 0
 fi
 
-# One retry after busy (common when GUI and automation overlap).
 muoto_log "update-icons: retry in 3s"
 sleep 3
 if _apply_once 2; then

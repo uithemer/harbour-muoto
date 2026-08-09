@@ -49,6 +49,21 @@ Page
                 }
             }
         }
+
+        T.Tab {
+            title: qsTr("Dynamic icons")
+
+            Component {
+                T.TabItem {
+                    flickable: dynTab
+
+                    DynamicIconsTabContent {
+                        id: dynTab
+                        tabActive: tabs.currentIndex === 2
+                    }
+                }
+            }
+        }
     }
 
     BusyState { id: busyindicator }

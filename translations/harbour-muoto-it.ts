@@ -125,6 +125,22 @@
         <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
         <translation>Riavvia la schermata iniziale per aggiornare icone e font del launcher e completare l&apos;applicazione del tema.</translation>
     </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation>Icona Orologio dinamica</translation>
+    </message>
+    <message>
+        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
+        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio, nello stile di questo tema.</translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation>Icona Calendario dinamica</translation>
+    </message>
+    <message>
+        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
+        <translation>Mostra la data corrente nell&apos;icona Calendario, nello stile di questo tema.</translation>
+    </message>
 </context>
 <context>
     <name>CoverConfirm</name>
@@ -211,6 +227,41 @@
     </message>
 </context>
 <context>
+    <name>DynamicIconsTabContent</name>
+    <message>
+        <source>Dynamic icons</source>
+        <translation>Icone dinamiche</translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation>Icona Orologio dinamica</translation>
+    </message>
+    <message>
+        <source>Shows the current time on the Clock launcher icon.</source>
+        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio.</translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation>Icona Calendario dinamica</translation>
+    </message>
+    <message>
+        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
+        <translation>Mostra la data corrente nell&apos;icona Calendario.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
+        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons.</source>
+        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario.</translation>
+    </message>
+    <message>
+        <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
+        <translation>Questo tema non include le icone dinamiche per l&apos;Orologio o il Calendario. Prova un altro tema o ripristina quello predefinito.</translation>
+    </message>
+</context>
+<context>
     <name>ExternalUrlPage</name>
     <message>
         <source>Swipe left to preview.</source>
@@ -249,23 +300,16 @@
         <source>Themes</source>
         <translation>Temi</translation>
     </message>
+    <message>
+        <source>Dynamic icons</source>
+        <translation>Icone dinamiche</translation>
+    </message>
 </context>
 <context>
     <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
         <translation>Info su Muoto</translation>
-    </message>
-</context>
-<context>
-    <name>MuotoRestartHomescreenButton</name>
-    <message>
-        <source>Restart homescreen</source>
-        <translation>Riavvia schermata iniziale</translation>
-    </message>
-    <message>
-        <source>Restarting homescreen</source>
-        <translation>Riavvio schermata iniziale</translation>
     </message>
 </context>
 <context>

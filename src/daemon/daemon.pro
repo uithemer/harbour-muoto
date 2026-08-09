@@ -4,29 +4,30 @@ TEMPLATE = app
 CONFIG += c++11 console
 CONFIG -= app_bundle
 
-QT += core gui dbus
-QT -= qml quick widgets
+QT += core dbus
+QT -= gui qml quick widgets
 
-# Pull in IconApplier, DensityEnabler, ThemePackOps + their deps.
-# FontApplier intentionally absent: it lives in src/gui/ because it is
-# unprivileged once the GUI runs as defaultuser.
-include(../ops/ops.pri)
-
-INCLUDEPATH += $$PWD
+# DensityEnable only — icon apply/restore is session Launcher1.
+INCLUDEPATH += $$PWD $$PWD/../ops
 
 HEADERS += \
-    $$PWD/helperservice.h
+    $$PWD/helperservice.h \
+    $$PWD/../ops/densityenabler.h \
+    $$PWD/../ops/dconfuser.h \
+    $$PWD/../ops/filelock.h \
+    $$PWD/../ops/spawner.h
 
 SOURCES += \
     $$PWD/main.cpp \
-    $$PWD/helperservice.cpp
+    $$PWD/helperservice.cpp \
+    $$PWD/../ops/densityenabler.cpp \
+    $$PWD/../ops/dconfuser.cpp \
+    $$PWD/../ops/filelock.cpp \
+    $$PWD/../ops/spawner.cpp
 
 # The bus policy (/etc/dbus-1/system.d/org.muoto.Muoto1.conf) is the
 # only gate. Once a method call has cleared dbus-daemon it is
-# trusted, no PolkitQt1::checkAuthorizationSync round-trip. This
-# removes the dependency on a polkit auth-agent being present in
-# the user session (which lipstick does not always provide on
-# community ports, and which appeared to silently deny our calls).
+# trusted, no PolkitQt1::checkAuthorizationSync round-trip.
 
 target.path = /usr/libexec
 INSTALLS += target
