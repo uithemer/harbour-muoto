@@ -1,4 +1,4 @@
-* Sun Aug 8 2026 3.2.0-1
+* Sat Aug 08 2026 3.2.0-1
 - Drop bulk silica ambient, hicolor, and apkd-bridge icon apply; launcher
   daemon owns all icon theming via session D-Bus (org.muoto.Launcher1).
 - Overlay reimplemented as launcher redirect composites (stock PNGs untouched).

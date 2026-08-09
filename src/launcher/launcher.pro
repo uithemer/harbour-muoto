@@ -18,6 +18,8 @@ INCLUDEPATH += $$PWD/../ops
 
 include($$PWD/launcher.pri)
 
-target.path = /usr/lib
+# Honour LIBDIR from rpm/sfdk (e.g. /usr/lib64 on aarch64); else Qt's libs dir.
+isEmpty(LIBDIR): LIBDIR = $$[QT_INSTALL_LIBS]
+target.path = $$LIBDIR
 
 INSTALLS += target
