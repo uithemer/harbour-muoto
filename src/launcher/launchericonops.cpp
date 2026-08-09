@@ -381,10 +381,13 @@ void LauncherIconOps::restoreIcons()
     emit progress(2, 3);
 
     mgconfSetBool("/apps/harbour-muoto/iconOverlay", false);
+    // Match Themes restore / pre-upgrade oneshot: dyn off until user re-enables.
+    mgconfSetBool("/apps/harbour-muoto/launcher/dynamicClockEnabled", false);
+    mgconfSetBool("/apps/harbour-muoto/launcher/dynamicCalendarEnabled", false);
     activeIconPackConf()->set(QStringLiteral("default"));
     m_applyPackIcons = true;
 
-    // Re-attach stock dynamic clock/calendar after pack restore.
+    // Pack cleared; dyn flags off — rebuild drops live clock/calendar updaters.
     rebuildIconUpdaters();
 
     emit progress(3, 3);

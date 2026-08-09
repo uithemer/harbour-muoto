@@ -94,7 +94,7 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 | Check | Expect |
 | ----- | ------ |
 | Unit wiring | `Before=sailfish-upgrade-ui.service`, `WantedBy=system-update.target`, drop-in wants the oneshot |
-| After apply + `systemctl start harbour-muoto-oneshot-restore` | `activeIconPack=default`, `iconOverlay=false`, manifest gone, generated PNGs cleared, Jolla `Icon=` back to stock names (e.g. fingerterm → `icon-launcher-shell`) |
+| After apply + `systemctl start harbour-muoto-oneshot-restore` | `activeIconPack=default`, `iconOverlay=false`, dyn clock/calendar flags **false**, manifest gone, generated PNGs cleared, Jolla `Icon=` back to stock names (e.g. fingerterm → `icon-launcher-shell`) |
 
 **T-21 install/upgrade re-theme (`harbour-muoto-install-listener`)**
 
