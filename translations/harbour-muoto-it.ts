@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="it">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="it">
 <context>
     <name>AboutPage</name>
     <message>
@@ -426,10 +424,7 @@
     </message>
     <message numerus="yes">
         <source>show license(s)</source>
-        <translation>
-            <numerusform>mostra licenza</numerusform>
-            <numerusform>mostra licenze</numerusform>
-        </translation>
+        <translation><numerusform>mostra licenza</numerusform><numerusform>mostra licenze</numerusform><numerusform>mostra licenze</numerusform></translation>
     </message>
     <message>
         <source>News</source>
@@ -473,10 +468,7 @@
     </message>
     <message numerus="yes">
         <source>License(s)</source>
-        <translation>
-            <numerusform>Licenza</numerusform>
-            <numerusform>Licenze</numerusform>
-        </translation>
+        <translation><numerusform>Licenza</numerusform><numerusform>Licenze</numerusform><numerusform>Licenze</numerusform></translation>
     </message>
     <message>
         <source>Note: please check the source code for most accurate information.</source>
