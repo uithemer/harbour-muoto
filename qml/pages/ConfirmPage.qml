@@ -261,7 +261,7 @@ Dialog
                 id: itsdynclock
                 automaticCheck: true
                 text: qsTr("Dynamic clock icon")
-                description: qsTr("Live clock on the launcher using this theme's clock assets.")
+                description: qsTr("Show the current time on the Clock icon, in this theme's style.")
                 visible: hasDynClock
                 checked: settings.dynamicClockEnabled
             }
@@ -270,7 +270,7 @@ Dialog
                 id: itsdyncal
                 automaticCheck: true
                 text: qsTr("Dynamic calendar icon")
-                description: qsTr("Shows today's date on the launcher using this theme's calendar assets.")
+                description: qsTr("Show today's date on the Calendar icon, in this theme's style.")
                 visible: hasDynCalendar
                 checked: settings.dynamicCalendarEnabled
             }

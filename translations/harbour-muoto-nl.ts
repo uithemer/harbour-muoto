@@ -141,7 +141,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Live clock on the launcher using this theme&apos;s clock assets.</source>
+        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -149,7 +149,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Shows today&apos;s date on the launcher using this theme&apos;s calendar assets.</source>
+        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -267,15 +267,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Live clock and calendar on the launcher using the active theme&apos;s assets.</source>
+        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Live clock and calendar on the launcher using stock icons.</source>
+        <source>Show the current time and date on your Clock and Calendar icons.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This theme has no dynamic clock or calendar assets. Apply a theme that includes them, or restore the default theme.</source>
+        <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

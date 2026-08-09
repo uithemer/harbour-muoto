@@ -62,9 +62,9 @@ SilicaFlickable {
             opacity: dynView.dynAvailable ? 1.0 : Theme.opacityHigh
             text: dynView.dynAvailable
                   ? (dynView.stockDyn
-                     ? qsTr("Live clock and calendar on the launcher using stock icons.")
-                     : qsTr("Live clock and calendar on the launcher using the active theme's assets."))
-                  : qsTr("This theme has no dynamic clock or calendar assets. Apply a theme that includes them, or restore the default theme.")
+                     ? qsTr("Show the current time and date on your Clock and Calendar icons.")
+                     : qsTr("Show the current time and date on your Clock and Calendar icons, using this theme's style."))
+                  : qsTr("This theme doesn't include live Clock or Calendar icons. Try another theme, or restore the default look.")
         }
 
         D.TwoLineDelegate {
