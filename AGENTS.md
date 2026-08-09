@@ -22,6 +22,19 @@ Muoto lets users apply `harbour-themepack-*` icon/font packs and display density
 - Pack `jolla` / `native` / `apk` → PNGs under `/usr/share/harbour-muoto/launcher-icons/` + `.desktop` `Icon=` redirect; manifest + `saved-id` for restore.
 - Per-app dconf `launcher/applications/<desktop>/provider`: only `dynamic-icon://` (clock/calendar) is honored.
 
+## Homescreen icon refresh (do not “just overwrite the PNG”)
+
+Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting bytes at a path Lipstick already resolved often leaves the grid stuck on the old image (no lipstick restart). Muoto’s refresh trick, from Clockwork / `IconUpdater`:
+
+1. **New absolute `Icon=` path (redirect)** — write  
+   `/usr/share/harbour-muoto/launcher-icons/<desktopBase>-<msecs>.png`  
+   (`generateIconPath`: msecs so rapid rebuilds never reuse a path), then set `Icon=` to that file. A **new path** busts the cache.
+2. **`futimens` the `.desktop`** — after the PNG / `Icon=` change, touch the desktop file (`touchFile`) so Lipstick re-reads the entry.
+3. **Hicolor inplace (when used)** — `Icon=` stays a name (`harbour-foo`); replace the single resolved launcher-size PNG under `hicolor/…/apps/`, then touch the desktop. Only that size is updated (e.g. 172), not every hicolor size (512 stays stock).
+4. **Pack switch** — prefer a new generated path (or a real content replace + desktop touch). Avoid deleting a PNG while `Icon=` still names it: Lipstick’s watcher then hits `inotify_add_watch` ENOENT and the tile freezes until a lipstick restart.
+
+Implementation: `src/launcher/iconupdater.cpp` (`generateIconPath`, `updateNonMonitoredIcon` / `updateMonitoredIcon`, `touchFile`).
+
 ## Fonts apply / restore
 
 - Unprivileged, in the **GUI process** via `FontApplier` (`src/gui/fontapplier.cpp`), driven by `ThemePackModel::applyTheme` / `restoreTheme`.
