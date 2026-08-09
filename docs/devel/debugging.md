@@ -60,7 +60,7 @@ ls -lt /usr/share/harbour-muoto/launcher-icons/ | head
 wc -c /usr/share/harbour-muoto/launcher-manifest.json
 ```
 
-Expect themed launchers to use absolute paths under `launcher-icons/`. Stock names like `icon-launcher-phone` mean redirect was restored or never applied.
+Expect **APK** (and many jolla) themed launchers to use absolute paths under `launcher-icons/`. **Native/hicolor** themed apps often keep `Icon=harbour-foo` while only the launcher-size hicolor PNG changed — compare that file (and the manifest) before assuming apply failed. A stock-looking `Icon=` name alone does not mean “not themed.”
 
 ## Journal
 
@@ -77,7 +77,7 @@ Look for `ApplyIcons start/done`, `rebuildIconUpdaters`, `file not found`, and `
 | Symptom | Likely cause | Check |
 | ------- | ------------ | ----- |
 | Nothing themes after install | `launcher-icond` not running / no D-Bus name | User unit symlink + `enable --now`; GetNameOwner |
-| Half icons look stock after pack switch | Lipstick cache; or pack lacks those assets (overlay off) | Restart homescreen; compare pack files vs `Icon=` |
+| Half icons look stock after pack switch | Lipstick cache; pack lacks assets (overlay off); or inplace only updated launcher size | Check manifest `mode`; compare hicolor launcher-size vs 512; restart homescreen if needed |
 | APK icons stuck on previous pack | Absolute `Icon=` cached by Lipstick | Confirm on-disk `Icon=` path/md5 changed; restart homescreen |
 | Apply returns “upgrade in progress” | OS update guard | `/run/defaultuser/osupdate_running`, `system-update.target` — see [Automation](automation) |
 | Apply returns “busy” | `icon-ops.lock` held | Wait; check for stuck icond |

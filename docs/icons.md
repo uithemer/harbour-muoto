@@ -67,7 +67,7 @@ Stock reference paths on device (read-only):
 
 From **Muoto 3.2**, only **`icon-launcher-*`** keys under `jolla/<z>/icons/` are themed (via the launcher daemon). Status bar, covers, in-app `graphic-*`, and other ambient families are **not** bulk-copied into silica anymore.
 
-Ship launcher keys under `jolla/<z>/icons/`; the daemon redirects `.desktop` `Icon=` to generated PNGs under `/usr/share/harbour-muoto/launcher-icons/`. Engine details: [Architecture](devel/architecture).
+Ship launcher keys under `jolla/<z>/icons/`. Jolla/system ids are usually applied via **redirect** to `/usr/share/harbour-muoto/launcher-icons/`; harbour/native pack icons under `native/` are applied **inplace** on the launcher-size hicolor PNG (`Icon=` name unchanged). Engine details: [Architecture](devel/architecture).
 
 Homescreen **folders** use theme ids `icon-launcher-folder-01` … `16` (`image://theme/` / Lipstick `Folder*.directory`). Muoto themes those by scoped writeback into sailfish-default silica (`icon-launcher-folder-NN.png` only), with backups under `/usr/share/harbour-muoto/backup/folder-icons/`. Ship matching PNGs under `jolla/`, or enable overlay to replace stock folder glyphs with the overlay frame alone (no inner stock icon). Folder **picker** and tiles then both show the themed silica assets.
 
@@ -90,7 +90,7 @@ Enable on **Confirm** when applying a pack that includes `dynclock/`, or on the 
 
 ## Style missing app icons (`overlay/`)
 
-If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto **launcher-visible** stock icons not already covered by the pack, via generated PNGs and `.desktop` redirect — stock files under hicolor and `apkd-bridge/launcherIcon/` are **not** modified.
+If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto **launcher-visible** stock icons not already covered by the pack. On hicolor that is usually **inplace** (live launcher-size PNG replaced; other sizes untouched). APK bridge targets use **redirect** to `launcher-icons/`.
 
 The old Android-only overlay trick (root file `type` containing `android`) is **no longer supported**.
 

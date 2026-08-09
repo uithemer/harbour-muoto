@@ -4,7 +4,7 @@ Orientation for coding agents working on **harbour-muoto** (Sailfish OS theming 
 
 ## What this is
 
-Muoto lets users apply `harbour-themepack-*` icon/font packs and display density on Sailfish OS. From **3.2**, launcher icons are applied only by the session daemon `harbour-muoto-launcher-icond` (redirect + generated PNGs). The root helperd is slim (density unlock + uninstall pack). Fonts apply in-process in the GUI as `defaultuser`.
+Muoto lets users apply `harbour-themepack-*` icon/font packs and display density on Sailfish OS. From **3.2**, launcher icons are applied only by the session daemon `harbour-muoto-launcher-icond`. The root helperd is slim (density unlock + uninstall pack). Fonts apply in-process in the GUI as `defaultuser`.
 
 ## Docs map
 
@@ -19,21 +19,29 @@ Muoto lets users apply `harbour-themepack-*` icon/font packs and display density
 ## Icons (summary)
 
 - Session D-Bus `org.muoto.Launcher1.Themes` (`ApplyIcons` / `RestoreIcons`).
-- Pack `jolla` / `native` / `apk` → PNGs under `/usr/share/harbour-muoto/launcher-icons/` + `.desktop` `Icon=` redirect; manifest + `saved-id` for restore.
+- **ApplyIcons** sets `activeIconPack` / `iconOverlay`, `rebuildIconUpdaters()`, then `FolderAmbient::apply` (no stock intermediate).
+- **Hybrid write model** (`IconUpdater` ctor):
+  - **Hicolor** (`/usr/share/icons/hicolor/…/apps/`) → **inplace**: keep `Icon=harbour-foo`, replace the single resolved launcher-size PNG, touch desktop. Fingerprint in dconf detects “our” bytes.
+  - **APK bridge** (`~/.local/share/apkd-bridge/launcherIcon/`) → **redirect**: unique `launcher-icons/<desktop>-<msecs>.png` + `Icon=` rewrite (absolute paths need a new path for Lipstick to refresh).
+  - **Overlay** (missing pack icons only): `RedirectOnly` updater, but hicolor still forces inplace via the rule above.
+- Pack lookup (`HarbourThemePack`): prefer `native|apk/<iconSizeLauncher>x…/`, else largest available pack size; jolla uses `jolla/z<pixelRatio>/`. Pack trees under `/usr/share/harbour-themepack-*` may be **symlinks** into `~/.themepack/` — follow them when debugging “empty native/”.
+- Overlay composites pack `overlay/*.png` onto **stock** (backup if live was already themed). Not used when the pack already has that app.
+- Only the **launcher-resolved** hicolor size is written (e.g. 172); other sizes (512, …) stay stock by design.
+- Manifest + `saved-id` for restore; folder tiles via `FolderAmbient` (silica `icon-launcher-folder-*`).
 - Per-app dconf `launcher/applications/<desktop>/provider`: only `dynamic-icon://` (clock/calendar) is honored.
 
 ## Homescreen icon refresh (do not “just overwrite the PNG”)
 
-Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting bytes at a path Lipstick already resolved often leaves the grid stuck on the old image (no lipstick restart). Muoto’s refresh trick, from Clockwork / `IconUpdater`:
+Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting bytes at a path Lipstick already resolved often leaves the grid stuck (no lipstick restart). Muoto’s refresh trick (`IconUpdater`):
 
-1. **New absolute `Icon=` path (redirect)** — write  
+1. **Redirect (APK / non-hicolor)** — write  
    `/usr/share/harbour-muoto/launcher-icons/<desktopBase>-<msecs>.png`  
-   (`generateIconPath`: msecs so rapid rebuilds never reuse a path), then set `Icon=` to that file. A **new path** busts the cache.
-2. **`futimens` the `.desktop`** — after the PNG / `Icon=` change, touch the desktop file (`touchFile`) so Lipstick re-reads the entry.
-3. **Hicolor inplace (when used)** — `Icon=` stays a name (`harbour-foo`); replace the single resolved launcher-size PNG under `hicolor/…/apps/`, then touch the desktop. Only that size is updated (e.g. 172), not every hicolor size (512 stays stock).
-4. **Pack switch** — prefer a new generated path (or a real content replace + desktop touch). Avoid deleting a PNG while `Icon=` still names it: Lipstick’s watcher then hits `inotify_add_watch` ENOENT and the tile freezes until a lipstick restart.
+   (`generateIconPath`), set `Icon=` to that path. A **new path** busts the cache.
+2. **Inplace (hicolor)** — replace via temp `*.muoto-write.png` then rename onto the live path; `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick reloads the named icon.
+3. **Always touch the `.desktop`** after PNG / `Icon=` changes (`touchFile` / `futimens`).
+4. Avoid deleting a PNG while `Icon=` still names it (`inotify_add_watch` ENOENT → frozen tile until lipstick restart).
 
-Implementation: `src/launcher/iconupdater.cpp` (`generateIconPath`, `updateNonMonitoredIcon` / `updateMonitoredIcon`, `touchFile`).
+Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
 
 ## Fonts apply / restore
 
@@ -74,7 +82,10 @@ Implementation: `src/launcher/iconupdater.cpp` (`generateIconPath`, `updateNonMo
 | Concern | Files |
 | ------- | ----- |
 | Icon apply / rebuild | `src/launcher/launchericonops.cpp` |
-| Icon redirect write | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
+| Icon inplace / redirect | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
+| Path resolve (hicolor size / APK) | `src/launcher/iconresolve.cpp` |
+| Overlay composite | `src/launcher/overlayiconprovider.cpp`, `overlayrender.cpp` |
+| Folder silica icons | `src/launcher/folderambient.cpp` |
 | Pack lookup | `src/launcher/harbourthemepack.cpp` |
 | Font apply / restore | `src/gui/fontapplier.cpp`, `src/gui/themepackmodel.cpp` |
 | Density unlock / restore | `src/ops/densityenabler.cpp`, `src/gui/helperclient.cpp`, `qml/components/DensityTabContent.qml` |

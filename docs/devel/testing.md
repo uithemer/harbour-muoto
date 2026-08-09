@@ -72,6 +72,7 @@ Auto-apply / upgrade / uninstall expectations are detailed under [Automation](au
 ## What “good” looks like after ApplyIcons
 
 - `dconf read /apps/harbour-muoto/activeIconPack` is the pack short name.
-- `/usr/share/harbour-muoto/launcher-manifest.json` exists; PNGs under `launcher-icons/`.
-- Sample `.desktop` files use `Icon=/usr/share/harbour-muoto/launcher-icons/…`.
+- `/usr/share/harbour-muoto/launcher-manifest.json` exists.
+- APK / redirect entries: PNGs under `launcher-icons/` and `Icon=/usr/share/harbour-muoto/launcher-icons/…`.
+- Native inplace: `Icon=` may still be `harbour-…` while the launcher-size hicolor PNG and manifest `mode=inplace` reflect the pack.
 - Live silica under `graphic-*` is **unchanged** (no bulk ambient); folder `icon-launcher-folder-*` may change when folder theming applies.
