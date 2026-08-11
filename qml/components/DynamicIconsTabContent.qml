@@ -85,7 +85,12 @@ SilicaFlickable {
             description: qsTr("Shows the current time on the Clock launcher icon.")
             padding.topBottom: Theme.paddingMedium
 
-            Component.onCompleted: descriptionLabel.wrapped = true
+            // Wrap title+description: center column is narrow (switch + preview),
+            // and large text sizes otherwise TruncationMode.Fade-cut the labels.
+            Component.onCompleted: {
+                textLabel.wrapped = true
+                descriptionLabel.wrapped = true
+            }
 
             leftItem: Component {
                 TextSwitch {
@@ -93,7 +98,6 @@ SilicaFlickable {
                     checked: dynView.hasActiveDynClock && settings.dynamicClockEnabled
                     enabled: dynView.hasActiveDynClock && !settings.isRunning
                     width: Theme.itemSizeSmall
-                    height: Theme.itemSizeSmall
                     leftMargin: 0
                     rightMargin: 0
                     onCheckedChanged: {
@@ -129,7 +133,10 @@ SilicaFlickable {
             description: qsTr("Shows today's date on the Calendar launcher icon.")
             padding.topBottom: Theme.paddingMedium
 
-            Component.onCompleted: descriptionLabel.wrapped = true
+            Component.onCompleted: {
+                textLabel.wrapped = true
+                descriptionLabel.wrapped = true
+            }
 
             leftItem: Component {
                 TextSwitch {
@@ -137,7 +144,6 @@ SilicaFlickable {
                     checked: dynView.hasActiveDynCalendar && settings.dynamicCalendarEnabled
                     enabled: dynView.hasActiveDynCalendar && !settings.isRunning
                     width: Theme.itemSizeSmall
-                    height: Theme.itemSizeSmall
                     leftMargin: 0
                     rightMargin: 0
                     onCheckedChanged: {
