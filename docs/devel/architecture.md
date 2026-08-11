@@ -76,6 +76,7 @@ Restore uses the manifest (redirect + inplace backups), restores folder backups,
 | Folder silica | `src/launcher/folderambient.cpp` |
 | Manifest | `src/launcher/launchermanifest.cpp` |
 | Daemon main | `src/launcher-daemon/main.cpp` |
+| Font apply / restore | `src/gui/fontapplier.cpp` (stages under `~/.local/share/fonts/muoto/`) |
 | Confirm / themes UI | `qml/pages/ConfirmPage.qml`, `qml/components/ThemesTabContent.qml` |
 | Dyn tab | `qml/components/DynamicIconsTabContent.qml` |
 | Session D-Bus XML | `dbus/org.muoto.Launcher1.Themes.xml` |

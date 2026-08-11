@@ -25,9 +25,9 @@ for arg in "$@"; do
     esac
 done
 
-# 1) Fonts
+# 1) Fonts (conf + Sailjail staging under ~/.local/share/fonts/muoto)
 muoto_dconf_as_user_or_die "dconf write /apps/harbour-muoto/activeFontPack \"'default'\""
-muoto_run_as_user_or_die 'rm -f ~/.config/fontconfig/conf.d/99-muoto.conf; fc-cache -f'
+muoto_run_as_user_or_die 'rm -f ~/.config/fontconfig/conf.d/99-muoto.conf; rm -rf ~/.local/share/fonts/muoto; fc-cache -f'
 
 # 2) Icons — launcher session RestoreIcons (always on upgrade/uninstall)
 _restore_icons_once() {

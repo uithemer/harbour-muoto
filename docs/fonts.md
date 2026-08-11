@@ -9,7 +9,7 @@ nav_order: 2
 
 How to create fonts compatible with **Muoto**.
 
-Sailfish OS uses separate font configuration for the system UI and Alien Dalvik; theme packs supply files under `theme/font/` and `theme/font-nonlatin/`. Muoto writes `~/.config/fontconfig/conf.d/99-muoto.conf` and runs `fc-cache` for the current user when a font pack is applied.
+Sailfish OS uses separate font configuration for the system UI and Alien Dalvik; theme packs supply files under `theme/font/` and `theme/font-nonlatin/`. When you apply a font pack, Muoto copies those files into `~/.local/share/fonts/muoto/` (readable by Sailjail apps), writes `~/.config/fontconfig/conf.d/99-muoto.conf` pointing at that staging directory, and runs `fc-cache` for the current user. Restore removes the conf and the staging tree. If you upgraded from Muoto before 3.2.2, reapply the font once so jailed apps can use it.
 
 Download TrueType (`.ttf`) or collection (`.ttc`) fonts of your choice. One typeface family per pack is typical, with multiple weights (Bold, Regular, Light, etc.).
 

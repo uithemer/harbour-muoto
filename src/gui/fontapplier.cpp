@@ -2,6 +2,7 @@
 #include "filelock.h"
 
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
 #include <QSaveFile>
@@ -74,6 +75,24 @@ QString FontApplier::packDir(const QString& packName) const
     return QString::fromLatin1(kPackPrefix) + name;
 }
 
+QString FontApplier::stageRoot() const
+{
+    // ~/.local/share/fonts/muoto — Sailjail Base can read this; pack dirs
+    // under harbour-themepack / ~/.themepack cannot.
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+         + QStringLiteral("/fonts/muoto");
+}
+
+QString FontApplier::stageFontDir() const
+{
+    return stageRoot() + QStringLiteral("/font");
+}
+
+QString FontApplier::stageNonlatinDir() const
+{
+    return stageRoot() + QStringLiteral("/font-nonlatin");
+}
+
 QString FontApplier::familyFromTtf(const QString& path) const
 {
     if(!QFileInfo::exists(path))
@@ -85,13 +104,90 @@ QString FontApplier::familyFromTtf(const QString& path) const
     return rf.familyName();
 }
 
+bool FontApplier::clearStage() const
+{
+    const QString root = stageRoot();
+    if(!QFileInfo::exists(root))
+        return true;
+    QDir dir(root);
+    if(!dir.removeRecursively())
+    {
+        qWarning() << "FontApplier: cannot remove staging" << root;
+        return false;
+    }
+    return true;
+}
+
+bool FontApplier::copyDirFiles(const QString& srcDir, const QString& dstDir) const
+{
+    if(!QFileInfo(srcDir).isDir())
+        return true;
+
+    if(!QDir().mkpath(dstDir))
+    {
+        qWarning() << "FontApplier: cannot create" << dstDir;
+        return false;
+    }
+
+    QDirIterator it(srcDir, QDir::Files | QDir::Readable | QDir::NoDotAndDotDot);
+    while(it.hasNext())
+    {
+        it.next();
+        const QFileInfo info = it.fileInfo();
+        // Resolve symlinks (pack trees often link into ~/.themepack) so the
+        // staged file is a real copy jailed apps can open.
+        const QString src = info.canonicalFilePath();
+        if(src.isEmpty() || !QFileInfo(src).isFile())
+        {
+            qWarning() << "FontApplier: skip unreadable" << info.absoluteFilePath();
+            continue;
+        }
+
+        const QString dst = dstDir + QLatin1Char('/') + info.fileName();
+        if(QFile::exists(dst) && !QFile::remove(dst))
+        {
+            qWarning() << "FontApplier: cannot replace" << dst;
+            return false;
+        }
+        if(!QFile::copy(src, dst))
+        {
+            qWarning() << "FontApplier: copy failed" << src << "->" << dst;
+            return false;
+        }
+    }
+    return true;
+}
+
+bool FontApplier::stagePackFonts(const QString& packName) const
+{
+    if(!clearStage())
+        return false;
+
+    const QString root = packDir(packName);
+    const QString packFont = root + QStringLiteral("/font");
+    const QString packNonlatin = root + QStringLiteral("/font-nonlatin");
+
+    if(!copyDirFiles(packFont, stageFontDir()))
+        return false;
+    if(!copyDirFiles(packNonlatin, stageNonlatinDir()))
+        return false;
+
+    // At least one latin weight must have been staged.
+    if(!QFileInfo(stageFontDir()).isDir()
+       || QDir(stageFontDir()).entryList(QDir::Files).isEmpty())
+    {
+        qWarning() << "FontApplier: no fonts staged from" << packFont;
+        return false;
+    }
+    return true;
+}
+
 QString FontApplier::buildConfXml(const QString& packName,
                                   const QString& weightBasename,
                                   const QString& latinFamily) const
 {
-    const QString root = packDir(packName);
-    const QString fontDir     = root + QStringLiteral("/font");
-    const QString nonlatinDir = root + QStringLiteral("/font-nonlatin");
+    const QString fontDir = stageFontDir();
+    const QString nonlatinDir = stageNonlatinDir();
 
     QString xml;
     xml.reserve(2048);
@@ -232,9 +328,18 @@ void FontApplier::applyFromPack(const QString& packName, const QString& weightBa
         return;
     }
 
+    if(!stagePackFonts(packName))
+    {
+        clearStage();
+        emit error(QStringLiteral("failed to stage fonts for Sailjail"));
+        emit applied(packName);
+        return;
+    }
+
     const QString xml = buildConfXml(packName, weightBasename, family);
     if(!writeConf(xml))
     {
+        clearStage();
         emit error(QStringLiteral("failed to write fontconfig conf"));
         emit applied(packName);
         return;
@@ -255,6 +360,12 @@ void FontApplier::restoreFonts()
     if(!removeConf())
     {
         emit error(QStringLiteral("failed to remove fontconfig conf"));
+        emit restored();
+        return;
+    }
+    if(!clearStage())
+    {
+        emit error(QStringLiteral("failed to remove staged fonts"));
         emit restored();
         return;
     }

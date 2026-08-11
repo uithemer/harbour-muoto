@@ -47,8 +47,9 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconp
 
 - Unprivileged, in the **GUI process** via `FontApplier` (`src/gui/fontapplier.cpp`), driven by `ThemePackModel::applyTheme` / `restoreTheme`.
 - Confirm / Restore on the Themes tab call these (icons go through `Helper` → launcher-icond in parallel).
-- Apply: read pack `font/` (+ optional `font-nonlatin/`), write `~/.config/fontconfig/conf.d/99-muoto.conf`, run `fc-cache`; sets `activeFontPack` in dconf.
-- Restore: remove that conf (and related state), `fc-cache`, clear `activeFontPack`.
+- Apply: copy pack `font/` (+ optional `font-nonlatin/`) into `~/.local/share/fonts/muoto/` (Sailjail-readable), write `~/.config/fontconfig/conf.d/99-muoto.conf` with `<dir>` pointing at that staging tree, run `fc-cache`; sets `activeFontPack` in dconf. Real copies — not symlinks into `.themepack`.
+- Restore: remove that conf and wipe `~/.local/share/fonts/muoto/`, `fc-cache`, clear `activeFontPack`.
+- After upgrading to 3.2.2+, reapply the font once so jailed apps pick up staging (RPM update does not rewrite an existing conf).
 - User docs: [docs/fonts.md](docs/fonts.md). UI: `qml/pages/ConfirmPage.qml`, `RestorePage.qml`, `ThemesTabContent.qml`.
 
 ## Display density apply / restore
