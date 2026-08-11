@@ -17,6 +17,8 @@
 // readable) and the conf <dir> entries point there — not at
 // /usr/share/harbour-themepack-* or ~/.themepack, which jailed apps cannot
 // open. Restore removes the conf and the staging tree.
+// Apply/restore run on a worker thread (staging + fc-cache) so the GUI
+// does not freeze; signals are delivered queued to the main thread.
 //
 // 2.6.0: this class is intentionally GUI-only (lives in src/gui/, never
 // exposed via the helperd D-Bus surface) because it is fully
@@ -43,10 +45,11 @@ public slots:
     // fontconfig conf for `packName` (bare or full "harbour-themepack-..."
     // form), aliasing Sail Sans Pro to the family exposed by
     // `<pack>/font/<weightBasename>.ttf`. Refreshes fc-cache.
+    // Returns immediately; work runs off the GUI thread.
     void applyFromPack(const QString& packName, const QString& weightBasename);
 
     // Remove the conf file and staging tree (no-op if missing) and refresh
-    // fc-cache.
+    // fc-cache. Returns immediately; work runs off the GUI thread.
     void restoreFonts();
 
 signals:
@@ -55,6 +58,9 @@ signals:
     void error(const QString& message);
 
 private:
+    void applyFromPackWorker(const QString& packName, const QString& weightBasename);
+    void restoreFontsWorker();
+
     QString packDir(const QString& packName) const;
     QString stageRoot() const;
     QString stageFontDir() const;

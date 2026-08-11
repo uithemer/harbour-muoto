@@ -22,6 +22,41 @@ SilicaListView {
     property bool _pendingFontRestore: false
     property bool _uninstallAfterIconRestore: false
     property int _uninstallPackIndex: -1
+    // Font + icon share icon-ops.lock; with async fonts, start icons only
+    // after fonts finish (same order as when applyFromPack blocked the UI).
+    property string _deferredIconPack: ""
+    property bool _deferredIconRunPack: false
+    property bool _deferredIconOverlay: false
+    property bool _deferredIconRestore: false
+
+    function _clearDeferredIcons() {
+        _deferredIconPack = ""
+        _deferredIconRunPack = false
+        _deferredIconOverlay = false
+        _deferredIconRestore = false
+    }
+
+    function _startDeferredIcons() {
+        if (_deferredIconRestore) {
+            _deferredIconRestore = false
+            settings.dynamicClockEnabled = false
+            settings.dynamicCalendarEnabled = false
+            _pendingIconRestore = true
+            Helper.restoreIcons()
+            return
+        }
+        if (_deferredIconPack !== "") {
+            var pack = _deferredIconPack
+            var runPack = _deferredIconRunPack
+            var overlay = _deferredIconOverlay
+            _deferredIconPack = ""
+            _deferredIconRunPack = false
+            _deferredIconOverlay = false
+            _pendingIconPack = pack
+            _pendingIconOverlay = overlay
+            Helper.applyIcons(pack, runPack, overlay)
+        }
+    }
 
     function _commitPendingIconApply() {
         if (_pendingIconPack !== "") {
@@ -80,6 +115,7 @@ SilicaListView {
         _pendingFontRestore = false
         _uninstallAfterIconRestore = false
         _uninstallPackIndex = -1
+        _clearDeferredIcons()
         settings.isRunning = false
         app.showHelperError(errMsg)
     }
@@ -142,11 +178,13 @@ SilicaListView {
         onThemeApplied: {
             themesView._commitPendingFontApply()
             themesView._opDone()
+            themesView._startDeferredIcons()
         }
         onThemeApplyFailed: themesView._abortThemeWork(message)
         onThemeRestored: {
             themesView._commitPendingFontRestore()
             themesView._opDone()
+            themesView._startDeferredIcons()
         }
         onThemeRestoreFailed: themesView._abortThemeWork(message)
         onUninstallCompleted: notifyDone()
@@ -222,10 +260,12 @@ SilicaListView {
 
                     if (dlgrestore.restoreFonts) {
                         themesView._pendingFontRestore = true
+                        if (dlgrestore.restoreIcons) {
+                            // Defer icons until fonts release icon-ops.lock.
+                            themesView._deferredIconRestore = true
+                        }
                         themepackmodel.restoreTheme(dlgrestore.restoreFonts)
-                    }
-                    if (dlgrestore.restoreIcons) {
-                        // Stock dyn UI is available again; do not auto-apply live icons.
+                    } else if (dlgrestore.restoreIcons) {
                         settings.dynamicClockEnabled = false
                         settings.dynamicCalendarEnabled = false
                         themesView._pendingIconRestore = true
@@ -266,11 +306,16 @@ SilicaListView {
 
                 if (dlgconfirm.fontsSelected) {
                     themesView._pendingFontPack = model.packName
+                    if (wantsIcons) {
+                        // Defer icons until fonts release icon-ops.lock.
+                        themesView._deferredIconPack = model.packName
+                        themesView._deferredIconRunPack = dlgconfirm.iconsSelected
+                        themesView._deferredIconOverlay = dlgconfirm.iconOverlaySelected
+                    }
                     themepackmodel.applyTheme(index,
                         dlgconfirm.fontsSelected,
                         dlgconfirm.selectedFont)
-                }
-                if (wantsIcons) {
+                } else if (wantsIcons) {
                     themesView._pendingIconPack = model.packName
                     themesView._pendingIconOverlay = dlgconfirm.iconOverlaySelected
                     Helper.applyIcons(model.packName,

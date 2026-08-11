@@ -1,5 +1,6 @@
-* Tue Aug 11 2026 3.2.2-1
+* Tue Aug 11 2026 3.2.2-2
 - Font support for jailed apps.
+- Translations updated.
 
 * Sat Aug 08 2026 3.2.0-1
 - Drop bulk silica ambient, hicolor, and apkd-bridge icon apply; launcher

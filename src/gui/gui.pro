@@ -23,7 +23,7 @@ load(sailfishapp)
 # (double absolute prefix) and silently fail to ship any .qm. We replicate
 # its flow further down with proper $$ROOT-rooted paths.
 
-QT += dbus
+QT += dbus concurrent
 
 # Shared ops (IconApplier, DensityEnabler, file lock, spawner, manifest,
 # desktopfile, imageutil, iconpreviewcache, themepack-ops). FontApplier

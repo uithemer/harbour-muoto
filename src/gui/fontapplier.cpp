@@ -10,6 +10,7 @@
 #include <QProcess>
 #include <QStandardPaths>
 #include <QDebug>
+#include <QtConcurrent>
 
 static const char* kPackPrefix = "/usr/share/harbour-themepack-";
 static const char* kSailFamily   = "Sail Sans Pro Light";
@@ -291,6 +292,7 @@ void FontApplier::runFcCache()
 {
     // 2.6.0: with the GUI running as defaultuser, fc-cache writes into
     // the current user's ~/.cache/fontconfig directly. No `su -` shell.
+    // Called from a worker thread — blocking wait is fine here.
     QProcess p;
     p.setProcessChannelMode(QProcess::ForwardedChannels);
     p.start(QStringLiteral("fc-cache"), QStringList() << QStringLiteral("-f"));
@@ -300,75 +302,94 @@ void FontApplier::runFcCache()
 
 void FontApplier::applyFromPack(const QString& packName, const QString& weightBasename)
 {
-    // Always emit applied(packName) at the end (success or logged failure)
-    // so callers' one-shot connections drain and the busy spinner clears.
-    // Mirrors IconApplier's "log-and-continue" error policy.
-    FileLock lk;
-    if(!lk.isHeld())
-    {
-        emit error(QStringLiteral("busy"));
-        emit applied(packName);
-        return;
-    }
-
-    if(packName.isEmpty() || weightBasename.isEmpty())
-    {
-        emit error(QStringLiteral("empty pack or weight"));
-        emit applied(packName);
-        return;
-    }
-
-    const QString ttfPath = packDir(packName) + QStringLiteral("/font/")
-                          + weightBasename + QStringLiteral(".ttf");
-    const QString family = familyFromTtf(ttfPath);
-    if(family.isEmpty())
-    {
-        emit error(QStringLiteral("could not read font family from %1").arg(ttfPath));
-        emit applied(packName);
-        return;
-    }
-
-    if(!stagePackFonts(packName))
-    {
-        clearStage();
-        emit error(QStringLiteral("failed to stage fonts for Sailjail"));
-        emit applied(packName);
-        return;
-    }
-
-    const QString xml = buildConfXml(packName, weightBasename, family);
-    if(!writeConf(xml))
-    {
-        clearStage();
-        emit error(QStringLiteral("failed to write fontconfig conf"));
-        emit applied(packName);
-        return;
-    }
-    runFcCache();
-    emit applied(packName);
+    // Staging + fc-cache are slow; keep the Silica event loop responsive.
+    QtConcurrent::run(this, &FontApplier::applyFromPackWorker, packName, weightBasename);
 }
 
 void FontApplier::restoreFonts()
 {
-    FileLock lk;
-    if(!lk.isHeld())
+    QtConcurrent::run(this, &FontApplier::restoreFontsWorker);
+}
+
+void FontApplier::applyFromPackWorker(const QString& packName, const QString& weightBasename)
+{
+    // Always emit applied(packName) at the end (success or logged failure)
+    // so callers' one-shot connections drain and the busy spinner clears.
+    // Mirrors IconApplier's "log-and-continue" error policy.
+    // Release FileLock before emit so a follow-up ApplyIcons (same lock)
+    // is not rejected as busy when QML chains font→icon.
+    QString err;
+    bool ok = false;
     {
-        emit error(QStringLiteral("busy"));
-        emit restored();
-        return;
+        FileLock lk;
+        if(!lk.isHeld())
+        {
+            err = QStringLiteral("busy");
+        }
+        else if(packName.isEmpty() || weightBasename.isEmpty())
+        {
+            err = QStringLiteral("empty pack or weight");
+        }
+        else
+        {
+            const QString ttfPath = packDir(packName) + QStringLiteral("/font/")
+                                  + weightBasename + QStringLiteral(".ttf");
+            const QString family = familyFromTtf(ttfPath);
+            if(family.isEmpty())
+            {
+                err = QStringLiteral("could not read font family from %1").arg(ttfPath);
+            }
+            else if(!stagePackFonts(packName))
+            {
+                clearStage();
+                err = QStringLiteral("failed to stage fonts for Sailjail");
+            }
+            else
+            {
+                const QString xml = buildConfXml(packName, weightBasename, family);
+                if(!writeConf(xml))
+                {
+                    clearStage();
+                    err = QStringLiteral("failed to write fontconfig conf");
+                }
+                else
+                {
+                    runFcCache();
+                    ok = true;
+                }
+            }
+        }
     }
-    if(!removeConf())
+    if(!ok)
+        emit error(err);
+    emit applied(packName);
+}
+
+void FontApplier::restoreFontsWorker()
+{
+    QString err;
+    bool ok = false;
     {
-        emit error(QStringLiteral("failed to remove fontconfig conf"));
-        emit restored();
-        return;
+        FileLock lk;
+        if(!lk.isHeld())
+        {
+            err = QStringLiteral("busy");
+        }
+        else if(!removeConf())
+        {
+            err = QStringLiteral("failed to remove fontconfig conf");
+        }
+        else if(!clearStage())
+        {
+            err = QStringLiteral("failed to remove staged fonts");
+        }
+        else
+        {
+            runFcCache();
+            ok = true;
+        }
     }
-    if(!clearStage())
-    {
-        emit error(QStringLiteral("failed to remove staged fonts"));
-        emit restored();
-        return;
-    }
-    runFcCache();
+    if(!ok)
+        emit error(err);
     emit restored();
 }
