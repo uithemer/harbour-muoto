@@ -8,10 +8,20 @@ Item {
     property string packName: ""
     property string selectedFont: ""
 
+    readonly property int previewHeadingPx: {
+        // Leave room for heading + gap + several wrapped body lines.
+        var cap = Math.max(1, Math.round(height * 0.14))
+        return Math.min(Theme.fontSizeLarge, cap)
+    }
+    readonly property int previewBodyPx: {
+        var cap = Math.max(1, Math.round(height * 0.09))
+        return Math.min(Theme.fontSizeSmall, cap)
+    }
+
     readonly property string previewSource: {
         var c = String(Theme.primaryColor).replace("#", "")
         var pack = (!packName || packName === "") ? "default" : packName
-        var q = "?c=" + c + "&h=" + Theme.fontSizeLarge + "&b=" + Theme.fontSizeSmall
+        var q = "?c=" + c + "&h=" + previewHeadingPx + "&b=" + previewBodyPx
         if (pack === "default")
             return "image://muoto-font/lorem/default" + q
         if (selectedFont === "")
@@ -22,7 +32,8 @@ Item {
     Image {
         id: previewImage
         anchors.fill: parent
-        fillMode: Image.Pad
+        anchors.margins: Theme.paddingMedium
+        fillMode: Image.PreserveAspectFit
         asynchronous: false
         sourceSize.width: Math.max(1, width)
         sourceSize.height: Math.max(1, height)

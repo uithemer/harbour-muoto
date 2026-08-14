@@ -148,15 +148,18 @@ QImage FontSampleProvider::requestImage(const QString& id,
             height = requestedSize.height();
         else
             height = qMax(1, width / 2);
-        const int pad = qMax(12, width / 24);
-        const int headingPx = intFromQuery(query, "h", qMax(32, height / 8));
-        const int bodyPx = intFromQuery(query, "b", qMax(20, headingPx * 2 / 3));
+        const int pad = qMax(8, width / 32);
+        const int usable = qMax(1, height - 2 * pad);
+        // Heading + gap + ~3–4 wrapped body lines must fit in usable.
+        int headingPx = intFromQuery(query, "h", qMax(24, usable / 6));
+        int bodyPx = intFromQuery(query, "b", qMax(16, headingPx * 2 / 3));
+        headingPx = qMin(headingPx, qMax(8, usable / 6));
+        bodyPx = qMin(bodyPx, qMax(8, usable / 10));
         img = ImageUtil::previewTtfText(
                     path,
                     QStringLiteral("Lorem ipsum"),
                     QStringLiteral("Dolor sit amet, consectetur adipiscing elit. "
-                                   "Maecenas imperdiet finibus venenatis. "
-                                   "Suspendisse mollis urna sed luctus sodales."),
+                                   "Maecenas imperdiet finibus venenatis."),
                     width, headingPx, bodyPx, color, height, pad);
     }
 
