@@ -36,6 +36,33 @@ Dialog {
 
     ListModel { id: carouselModel }
 
+    // One probe instance for carousel sampling — avoid FontWeightModel per tile.
+    FontWeightModel { id: carouselProbe; packName: "" }
+
+    function sampleBasenameForPack(packIndex) {
+        if (!packModel.hasFont(packIndex))
+            return ""
+        carouselProbe.packName = packModel.packName(packIndex)
+        var result = ""
+        if (carouselProbe.rowCount() > 0) {
+            var prefs = ["regular", "light", "thin", "book", "normal", "extralight", "medium"]
+            outer:
+            for (var p = 0; p < prefs.length; ++p) {
+                for (var r = 0; r < carouselProbe.rowCount(); ++r) {
+                    var w = carouselProbe.data(carouselProbe.index(r, 0), 257)
+                    if (w && w.toLowerCase().indexOf(prefs[p]) >= 0) {
+                        result = w
+                        break outer
+                    }
+                }
+            }
+            if (result === "")
+                result = carouselProbe.data(carouselProbe.index(0, 0), 257)
+        }
+        carouselProbe.packName = ""
+        return result
+    }
+
     function rebuildCarousel() {
         carouselModel.clear()
         for (var i = 0; i < packModel.rowCount(); ++i) {
@@ -44,14 +71,15 @@ Dialog {
             carouselModel.append({
                 packIndex: i,
                 packName: packModel.packName(i),
-                packDisplayName: packModel.packDisplayName(i)
+                packDisplayName: packModel.packDisplayName(i),
+                sampleFontBasename: sampleBasenameForPack(i)
             })
         }
     }
 
     FontWeightModel {
         id: fontweightmodel
-        packName: dlg.packName
+        packName: dlg.hasFont ? dlg.packName : ""
     }
 
     function initFromSettings() {
@@ -128,8 +156,12 @@ Dialog {
             id: content
             width: parent.width
 
-            SectionHeader { text: qsTr("Preview") }
 
+            Item {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
+            
             Item {
                 width: parent.width
                 height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
@@ -166,7 +198,7 @@ Dialog {
             ListView {
                 id: carousel
                 width: parent.width
-                height: Theme.itemSizeLarge * 2.4
+                height: Theme.itemSizeLarge * 1.6
                 orientation: ListView.Horizontal
                 spacing: Theme.paddingMedium
                 clip: true
@@ -187,6 +219,7 @@ Dialog {
                         anchors.margins: Theme.paddingSmall
                         packName: model.packName
                         packDisplayName: model.packDisplayName
+                        sampleFontBasename: model.sampleFontBasename
                     }
                 }
             }

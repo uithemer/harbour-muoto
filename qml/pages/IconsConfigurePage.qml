@@ -128,7 +128,11 @@ Dialog {
             id: content
             width: parent.width
 
-            SectionHeader { text: qsTr("Preview") }
+            Item {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
+
 
             IconPackPreview {
                 width: parent.width
@@ -141,7 +145,7 @@ Dialog {
             ListView {
                 id: carousel
                 width: parent.width
-                height: Theme.itemSizeLarge * 2.4
+                height: Theme.itemSizeLarge * 1.6
                 orientation: ListView.Horizontal
                 spacing: Theme.paddingMedium
                 clip: true
@@ -164,16 +168,6 @@ Dialog {
                         packDisplayName: model.packDisplayName
                     }
                 }
-            }
-
-            Label {
-                width: parent.width - Theme.horizontalPageMargin * 2
-                x: Theme.horizontalPageMargin
-                text: effectiveIndex >= 0
-                      ? packModel.packDisplayName(effectiveIndex)
-                      : qsTr("No icon packs installed")
-                color: Theme.secondaryColor
-                font.pixelSize: Theme.fontSizeSmall
             }
 
             SectionHeader {

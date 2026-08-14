@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.muoto 1.0
 import "../common/fontWeightUtils.js" as FontWeightUtils
 
 Item {
@@ -8,23 +7,15 @@ Item {
 
     property string packName: ""
     property string packDisplayName: ""
+    property string sampleFontBasename: ""
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
 
-    FontWeightModel {
-        id: weights
-        packName: root.packName
-    }
-
-    readonly property string sampleBasename: weights.rowCount() > 0
-        ? FontWeightUtils.fontBasenameFromFilename(weights.firstWeight)
-        : ""
-
     FontLoader {
         id: sampleFont
-        source: sampleBasename !== ""
-                ? FontWeightUtils.fontTtfPath(root.packName, sampleBasename)
+        source: sampleFontBasename !== ""
+                ? FontWeightUtils.fontTtfPath(root.packName, sampleFontBasename)
                 : ""
     }
 
@@ -33,25 +24,28 @@ Item {
         spacing: Theme.paddingSmall
 
         Item {
+            id: previewHost
             width: parent.width
-            height: width
+            height: (parent.height - parent.spacing) * 0.58
 
             Label {
                 anchors.centerIn: parent
                 text: "Aa"
-                font.family: sampleBasename !== "" ? sampleFont.name : Theme.defaultFontFamily
-                font.weight: FontWeightUtils.fontWeightFromBasename(sampleBasename)
+                font.family: sampleFontBasename !== "" ? sampleFont.name : ""
+                font.weight: FontWeightUtils.fontWeightFromBasename(sampleFontBasename)
                 font.pixelSize: Theme.fontSizeLarge * 1.25
-                color: sampleBasename !== "" ? Theme.primaryColor : Theme.secondaryColor
+                color: sampleFontBasename !== "" ? Theme.primaryColor : Theme.secondaryColor
             }
         }
 
         Label {
             width: parent.width
+            height: parent.height - previewHost.height - parent.spacing
             horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignTop
+            wrapMode: Text.Wrap
             font.pixelSize: Theme.fontSizeSmall
             color: Theme.secondaryColor
-            truncationMode: TruncationMode.Fade
             text: root.packDisplayName
         }
     }

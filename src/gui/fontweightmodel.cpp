@@ -78,13 +78,18 @@ void FontWeightModel::loadFontWeigths()
         return;
 
     this->_weights.clear();
+    this->_firstweight.clear();
 
     QDir dir("/usr/share/" + this->_packname + "/font");
 
     if(!dir.exists())
+    {
+        emit firstWeightChanged();
         return;
+    }
 
     this->_weights = dir.entryList((QStringList() << "*.ttf" << "*.ttc"));
-    this->_firstweight = this->_weights.first();
+    if (!this->_weights.isEmpty())
+        this->_firstweight = this->_weights.first();
     emit firstWeightChanged();
 }

@@ -280,6 +280,13 @@
     </message>
 </context>
 <context>
+    <name>FontPreview</name>
+    <message>
+        <source>Aa Bb Cc 123</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FontsConfigurePage</name>
     <message>
         <source>Cancel</source>
@@ -287,10 +294,6 @@
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -343,15 +346,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Preview</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Icon packs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No icon packs installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
