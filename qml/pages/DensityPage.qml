@@ -257,11 +257,7 @@ Dialog {
                     }
 
 
-            Item {
-                width: parent.width
-                height: Theme.paddingLarge
-            }
-            
+LabelSpacer { }            
                     Button {
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: Math.min(parent.width - Theme.paddingLarge * 2,
@@ -272,11 +268,7 @@ Dialog {
                     }
 
 
-            Item {
-                width: parent.width
-                height: Theme.paddingLarge
-            }
-
+LabelSpacer { }
                     MuotoTextLabel {
                         text: qsTr("Controls how large Sailfish UI elements appear. "
                                    + "Lower = more on screen; higher = larger text and buttons.")
@@ -318,10 +310,6 @@ Dialog {
                 explanation: qsTr("Restart the homescreen after applying display density so all apps pick up the changes.")
             }
 
-            Item {
-                width: parent.width
-                height: Theme.paddingLarge
-            }
-        }
+LabelSpacer { }        }
     }
 }

@@ -182,11 +182,7 @@ Page {
                 }
             }
 
-            Item {
-                width: parent.width
-                height: Theme.paddingLarge
-            }
-        }
+LabelSpacer { }        }
     }
 
     DBusInterface {

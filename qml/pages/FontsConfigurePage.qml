@@ -335,11 +335,7 @@ Dialog {
                 explanation: qsTr("Restart the homescreen after applying fonts so all apps pick up the new typeface.")
             }
 
-            Item {
-                width: parent.width
-                height: Theme.paddingLarge
-            }
-        }
+LabelSpacer { }        }
     }
 
     Connections {
