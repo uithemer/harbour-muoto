@@ -11,6 +11,7 @@ Item {
     property bool hasApk: false
     property bool hasJolla: false
     property bool isDefault: false
+    property bool highlighted: false
     property var stockModel: null
 
     width: parent ? parent.width : implicitWidth
@@ -110,7 +111,7 @@ Item {
             verticalAlignment: Text.AlignTop
             wrapMode: Text.Wrap
             font.pixelSize: Theme.fontSizeSmall
-            color: Theme.secondaryColor
+            color: root.highlighted ? Theme.highlightColor : Theme.secondaryColor
             text: root.packDisplayName
         }
     }

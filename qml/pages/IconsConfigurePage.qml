@@ -295,6 +295,7 @@ Dialog {
                         hasApk: model.hasApk
                         hasJolla: model.hasJolla
                         isDefault: model.isDefault
+                        highlighted: iconTile.highlighted || iconTile.down
                         stockModel: model.isDefault ? stockIcons : null
                     }
                 }

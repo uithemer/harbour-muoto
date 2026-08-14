@@ -273,6 +273,7 @@ Dialog {
                         packDisplayName: model.packDisplayName
                         sampleFontBasename: model.sampleFontBasename
                         isDefault: model.isDefault
+                        highlighted: fontTile.highlighted || fontTile.down
                     }
                 }
             }

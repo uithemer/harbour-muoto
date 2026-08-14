@@ -45,7 +45,7 @@ CoverBackground {
             text: "Muoto"
             color: Theme.secondaryColor
             font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSizeHuge
+            font.pixelSize: Theme.fontSizeLarge
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             wrapMode: Text.WordWrap

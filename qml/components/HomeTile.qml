@@ -15,8 +15,6 @@ BackgroundItem {
     height: implicitHeight
     clip: true
 
-    signal clicked()
-
     Column {
         id: labelColumn
         anchors.left: parent.left
@@ -29,14 +27,16 @@ BackgroundItem {
             width: parent.width
             text: root.title
             font.pixelSize: Theme.fontSizeMedium
-            color: Theme.highlightColor
+            color: root.highlighted || root.down
+                   ? Theme.highlightColor : Theme.primaryColor
         }
 
         Label {
             width: parent.width
             text: root.subtitle
             font.pixelSize: Theme.fontSizeSmall
-            color: Theme.secondaryColor
+            color: root.highlighted || root.down
+                   ? Theme.secondaryHighlightColor : Theme.secondaryColor
             truncationMode: TruncationMode.Fade
         }
     }
@@ -51,11 +51,5 @@ BackgroundItem {
         }
         height: root.previewHeight
         clip: true
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        z: 1
-        onClicked: root.clicked()
     }
 }

@@ -8,6 +8,7 @@ Item {
     property string packDisplayName: ""
     property string sampleFontBasename: ""
     property bool isDefault: false
+    property bool highlighted: false
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
@@ -51,7 +52,7 @@ Item {
                 visible: root.aaSource === ""
                 text: "Aa"
                 font.pixelSize: Theme.fontSizeLarge * 1.25
-                color: Theme.primaryColor
+                color: root.highlighted ? Theme.highlightColor : Theme.primaryColor
             }
         }
 
@@ -62,7 +63,7 @@ Item {
             verticalAlignment: Text.AlignTop
             wrapMode: Text.Wrap
             font.pixelSize: Theme.fontSizeSmall
-            color: Theme.secondaryColor
+            color: root.highlighted ? Theme.highlightColor : Theme.secondaryColor
             text: root.packDisplayName
         }
     }
