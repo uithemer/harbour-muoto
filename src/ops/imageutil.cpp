@@ -266,4 +266,31 @@ QImage previewTtfText(const QString& ttfPath,
     return out;
 }
 
+QImage previewTtfGlyphs(const QString& ttfPath,
+                        const QString& text,
+                        int pixelSize,
+                        const QColor& color)
+{
+    if(ttfPath.isEmpty() || text.isEmpty() || pixelSize <= 0)
+        return QImage();
+
+    const QRawFont font(ttfPath, pixelSize);
+    if(!font.isValid())
+        return QImage();
+
+    const qreal gw = glyphRunWidth(font, text);
+    const int pad = qMax(2, pixelSize / 8);
+    const int width = qMax(1, qRound(gw) + pad * 2);
+    const int height = qMax(1, qRound(font.ascent() + font.descent()) + pad * 2);
+
+    QImage out(width, height, QImage::Format_ARGB32_Premultiplied);
+    out.fill(Qt::transparent);
+
+    QPainter p(&out);
+    p.setRenderHint(QPainter::TextAntialiasing);
+    drawLines(&p, font, QStringList() << text, pad, pad + font.ascent(), color);
+    p.end();
+    return out;
+}
+
 } // namespace ImageUtil

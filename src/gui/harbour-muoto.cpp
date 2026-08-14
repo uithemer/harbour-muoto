@@ -10,9 +10,11 @@
 #include "themepack.h"
 #include "themepackmodel.h"
 #include "fontweightmodel.h"
+#include "fontcarouselmodel.h"
 #include "iconapplier.h"
 #include "helperclient.h"
 #include "iconpreviewprovider.h"
+#include "fontsampleprovider.h"
 #include "launcherimageprovider.h"
 
 // 2.6.0: setuid(0) is gone from main(). The GUI runs as defaultuser
@@ -36,6 +38,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ThemePack>("harbour.muoto", 1, 0, "ThemePack");
     qmlRegisterType<ThemePackModel>("harbour.muoto", 1, 0, "ThemePackModel");
     qmlRegisterType<FontWeightModel>("harbour.muoto", 1, 0, "FontWeightModel");
+    qmlRegisterType<FontCarouselModel>("harbour.muoto", 1, 0, "FontCarouselModel");
     qmlRegisterType<IconApplier>("harbour.muoto", 1, 0, "IconApplier");
     qmlRegisterSingletonType<HelperClient>("harbour.muoto", 1, 0, "Helper",
                                            &HelperClient::qmlSingleton);
@@ -45,6 +48,8 @@ int main(int argc, char *argv[])
     // takes ownership.
     view->engine()->addImageProvider(QStringLiteral("muoto"),
                                      new IconPreviewProvider);
+    view->engine()->addImageProvider(QStringLiteral("muoto-font"),
+                                     new FontSampleProvider);
     view->engine()->addImageProvider(QStringLiteral("muoto-launcher"),
                                      new LauncherImageProvider);
 

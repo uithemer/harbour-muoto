@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../common/fontWeightUtils.js" as FontWeightUtils
 
 Item {
     anchors.fill: parent
@@ -8,13 +7,17 @@ Item {
     property string packName: ""
     property string selectedFont: ""
 
-    FontLoader {
-        id: previewfont
-        source: FontWeightUtils.fontTtfPath(packName, selectedFont)
+    readonly property string previewSource: {
+        var c = String(Theme.primaryColor).replace("#", "")
+        var pack = (!packName || packName === "") ? "default" : packName
+        if (pack === "default")
+            return "image://muoto-font/lorem/default?c=" + c
+        if (selectedFont === "")
+            return ""
+        return "image://muoto-font/lorem/" + pack + "/" + selectedFont + "?c=" + c
     }
 
-    Label {
-        id: previewlabel
+    Image {
         anchors {
             left: parent.left
             right: parent.right
@@ -23,11 +26,11 @@ Item {
             rightMargin: Theme.paddingLarge
             topMargin: Theme.paddingLarge
         }
-        font.family: previewfont.name
-        font.weight: FontWeightUtils.fontWeightFromBasename(selectedFont)
-        font.pixelSize: Theme.fontSizeExtraSmall
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas imperdiet finibus venenatis."
-        wrapMode: Text.WordWrap
+        height: parent.height - Theme.paddingLarge * 2
+        fillMode: Image.PreserveAspectFit
+        asynchronous: false
+        sourceSize.width: Math.max(1, width)
+        visible: previewSource !== ""
+        source: previewSource
     }
-
 }

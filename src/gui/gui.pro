@@ -37,8 +37,10 @@ HEADERS += \
     $$PWD/themepack.h \
     $$PWD/themepackmodel.h \
     $$PWD/fontweightmodel.h \
+    $$PWD/fontcarouselmodel.h \
     $$PWD/fontapplier.h \
     $$PWD/iconpreviewprovider.h \
+    $$PWD/fontsampleprovider.h \
     $$PWD/helperclient.h \
     $$PWD/launcherimageprovider.h
 
@@ -47,8 +49,10 @@ SOURCES += \
     $$PWD/themepack.cpp \
     $$PWD/themepackmodel.cpp \
     $$PWD/fontweightmodel.cpp \
+    $$PWD/fontcarouselmodel.cpp \
     $$PWD/fontapplier.cpp \
     $$PWD/iconpreviewprovider.cpp \
+    $$PWD/fontsampleprovider.cpp \
     $$PWD/helperclient.cpp \
     $$PWD/launcherimageprovider.cpp
 

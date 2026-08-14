@@ -34,6 +34,12 @@ namespace ImageUtil
                           int headingPx,
                           int bodyPx,
                           const QColor& color);
+
+    // Tight single-line glyph image (carousel “Aa”). Same QRawFont rule.
+    QImage previewTtfGlyphs(const QString& ttfPath,
+                            const QString& text,
+                            int pixelSize,
+                            const QColor& color);
 }
 
 #endif // IMAGEUTIL_H

@@ -34,27 +34,18 @@ Dialog {
     readonly property bool fontsApplyOk: !hasFont
         || (hasFont && selectedFont !== "")
         || (!hasFont && hasFontNonLatin)
-    // Applied pack is already the process UI face via 99-muoto.conf. FontLoader
-    // of those TTFs then unregister (preview reload) aborts Qt 5.6 fontconfig.
-    readonly property bool previewUsesThemeFamily: stockSelected
-        || (hasFont && packName !== "" && packName === settings.activeFontPack)
 
     canAccept: stockSelected || (effectiveIndex >= 0 && fontsApplyOk)
 
-    ListModel { id: carouselModel }
-
-    function carouselRowForPack(packIndex) {
-        for (var i = 0; i < carouselModel.count; ++i) {
-            if (carouselModel.get(i).packIndex === packIndex)
-                return i
-        }
-        return -1
+    FontCarouselModel {
+        id: fontCarousel
+        packModel: dlg.packModel
     }
 
     function centerCarouselNow() {
-        if (!carousel || carousel.width <= 0 || carouselModel.count === 0)
+        if (!carousel || carousel.width <= 0)
             return false
-        var row = carouselRowForPack(effectiveIndex)
+        var row = fontCarousel.rowForPackIndex(effectiveIndex)
         if (row < 0)
             return false
         carousel.currentIndex = row
@@ -77,11 +68,6 @@ Dialog {
             if (dlg.centerCarouselNow() || tries > 20)
                 stop()
         }
-    }
-
-    FontWeightModel {
-        id: carouselProbe
-        packName: ""
     }
 
     FontWeightModel {
@@ -117,38 +103,6 @@ Dialog {
         return FontWeightUtils.pickPreferredBasename(fontweightmodel)
     }
 
-    function sampleBasenameForPack(packIndex) {
-        if (!packModel.hasFont(packIndex))
-            return ""
-        carouselProbe.packName = packModel.packName(packIndex)
-        var sample = FontWeightUtils.pickPreferredBasename(carouselProbe)
-        carouselProbe.packName = ""
-        return sample
-    }
-
-    function rebuildCarousel() {
-        carouselModel.clear()
-        carouselModel.append({
-            packIndex: -1,
-            packName: "",
-            packDisplayName: qsTr("Default"),
-            sampleFontBasename: "",
-            isDefault: true
-        })
-        for (var i = 0; i < packModel.rowCount(); ++i) {
-            if (!packModel.hasFont(i) && !packModel.hasFontNonLatin(i))
-                continue
-            carouselModel.append({
-                packIndex: i,
-                packName: packModel.packName(i),
-                packDisplayName: packModel.packDisplayName(i),
-                sampleFontBasename: sampleBasenameForPack(i),
-                isDefault: false
-            })
-        }
-        scheduleCenterCarousel()
-    }
-
     function syncFromSettings() {
         cacheActiveFontWeightFromConf()
         stockSelected = !settings.hasActiveFontPack()
@@ -168,48 +122,16 @@ Dialog {
         selectedFont = resolveSelectedWeight()
     }
 
-    Component.onCompleted: {
-        rebuildCarousel()
-        syncFromSettings()
-    }
+    Component.onCompleted: syncFromSettings()
 
     onStatusChanged: {
         if (status === PageStatus.Active)
             syncFromSettings()
     }
 
-    Connections {
-        target: packModel
-        onModelReset: dlg.rebuildCarousel()
-    }
-
     onEffectiveIndexChanged: {
         syncWeightForPack()
         scheduleCenterCarousel()
-    }
-
-    onPackNameChanged: schedulePreviewReload()
-    onSelectedFontChanged: schedulePreviewReload()
-    onStockSelectedChanged: schedulePreviewReload()
-
-    function schedulePreviewReload() {
-        previewLoader.source = ""
-        previewReloadTimer.restart()
-    }
-
-    Timer {
-        id: previewReloadTimer
-        interval: 1
-        onTriggered: {
-            if (dlg.previewUsesThemeFamily)
-                return
-            if (!dlg.hasFont || dlg.packName === "" || dlg.selectedFont === "")
-                return
-            previewLoader.setSource(Qt.resolvedUrl("../components/FontPreview.qml"), {
-                "packName": dlg.packName,
-                "selectedFont": dlg.selectedFont
-            })
-        }
     }
 
     onAccepted: {
@@ -250,43 +172,18 @@ Dialog {
                 width: parent.width
                 height: Theme.paddingLarge
             }
-            
+
             Item {
                 id: fontPreviewHost
                 width: parent.width
                 height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
 
-                Loader {
-                    id: previewLoader
+                FontPreview {
                     anchors.fill: parent
-                    visible: !dlg.previewUsesThemeFamily && hasFont && selectedFont !== ""
-                }
-
-                Column {
-                    visible: dlg.previewUsesThemeFamily
-                    anchors.fill: parent
-                    anchors.margins: Theme.paddingLarge
-                    spacing: Theme.paddingMedium
-
-                    Label {
-                        width: parent.width
-                        font.pixelSize: Theme.fontSizeExtraLarge
-                        font.weight: dlg.stockSelected
-                                     ? Font.Light
-                                     : FontWeightUtils.fontWeightFromBasename(dlg.selectedFont)
-                        text: "Lorem ipsum"
-                        wrapMode: Text.WordWrap
-                    }
-
-                    Label {
-                        width: parent.width
-                        font.pixelSize: Theme.fontSizeMedium
-                        font.weight: dlg.stockSelected
-                                     ? Font.Light
-                                     : FontWeightUtils.fontWeightFromBasename(dlg.selectedFont)
-                        text: "Dolor sit amet, consectetur adipiscing elit. Maecenas imperdiet finibus venenatis. Suspendisse mollis urna sed luctus sodales."
-                        wrapMode: Text.WordWrap
-                    }
+                    visible: dlg.stockSelected
+                             || (hasFont && selectedFont !== "")
+                    packName: dlg.stockSelected ? "default" : dlg.packName
+                    selectedFont: dlg.stockSelected ? "Light" : dlg.selectedFont
                 }
 
                 Label {
@@ -319,7 +216,7 @@ Dialog {
                 orientation: ListView.Horizontal
                 spacing: Theme.paddingMedium
                 clip: true
-                model: carouselModel
+                model: fontCarousel
                 boundsBehavior: Flickable.StopAtBounds
 
                 delegate: BackgroundItem {
@@ -347,11 +244,7 @@ Dialog {
                         packName: model.packName
                         packDisplayName: model.packDisplayName
                         sampleFontBasename: model.sampleFontBasename
-                        loadOwnFont: !model.isDefault
-                                     && model.packName !== settings.activeFontPack
-                                     && model.packName !== dlg.packName
-                                     && (dlg.previewUsesThemeFamily
-                                         || previewLoader.source !== "")
+                        isDefault: model.isDefault
                     }
                 }
             }
@@ -401,5 +294,10 @@ Dialog {
                 return
             selectedFont = resolveSelectedWeight()
         }
+    }
+
+    Connections {
+        target: fontCarousel
+        onModelReset: dlg.scheduleCenterCarousel()
     }
 }

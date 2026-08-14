@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../common/fontWeightUtils.js" as FontWeightUtils
 
 Item {
     id: root
@@ -8,16 +7,19 @@ Item {
     property string packName: ""
     property string packDisplayName: ""
     property string sampleFontBasename: ""
-    property bool loadOwnFont: false
+    property bool isDefault: false
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
 
-    FontLoader {
-        id: sampleFont
-        source: root.loadOwnFont && root.sampleFontBasename !== ""
-                ? FontWeightUtils.fontTtfPath(root.packName, root.sampleFontBasename)
-                : ""
+    readonly property string aaSource: {
+        var c = String(Theme.primaryColor).replace("#", "")
+        if (root.isDefault)
+            return "image://muoto-font/aa/default?c=" + c
+        if (root.packName === "" || root.sampleFontBasename === "")
+            return ""
+        return "image://muoto-font/aa/" + root.packName + "/"
+               + root.sampleFontBasename + "?c=" + c
     }
 
     Column {
@@ -29,11 +31,20 @@ Item {
             width: parent.width
             height: (parent.height - parent.spacing) * 0.58
 
+            Image {
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectFit
+                asynchronous: false
+                sourceSize.width: width
+                sourceSize.height: height
+                visible: root.aaSource !== ""
+                source: root.aaSource
+            }
+
             Label {
                 anchors.centerIn: parent
+                visible: root.aaSource === ""
                 text: "Aa"
-                font.family: root.loadOwnFont ? sampleFont.name : Theme.fontFamily
-                font.weight: FontWeightUtils.fontWeightFromBasename(root.sampleFontBasename)
                 font.pixelSize: Theme.fontSizeLarge * 1.25
                 color: Theme.primaryColor
             }

@@ -280,9 +280,9 @@
     </message>
 </context>
 <context>
-    <name>FontPreview</name>
+    <name>FontCarouselModel</name>
     <message>
-        <source>Aa Bb Cc 123</source>
+        <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -314,10 +314,6 @@
     </message>
     <message>
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
