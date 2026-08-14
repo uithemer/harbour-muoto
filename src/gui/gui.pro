@@ -83,9 +83,6 @@ OTHER_FILES += \
     $$ROOT/qml/components/MuotoNotification.qml \
     $$ROOT/qml/components/themepacklistview/ThemePackItem.qml \
     $$ROOT/qml/cover/CoverPage.qml \
-    $$ROOT/qml/cover/CoverConfirm.qml \
-    $$ROOT/qml/cover/CoverLabel.qml \
-    $$ROOT/qml/cover/FontPreviewCover.qml \
     $$ROOT/qml/pages/ConfirmPage.qml \
     $$ROOT/qml/components/MuotoAboutMenuItem.qml \
     $$ROOT/qml/components/MuotoRestartHomescreenMenuItem.qml \

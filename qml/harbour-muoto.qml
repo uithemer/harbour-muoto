@@ -56,12 +56,6 @@ ApplicationWindow
     function showHelperError(message, emptyFallback) {
         showToast(formatHelperError(message, emptyFallback))
     }
-    property string coverMode
-    property string coverIconPreviewPack: ""
-    property bool coverIconPreviewOk: false
-    property int coverIconPreviewSeq: 0
-    property int coverFontPreviewSeq: 0
-
     Component {
         id: mainpage
         MainPage {}
@@ -75,17 +69,8 @@ ApplicationWindow
     ThemePack { id: themepack }
     IconApplier {
         id: iconapplier
-        // Preview only (ConfirmPage buildPreview). Icon apply/restore go
+        // Preview only (IconPackPreview buildPreview). Icon apply/restore go
         // through Helper -> session launcher D-Bus.
-    }
-
-    Connections {
-        target: iconapplier
-        onPreviewReady: {
-            coverIconPreviewPack = packName
-            coverIconPreviewOk = ok
-            coverIconPreviewSeq++
-        }
     }
 
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
@@ -95,12 +80,7 @@ ApplicationWindow
     }
 
     initialPage: settings.wizardDone ? mainpage : welcomepage
-    cover: switch (app.coverMode) {
-           case "confirmDialog":
-               return Qt.resolvedUrl("cover/CoverConfirm.qml");
-           default:
-               return Qt.resolvedUrl("cover/CoverPage.qml")
-           }
+    cover: Qt.resolvedUrl("cover/CoverPage.qml")
 
     allowedOrientations: defaultAllowedOrientations
     _defaultPageOrientations: defaultAllowedOrientations

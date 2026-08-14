@@ -107,39 +107,6 @@ Dialog
 
     readonly property bool hasLatinFontFiles: fontweightmodel.rowCount() > 0
 
-    property string _coverFontNotifyKey: ""
-
-    function notifyCoverFontPreviewReady() {
-        if (previewFontBasename === "" || app.coverMode !== "confirmDialog")
-            return
-        var key = packName + "\0" + previewFontBasename
-        if (_coverFontNotifyKey === key)
-            return
-        _coverFontNotifyKey = key
-        app.coverFontPreviewSeq++
-    }
-
-    onPackNameChanged: _coverFontNotifyKey = ""
-
-    Connections {
-        target: fontweightmodel
-        onFirstWeightChanged: notifyCoverFontPreviewReady()
-    }
-
-    Connections {
-        target: Qt.application
-        onStateChanged: {
-            // Swipe to cover: re-notify so CoverConfirm picks up fonts even if seq
-            // was bumped before the cover Connections existed (first confirm open).
-            if (state !== Qt.ApplicationActive && app.coverMode === "confirmDialog") {
-                _coverFontNotifyKey = ""
-                notifyCoverFontPreviewReady()
-            }
-        }
-    }
-
-    Component.onCompleted: notifyCoverFontPreviewReady()
-
     SilicaFlickable
     {
         id: flickable
@@ -392,7 +359,6 @@ Dialog
                             vphfont.visible = false
                             fontloader.visible = true
                             fontloader.reload()
-                            notifyCoverFontPreviewReady()
                         }
                     }
                 }

@@ -22,10 +22,8 @@ Page {
     Component.onCompleted: refreshHomeIconPreview()
 
     onStatusChanged: {
-        if (status === PageStatus.Active) {
-            app.coverMode = "mainPage"
+        if (status === PageStatus.Active)
             refreshHomeIconPreview()
-        }
     }
 
     Connections {
