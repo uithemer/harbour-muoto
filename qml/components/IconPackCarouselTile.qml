@@ -36,8 +36,19 @@ Item {
         var url = ""
         if (root.isDefault) {
             var m = root.stockModel
-            if (m && m.count > 0)
-                url = m.get(Math.floor(Math.random() * m.count), "fileURL")
+            if (m && m.count > 0) {
+                // FolderAmbient themes icon-launcher-folder-* inplace; never
+                // use those for the Default stock thumb.
+                var tries = Math.min(m.count, 32)
+                for (var t = 0; t < tries; ++t) {
+                    var candidate = m.get(Math.floor(Math.random() * m.count), "fileURL")
+                    var name = String(candidate).split("/").pop()
+                    if (name.indexOf("icon-launcher-folder-") !== 0) {
+                        url = candidate
+                        break
+                    }
+                }
+            }
         } else {
             var n = thumbs.count
             if (n > 0)

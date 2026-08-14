@@ -3,6 +3,7 @@
 
 #include <QDir>
 #include <QDirIterator>
+#include <QFileInfo>
 #include <QGlyphRun>
 #include <QHash>
 #include <QPainter>
@@ -123,6 +124,8 @@ QStringList sampleStockLauncherIcons(int count)
     if(count <= 0)
         return QStringList();
 
+    static const QString kFolderPrefix = QStringLiteral("icon-launcher-folder-");
+
     const QStringList& sizes = IconPaths::jollaSizes();
     for(int s = 0; s < sizes.size(); ++s)
     {
@@ -135,7 +138,10 @@ QStringList sampleStockLauncherIcons(int count)
                         QDir::Files);
         while(it.hasNext())
         {
-            all << it.next();
+            const QString path = it.next();
+            if(QFileInfo(path).fileName().startsWith(kFolderPrefix))
+                continue;
+            all << path;
             if(all.size() >= count)
                 break;
         }
