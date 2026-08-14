@@ -17,11 +17,12 @@
 // "Display density" page to take effect, so the lock files have to be
 // moved out of the way. ensureEnabled() does that once: it relocates the
 // lock files into /usr/share/harbour-muoto/backup/dlocks/<name>.bk,
-// then runs `dconf update`.
+// then runs `dconf update` only if a lock was actually moved.
 //
-// Idempotent: safe to call repeatedly. If vendor lock files were restored
-// (e.g. after an SFOS upgrade) while .bk backups already exist, src is
-// moved again (stale .bk is replaced).
+// Idempotent: safe to call repeatedly. Already-unlocked (src missing)
+// skips the compile and still emits enabled(). If vendor lock files were
+// restored (e.g. after an SFOS upgrade) while .bk backups already exist,
+// src is moved again (stale .bk is replaced) and dconf is compiled.
 //
 // restoreDensity(dpr, iconSize) dconf-resets
 // /desktop/sailfish/silica/{theme_pixel_ratio,icon_size_launcher} via
@@ -41,8 +42,9 @@ public:
     explicit DensityEnabler(QObject* parent = nullptr);
 
 public slots:
-    // Move vendor dconf locks into the muoto backup dir and refresh the
-    // dconf db. Emits enabled() on success or error(QString) on failure.
+    // Move vendor dconf locks into the muoto backup dir. Compiles dconf
+    // only when a lock file was relocated. Emits enabled() on success
+    // (including already-unlocked) or error(QString) on failure.
     void ensureEnabled();
 
     void restoreDensity(bool dpr, bool iconSize);
@@ -53,7 +55,7 @@ signals:
     void error(const QString& message);
 
 private:
-    bool moveLockToBackup(const QString& fileName);
+    bool moveLockToBackup(const QString& fileName, bool* moved);
     // System-wide compile after relocating vendor lock files (root only).
     void runDconfUpdate();
     void runUserDconf(const QStringList& args);
