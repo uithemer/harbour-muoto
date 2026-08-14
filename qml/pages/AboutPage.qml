@@ -89,6 +89,7 @@ A.AboutPageBase {
         },
         A.Attribution {
             name: "Per-user font theming via fontconfig"
+            entries: ["dumol"]
             homepage: "https://dt.iki.fi/sailfish-os-change-default-font"
         },
         A.Attribution {
