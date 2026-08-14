@@ -48,8 +48,8 @@ Item {
             height: (parent.height - parent.spacing) * 0.58
 
             Image {
-                width: Theme.iconSizeLarge
-                height: Theme.iconSizeLarge
+                width: (Theme.iconSizeMedium + Theme.iconSizeLarge) / 2
+                height: width
                 anchors.centerIn: parent
                 asynchronous: true
                 cache: false
