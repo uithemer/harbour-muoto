@@ -91,22 +91,53 @@ Dialog {
                 width: parent.width
                 height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
 
-                DynIconsPreview {
-                    anchors.fill: parent
-                    packName: dlg.activePack
-                    stockLook: dlg.stockDyn
-                    hasDynClock: dlg.hasActiveDynClock
-                    hasDynCalendar: dlg.hasActiveDynCalendar
-                    clockLive: dlg.clockSelected
-                    calendarLive: dlg.calendarSelected
-                    iconPx: Theme.iconSizeLauncher
-                    previewTick: dlg.previewTick
-                }
-            }
+                Row {
+                    anchors.centerIn: parent
+                    spacing: Theme.paddingLarge
+                    visible: dlg.dynAvailable
 
-            MuotoTextLabel {
-                visible: !dlg.dynAvailable
-                text: qsTr("This theme doesn't include live Clock or Calendar icons. Try another theme, or restore the default look.")
+                    Image {
+                        width: Theme.iconSizeLauncher
+                        height: width
+                        fillMode: Image.PreserveAspectFit
+                        sourceSize.width: width
+                        sourceSize.height: height
+                        cache: false
+                        source: (dlg.clockSelected && dlg.hasActiveDynClock)
+                                ? ("image://muoto-launcher/dyn-clock/" + dlg.activePack
+                                   + "?t=" + dlg.previewTick)
+                                : (dlg.stockDyn
+                                   ? "image://theme/icon-launcher-clock"
+                                   : ("image://muoto-launcher/icon-pack/" + dlg.activePack
+                                      + "/icon-launcher-clock"))
+                    }
+
+                    Image {
+                        width: Theme.iconSizeLauncher
+                        height: width
+                        fillMode: Image.PreserveAspectFit
+                        sourceSize.width: width
+                        sourceSize.height: height
+                        cache: false
+                        source: (dlg.calendarSelected && dlg.hasActiveDynCalendar)
+                                ? ("image://muoto-launcher/dyn-calendar/" + dlg.activePack
+                                   + "?t=" + dlg.previewTick)
+                                : (dlg.stockDyn
+                                   ? "image://theme/icon-launcher-calendar"
+                                   : ("image://muoto-launcher/icon-pack/" + dlg.activePack
+                                      + "/icon-launcher-calendar"))
+                    }
+                }
+
+                Label {
+                    anchors.centerIn: parent
+                    width: parent.width - Theme.paddingLarge * 2
+                    horizontalAlignment: Text.AlignHCenter
+                    wrapMode: Text.Wrap
+                    color: Theme.secondaryColor
+                    visible: !dlg.dynAvailable
+                    text: qsTr("This theme doesn't include live Clock or Calendar icons. Try another theme, or restore the default look.")
+                }
             }
 
             MuotoTextLabel {

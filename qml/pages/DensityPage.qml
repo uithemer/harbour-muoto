@@ -206,10 +206,32 @@ Dialog {
                 width: parent.width
                 height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
 
-                DensityPreview {
-                    anchors.fill: parent
-                    iconPx: dlg.previewIconPx
-                    fontScale: dlg.previewFontScale
+                StockLauncherIcons { id: stockIcons }
+
+                Column {
+                    anchors.centerIn: parent
+                    spacing: Theme.paddingSmall
+                    width: parent.width
+
+                    Image {
+                        width: dlg.previewIconPx
+                        height: width
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        asynchronous: true
+                        cache: true
+                        fillMode: Image.PreserveAspectFit
+                        source: stockIcons.count > 0
+                                ? stockIcons.get(0, "fileURL")
+                                : "image://theme/icon-launcher-application"
+                    }
+
+                    Label {
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        text: qsTr("Aa Bb")
+                        color: Theme.primaryColor
+                        font.pixelSize: Theme.fontSizeMedium * dlg.previewFontScale
+                    }
                 }
             }
 
