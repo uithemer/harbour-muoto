@@ -23,17 +23,41 @@ Item {
 
     Label {
         id: previewlabel
+        visible: compact
         anchors.fill: parent
-        anchors.margins: compact ? Theme.paddingSmall : Theme.paddingLarge
+        anchors.margins: Theme.paddingSmall
         font.family: previewfont.name
         font.weight: FontWeightUtils.fontWeightFromBasename(selectedFont)
-        font.pixelSize: compact ? Theme.fontSizeSmall : Theme.fontSizeMedium
-        text: compact
-              ? qsTr("Aa Bb Cc 123")
-              : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas imperdiet finibus venenatis. Suspendisse mollis urna sed luctus sodales."
+        font.pixelSize: Theme.fontSizeSmall
+        text: qsTr("Aa Bb Cc 123")
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         wrapMode: Text.WordWrap
         clip: true
+    }
+
+    Column {
+        visible: !compact
+        anchors.fill: parent
+        anchors.margins: Theme.paddingLarge
+        spacing: Theme.paddingMedium
+
+        Label {
+            width: parent.width
+            font.family: previewfont.name
+            font.weight: FontWeightUtils.fontWeightFromBasename(selectedFont)
+            font.pixelSize: Theme.fontSizeExtraLarge
+            text: "Lorem ipsum"
+            wrapMode: Text.WordWrap
+        }
+
+        Label {
+            width: parent.width
+            font.family: previewfont.name
+            font.weight: FontWeightUtils.fontWeightFromBasename(selectedFont)
+            font.pixelSize: Theme.fontSizeMedium
+            text: "Dolor sit amet, consectetur adipiscing elit. Maecenas imperdiet finibus venenatis. Suspendisse mollis urna sed luctus sodales."
+            wrapMode: Text.WordWrap
+        }
     }
 }
