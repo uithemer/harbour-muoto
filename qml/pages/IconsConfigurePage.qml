@@ -230,7 +230,7 @@ Dialog {
             IconPackPreview {
                 width: parent.width
                 packName: dlg.stockSelected ? "default" : dlg.packName
-                previewHeight: Math.round(width / 2)
+                previewHeight: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
                 previewMargins: Theme.paddingLarge * 2
             }
 
