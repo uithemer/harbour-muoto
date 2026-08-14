@@ -134,10 +134,8 @@ Dialog {
     }
 
     onStatusChanged: {
-        if (status === PageStatus.Active) {
-            rebuildCarousel()
+        if (status === PageStatus.Active)
             scheduleCenterCarousel()
-        }
     }
 
     Connections {
@@ -254,8 +252,7 @@ Dialog {
                         hasApk: model.hasApk
                         hasJolla: model.hasJolla
                         isDefault: model.isDefault
-                        stockThumbUrl: stockIcons.count > 0
-                                       ? stockIcons.get(0, "fileURL") : ""
+                        stockModel: model.isDefault ? stockIcons : null
                     }
                 }
             }

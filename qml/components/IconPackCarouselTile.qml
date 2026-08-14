@@ -11,10 +11,12 @@ Item {
     property bool hasApk: false
     property bool hasJolla: false
     property bool isDefault: false
-    property url stockThumbUrl: ""
+    property var stockModel: null
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
+
+    property url lockedThumb: ""
 
     readonly property string thumbFolder: {
         if (isDefault || !packName || packName === "")
@@ -29,6 +31,21 @@ Item {
         return ""
     }
 
+    function applyPick() {
+        var url = ""
+        if (root.isDefault) {
+            var m = root.stockModel
+            if (m && m.count > 0)
+                url = m.get(Math.floor(Math.random() * m.count), "fileURL")
+        } else {
+            var n = thumbs.count
+            if (n > 0)
+                url = thumbs.get(Math.floor(Math.random() * n), "fileURL")
+        }
+        if (lockedThumb !== url)
+            lockedThumb = url
+    }
+
     FolderListModel {
         id: thumbs
         folder: root.thumbFolder
@@ -38,7 +55,33 @@ Item {
         showHidden: false
         showOnlyReadable: true
         sortField: FolderListModel.Unsorted
+        onCountChanged: pickTimer.restart()
     }
+
+    Connections {
+        target: root.stockModel
+        onCountChanged: {
+            if (root.isDefault)
+                pickTimer.restart()
+        }
+    }
+
+    Timer {
+        id: pickTimer
+        interval: 50
+        onTriggered: applyPick()
+    }
+
+    onIsDefaultChanged: {
+        lockedThumb = ""
+        pickTimer.restart()
+    }
+    onThumbFolderChanged: {
+        lockedThumb = ""
+        pickTimer.restart()
+    }
+
+    Component.onCompleted: pickTimer.restart()
 
     Column {
         anchors.fill: parent
@@ -54,11 +97,9 @@ Item {
                 height: width
                 anchors.centerIn: parent
                 asynchronous: true
-                cache: false
+                cache: true
                 fillMode: Image.PreserveAspectFit
-                source: root.isDefault
-                        ? root.stockThumbUrl
-                        : (thumbs.count > 0 ? thumbs.get(0, "fileURL") : "")
+                source: root.lockedThumb
             }
         }
 
