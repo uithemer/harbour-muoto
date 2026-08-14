@@ -22,13 +22,14 @@ Item {
     }
 
     Image {
+        id: previewImage
         anchors.fill: parent
-        anchors.margins: compact ? Theme.paddingSmall : Theme.paddingLarge
-        fillMode: Image.PreserveAspectFit
+        fillMode: compact ? Image.PreserveAspectFit : Image.Pad
         asynchronous: false
         sourceSize.width: Math.max(1, width)
-        sourceSize.height: Math.max(1, compact ? height : width / 2)
-        visible: root.previewSource !== ""
-        source: root.previewSource
+        sourceSize.height: Math.max(1, height)
+        visible: source !== ""
+        source: (width > 8 && height > 8 && root.previewSource !== "")
+                ? root.previewSource : ""
     }
 }

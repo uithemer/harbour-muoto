@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QGlyphRun>
+#include <QHash>
 #include <QPainter>
 #include <QRawFont>
 #include <QVector>
@@ -222,6 +223,27 @@ qreal drawLines(QPainter* p, const QRawFont& font, const QStringList& lines,
     }
     return y;
 }
+QRawFont cachedRawFont(const QString& ttfPath, int pixelSize)
+{
+    if(ttfPath.isEmpty() || pixelSize <= 0)
+        return QRawFont();
+
+    static QHash<QString, QRawFont> cache;
+    const QString key = ttfPath + QLatin1Char('\n') + QString::number(pixelSize);
+    const auto it = cache.constFind(key);
+    if(it != cache.constEnd())
+        return it.value();
+
+    const QRawFont font(ttfPath, pixelSize);
+    if(!font.isValid())
+        return font;
+
+    if(cache.size() >= 64)
+        cache.erase(cache.begin());
+    cache.insert(key, font);
+    return font;
+}
+
 } // namespace
 
 QImage previewTtfText(const QString& ttfPath,
@@ -230,38 +252,51 @@ QImage previewTtfText(const QString& ttfPath,
                       int width,
                       int headingPx,
                       int bodyPx,
-                      const QColor& color)
+                      const QColor& color,
+                      int height,
+                      int pad)
 {
     if(ttfPath.isEmpty() || width <= 0 || headingPx <= 0 || bodyPx <= 0)
         return QImage();
 
-    const QRawFont headingFont(ttfPath, headingPx);
-    const QRawFont bodyFont(ttfPath, bodyPx);
+    const QRawFont headingFont = cachedRawFont(ttfPath, headingPx);
+    const QRawFont bodyFont = cachedRawFont(ttfPath, bodyPx);
     if(!headingFont.isValid() || !bodyFont.isValid())
         return QImage();
 
-    const QStringList headingLines = wrapText(headingFont, heading, width);
-    const QStringList bodyLines = wrapText(bodyFont, body, width);
+    if(pad < 0)
+        pad = 0;
+    const int innerW = qMax(1, width - pad * 2);
+    const QStringList headingLines = wrapText(headingFont, heading, innerW);
+    const QStringList bodyLines = wrapText(bodyFont, body, innerW);
     const qreal headingLh = headingFont.ascent() + headingFont.descent()
             + qMax(qreal(2), headingFont.ascent() * qreal(0.2));
     const qreal bodyLh = bodyFont.ascent() + bodyFont.descent()
             + qMax(qreal(2), bodyFont.ascent() * qreal(0.2));
     const qreal gap = headingPx * 0.4;
-    const int height = qMax(1, qRound(headingFont.ascent()
-                                      + headingLines.size() * headingLh
-                                      + gap
-                                      + bodyLines.size() * bodyLh
-                                      + bodyFont.descent()));
+
+    const bool fixed = height > 0;
+    if(!fixed)
+    {
+        height = qMax(1, qRound(headingFont.ascent()
+                                + headingLines.size() * headingLh
+                                + gap
+                                + bodyLines.size() * bodyLh
+                                + bodyFont.descent()
+                                + pad));
+    }
 
     QImage out(width, height, QImage::Format_ARGB32_Premultiplied);
     out.fill(Qt::transparent);
 
     QPainter p(&out);
     p.setRenderHint(QPainter::TextAntialiasing);
-    qreal y = headingFont.ascent();
-    y = drawLines(&p, headingFont, headingLines, 0, y, color);
+    if(fixed)
+        p.setClipRect(QRectF(pad, pad, innerW, qMax(1, height - pad * 2)));
+    qreal y = pad + headingFont.ascent();
+    y = drawLines(&p, headingFont, headingLines, pad, y, color);
     y += gap;
-    drawLines(&p, bodyFont, bodyLines, 0, y, color);
+    drawLines(&p, bodyFont, bodyLines, pad, y, color);
     p.end();
     return out;
 }
@@ -274,21 +309,21 @@ QImage previewTtfGlyphs(const QString& ttfPath,
     if(ttfPath.isEmpty() || text.isEmpty() || pixelSize <= 0)
         return QImage();
 
-    const QRawFont font(ttfPath, pixelSize);
+    const QRawFont font = cachedRawFont(ttfPath, pixelSize);
     if(!font.isValid())
         return QImage();
 
     const qreal gw = glyphRunWidth(font, text);
-    const int pad = qMax(2, pixelSize / 8);
-    const int width = qMax(1, qRound(gw) + pad * 2);
-    const int height = qMax(1, qRound(font.ascent() + font.descent()) + pad * 2);
+    const int gpad = qMax(2, pixelSize / 8);
+    const int width = qMax(1, qRound(gw) + gpad * 2);
+    const int height = qMax(1, qRound(font.ascent() + font.descent()) + gpad * 2);
 
     QImage out(width, height, QImage::Format_ARGB32_Premultiplied);
     out.fill(Qt::transparent);
 
     QPainter p(&out);
     p.setRenderHint(QPainter::TextAntialiasing);
-    drawLines(&p, font, QStringList() << text, pad, pad + font.ascent(), color);
+    drawLines(&p, font, QStringList() << text, gpad, gpad + font.ascent(), color);
     p.end();
     return out;
 }

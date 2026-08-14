@@ -27,13 +27,16 @@ namespace ImageUtil
 
     // Rasterize heading+body with QRawFont (does not register the TTF in
     // QFontDatabase, so Theme.fontFamily is unchanged).
+    // height > 0: fixed canvas (stable padding); wrap+clip inside pad.
     QImage previewTtfText(const QString& ttfPath,
                           const QString& heading,
                           const QString& body,
                           int width,
                           int headingPx,
                           int bodyPx,
-                          const QColor& color);
+                          const QColor& color,
+                          int height = 0,
+                          int pad = 0);
 
     // Tight single-line glyph image (carousel “Aa”). Same QRawFont rule.
     QImage previewTtfGlyphs(const QString& ttfPath,

@@ -12,6 +12,8 @@ Item {
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
 
+    readonly property int aaPx: Math.round(Theme.fontSizeLarge * 2)
+
     readonly property string aaSource: {
         var c = String(Theme.primaryColor).replace("#", "")
         if (root.isDefault)
@@ -32,13 +34,16 @@ Item {
             height: (parent.height - parent.spacing) * 0.58
 
             Image {
-                anchors.fill: parent
+                anchors.centerIn: parent
+                width: Math.min(parent.width, parent.height)
+                height: width
                 fillMode: Image.PreserveAspectFit
                 asynchronous: false
-                sourceSize.width: width
-                sourceSize.height: height
-                visible: root.aaSource !== ""
-                source: root.aaSource
+                sourceSize.width: root.aaPx
+                sourceSize.height: root.aaPx
+                visible: source !== ""
+                source: (previewHost.width > 8 && previewHost.height > 8
+                         && root.aaSource !== "") ? root.aaSource : ""
             }
 
             Label {

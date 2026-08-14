@@ -2,6 +2,7 @@
 #include "imageutil.h"
 
 #include <QColor>
+#include <QHash>
 #include <QUrlQuery>
 #include <QtGlobal>
 
@@ -9,6 +10,11 @@ namespace {
 
 const QString kSailSans =
         QStringLiteral("/usr/share/fonts/sail-sans-pro/SailSansPro-Light.ttf");
+
+const int kImageCacheCap = 32;
+
+QHash<QString, QImage> g_imageCache;
+QStringList g_imageCacheOrder;
 
 QString stripQuery(const QString& id, QString* query)
 {
@@ -48,6 +54,29 @@ QString ttfPath(const QString& pack, const QString& basename)
     return QStringLiteral("/usr/share/%1/font/%2.ttf").arg(pack, basename);
 }
 
+QImage cachedImage(const QString& cacheKey)
+{
+    const auto it = g_imageCache.constFind(cacheKey);
+    if(it == g_imageCache.constEnd())
+        return QImage();
+    return it.value();
+}
+
+void storeImage(const QString& cacheKey, const QImage& img)
+{
+    if(img.isNull() || cacheKey.isEmpty())
+        return;
+    if(g_imageCache.contains(cacheKey))
+        return;
+    while(g_imageCache.size() >= kImageCacheCap && !g_imageCacheOrder.isEmpty())
+    {
+        const QString oldest = g_imageCacheOrder.takeFirst();
+        g_imageCache.remove(oldest);
+    }
+    g_imageCache.insert(cacheKey, img);
+    g_imageCacheOrder.append(cacheKey);
+}
+
 } // namespace
 
 FontSampleProvider::FontSampleProvider()
@@ -63,6 +92,18 @@ QImage FontSampleProvider::requestImage(const QString& id,
     const QString key = stripQuery(id, &query);
     const QColor color = colorFromQuery(query, QColor(Qt::white));
 
+    const QString cacheKey = key
+            + QLatin1Char('|') + color.name()
+            + QLatin1Char('|') + QString::number(requestedSize.width())
+            + QLatin1Char('x') + QString::number(requestedSize.height());
+    QImage img = cachedImage(cacheKey);
+    if(!img.isNull())
+    {
+        if(size)
+            *size = img.size();
+        return img;
+    }
+
     const QStringList parts = key.split(QLatin1Char('/'), QString::SkipEmptyParts);
     if(parts.size() < 2)
         return QImage();
@@ -74,7 +115,6 @@ QImage FontSampleProvider::requestImage(const QString& id,
     if(path.isEmpty())
         return QImage();
 
-    QImage img;
     if(kind == QLatin1String("aa"))
     {
         int px = 48;
@@ -87,19 +127,27 @@ QImage FontSampleProvider::requestImage(const QString& id,
     else if(kind == QLatin1String("lorem"))
     {
         int width = 480;
+        int height = 240;
         if(requestedSize.width() > 0)
             width = requestedSize.width();
-        const int headingPx = qMax(18, width / 12);
-        const int bodyPx = qMax(14, width / 20);
+        if(requestedSize.height() > 0)
+            height = requestedSize.height();
+        else
+            height = qMax(1, width / 2);
+        const int pad = qMax(12, width / 24);
+        const int inner = qMax(1, qMin(width, height) - pad * 2);
+        const int headingPx = qMax(18, inner / 10);
+        const int bodyPx = qMax(14, headingPx * 2 / 3);
         img = ImageUtil::previewTtfText(
                     path,
                     QStringLiteral("Lorem ipsum"),
                     QStringLiteral("Dolor sit amet, consectetur adipiscing elit. "
                                    "Maecenas imperdiet finibus venenatis. "
                                    "Suspendisse mollis urna sed luctus sodales."),
-                    width, headingPx, bodyPx, color);
+                    width, headingPx, bodyPx, color, height, pad);
     }
 
+    storeImage(cacheKey, img);
     if(size)
         *size = img.size();
     return img;
