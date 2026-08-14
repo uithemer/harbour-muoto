@@ -42,7 +42,8 @@ CoverBackground {
         Label {
             width: parent.width
             height: Math.min(width, Theme.itemSizeLarge * 1.5)
-            text: "Aa"
+            text: "Muoto"
+            color: Theme.secondaryColor
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSizeHuge
             horizontalAlignment: Text.AlignHCenter
