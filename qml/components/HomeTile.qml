@@ -29,6 +29,7 @@ BackgroundItem {
             font.pixelSize: Theme.fontSizeMedium
             color: root.highlighted || root.down
                    ? Theme.highlightColor : Theme.primaryColor
+            truncationMode: TruncationMode.Fade
         }
 
         Label {

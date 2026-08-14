@@ -55,7 +55,9 @@ A.AboutPageBase {
             buttons: [
                 A.InfoButton {
                     text: qsTr("Documentation")
-                    onClicked: Qt.openUrlExternally("https://uithemer.github.io/harbour-muoto/docs/getstarted")
+                    onClicked: openOrCopyUrl(
+                        "https://uithemer.github.io/harbour-muoto/docs/getstarted",
+                        text)
                 }
             ]
         },
@@ -65,7 +67,9 @@ A.AboutPageBase {
             buttons: [
                 A.InfoButton {
                     text: qsTr("Issues")
-                    onClicked: Qt.openUrlExternally("https://github.com/uithemer/harbour-muoto/issues")
+                    onClicked: openOrCopyUrl(
+                        "https://github.com/uithemer/harbour-muoto/issues",
+                        text)
                 }
             ]
         },
