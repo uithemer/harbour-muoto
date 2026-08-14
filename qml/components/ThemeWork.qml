@@ -286,8 +286,16 @@ Item {
             themeWork._commitPendingIconRestore()
             if (themeWork._reapplyDynAfterIconRestore) {
                 themeWork._reapplyDynAfterIconRestore = false
-                settings.dynamicClockEnabled = themeWork._pendingDynClock
-                settings.dynamicCalendarEnabled = themeWork._pendingDynCalendar
+                // Pulse when QML still reads the old value so dconf watches fire
+                // after RestoreIcons (or an older daemon) forced the keys off.
+                var clockOn = themeWork._pendingDynClock
+                var calOn = themeWork._pendingDynCalendar
+                if (settings.dynamicClockEnabled === clockOn)
+                    settings.dynamicClockEnabled = !clockOn
+                settings.dynamicClockEnabled = clockOn
+                if (settings.dynamicCalendarEnabled === calOn)
+                    settings.dynamicCalendarEnabled = !calOn
+                settings.dynamicCalendarEnabled = calOn
             }
             if (themeWork._uninstallAfterIconRestore) {
                 var idx = themeWork._uninstallPackIndex

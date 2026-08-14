@@ -235,6 +235,22 @@ void LauncherIconOps::clearUpdaters(bool restoreOnDestroy)
 
 void LauncherIconOps::rebuildIconUpdaters()
 {
+    if(m_rebuilding)
+    {
+        qInfo() << "muoto-launcher: skip re-entrant rebuildIconUpdaters";
+        return;
+    }
+    if(m_inIconOp)
+    {
+        qInfo() << "muoto-launcher: skip rebuildIconUpdaters during icon op";
+        return;
+    }
+    rebuildIconUpdatersNow();
+}
+
+void LauncherIconOps::rebuildIconUpdatersNow()
+{
+    m_rebuilding = true;
     // Restore previous redirects before re-attaching so toggling dyn off
     // (or leaving a pack) does not leave stale generated Icon= values.
     clearUpdaters(true);
@@ -265,6 +281,7 @@ void LauncherIconOps::rebuildIconUpdaters()
     qInfo() << "muoto-launcher: rebuildIconUpdaters active="
             << (packActive ? active : QStringLiteral("<default>"))
             << "count=" << s_updaters.size();
+    m_rebuilding = false;
 }
 
 void LauncherIconOps::ensureDesktopWatches()
@@ -322,6 +339,8 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
 
     emit progress(0, 3);
 
+    m_inIconOp = true;
+
     // Overlay styles apps missing from the pack — only valid with pack apply.
     if(overlay && !runPack)
         runPack = true;
@@ -333,9 +352,10 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
         activeIconPackConf()->set(pack);
 
     emit progress(1, 3);
-    rebuildIconUpdaters();
+    rebuildIconUpdatersNow();
     emit progress(2, 3);
     FolderAmbient::apply(pack, overlay);
+    m_inIconOp = false;
     emit progress(3, 3);
     qInfo() << "muoto-launcher: ApplyIcons done ok=true msg= updaters=" << s_updaters.size();
     emit applied(true, QString());
@@ -354,6 +374,7 @@ void LauncherIconOps::restoreIcons()
     }
 
     emit progress(0, 3);
+    m_inIconOp = true;
     clearUpdaters(false);
     emit progress(1, 3);
 
@@ -381,14 +402,16 @@ void LauncherIconOps::restoreIcons()
     emit progress(2, 3);
 
     mgconfSetBool("/apps/harbour-muoto/iconOverlay", false);
-    // Match Themes restore / pre-upgrade oneshot: dyn off until user re-enables.
-    mgconfSetBool("/apps/harbour-muoto/launcher/dynamicClockEnabled", false);
-    mgconfSetBool("/apps/harbour-muoto/launcher/dynamicCalendarEnabled", false);
+    // Do not touch dyn clock/calendar flags. Callers that want them off
+    // (Themes restore, uninstall, oneshot-restore) write dconf first.
+    // Clearing them here retriggers rebuildIconUpdaters while the pack is
+    // still active and backups are already gone, then QML cannot turn them
+    // back on if ConfigurationGroup still reads true.
     activeIconPackConf()->set(QStringLiteral("default"));
     m_applyPackIcons = true;
 
-    // Pack cleared; dyn flags off — rebuild drops live clock/calendar updaters.
-    rebuildIconUpdaters();
+    rebuildIconUpdatersNow();
+    m_inIconOp = false;
 
     emit progress(3, 3);
     if(!restoredOk)

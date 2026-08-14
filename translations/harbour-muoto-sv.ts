@@ -143,20 +143,6 @@
     </message>
 </context>
 <context>
-    <name>CoverConfirm</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Inställningar tillämpas.</translation>
-    </message>
-</context>
-<context>
-    <name>CoverPage</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Inställningar tillämpas.</translation>
-    </message>
-</context>
-<context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
@@ -222,6 +208,17 @@
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Aa Bb</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DensityPreview</name>
+    <message>
+        <source>Aa Bb</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DetailsDrawer</name>
@@ -235,38 +232,42 @@
     </message>
 </context>
 <context>
-    <name>DynamicIconsTabContent</name>
+    <name>DynamicIconsPage</name>
     <message>
-        <source>Dynamic icons</source>
-        <translation>Dynamiska ikoner</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
     </message>
     <message>
-        <source>Dynamic clock icon</source>
-        <translation>Dynamisk klockikon</translation>
-    </message>
-    <message>
-        <source>Shows the current time on the Clock launcher icon.</source>
-        <translation>Visa aktuell tid på klockans startikon.</translation>
-    </message>
-    <message>
-        <source>Dynamic calendar icon</source>
-        <translation>Dynamisk kalenderikon</translation>
-    </message>
-    <message>
-        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation>Visa dagens datum på kalenderns startikon</translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation>Visa aktuell tid och datum på klock- och kalenderikonerna, i den här temastilen.</translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation>Visa aktuell tid och datum på klock- och kalenderikonerna.</translation>
+        <source>Apply</source>
+        <translation type="unfinished">Tillämpa</translation>
     </message>
     <message>
         <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation>Detta tema innehåller inga live klock- och kalenderikoner. Försök med ett annat tema, eller återställ standardutseendet.</translation>
+        <translation type="unfinished">Detta tema innehåller inga live klock- och kalenderikoner. Försök med ett annat tema, eller återställ standardutseendet.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons.</source>
+        <translation type="unfinished">Visa aktuell tid och datum på klock- och kalenderikonerna.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
+        <translation type="unfinished">Visa aktuell tid och datum på klock- och kalenderikonerna, i den här temastilen.</translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished">Dynamisk klockikon</translation>
+    </message>
+    <message>
+        <source>Shows the current time on the Clock launcher icon.</source>
+        <translation type="unfinished">Visa aktuell tid på klockans startikon.</translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished">Dynamisk kalenderikon</translation>
+    </message>
+    <message>
+        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
+        <translation type="unfinished">Visa dagens datum på kalenderns startikon</translation>
     </message>
 </context>
 <context>
@@ -316,6 +317,14 @@
     <message>
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished">Avinstallera</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished">Avinstallerar %1</translation>
     </message>
 </context>
 <context>
@@ -385,6 +394,14 @@
     <message>
         <source>Default</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished">Avinstallera</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished">Avinstallerar %1</translation>
     </message>
 </context>
 <context>
@@ -767,6 +784,10 @@
     <message>
         <source>Restoring theme…</source>
         <translation type="unfinished">Återställer tema…</translation>
+    </message>
+    <message>
+        <source>Uninstalling theme…</source>
+        <translation type="unfinished">Avinstallerar tema…</translation>
     </message>
 </context>
 <context>

@@ -143,20 +143,6 @@
     </message>
 </context>
 <context>
-    <name>CoverConfirm</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">Οι ρυθμίσεις εφαρμόστηκαν.</translation>
-    </message>
-</context>
-<context>
-    <name>CoverPage</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">Οι ρυθμίσεις εφαρμόστηκαν.</translation>
-    </message>
-</context>
-<context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
@@ -222,6 +208,17 @@
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Aa Bb</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DensityPreview</name>
+    <message>
+        <source>Aa Bb</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DetailsDrawer</name>
@@ -235,9 +232,25 @@
     </message>
 </context>
 <context>
-    <name>DynamicIconsTabContent</name>
+    <name>DynamicIconsPage</name>
     <message>
-        <source>Dynamic icons</source>
+        <source>Cancel</source>
+        <translation type="unfinished">Ακύρωση</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -254,18 +267,6 @@
     </message>
     <message>
         <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -315,6 +316,14 @@
     </message>
     <message>
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished">Απεγκατάσταση</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -384,6 +393,14 @@
     </message>
     <message>
         <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished">Απεγκατάσταση</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -766,6 +783,10 @@
     </message>
     <message>
         <source>Restoring theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstalling theme…</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

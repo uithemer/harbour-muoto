@@ -29,12 +29,15 @@ signals:
 private:
     explicit LauncherIconOps(QObject* parent = nullptr);
 
+    void rebuildIconUpdatersNow();
     void clearUpdaters(bool restoreOnDestroy);
     void reloadIconPacks();
     void ensureDesktopWatches();
 
     bool m_restoreOnUpdaterDestroy = true;
     bool m_applyPackIcons = true;
+    bool m_inIconOp = false;
+    bool m_rebuilding = false;
 };
 
 #endif // LAUNCHERICONOPS_H

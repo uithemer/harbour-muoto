@@ -143,20 +143,6 @@
     </message>
 </context>
 <context>
-    <name>CoverConfirm</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Impostazioni applicate.</translation>
-    </message>
-</context>
-<context>
-    <name>CoverPage</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Impostazioni applicate.</translation>
-    </message>
-</context>
-<context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
@@ -222,6 +208,17 @@
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Aa Bb</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DensityPreview</name>
+    <message>
+        <source>Aa Bb</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DetailsDrawer</name>
@@ -235,38 +232,42 @@
     </message>
 </context>
 <context>
-    <name>DynamicIconsTabContent</name>
+    <name>DynamicIconsPage</name>
     <message>
-        <source>Dynamic icons</source>
-        <translation>Icone dinamiche</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Annulla</translation>
     </message>
     <message>
-        <source>Dynamic clock icon</source>
-        <translation>Icona Orologio dinamica</translation>
-    </message>
-    <message>
-        <source>Shows the current time on the Clock launcher icon.</source>
-        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio.</translation>
-    </message>
-    <message>
-        <source>Dynamic calendar icon</source>
-        <translation>Icona Calendario dinamica</translation>
-    </message>
-    <message>
-        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation>Mostra la data corrente nell&apos;icona Calendario.</translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario.</translation>
+        <source>Apply</source>
+        <translation type="unfinished">Applica</translation>
     </message>
     <message>
         <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation>Questo tema non include le icone dinamiche per l&apos;Orologio o il Calendario. Prova un altro tema o ripristina quello predefinito.</translation>
+        <translation type="unfinished">Questo tema non include le icone dinamiche per l&apos;Orologio o il Calendario. Prova un altro tema o ripristina quello predefinito.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons.</source>
+        <translation type="unfinished">Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
+        <translation type="unfinished">Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished">Icona Orologio dinamica</translation>
+    </message>
+    <message>
+        <source>Shows the current time on the Clock launcher icon.</source>
+        <translation type="unfinished">Mostra l&apos;ora corrente nell&apos;icona Orologio.</translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished">Icona Calendario dinamica</translation>
+    </message>
+    <message>
+        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
+        <translation type="unfinished">Mostra la data corrente nell&apos;icona Calendario.</translation>
     </message>
 </context>
 <context>
@@ -316,6 +317,14 @@
     <message>
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished">Disinstalla</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished">Disinstallazione di %1</translation>
     </message>
 </context>
 <context>
@@ -385,6 +394,14 @@
     <message>
         <source>Default</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished">Disinstalla</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished">Disinstallazione di %1</translation>
     </message>
 </context>
 <context>
@@ -767,6 +784,10 @@
     <message>
         <source>Restoring theme…</source>
         <translation type="unfinished">Ripristino tema…</translation>
+    </message>
+    <message>
+        <source>Uninstalling theme…</source>
+        <translation type="unfinished">Disinstallazione tema…</translation>
     </message>
 </context>
 <context>
