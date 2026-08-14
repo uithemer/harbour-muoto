@@ -36,10 +36,12 @@ Dialog {
     readonly property bool hasIconApply: hasNative || hasApk || hasJolla
     readonly property bool hasIconOverlay: effectiveIndex >= 0
                                            && packModel.hasIconOverlay(effectiveIndex)
-    readonly property bool hasDynClock: effectiveIndex >= 0
-                                        && packModel.hasDynClock(effectiveIndex)
-    readonly property bool hasDynCalendar: effectiveIndex >= 0
-                                           && packModel.hasDynCalendar(effectiveIndex)
+    readonly property bool hasDynClock: stockSelected
+                                        || (effectiveIndex >= 0
+                                            && packModel.hasDynClock(effectiveIndex))
+    readonly property bool hasDynCalendar: stockSelected
+                                           || (effectiveIndex >= 0
+                                               && packModel.hasDynCalendar(effectiveIndex))
     readonly property bool wantsIconOps: hasIconApply || overlaySelected
 
     canAccept: stockSelected || (effectiveIndex >= 0 && wantsIconOps)
@@ -158,6 +160,8 @@ Dialog {
     onAccepted: {
         settings.homeRefresh = restartSection.homeRefreshSwitch.checked
         if (stockSelected) {
+            settings.dynamicClockEnabled = dynClockSelected
+            settings.dynamicCalendarEnabled = dynCalendarSelected
             themeWork.beginRestore(true, false)
             return
         }
@@ -260,14 +264,14 @@ Dialog {
 
             SectionHeader {
                 text: qsTr("Options")
-                visible: !stockSelected && (hasIconOverlay || hasDynClock || hasDynCalendar)
+                visible: hasIconOverlay || hasDynClock || hasDynCalendar
             }
 
             IconTextSwitch {
                 automaticCheck: true
                 text: qsTr("Style missing app icons")
                 description: qsTr("Uses this theme's look for apps that don't have a custom icon in the pack.")
-                visible: !stockSelected && hasIconOverlay
+                visible: hasIconOverlay
                 checked: overlaySelected
                 enabled: hasIconOverlay
                 onCheckedChanged: overlaySelected = checked
@@ -277,7 +281,7 @@ Dialog {
                 automaticCheck: true
                 text: qsTr("Dynamic clock icon")
                 description: qsTr("Show the current time on the Clock icon, in this theme's style.")
-                visible: !stockSelected && hasDynClock
+                visible: hasDynClock
                 checked: dynClockSelected
                 onCheckedChanged: dynClockSelected = checked
             }
@@ -286,7 +290,7 @@ Dialog {
                 automaticCheck: true
                 text: qsTr("Dynamic calendar icon")
                 description: qsTr("Show today's date on the Calendar icon, in this theme's style.")
-                visible: !stockSelected && hasDynCalendar
+                visible: hasDynCalendar
                 checked: dynCalendarSelected
                 onCheckedChanged: dynCalendarSelected = checked
             }

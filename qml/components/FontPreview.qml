@@ -12,6 +12,8 @@ Item {
 
     // Set source once. Changing FontLoader.source (or destroying it while
     // another loader still holds the same file) aborts in Qt 5.6 fontconfig.
+    readonly property alias loadedFamily: previewfont.name
+
     FontLoader {
         id: previewfont
     }

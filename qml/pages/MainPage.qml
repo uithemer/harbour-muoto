@@ -19,35 +19,18 @@ Page {
                                  ? settings.activeIconPack : "default")
     }
 
-    function refreshHomeFontPreview() {
-        if (settings.hasActiveFontPack() || mainpage.status !== PageStatus.Active) {
-            homeFontPreview.source = ""
-            return
-        }
-        homeFontPreview.setSource(Qt.resolvedUrl("../components/FontPreview.qml"), {
-            "compact": true,
-            "packName": "default",
-            "selectedFont": "Light"
-        })
-    }
-
-    Component.onCompleted: {
-        refreshHomeIconPreview()
-        refreshHomeFontPreview()
-    }
+    Component.onCompleted: refreshHomeIconPreview()
 
     onStatusChanged: {
         if (status === PageStatus.Active) {
             app.coverMode = "mainPage"
             refreshHomeIconPreview()
         }
-        refreshHomeFontPreview()
     }
 
     Connections {
         target: settings
         onActiveIconPackChanged: mainpage.refreshHomeIconPreview()
-        onActiveFontPackChanged: mainpage.refreshHomeFontPreview()
         onIsRunningChanged: {
             if (!settings.isRunning)
                 mainpage.refreshHomeIconPreview()
@@ -130,20 +113,12 @@ Page {
                     Label {
                         width: parent.width
                         height: Math.min(width, Theme.itemSizeLarge * 1.5)
-                        visible: settings.hasActiveFontPack()
                         text: qsTr("Aa Bb Cc 123")
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.WordWrap
-                    }
-
-                    Loader {
-                        id: homeFontPreview
-                        width: parent.width
-                        height: Math.min(width, Theme.itemSizeLarge * 1.5)
-                        visible: !settings.hasActiveFontPack()
                     }
                 }
 

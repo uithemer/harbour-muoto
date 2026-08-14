@@ -84,8 +84,6 @@ Item {
     function _startDeferredIcons() {
         if (_deferredIconRestore) {
             _deferredIconRestore = false
-            settings.dynamicClockEnabled = false
-            settings.dynamicCalendarEnabled = false
             _pendingIconRestore = true
             Helper.restoreIcons()
             return
@@ -217,8 +215,6 @@ Item {
                 _deferredIconRestore = true
             themepackmodel.restoreTheme(restoreFonts)
         } else if (restoreIcons) {
-            settings.dynamicClockEnabled = false
-            settings.dynamicCalendarEnabled = false
             _pendingIconRestore = true
             Helper.restoreIcons()
         }

@@ -34,6 +34,10 @@ Dialog {
     readonly property bool fontsApplyOk: !hasFont
         || (hasFont && selectedFont !== "")
         || (!hasFont && hasFontNonLatin)
+    // Applied pack is already the process UI face via 99-muoto.conf. FontLoader
+    // of those TTFs then unregister (preview reload) aborts Qt 5.6 fontconfig.
+    readonly property bool previewUsesThemeFamily: stockSelected
+        || (hasFont && packName !== "" && packName === settings.activeFontPack)
 
     canAccept: stockSelected || (effectiveIndex >= 0 && fontsApplyOk)
 
@@ -189,29 +193,16 @@ Dialog {
     onStockSelectedChanged: schedulePreviewReload()
 
     function schedulePreviewReload() {
-        previewReloadTimer.unloadFirst = true
+        previewLoader.source = ""
         previewReloadTimer.restart()
     }
 
     Timer {
         id: previewReloadTimer
         interval: 1
-        property bool unloadFirst: true
         onTriggered: {
-            if (unloadFirst) {
-                previewLoader.source = ""
-                unloadFirst = false
-                start()
+            if (dlg.previewUsesThemeFamily)
                 return
-            }
-            unloadFirst = true
-            if (dlg.stockSelected) {
-                previewLoader.setSource(Qt.resolvedUrl("../components/FontPreview.qml"), {
-                    "packName": "default",
-                    "selectedFont": "Light"
-                })
-                return
-            }
             if (!dlg.hasFont || dlg.packName === "" || dlg.selectedFont === "")
                 return
             previewLoader.setSource(Qt.resolvedUrl("../components/FontPreview.qml"), {
@@ -268,8 +259,34 @@ Dialog {
                 Loader {
                     id: previewLoader
                     anchors.fill: parent
-                    visible: dlg.stockSelected
-                             || (hasFont && selectedFont !== "")
+                    visible: !dlg.previewUsesThemeFamily && hasFont && selectedFont !== ""
+                }
+
+                Column {
+                    visible: dlg.previewUsesThemeFamily
+                    anchors.fill: parent
+                    anchors.margins: Theme.paddingLarge
+                    spacing: Theme.paddingMedium
+
+                    Label {
+                        width: parent.width
+                        font.pixelSize: Theme.fontSizeExtraLarge
+                        font.weight: dlg.stockSelected
+                                     ? Font.Light
+                                     : FontWeightUtils.fontWeightFromBasename(dlg.selectedFont)
+                        text: "Lorem ipsum"
+                        wrapMode: Text.WordWrap
+                    }
+
+                    Label {
+                        width: parent.width
+                        font.pixelSize: Theme.fontSizeMedium
+                        font.weight: dlg.stockSelected
+                                     ? Font.Light
+                                     : FontWeightUtils.fontWeightFromBasename(dlg.selectedFont)
+                        text: "Dolor sit amet, consectetur adipiscing elit. Maecenas imperdiet finibus venenatis. Suspendisse mollis urna sed luctus sodales."
+                        wrapMode: Text.WordWrap
+                    }
                 }
 
                 Label {
@@ -330,6 +347,11 @@ Dialog {
                         packName: model.packName
                         packDisplayName: model.packDisplayName
                         sampleFontBasename: model.sampleFontBasename
+                        loadOwnFont: !model.isDefault
+                                     && model.packName !== settings.activeFontPack
+                                     && model.packName !== dlg.packName
+                                     && (dlg.previewUsesThemeFamily
+                                         || previewLoader.source !== "")
                     }
                 }
             }
