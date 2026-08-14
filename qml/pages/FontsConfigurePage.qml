@@ -36,6 +36,42 @@ Dialog {
 
     ListModel { id: carouselModel }
 
+    function carouselRowForPack(packIndex) {
+        for (var i = 0; i < carouselModel.count; ++i) {
+            if (carouselModel.get(i).packIndex === packIndex)
+                return i
+        }
+        return -1
+    }
+
+    function centerCarouselNow() {
+        if (!carousel || carousel.width <= 0 || carouselModel.count === 0)
+            return false
+        var row = carouselRowForPack(effectiveIndex)
+        if (row < 0)
+            return false
+        carousel.currentIndex = row
+        carousel.positionViewAtIndex(row, ListView.Contain)
+        return true
+    }
+
+    function scheduleCenterCarousel() {
+        centerCarouselTimer.tries = 0
+        centerCarouselTimer.restart()
+    }
+
+    Timer {
+        id: centerCarouselTimer
+        interval: 50
+        repeat: true
+        property int tries: 0
+        onTriggered: {
+            tries += 1
+            if (dlg.centerCarouselNow() || tries > 20)
+                stop()
+        }
+    }
+
     FontWeightModel {
         id: carouselProbe
         packName: ""
@@ -95,6 +131,7 @@ Dialog {
                 sampleFontBasename: sampleBasenameForPack(i)
             })
         }
+        scheduleCenterCarousel()
     }
 
     function syncFromSettings() {
@@ -104,6 +141,7 @@ Dialog {
                                    || packModel.hasFontNonLatin(selectedIndex)))
             selectedIndex = -1
         selectedFont = resolveSelectedWeight()
+        scheduleCenterCarousel()
     }
 
     function syncWeightForPack() {
@@ -125,7 +163,10 @@ Dialog {
         onModelReset: dlg.rebuildCarousel()
     }
 
-    onEffectiveIndexChanged: syncWeightForPack()
+    onEffectiveIndexChanged: {
+        syncWeightForPack()
+        scheduleCenterCarousel()
+    }
 
     onPackNameChanged: schedulePreviewReload()
     onSelectedFontChanged: schedulePreviewReload()
@@ -232,6 +273,7 @@ Dialog {
                 spacing: Theme.paddingMedium
                 clip: true
                 model: carouselModel
+                boundsBehavior: Flickable.StopAtBounds
 
                 delegate: BackgroundItem {
                     width: carousel.height * 0.72

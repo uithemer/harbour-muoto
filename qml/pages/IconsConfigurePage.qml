@@ -43,6 +43,42 @@ Dialog {
 
     ListModel { id: carouselModel }
 
+    function carouselRowForPack(packIndex) {
+        for (var i = 0; i < carouselModel.count; ++i) {
+            if (carouselModel.get(i).packIndex === packIndex)
+                return i
+        }
+        return -1
+    }
+
+    function centerCarouselNow() {
+        if (!carousel || carousel.width <= 0 || carouselModel.count === 0)
+            return false
+        var row = carouselRowForPack(effectiveIndex)
+        if (row < 0)
+            return false
+        carousel.currentIndex = row
+        carousel.positionViewAtIndex(row, ListView.Contain)
+        return true
+    }
+
+    function scheduleCenterCarousel() {
+        centerCarouselTimer.tries = 0
+        centerCarouselTimer.restart()
+    }
+
+    Timer {
+        id: centerCarouselTimer
+        interval: 50
+        repeat: true
+        property int tries: 0
+        onTriggered: {
+            tries += 1
+            if (dlg.centerCarouselNow() || tries > 20)
+                stop()
+        }
+    }
+
     function rebuildCarousel() {
         carouselModel.clear()
         for (var i = 0; i < packModel.rowCount(); ++i) {
@@ -54,6 +90,7 @@ Dialog {
                 packDisplayName: packModel.packDisplayName(i)
             })
         }
+        scheduleCenterCarousel()
     }
 
     function initFromSettings() {
@@ -63,6 +100,7 @@ Dialog {
         selectedIndex = themeWork.indexForPackName(settings.activeIconPack)
         if (selectedIndex < 0 || !packModel.hasIcons(selectedIndex))
             selectedIndex = themeWork.firstIconPackIndex()
+        scheduleCenterCarousel()
     }
 
     Component.onCompleted: {
@@ -71,8 +109,10 @@ Dialog {
     }
 
     onStatusChanged: {
-        if (status === PageStatus.Active)
+        if (status === PageStatus.Active) {
             rebuildCarousel()
+            scheduleCenterCarousel()
+        }
     }
 
     Connections {
@@ -87,6 +127,7 @@ Dialog {
             overlaySelected = settings.iconOverlay
         else
             overlaySelected = hasIconApply
+        scheduleCenterCarousel()
     }
 
     onAccepted: {
@@ -150,6 +191,7 @@ Dialog {
                 spacing: Theme.paddingMedium
                 clip: true
                 model: carouselModel
+                boundsBehavior: Flickable.StopAtBounds
 
                 delegate: BackgroundItem {
                     width: carousel.height * 0.72
