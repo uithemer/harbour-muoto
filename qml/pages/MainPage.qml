@@ -157,7 +157,10 @@ Page {
                                || (cal && settings.dynamicCalendarEnabled)
                         return on ? qsTr("On") : qsTr("Off")
                     }
-                    onClicked: pageStack.push(Qt.resolvedUrl("DynamicIconsPage.qml"))
+                    onClicked: pageStack.push(Qt.resolvedUrl("DynamicIconsPage.qml"), {
+                        "themeWork": themeWork,
+                        "settings": settings
+                    })
 
                     Image {
                         anchors.centerIn: parent

@@ -78,6 +78,6 @@ Restore uses the manifest (redirect + inplace backups), restores folder backups,
 | Daemon main | `src/launcher-daemon/main.cpp` |
 | Font apply / restore | `src/gui/fontapplier.cpp` (stages under `~/.local/share/fonts/muoto/`) |
 | Confirm / themes UI | `qml/pages/ConfirmPage.qml`, `qml/components/ThemesTabContent.qml` |
-| Dyn tab | `qml/components/DynamicIconsTabContent.qml` |
+| Dyn icons | `qml/pages/DynamicIconsPage.qml` |
 | Session D-Bus XML | `dbus/org.muoto.Launcher1.Themes.xml` |
 | Shell helpers | `service/muoto-dbus-wait.sh`, `service/harbour-muoto-update-icons` |

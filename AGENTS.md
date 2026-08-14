@@ -91,5 +91,5 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconp
 | Font apply / restore | `src/gui/fontapplier.cpp`, `src/gui/themepackmodel.cpp` |
 | Density unlock / restore | `src/ops/densityenabler.cpp`, `src/gui/helperclient.cpp`, `qml/pages/DensityPage.qml` |
 | Confirm / Themes UI | `qml/pages/ConfirmPage.qml`, `qml/components/ThemesTabContent.qml` |
-| Dyn icons tab | `qml/components/DynamicIconsTabContent.qml` |
+| Dyn icons | `qml/pages/DynamicIconsPage.qml` |
 | Session D-Bus | `dbus/org.muoto.Launcher1.Themes.xml`, `src/launcher-daemon/main.cpp` |
