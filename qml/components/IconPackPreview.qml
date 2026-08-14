@@ -7,6 +7,7 @@ Item {
 
     property string packName: ""
     property int previewHeight: Math.round((parent ? parent.width : width) / 2)
+    property int previewMargins: Theme.paddingMedium
 
     width: parent ? parent.width : implicitWidth
     height: previewHeight
@@ -71,7 +72,7 @@ Item {
     Image {
         id: imgpreview
         anchors.fill: parent
-        anchors.margins: Theme.paddingMedium
+        anchors.margins: root.previewMargins
         asynchronous: true
         fillMode: Image.PreserveAspectFit
         cache: false

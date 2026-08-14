@@ -182,6 +182,7 @@ Dialog {
                 width: parent.width
                 packName: dlg.packName
                 previewHeight: Math.round(width / 2)
+                previewMargins: Theme.paddingLarge * 2
             }
 
             SectionHeader { text: qsTr("Icon packs") }
