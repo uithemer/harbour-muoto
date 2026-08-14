@@ -1,3 +1,7 @@
+* Sat Aug 15 2026 3.3.0-1
+- Mosaic home with Icons, Fonts, Display density, and Dynamic icons pages.
+- UI polish for cover, previews, and tap/selection feedback.
+
 * Tue Aug 11 2026 3.2.2-2
 - Font support for jailed apps.
 - Translations updated.
