@@ -279,6 +279,8 @@ Dialog {
                 }
             }
 
+            LabelSpacer { }
+
             SectionHeader {
                 text: qsTr("Options")
                 visible: hasIconOverlay || hasDynClock || hasDynCalendar
@@ -314,6 +316,8 @@ Dialog {
                 onClicked: dynCalendarSelected = !dynCalendarSelected
             }
 
+            LabelSpacer { }
+            
             HomescreenRestartSection {
                 id: restartSection
                 settings: dlg.settings

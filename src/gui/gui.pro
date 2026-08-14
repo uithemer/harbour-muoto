@@ -67,6 +67,8 @@ OTHER_FILES += \
     $$ROOT/qml/components/HomeTile.qml \
     $$ROOT/qml/components/ThemeWork.qml \
     $$ROOT/qml/components/IconPackPreview.qml \
+    $$ROOT/qml/components/DensityPreview.qml \
+    $$ROOT/qml/components/DynIconsPreview.qml \
     $$ROOT/qml/components/IconPackCarouselTile.qml \
     $$ROOT/qml/components/StockLauncherIcons.qml \
     $$ROOT/qml/components/FontPackCarouselTile.qml \

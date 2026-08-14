@@ -258,6 +258,8 @@ Dialog {
                 }
             }
 
+            LabelSpacer { }
+
             SectionHeader {
                 text: qsTr("Font weight")
                 visible: !stockSelected && hasFont
@@ -280,6 +282,8 @@ Dialog {
                 }
             }
 
+            LabelSpacer { }
+            
             HomescreenRestartSection {
                 id: restartSection
                 settings: dlg.settings

@@ -132,12 +132,10 @@ Page {
                         "settings": settings
                     })
 
-                    Image {
-                        anchors.centerIn: parent
-                        anchors.bottomMargin: Theme.itemSizeLarge
-                        width: Theme.iconSizeLarge
-                        height: width
-                        source: "image://theme/icon-m-size"
+                    DensityPreview {
+                        anchors.fill: parent
+                        iconPx: Theme.iconSizeMedium
+                        fontScale: 1
                     }
                 }
 
@@ -162,12 +160,26 @@ Page {
                         "settings": settings
                     })
 
-                    Image {
-                        anchors.centerIn: parent
-                        anchors.bottomMargin: Theme.itemSizeLarge
-                        width: Theme.iconSizeLarge
-                        height: width
-                        source: "image://theme/icon-clock"
+                    DynIconsPreview {
+                        anchors.fill: parent
+                        packName: settings.hasActiveIconPack()
+                                  ? settings.activeIconPack : "default"
+                        stockLook: !settings.hasActiveIconPack()
+                        hasDynClock: {
+                            var ap = settings.hasActiveIconPack()
+                                     ? settings.activeIconPack : "default"
+                            return !settings.hasActiveIconPack()
+                                   || themeWork.themepackmodel.hasDynClockForPack(ap)
+                        }
+                        hasDynCalendar: {
+                            var ap = settings.hasActiveIconPack()
+                                     ? settings.activeIconPack : "default"
+                            return !settings.hasActiveIconPack()
+                                   || themeWork.themepackmodel.hasDynCalendarForPack(ap)
+                        }
+                        clockLive: settings.dynamicClockEnabled
+                        calendarLive: settings.dynamicCalendarEnabled
+                        iconPx: Theme.iconSizeMedium
                     }
                 }
             }
