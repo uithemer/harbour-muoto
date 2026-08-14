@@ -1,23 +1,42 @@
 import QtQuick 2.0
+import Qt.labs.folderlistmodel 2.1
 import Sailfish.Silica 1.0
-import harbour.muoto 1.0
 
 Item {
     id: root
 
     property string packName: ""
     property string packDisplayName: ""
+    property bool hasNative: false
+    property bool hasApk: false
+    property bool hasJolla: false
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
 
-    function refreshPreview() {
-        if (packName && packName !== "")
-            iconapplier.buildPreview(packName)
+    readonly property string thumbFolder: {
+        if (!packName || packName === "")
+            return ""
+        var rootPath = "file:///usr/share/" + packName
+        if (hasNative)
+            return rootPath + "/native/86x86/apps"
+        if (hasApk)
+            return rootPath + "/apk/86x86"
+        if (hasJolla)
+            return rootPath + "/jolla/z1.0/icons"
+        return ""
     }
 
-    onPackNameChanged: refreshPreview()
-    Component.onCompleted: refreshPreview()
+    FolderListModel {
+        id: thumbs
+        folder: root.thumbFolder
+        nameFilters: ["*.png"]
+        showDirs: false
+        showFiles: true
+        showHidden: false
+        showOnlyReadable: true
+        sortField: FolderListModel.Unsorted
+    }
 
     Column {
         anchors.fill: parent
@@ -28,23 +47,14 @@ Item {
             width: parent.width
             height: (parent.height - parent.spacing) * 0.58
 
-            Item {
+            Image {
                 width: Theme.iconSizeLarge
                 height: Theme.iconSizeLarge
                 anchors.centerIn: parent
-                clip: true
-
-                Image {
-                    // Pack preview montage is 4×2; show the top-left tile only.
-                    width: parent.width * 4
-                    height: parent.height * 2
-                    asynchronous: true
-                    cache: false
-                    fillMode: Image.PreserveAspectFit
-                    source: packName !== ""
-                            ? ("image://muoto/preview/" + packName + "?t=carousel")
-                            : ""
-                }
+                asynchronous: true
+                cache: false
+                fillMode: Image.PreserveAspectFit
+                source: thumbs.count > 0 ? thumbs.get(0, "fileURL") : ""
             }
         }
 

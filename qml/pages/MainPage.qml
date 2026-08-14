@@ -13,6 +13,8 @@ Page {
     }
 
     function refreshHomeIconPreview() {
+        if (settings.isRunning)
+            return
         if (settings.hasActiveIconPack())
             iconapplier.buildPreview(settings.activeIconPack)
     }
@@ -29,6 +31,10 @@ Page {
     Connections {
         target: settings
         onActiveIconPackChanged: mainpage.refreshHomeIconPreview()
+        onIsRunningChanged: {
+            if (!settings.isRunning)
+                mainpage.refreshHomeIconPreview()
+        }
     }
 
     SilicaFlickable {

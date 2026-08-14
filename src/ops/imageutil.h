@@ -17,8 +17,8 @@ namespace ImageUtil
                    const QSize& cell = QSize(128, 128),
                    int pad = 15);
 
-    // Picks up to `count` random PNGs from any of {pack/native, pack/apk, pack/overlay, pack/jolla}
-    // (recursive), including packs that only ship jolla/ ambient artwork.
+    // Picks up to `count` PNGs without listing whole trees. Prefers native/
+    // (skips jolla/ if native had any), then apk/, then overlay/.
     QStringList samplePackIcons(const QString& packDir, int count = 8);
 }
 

@@ -12,8 +12,13 @@ namespace ImageUtil
 
 namespace
 {
-    QStringList collectPngsUnderCapability(const QString& packRoot, const QString& capability)
+    QStringList collectPngsUnderCapability(const QString& packRoot,
+                                           const QString& capability,
+                                           int limit)
     {
+        if(limit <= 0)
+            return QStringList();
+
         const QString path = IconPaths::resolvePackCapabilityDir(packRoot, capability);
         if(path.isEmpty())
             return QStringList();
@@ -22,7 +27,11 @@ namespace
         QDirIterator it(path, QStringList() << QStringLiteral("*.png"),
                         QDir::Files, QDirIterator::Subdirectories);
         while(it.hasNext())
+        {
             all << it.next();
+            if(all.size() >= limit)
+                break;
+        }
         return all;
     }
 }
@@ -66,13 +75,30 @@ QImage montage(const QStringList& pngs, int cols, int rows, const QSize& cell, i
 
 QStringList samplePackIcons(const QString& packDir, int count)
 {
+    if(count <= 0)
+        return QStringList();
+
     const QString packRoot = IconPaths::packDir(packDir);
 
+    const QStringList native = collectPngsUnderCapability(
+                packRoot, QStringLiteral("native"), count);
+    const QStringList jolla = native.isEmpty()
+            ? collectPngsUnderCapability(packRoot, QStringLiteral("jolla"), count)
+            : QStringList();
+    const QStringList primary = native.isEmpty() ? jolla : native;
+
+    const QStringList apk = collectPngsUnderCapability(
+                packRoot, QStringLiteral("apk"), count);
+
     QStringList all;
-    all << collectPngsUnderCapability(packRoot, QStringLiteral("native"));
-    all << collectPngsUnderCapability(packRoot, QStringLiteral("jolla"));
-    all << collectPngsUnderCapability(packRoot, QStringLiteral("apk"));
-    all << collectPngsUnderCapability(packRoot, QStringLiteral("overlay"));
+    const int apkTake = apk.isEmpty() ? 0 : qMin(apk.size(), count > 1 ? 2 : count);
+    const int primaryTake = qMin(primary.size(), count - apkTake);
+    all << primary.mid(0, primaryTake);
+    all << apk.mid(0, qMin(apk.size(), count - all.size()));
+
+    const int remain = count - all.size();
+    if(remain > 0)
+        all << collectPngsUnderCapability(packRoot, QStringLiteral("overlay"), remain);
 
     if(all.isEmpty())
         return all;

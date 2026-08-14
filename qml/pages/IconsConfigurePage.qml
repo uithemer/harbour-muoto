@@ -87,7 +87,10 @@ Dialog {
             carouselModel.append({
                 packIndex: i,
                 packName: packModel.packName(i),
-                packDisplayName: packModel.packDisplayName(i)
+                packDisplayName: packModel.packDisplayName(i),
+                hasNative: packModel.hasNative(i),
+                hasApk: packModel.hasApk(i),
+                hasJolla: packModel.hasJolla(i)
             })
         }
         scheduleCenterCarousel()
@@ -208,6 +211,9 @@ Dialog {
                         anchors.margins: Theme.paddingSmall
                         packName: model.packName
                         packDisplayName: model.packDisplayName
+                        hasNative: model.hasNative
+                        hasApk: model.hasApk
+                        hasJolla: model.hasJolla
                     }
                 }
             }
