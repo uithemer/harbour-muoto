@@ -22,7 +22,6 @@ public:
     void rebuildIconUpdaters();
 
 signals:
-    void progress(int done, int total);
     void applied(bool ok, const QString& message);
     void restored(bool ok, const QString& message);
 

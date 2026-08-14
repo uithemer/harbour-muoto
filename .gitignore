@@ -1,4 +1,6 @@
 **/icon-options/**
+**/__pycache__/
+*.pyc
 # C++ objects and libs
 *.slo
 *.lo

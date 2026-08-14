@@ -57,12 +57,6 @@ LauncherThemesAdaptor::LauncherThemesAdaptor(LauncherBackend* backend, QObject* 
     , m_backend(backend)
 {
     setAutoRelaySignals(false);
-
-    LauncherIconOps* ops = m_backend->iconOps();
-    connect(ops, &LauncherIconOps::progress, this,
-            [this](int done, int total) {
-                emit Progress(QStringLiteral("ApplyIcons"), done, total);
-            });
 }
 
 void LauncherThemesAdaptor::runIconOpVoid(const QString& op,

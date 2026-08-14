@@ -29,7 +29,7 @@ flowchart LR
 
 | Process | Bus / unit | Role |
 | ------- | ---------- | ---- |
-| `harbour-muoto` | user GUI | Themes UI, Confirm, density; calls Helper / Launcher |
+| `harbour-muoto` | user GUI | Mosaic home, configure pages, density; calls Helper / Launcher |
 | `harbour-muoto-launcher-icond` | session `org.muoto.Launcher1` | All launcher icon apply/restore; `cap_dac_override` for system `.desktop` / silica folder writeback |
 | `harbour-muoto-helperd` | system `org.muoto.Muoto1` | On-demand: `DensityEnable`, `UninstallPack` only |
 | `harbour-muoto-install-listener` | user unit | D-Bus hooks → `/usr/bin/harbour-muoto-update-icons` |
@@ -77,7 +77,8 @@ Restore uses the manifest (redirect + inplace backups), restores folder backups,
 | Manifest | `src/launcher/launchermanifest.cpp` |
 | Daemon main | `src/launcher-daemon/main.cpp` |
 | Font apply / restore | `src/gui/fontapplier.cpp` (stages under `~/.local/share/fonts/muoto/`) |
-| Confirm / themes UI | `qml/pages/ConfirmPage.qml`, `qml/components/ThemesTabContent.qml` |
+| Mosaic home / theme work | `qml/pages/MainPage.qml`, `qml/components/ThemeWork.qml` |
+| Icons / fonts configure | `qml/pages/IconsConfigurePage.qml`, `qml/pages/FontsConfigurePage.qml` |
 | Dyn icons | `qml/pages/DynamicIconsPage.qml` |
 | Session D-Bus XML | `dbus/org.muoto.Launcher1.Themes.xml` |
 | Shell helpers | `service/muoto-dbus-wait.sh`, `service/harbour-muoto-update-icons` |

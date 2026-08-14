@@ -19,8 +19,6 @@ public:
     DensityEnabler& densityEnabler() { return _densityEnabler; }
 
     void resetIdleTimer();
-    void suspendIdleTimer();
-    void resumeIdleTimer();
     bool shuttingDown() const { return _shuttingDown; }
 
 signals:
@@ -33,7 +31,6 @@ private slots:
 private:
     DensityEnabler _densityEnabler;
     QTimer         _idleTimer;
-    int            _idleSuspendCount = 0;
     bool           _shuttingDown = false;
 };
 
@@ -53,7 +50,6 @@ signals:
                             const QString& message);
 
 private:
-    bool authorize(const QDBusMessage& message, const QString& op);
     HelperBackend* _backend;
 };
 
@@ -73,7 +69,6 @@ signals:
                             const QString& message);
 
 private:
-    bool authorize(const QDBusMessage& message, const QString& op);
     HelperBackend* _backend;
 };
 

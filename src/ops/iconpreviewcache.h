@@ -6,7 +6,7 @@
 #include <QMutex>
 #include <QString>
 
-// Process-wide, thread-safe in-memory cache for the ConfirmPage / Cover icon
+// Process-wide, thread-safe in-memory cache for MainPage / Cover icon
 // preview. Built by IconApplier::buildPreview and read by IconPreviewProvider
 // when QML resolves an image://muoto/preview/<packName> URL.
 //

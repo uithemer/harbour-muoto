@@ -6,7 +6,6 @@
 class FontWeightModel : public QAbstractListModel
 {
     Q_PROPERTY(QString firstWeight READ firstWeight NOTIFY firstWeightChanged)
-    Q_PROPERTY(QString firstWeightFont READ firstWeightFont NOTIFY firstWeightFontChanged)
     Q_PROPERTY(QString packName READ packName WRITE setPackName NOTIFY packNameChanged)
 
     Q_OBJECT
@@ -16,7 +15,6 @@ class FontWeightModel : public QAbstractListModel
 
     public:
         explicit FontWeightModel(QObject *parent = 0);
-        QString firstWeightFont() const;
         QString firstWeight() const;
         QString packName() const;
         void setPackName(const QString& packname);
@@ -31,7 +29,6 @@ class FontWeightModel : public QAbstractListModel
         void loadFontWeigths();
 
     signals:
-        void firstWeightFontChanged();
         void firstWeightChanged();
         void packNameChanged();
 

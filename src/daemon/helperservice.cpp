@@ -51,31 +51,11 @@ HelperBackend::HelperBackend(QObject *parent) : QObject(parent)
 
 void HelperBackend::resetIdleTimer()
 {
-    if(_idleSuspendCount == 0)
-        _idleTimer.start();
-}
-
-void HelperBackend::suspendIdleTimer()
-{
-  ++_idleSuspendCount;
-    _idleTimer.stop();
-}
-
-void HelperBackend::resumeIdleTimer()
-{
-    if(_idleSuspendCount > 0)
-        --_idleSuspendCount;
-    if(_idleSuspendCount == 0 && !_shuttingDown)
-        _idleTimer.start();
+    _idleTimer.start();
 }
 
 void HelperBackend::onIdleTimeout()
 {
-    if(_idleSuspendCount > 0)
-    {
-        _idleTimer.start();
-        return;
-    }
     qInfo() << "muoto-helperd: idle timeout, quitting";
     emit idleQuit();
 }
@@ -99,24 +79,12 @@ ThemesAdaptor::ThemesAdaptor(HelperBackend *backend, QObject *parent)
     setAutoRelaySignals(false);
 }
 
-bool ThemesAdaptor::authorize(const QDBusMessage &message, const QString &op)
-{
-    Q_UNUSED(message);
-    Q_UNUSED(op);
-    return true;
-}
-
 void ThemesAdaptor::DensityEnable(const QDBusMessage &message)
 {
     const QString op = QStringLiteral("DensityEnable");
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
-        sendMethodReply(message);
-        return;
-    }
-    if (!authorize(message, op))
-    {
         sendMethodReply(message);
         return;
     }
@@ -147,13 +115,6 @@ PacksAdaptor::PacksAdaptor(HelperBackend *backend, QObject *parent)
     setAutoRelaySignals(false);
 }
 
-bool PacksAdaptor::authorize(const QDBusMessage &message, const QString &op)
-{
-    Q_UNUSED(message);
-    Q_UNUSED(op);
-    return true;
-}
-
 void PacksAdaptor::UninstallPack(const QString &rpmName,
                                  const QDBusMessage &message)
 {
@@ -161,11 +122,6 @@ void PacksAdaptor::UninstallPack(const QString &rpmName,
     if (_backend->shuttingDown())
     {
         emit OperationCompleted(op, false, QStringLiteral("shutting down"));
-        sendMethodReply(message);
-        return;
-    }
-    if (!authorize(message, op))
-    {
         sendMethodReply(message);
         return;
     }

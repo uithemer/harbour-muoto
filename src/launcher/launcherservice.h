@@ -46,7 +46,6 @@ public slots:
 
 signals:
     void OperationCompleted(const QString& op, bool ok, const QString& message);
-    void Progress(const QString& op, int done, int total);
 
 private:
     void runIconOpVoid(const QString& op,

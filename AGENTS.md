@@ -46,11 +46,11 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconp
 ## Fonts apply / restore
 
 - Unprivileged, in the **GUI process** via `FontApplier` (`src/gui/fontapplier.cpp`), driven by `ThemePackModel::applyTheme` / `restoreTheme`.
-- Confirm / Restore on the Themes tab call these (icons go through `Helper` → launcher-icond in parallel).
+- Icons/Fonts configure pages and `ThemeWork` call these (icons go through `Helper` → launcher-icond in parallel).
 - Apply: copy pack `font/` (+ optional `font-nonlatin/`) into `~/.local/share/fonts/muoto/` (Sailjail-readable), write `~/.config/fontconfig/conf.d/99-muoto.conf` with `<dir>` pointing at that staging tree, run `fc-cache`; sets `activeFontPack` in dconf. Real copies — not symlinks into `.themepack`.
 - Restore: remove that conf and wipe `~/.local/share/fonts/muoto/`, `fc-cache`, clear `activeFontPack`.
 - After upgrading to 3.2.2+, reapply the font once so jailed apps pick up staging (RPM update does not rewrite an existing conf).
-- User docs: [docs/fonts.md](docs/fonts.md). UI: `qml/pages/ConfirmPage.qml`, `RestorePage.qml`, `ThemesTabContent.qml`.
+- User docs: [docs/fonts.md](docs/fonts.md). UI: `qml/pages/FontsConfigurePage.qml`, `qml/components/ThemeWork.qml`.
 
 ## Display density apply / restore
 
@@ -90,6 +90,7 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconp
 | Pack lookup | `src/launcher/harbourthemepack.cpp` |
 | Font apply / restore | `src/gui/fontapplier.cpp`, `src/gui/themepackmodel.cpp` |
 | Density unlock / restore | `src/ops/densityenabler.cpp`, `src/gui/helperclient.cpp`, `qml/pages/DensityPage.qml` |
-| Confirm / Themes UI | `qml/pages/ConfirmPage.qml`, `qml/components/ThemesTabContent.qml` |
+| Mosaic home / theme work | `qml/pages/MainPage.qml`, `qml/components/ThemeWork.qml` |
+| Icons / fonts configure | `qml/pages/IconsConfigurePage.qml`, `qml/pages/FontsConfigurePage.qml` |
 | Dyn icons | `qml/pages/DynamicIconsPage.qml` |
 | Session D-Bus | `dbus/org.muoto.Launcher1.Themes.xml`, `src/launcher-daemon/main.cpp` |

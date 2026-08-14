@@ -5,12 +5,6 @@
 
 FontWeightModel::FontWeightModel(QObject *parent) : QAbstractListModel(parent)
 {
-    connect(this, &FontWeightModel::firstWeightChanged, this, &FontWeightModel::firstWeightFontChanged);
-}
-
-QString FontWeightModel::firstWeightFont() const
-{
-    return this->_firstweight;
 }
 
 QString FontWeightModel::firstWeight() const

@@ -81,19 +81,15 @@ OTHER_FILES += \
     $$ROOT/qml/components/HomescreenRestartSection.qml \
     $$ROOT/qml/components/homescreenRestart.js \
     $$ROOT/qml/components/MuotoNotification.qml \
-    $$ROOT/qml/components/themepacklistview/ThemePackItem.qml \
     $$ROOT/qml/cover/CoverPage.qml \
-    $$ROOT/qml/pages/ConfirmPage.qml \
     $$ROOT/qml/components/MuotoAboutMenuItem.qml \
     $$ROOT/qml/components/MuotoRestartHomescreenMenuItem.qml \
-    $$ROOT/qml/components/ThemesTabContent.qml \
     $$ROOT/qml/components/MuotoSupportDialog.qml \
     $$ROOT/qml/pages/MainPage.qml \
     $$ROOT/qml/pages/IconsConfigurePage.qml \
     $$ROOT/qml/pages/FontsConfigurePage.qml \
     $$ROOT/qml/pages/DensityPage.qml \
     $$ROOT/qml/pages/DynamicIconsPage.qml \
-    $$ROOT/qml/pages/RestorePage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
     $$ROOT/rpm/* \
@@ -217,8 +213,7 @@ sessiondbusconf.files = $$ROOT/dbus/org.muoto.Launcher1.conf
 sessiondbusconf.path  = /etc/dbus-1/session.d
 
 # No polkit hand-off. See dbus/org.muoto.Muoto1.conf
-# for the new policy and src/daemon/helperservice.cpp for the
-# matching no-op authorize() stubs.
+# for the bus policy that authorizes DensityEnable / UninstallPack.
 
 # helperd.service ships under service/ and is moved into
 # /etc/systemd/system/ by the RPM %post.

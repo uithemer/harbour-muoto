@@ -21,7 +21,6 @@ License:        GPLv3
 Packager:       fravaccaro <me@fravaccaro.com>
 URL:            https://github.com/uithemer/harbour-muoto
 Source0:        %{name}-%{version}.tar.bz2
-Source100:      harbour-muoto.yaml
 
 Requires:       sailfish-version >= 2.1.4
 Obsoletes:      harbour-themepacksupport < 0.8.14
@@ -300,7 +299,7 @@ rm -f %{_datadir}/%{name}/graphic-current
 rm -f %{_datadir}/%{name}/sound-current
 rm -rf %{_datadir}/%{name}/backup/sound
 # 2.4.5 and earlier kept a /usr/share/harbour-muoto/tmp/iconspreview.png
-# for the ConfirmPage / cover preview. The preview is now served from memory
+# for the pack / cover preview. The preview is now served from memory
 # via a QQuickImageProvider; drop the leftover file and the (now unused) dir.
 rm -f %{_datadir}/%{name}/tmp/iconspreview.png
 rmdir --ignore-fail-on-non-empty %{_datadir}/%{name}/tmp 2>/dev/null || :

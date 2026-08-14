@@ -72,77 +72,6 @@
     </message>
 </context>
 <context>
-    <name>ConfirmPage</name>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation>Applica</translation>
-    </message>
-    <message>
-        <source>Icons</source>
-        <translation>Icone</translation>
-    </message>
-    <message>
-        <source>No preview available</source>
-        <translation>Anteprima non disponibile</translation>
-    </message>
-    <message>
-        <source>Apply icons</source>
-        <translation>Applica icone</translation>
-    </message>
-    <message>
-        <source>Fonts</source>
-        <translation>Font</translation>
-    </message>
-    <message>
-        <source>Choose a font weight to preview</source>
-        <translation>Scegli uno stile del font per l&apos;anteprima</translation>
-    </message>
-    <message>
-        <source>Apply fonts</source>
-        <translation>Applica font</translation>
-    </message>
-    <message>
-        <source>Font weight</source>
-        <translation>Stile del font</translation>
-    </message>
-    <message>
-        <source>Choose the main font weight for the UI.</source>
-        <translation>Scegli lo stile del font principale per l&apos;interfaccia.</translation>
-    </message>
-    <message>
-        <source>Style missing app icons</source>
-        <translation>Stilizza le icone mancanti</translation>
-    </message>
-    <message>
-        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation>Usa lo stile di questo tema per le app che non hanno un&apos;icona personalizzata nel pacchetto.</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
-        <translation>Riavvia la schermata iniziale per aggiornare icone e font del launcher e completare l&apos;applicazione del tema.</translation>
-    </message>
-    <message>
-        <source>Dynamic clock icon</source>
-        <translation>Icona Orologio dinamica</translation>
-    </message>
-    <message>
-        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio, nello stile di questo tema.</translation>
-    </message>
-    <message>
-        <source>Dynamic calendar icon</source>
-        <translation>Icona Calendario dinamica</translation>
-    </message>
-    <message>
-        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation>Mostra la data corrente nell&apos;icona Calendario, nello stile di questo tema.</translation>
-    </message>
-</context>
-<context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
@@ -699,29 +628,6 @@
     </message>
 </context>
 <context>
-    <name>RestorePage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Ripristina</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-    <message>
-        <source>Default icons</source>
-        <translation>Icone predefinite</translation>
-    </message>
-    <message>
-        <source>Default fonts</source>
-        <translation>Font predefiniti</translation>
-    </message>
-    <message>
-        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
-        <translation>La maggior parte delle modifiche appare subito. Riavvia la schermata iniziale per aggiornare icone e font del launcher dopo aver ripristinato i predefiniti.</translation>
-    </message>
-</context>
-<context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
@@ -742,21 +648,6 @@
     <message>
         <source>Don&apos;t ask me again</source>
         <translation>Non chiedermelo più</translation>
-    </message>
-</context>
-<context>
-    <name>ThemePackItem</name>
-    <message>
-        <source>Uninstall</source>
-        <translation>Disinstalla</translation>
-    </message>
-    <message>
-        <source>icons</source>
-        <translation>icone</translation>
-    </message>
-    <message>
-        <source>fonts</source>
-        <translation>font</translation>
     </message>
 </context>
 <context>
@@ -788,49 +679,6 @@
     <message>
         <source>Uninstalling theme…</source>
         <translation type="unfinished">Disinstallazione tema…</translation>
-    </message>
-</context>
-<context>
-    <name>ThemesTabContent</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Impostazioni applicate.</translation>
-    </message>
-    <message>
-        <source>Download more themes</source>
-        <translation>Scarica altri temi</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation>Ripristina tema</translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation>Disinstallazione di %1</translation>
-    </message>
-    <message>
-        <source>No themes yet</source>
-        <translation>Nessun tema</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme to start</source>
-        <translation>Installa un tema compatibile per iniziare</translation>
-    </message>
-    <message>
-        <source>Applying theme</source>
-        <translation>Applicazione tema</translation>
-    </message>
-    <message>
-        <source>Restoring theme…</source>
-        <translation>Ripristino tema…</translation>
-    </message>
-    <message>
-        <source>Applying theme…</source>
-        <translation>Applicazione tema…</translation>
-    </message>
-    <message>
-        <source>Uninstalling theme…</source>
-        <translation>Disinstallazione tema…</translation>
     </message>
 </context>
 <context>

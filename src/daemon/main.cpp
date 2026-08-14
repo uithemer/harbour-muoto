@@ -9,9 +9,8 @@
 //   1. systemd or dbus-daemon launches us via the .service activation
 //      file when defaultuser's GUI first issues a method call.
 //   2. We register the well-known name on the system bus.
-//   3. Every method handler runs a polkit auth check via libpolkit-qt-core-1
-//      and either dispatches into IconApplier / DensityEnabler /
-//      ThemePackOps or replies "polkit denied".
+//   3. Method handlers run DensityEnable / UninstallPack (authorization
+//      is the system-bus policy in org.muoto.Muoto1.conf — no polkit).
 //   4. After 30 s with no method dispatched we quit; the next call
 //      triggers a re-activation.
 //

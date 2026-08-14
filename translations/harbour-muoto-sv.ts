@@ -72,77 +72,6 @@
     </message>
 </context>
 <context>
-    <name>ConfirmPage</name>
-    <message>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation>Tillämpa</translation>
-    </message>
-    <message>
-        <source>Icons</source>
-        <translation>Ikoner</translation>
-    </message>
-    <message>
-        <source>No preview available</source>
-        <translation>Ingen förhandsgranskning tillgänglig</translation>
-    </message>
-    <message>
-        <source>Apply icons</source>
-        <translation>Tillämpa ikoner</translation>
-    </message>
-    <message>
-        <source>Fonts</source>
-        <translation>Teckensnitt</translation>
-    </message>
-    <message>
-        <source>Choose a font weight to preview</source>
-        <translation>Välj en teckengrovlek att förhandsgranska</translation>
-    </message>
-    <message>
-        <source>Apply fonts</source>
-        <translation>Tillämpa teckensnitt</translation>
-    </message>
-    <message>
-        <source>Font weight</source>
-        <translation>Teckengrovlek</translation>
-    </message>
-    <message>
-        <source>Choose the main font weight for the UI.</source>
-        <translation>Välj huvudgrovlek för UI.</translation>
-    </message>
-    <message>
-        <source>Style missing app icons</source>
-        <translation>Stilen saknar app-ikoner</translation>
-    </message>
-    <message>
-        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation>Använder detta temas utseende för appar som inte har en egen ikon i paketet.</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
-        <translation>Starta om hemskärmen för att uppdatera startikoner och teckensnitt, samt slutföra tillämpningen av ditt tema.</translation>
-    </message>
-    <message>
-        <source>Dynamic clock icon</source>
-        <translation>Dynamisk klockikon</translation>
-    </message>
-    <message>
-        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation>Visa aktuell tid på klockikonen, i den här temastilen.</translation>
-    </message>
-    <message>
-        <source>Dynamic calendar icon</source>
-        <translation>Dynamisk kalenderikon</translation>
-    </message>
-    <message>
-        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation>Visa dagens datum på kalenderikonen, i den här temastilen.</translation>
-    </message>
-</context>
-<context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
@@ -699,29 +628,6 @@
     </message>
 </context>
 <context>
-    <name>RestorePage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Återställ</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <source>Default icons</source>
-        <translation>Standardikoner</translation>
-    </message>
-    <message>
-        <source>Default fonts</source>
-        <translation>Standardteckensnitt</translation>
-    </message>
-    <message>
-        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
-        <translation>De flesta ändringar syns omedelbart. Starta om hemskärmen för att uppdatera appikoner och teckensnitt, efter att ha återställt standardinställningarna.</translation>
-    </message>
-</context>
-<context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
@@ -742,21 +648,6 @@
     <message>
         <source>Don&apos;t ask me again</source>
         <translation>Fråga inte igen</translation>
-    </message>
-</context>
-<context>
-    <name>ThemePackItem</name>
-    <message>
-        <source>Uninstall</source>
-        <translation>Avinstallera</translation>
-    </message>
-    <message>
-        <source>icons</source>
-        <translation>ikoner</translation>
-    </message>
-    <message>
-        <source>fonts</source>
-        <translation>teckensnitt</translation>
     </message>
 </context>
 <context>
@@ -788,49 +679,6 @@
     <message>
         <source>Uninstalling theme…</source>
         <translation type="unfinished">Avinstallerar tema…</translation>
-    </message>
-</context>
-<context>
-    <name>ThemesTabContent</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Inställningar tillämpas.</translation>
-    </message>
-    <message>
-        <source>Download more themes</source>
-        <translation>Ladda ner fler teman</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation>Återställ tema</translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation>Avinstallerar %1</translation>
-    </message>
-    <message>
-        <source>No themes yet</source>
-        <translation>Inga teman ännu</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme to start</source>
-        <translation>Installera ett kompatibelt tema för att komma igång</translation>
-    </message>
-    <message>
-        <source>Applying theme</source>
-        <translation>Tillämpar tema</translation>
-    </message>
-    <message>
-        <source>Restoring theme…</source>
-        <translation>Återställer tema…</translation>
-    </message>
-    <message>
-        <source>Applying theme…</source>
-        <translation>Tillämpar tema…</translation>
-    </message>
-    <message>
-        <source>Uninstalling theme…</source>
-        <translation>Avinstallerar tema…</translation>
     </message>
 </context>
 <context>

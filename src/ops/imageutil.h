@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QColor>
 
-// Qt-based image helpers for ConfirmPage / Cover pack previews.
+// Qt-based image helpers for MainPage / Cover pack previews.
 namespace ImageUtil
 {
     // Build a cols×rows tiled montage from PNG paths (unused cells stay empty).

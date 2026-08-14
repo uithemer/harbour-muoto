@@ -37,12 +37,12 @@ public:
     ~HelperClient() override;
 
 public slots:
-    // -- Themes interface (manage-themes) --
+    // -- Themes interface (bus-policy gated) --
     void applyIcons(const QString& pack, bool runPack, bool overlay);
     void restoreIcons();
     void densityEnable();
 
-    // -- Packs interface (manage-packs) --
+    // -- Packs interface (bus-policy gated) --
     void uninstallPack(const QString& rpmName);
 
 signals:

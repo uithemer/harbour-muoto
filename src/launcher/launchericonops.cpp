@@ -337,8 +337,6 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
         return;
     }
 
-    emit progress(0, 3);
-
     m_inIconOp = true;
 
     // Overlay styles apps missing from the pack — only valid with pack apply.
@@ -351,12 +349,9 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
     if(activeIconPackConf()->value(QStringLiteral("default")).toString() != pack)
         activeIconPackConf()->set(pack);
 
-    emit progress(1, 3);
     rebuildIconUpdatersNow();
-    emit progress(2, 3);
     FolderAmbient::apply(pack, overlay);
     m_inIconOp = false;
-    emit progress(3, 3);
     qInfo() << "muoto-launcher: ApplyIcons done ok=true msg= updaters=" << s_updaters.size();
     emit applied(true, QString());
 }
@@ -373,10 +368,8 @@ void LauncherIconOps::restoreIcons()
         return;
     }
 
-    emit progress(0, 3);
     m_inIconOp = true;
     clearUpdaters(false);
-    emit progress(1, 3);
 
     const bool restoredOk = LauncherManifest::restoreAll();
 
@@ -399,7 +392,6 @@ void LauncherIconOps::restoreIcons()
     }
 
     FolderAmbient::restore();
-    emit progress(2, 3);
 
     mgconfSetBool("/apps/harbour-muoto/iconOverlay", false);
     // Do not touch dyn clock/calendar flags. Callers that want them off
@@ -413,7 +405,6 @@ void LauncherIconOps::restoreIcons()
     rebuildIconUpdatersNow();
     m_inIconOp = false;
 
-    emit progress(3, 3);
     if(!restoredOk)
     {
         qInfo() << "muoto-launcher: RestoreIcons done ok=false msg=inplace restore failed";

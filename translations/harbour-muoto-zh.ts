@@ -72,77 +72,6 @@
     </message>
 </context>
 <context>
-    <name>ConfirmPage</name>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No preview available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Apply icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fonts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose a font weight to preview</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Apply fonts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Font weight</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose the main font weight for the UI.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Style missing app icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
@@ -697,29 +626,6 @@
     </message>
 </context>
 <context>
-    <name>RestorePage</name>
-    <message>
-        <source>Restore</source>
-        <translation>恢复</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>取消</translation>
-    </message>
-    <message>
-        <source>Default icons</source>
-        <translation>默认图标</translation>
-    </message>
-    <message>
-        <source>Default fonts</source>
-        <translation>默认字体</translation>
-    </message>
-    <message>
-        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
@@ -740,21 +646,6 @@
     <message>
         <source>Don&apos;t ask me again</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ThemePackItem</name>
-    <message>
-        <source>Uninstall</source>
-        <translation>卸载</translation>
-    </message>
-    <message>
-        <source>icons</source>
-        <translation>图标</translation>
-    </message>
-    <message>
-        <source>fonts</source>
-        <translation>字体</translation>
     </message>
 </context>
 <context>
@@ -781,49 +672,6 @@
     </message>
     <message>
         <source>Restoring theme…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uninstalling theme…</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ThemesTabContent</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">设置已应用</translation>
-    </message>
-    <message>
-        <source>Download more themes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation type="unfinished">恢复主题</translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No themes yet</source>
-        <translation type="unfinished">尚未安装主题</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme to start</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Applying theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restoring theme…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Applying theme…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

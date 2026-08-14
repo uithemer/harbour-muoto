@@ -20,15 +20,12 @@
 // 2.6.0: setuid(0) is gone from main(). The GUI runs as defaultuser
 // (its packaged .desktop file targets the user session) and gets
 // privileges only when needed via HelperClient -> system bus ->
-// harbour-muoto-helperd, which runs as root and is gated by 3
-// polkit actions (manage-themes, manage-packs,
-// manage-system-services, all auth_admin_keep so the user is prompted
-// once per ~5 minutes).
+// harbour-muoto-helperd (authorized by org.muoto.Muoto1.conf bus
+// policy; no polkit).
 //
-// IconApplier stays a QML type so ConfirmPage can call buildPreview()
-// directly (read-only, in-process). DensityEnabler is no longer
-// registered: the only QML caller (DensityPage) was the
-// ensureEnabled() path, which now goes through Helper.densityEnable().
+// IconApplier stays a QML type so MainPage / configure pages can call
+// buildPreview() directly (read-only, in-process). DensityEnabler is
+// no longer registered: unlock goes through Helper.densityEnable().
 int main(int argc, char *argv[])
 {
     QGuiApplication *app = SailfishApp::application(argc, argv);

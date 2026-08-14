@@ -4,13 +4,6 @@
 
 namespace {
 
-QString mgconfString(const char* path, const QString& defaultValue)
-{
-    MGConfItem item(QString::fromLatin1(path));
-    const QString v = item.value(defaultValue).toString();
-    return v;
-}
-
 bool mgconfBool(const char* path, bool defaultValue)
 {
     MGConfItem item(QString::fromLatin1(path));
@@ -18,14 +11,6 @@ bool mgconfBool(const char* path, bool defaultValue)
 }
 
 } // namespace
-
-QString LauncherSettings::activeIconPack()
-{
-    const QString pack = mgconfString("/apps/harbour-muoto/activeIconPack", QStringLiteral("default"));
-    if(pack.isEmpty() || pack == QLatin1String("default"))
-        return QString();
-    return pack;
-}
 
 bool LauncherSettings::iconOverlay()
 {
