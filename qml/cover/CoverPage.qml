@@ -30,6 +30,7 @@ CoverBackground {
         }
         spacing: Theme.paddingSmall
         visible: !settings.isRunning
+        opacity: 0.8
 
         IconPackPreview {
             width: parent.width
