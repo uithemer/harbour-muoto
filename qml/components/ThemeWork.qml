@@ -15,6 +15,7 @@ Item {
     property bool _pendingIconOverlay: false
     property bool _pendingIconRestore: false
     property string _pendingFontPack: ""
+    property string _pendingFontWeight: ""
     property bool _pendingFontRestore: false
     property bool _uninstallAfterIconRestore: false
     property int _uninstallPackIndex: -1
@@ -121,7 +122,9 @@ Item {
     function _commitPendingFontApply() {
         if (_pendingFontPack !== "") {
             settings.activeFontPack = _pendingFontPack
+            settings.activeFontWeight = _pendingFontWeight
             _pendingFontPack = ""
+            _pendingFontWeight = ""
         }
     }
 
@@ -160,6 +163,7 @@ Item {
         _pendingOps = 0
         _pendingIconPack = ""
         _pendingFontPack = ""
+        _pendingFontWeight = ""
         _pendingIconRestore = false
         _pendingFontRestore = false
         _uninstallAfterIconRestore = false
@@ -193,6 +197,7 @@ Item {
         _armApply(1)
         settings.syncToDisk()
         _pendingFontPack = packName
+        _pendingFontWeight = weight
         themepackmodel.applyTheme(packIndex, true, weight)
     }
 

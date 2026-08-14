@@ -36,31 +36,51 @@ Dialog {
 
     ListModel { id: carouselModel }
 
-    // One probe instance for carousel sampling — avoid FontWeightModel per tile.
-    FontWeightModel { id: carouselProbe; packName: "" }
+    FontWeightModel {
+        id: carouselProbe
+        packName: ""
+    }
+
+    FontWeightModel {
+        id: fontweightmodel
+        packName: dlg.hasFont ? dlg.packName : ""
+    }
+
+    function appliedWeightBasename() {
+        if (settings.activeFontWeight && settings.activeFontWeight !== "")
+            return settings.activeFontWeight
+        return FontWeightUtils.activeWeightFromMuotoConf()
+    }
+
+    function cacheActiveFontWeightFromConf() {
+        if (settings.activeFontWeight !== "" || !settings.hasActiveFontPack())
+            return
+        var w = FontWeightUtils.activeWeightFromMuotoConf()
+        if (w !== "")
+            settings.activeFontWeight = w
+    }
+
+    function resolveSelectedWeight() {
+        if (!hasFont || fontweightmodel.rowCount() === 0)
+            return ""
+
+        if (settings.hasActiveFontPack()
+                && themeWork.indexForPackName(settings.activeFontPack) === effectiveIndex) {
+            var applied = appliedWeightBasename()
+            if (FontWeightUtils.basenameExistsInModel(fontweightmodel, applied))
+                return applied
+        }
+
+        return FontWeightUtils.pickPreferredBasename(fontweightmodel)
+    }
 
     function sampleBasenameForPack(packIndex) {
         if (!packModel.hasFont(packIndex))
             return ""
         carouselProbe.packName = packModel.packName(packIndex)
-        var result = ""
-        if (carouselProbe.rowCount() > 0) {
-            var prefs = ["regular", "light", "thin", "book", "normal", "extralight", "medium"]
-            outer:
-            for (var p = 0; p < prefs.length; ++p) {
-                for (var r = 0; r < carouselProbe.rowCount(); ++r) {
-                    var w = carouselProbe.data(carouselProbe.index(r, 0), 257)
-                    if (w && w.toLowerCase().indexOf(prefs[p]) >= 0) {
-                        result = w
-                        break outer
-                    }
-                }
-            }
-            if (result === "")
-                result = carouselProbe.data(carouselProbe.index(0, 0), 257)
-        }
+        var sample = FontWeightUtils.pickPreferredBasename(carouselProbe)
         carouselProbe.packName = ""
-        return result
+        return sample
     }
 
     function rebuildCarousel() {
@@ -77,40 +97,27 @@ Dialog {
         }
     }
 
-    FontWeightModel {
-        id: fontweightmodel
-        packName: dlg.hasFont ? dlg.packName : ""
-    }
-
-    function initFromSettings() {
+    function syncFromSettings() {
+        cacheActiveFontWeightFromConf()
         selectedIndex = themeWork.indexForPackName(settings.activeFontPack)
         if (selectedIndex < 0 || !(packModel.hasFont(selectedIndex)
                                    || packModel.hasFontNonLatin(selectedIndex)))
-            selectedIndex = themeWork.firstFontPackIndex()
-        selectedFont = ""
-        if (hasFont && fontweightmodel.rowCount() > 0)
-            selectedFont = FontWeightUtils.fontBasenameFromFilename(
-                               fontweightmodel.firstWeight)
+            selectedIndex = -1
+        selectedFont = resolveSelectedWeight()
     }
 
-    function reloadFontPreview() {
-        fontloader.source = ""
-        if (!hasFont || packName === "" || selectedFont === "")
-            return
-        fontloader.setSource("../components/FontPreview.qml", {
-            "packName": packName,
-            "selectedFont": selectedFont
-        })
+    function syncWeightForPack() {
+        selectedFont = resolveSelectedWeight()
     }
 
     Component.onCompleted: {
         rebuildCarousel()
-        initFromSettings()
+        syncFromSettings()
     }
 
     onStatusChanged: {
         if (status === PageStatus.Active)
-            rebuildCarousel()
+            syncFromSettings()
     }
 
     Connections {
@@ -118,12 +125,35 @@ Dialog {
         onModelReset: dlg.rebuildCarousel()
     }
 
-    onEffectiveIndexChanged: {
-        selectedFont = ""
-        if (hasFont && fontweightmodel.rowCount() > 0)
-            selectedFont = FontWeightUtils.fontBasenameFromFilename(
-                               fontweightmodel.firstWeight)
-        reloadFontPreview()
+    onEffectiveIndexChanged: syncWeightForPack()
+
+    onPackNameChanged: schedulePreviewReload()
+    onSelectedFontChanged: schedulePreviewReload()
+
+    function schedulePreviewReload() {
+        previewReloadTimer.unloadFirst = true
+        previewReloadTimer.restart()
+    }
+
+    Timer {
+        id: previewReloadTimer
+        interval: 1
+        property bool unloadFirst: true
+        onTriggered: {
+            if (unloadFirst) {
+                previewLoader.source = ""
+                unloadFirst = false
+                start()
+                return
+            }
+            unloadFirst = true
+            if (!dlg.hasFont || dlg.packName === "" || dlg.selectedFont === "")
+                return
+            previewLoader.setSource(Qt.resolvedUrl("../components/FontPreview.qml"), {
+                "packName": dlg.packName,
+                "selectedFont": dlg.selectedFont
+            })
+        }
     }
 
     onAccepted: {
@@ -156,7 +186,6 @@ Dialog {
             id: content
             width: parent.width
 
-
             Item {
                 width: parent.width
                 height: Theme.paddingLarge
@@ -167,9 +196,9 @@ Dialog {
                 height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
 
                 Loader {
-                    id: fontloader
+                    id: previewLoader
                     anchors.fill: parent
-                    active: hasFont
+                    visible: hasFont && selectedFont !== ""
                 }
 
                 Label {
@@ -235,20 +264,13 @@ Dialog {
 
                 delegate: FontWeightSwitch {
                     width: parent.width
-                    automaticCheck: true
+                    automaticCheck: false
                     enabled: hasFont
                     packName: dlg.packName
                     fontWeight: model.fontWeight
                     text: model.fontDisplayWeight
-                    checked: selectedFont === model.fontWeight
-
-                    onClicked: {
-                        for (var i = 0; i < weightRepeater.count; ++i)
-                            weightRepeater.itemAt(i).checked = false
-                        checked = true
-                        selectedFont = model.fontWeight
-                        reloadFontPreview()
-                    }
+                    checked: dlg.selectedFont === model.fontWeight
+                    onClicked: dlg.selectedFont = model.fontWeight
                 }
             }
 
@@ -268,10 +290,12 @@ Dialog {
     Connections {
         target: fontweightmodel
         onFirstWeightChanged: {
-            if (selectedFont === "" && hasFont)
-                selectedFont = FontWeightUtils.fontBasenameFromFilename(
-                                   fontweightmodel.firstWeight)
-            reloadFontPreview()
+            if (!hasFont)
+                return
+            if (selectedFont !== ""
+                    && FontWeightUtils.basenameExistsInModel(fontweightmodel, selectedFont))
+                return
+            selectedFont = resolveSelectedWeight()
         }
     }
 }

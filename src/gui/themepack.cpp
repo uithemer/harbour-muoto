@@ -3,6 +3,9 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QStringList>
+#include <QFile>
+#include <QStandardPaths>
+#include <QRegularExpression>
 
 ThemePack::ThemePack(QObject* parent)
     : QObject(parent)
@@ -22,4 +25,19 @@ void ThemePack::restartHomescreen()
         QStringList() << QStringLiteral("--user")
                       << QStringLiteral("restart")
                       << QStringLiteral("lipstick.service"));
+}
+
+QString ThemePack::activeFontWeightBasename() const
+{
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+                       + QStringLiteral("/fontconfig/conf.d/99-muoto.conf");
+    QFile f(path);
+    if(!f.open(QIODevice::ReadOnly))
+        return QString();
+
+    static const QRegularExpression re(QStringLiteral("weight '([^']+)'"));
+    const QRegularExpressionMatch m = re.match(QString::fromUtf8(f.readAll()));
+    if(!m.hasMatch())
+        return QString();
+    return m.captured(1);
 }

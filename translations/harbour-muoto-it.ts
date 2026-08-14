@@ -316,6 +316,10 @@
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomescreenRestartSection</name>

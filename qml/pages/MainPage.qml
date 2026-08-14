@@ -2,7 +2,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import harbour.muoto 1.0
-import "../common/fontWeightUtils.js" as FontWeightUtils
 import "../components"
 
 Page {
@@ -130,26 +129,15 @@ Page {
                         "settings": settings
                     })
 
-                    Loader {
-                        id: homeFontPreview
+                    Label {
                         width: parent.width
                         height: Math.min(width, Theme.itemSizeLarge * 1.5)
-                        active: settings.hasActiveFontPack()
-
-                        sourceComponent: Component {
-                            Item {
-                                FontWeightModel { id: hw; packName: settings.activeFontPack }
-
-                                FontPreview {
-                                    anchors.fill: parent
-                                    compact: true
-                                    packName: settings.activeFontPack
-                                    selectedFont: hw.rowCount() > 0
-                                        ? FontWeightUtils.fontBasenameFromFilename(hw.firstWeight)
-                                        : ""
-                                }
-                            }
-                        }
+                        visible: settings.hasActiveFontPack()
+                        text: qsTr("Aa Bb Cc 123")
+                        font.pixelSize: Theme.fontSizeSmall
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        wrapMode: Text.WordWrap
                     }
 
                     Label {

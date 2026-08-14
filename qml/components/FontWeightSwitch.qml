@@ -19,11 +19,6 @@ MouseArea {
     width: parent ? parent.width : Screen.width
     implicitHeight: Math.max(toggle.height, label.height)
 
-    FontLoader {
-        id: rowfont
-        source: FontWeightUtils.fontTtfPath(packName, fontWeight)
-    }
-
     Item {
         id: toggle
 
@@ -60,7 +55,6 @@ MouseArea {
         }
         wrapMode: Text.Wrap
         color: highlighted ? Theme.highlightColor : Theme.primaryColor
-        font.family: rowfont.name
         font.weight: FontWeightUtils.fontWeightFromBasename(fontWeight)
     }
 

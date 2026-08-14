@@ -17,6 +17,7 @@ class ThemePack : public QObject
     public slots:
         bool hasStoremanInstalled() const;
         void restartHomescreen();
+        QString activeFontWeightBasename() const;
 };
 
 #endif // THEMEPACK_H

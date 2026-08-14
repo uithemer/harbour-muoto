@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../common/fontWeightUtils.js" as FontWeightUtils
 
 Item {
     id: root
@@ -11,13 +10,6 @@ Item {
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
-
-    FontLoader {
-        id: sampleFont
-        source: sampleFontBasename !== ""
-                ? FontWeightUtils.fontTtfPath(root.packName, sampleFontBasename)
-                : ""
-    }
 
     Column {
         anchors.fill: parent
@@ -31,10 +23,8 @@ Item {
             Label {
                 anchors.centerIn: parent
                 text: "Aa"
-                font.family: sampleFontBasename !== "" ? sampleFont.name : ""
-                font.weight: FontWeightUtils.fontWeightFromBasename(sampleFontBasename)
                 font.pixelSize: Theme.fontSizeLarge * 1.25
-                color: sampleFontBasename !== "" ? Theme.primaryColor : Theme.secondaryColor
+                color: Theme.primaryColor
             }
         }
 

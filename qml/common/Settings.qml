@@ -11,6 +11,7 @@ Item
         property bool wizardDone
         property string activeIconPack: "default"
         property string activeFontPack: "default"
+        property string activeFontWeight: ""
         // Mirror of the user's "apply icon overlay" choice at the last
         // ApplyIcons(pack, runPack, overlay). Cover sync and main-page apply pass
         // runPack/overlay so overlay-composited icons are included when
@@ -31,6 +32,7 @@ Item
     property alias wizardDone: conf.wizardDone
     property alias activeIconPack: conf.activeIconPack
     property alias activeFontPack: conf.activeFontPack
+    property alias activeFontWeight: conf.activeFontWeight
     property alias iconOverlay: conf.iconOverlay
     property alias homeRefresh: conf.homeRefresh
     property alias dynamicClockEnabled: launcherConf.dynamicClockEnabled
@@ -39,7 +41,10 @@ Item
     property bool isRunning: false
 
     function deactivateIcon() { activeIconPack = "default"; }
-    function deactivateFont() { activeFontPack = "default"; }
+    function deactivateFont() {
+        activeFontPack = "default"
+        activeFontWeight = ""
+    }
 
     function packIdIsActive(packId) {
         return packId && packId !== "" && packId !== "default"
@@ -54,6 +59,7 @@ Item
     onWizardDoneChanged: conf.sync();
     onActiveIconPackChanged: conf.sync();
     onActiveFontPackChanged: conf.sync();
+    onActiveFontWeightChanged: conf.sync();
     onIconOverlayChanged: conf.sync();
     onHomeRefreshChanged: conf.sync();
     onDynamicClockEnabledChanged: launcherConf.sync();

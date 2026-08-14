@@ -3,16 +3,22 @@ import Sailfish.Silica 1.0
 import "../common/fontWeightUtils.js" as FontWeightUtils
 
 Item {
-    anchors.fill: parent
+    id: root
     clip: true
 
     property string packName: ""
     property string selectedFont: ""
     property bool compact: false
 
+    // Set source once. Changing FontLoader.source (or destroying it while
+    // another loader still holds the same file) aborts in Qt 5.6 fontconfig.
     FontLoader {
         id: previewfont
-        source: FontWeightUtils.fontTtfPath(packName, selectedFont)
+    }
+
+    Component.onCompleted: {
+        if (packName !== "" && selectedFont !== "")
+            previewfont.source = FontWeightUtils.fontTtfPath(packName, selectedFont)
     }
 
     Label {
@@ -30,5 +36,4 @@ Item {
         wrapMode: Text.WordWrap
         clip: true
     }
-
 }
