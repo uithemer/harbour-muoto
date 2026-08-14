@@ -85,7 +85,6 @@ OTHER_FILES += \
     $$ROOT/qml/cover/CoverLabel.qml \
     $$ROOT/qml/cover/FontPreviewCover.qml \
     $$ROOT/qml/pages/ConfirmPage.qml \
-    $$ROOT/qml/components/DensityTabContent.qml \
     $$ROOT/qml/components/DynamicIconsTabContent.qml \
     $$ROOT/qml/components/MuotoAboutMenuItem.qml \
     $$ROOT/qml/components/MuotoRestartHomescreenMenuItem.qml \
@@ -97,7 +96,6 @@ OTHER_FILES += \
     $$ROOT/qml/pages/DensityPage.qml \
     $$ROOT/qml/pages/DynamicIconsPage.qml \
     $$ROOT/qml/pages/RestorePage.qml \
-    $$ROOT/qml/pages/RestoreDDPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
     $$ROOT/rpm/* \

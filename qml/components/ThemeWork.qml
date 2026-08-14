@@ -203,6 +203,17 @@ Item {
         themepackmodel.applyTheme(packIndex, true, weight)
     }
 
+    function restoreDpi(dpr, iconSize) {
+        if (!dpr && !iconSize)
+            return
+        settings.isRunning = true
+        themepackmodel.restoreDpi(dpr, iconSize)
+    }
+
+    function finishDensityApply() {
+        _finalise()
+    }
+
     function beginRestore(restoreIcons, restoreFonts) {
         var nOps = (restoreIcons ? 1 : 0) + (restoreFonts ? 1 : 0)
         if (nOps === 0)
@@ -293,6 +304,7 @@ Item {
             settings.isRunning = false
             app.showToast(qsTr("Settings applied."))
         }
+        onDpiRestored: themeWork.finishDensityApply()
     }
 
     Timer {

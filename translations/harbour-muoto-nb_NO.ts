@@ -159,67 +159,68 @@
 <context>
     <name>DensityPage</name>
     <message>
-        <source>Display density</source>
-        <translation type="unfinished">Skjermtetthet</translation>
-    </message>
-</context>
-<context>
-    <name>DensityTabContent</name>
-    <message>
-        <source>Restore display density</source>
-        <translation>Gjenopprett skjermtetthet</translation>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished">Kunne ikke låse opp innstillinger for skjermtetthet</translation>
     </message>
     <message>
-        <source>System default</source>
-        <translation>Systemstandard</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
     </message>
     <message>
-        <source>Compact (86)</source>
-        <translation>Kompakt (86)</translation>
-    </message>
-    <message>
-        <source>Normal (108)</source>
-        <translation>Normal (108)</translation>
-    </message>
-    <message>
-        <source>Medium (129)</source>
-        <translation>Medium (129)</translation>
-    </message>
-    <message>
-        <source>Large (151)</source>
-        <translation>Stor (151)</translation>
-    </message>
-    <message>
-        <source>Extra large (172)</source>
-        <translation>Ekstra stor (172)</translation>
+        <source>Apply</source>
+        <translation type="unfinished">Bruk</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation>Skjermskalering</translation>
+        <translation type="unfinished">Skjermskalering</translation>
+    </message>
+    <message>
+        <source>Restore default</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation>Styrer hvor store elementene i Sailfish-grensesnittet skal være. Lavere = plass til mer på skjermen; høyere = større tekst og knapper.</translation>
+        <translation type="unfinished">Styrer hvor store elementene i Sailfish-grensesnittet skal være. Lavere = plass til mer på skjermen; høyere = større tekst og knapper.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation>Ikonstørrelse i app-oversikt</translation>
-    </message>
-    <message>
-        <source>Could not unlock display density settings</source>
-        <translation>Kunne ikke låse opp innstillinger for skjermtetthet</translation>
-    </message>
-    <message>
-        <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
-        <translation>Når du er ferdig, starter du startskjermen på nytt for å ta i bruk endringene. Du kan starte startskjermen på nytt fra trekkmenyen.</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Innstillinger tatt i bruk.</translation>
+        <translation type="unfinished">Ikonstørrelse i app-oversikt</translation>
     </message>
     <message>
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation>Ikoner på startskjermen og i app-rutenettet. Systemstandarden bruker enhetens normale størrelse.</translation>
+        <translation type="unfinished">Ikoner på startskjermen og i app-rutenettet. Systemstandarden bruker enhetens normale størrelse.</translation>
+    </message>
+    <message>
+        <source>System default</source>
+        <translation type="unfinished">Systemstandard</translation>
+    </message>
+    <message>
+        <source>Compact (86)</source>
+        <translation type="unfinished">Kompakt (86)</translation>
+    </message>
+    <message>
+        <source>Normal (108)</source>
+        <translation type="unfinished">Normal (108)</translation>
+    </message>
+    <message>
+        <source>Medium (129)</source>
+        <translation type="unfinished">Medium (129)</translation>
+    </message>
+    <message>
+        <source>Large (151)</source>
+        <translation type="unfinished">Stor (151)</translation>
+    </message>
+    <message>
+        <source>Extra large (172)</source>
+        <translation type="unfinished">Ekstra stor (172)</translation>
+    </message>
+    <message>
+        <source>When you are done, restart the homescreen to apply these changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -437,10 +438,6 @@
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Aa Bb Cc 123</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -682,29 +679,6 @@
     <message>
         <source>The page is taking too long to load.</source>
         <translation>Siden bruker for lang tid på å laste inn.</translation>
-    </message>
-</context>
-<context>
-    <name>RestoreDDPage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Gjenopprett</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <source>Default device pixel ratio</source>
-        <translation>Standard pikselforhold for enheten</translation>
-    </message>
-    <message>
-        <source>Default icon size</source>
-        <translation>Standard ikonstørrelse</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
-        <translation>Start startskjermen på nytt etter gjenoppretting av skjermtetthet, slik at alle apper fanger opp endringene.</translation>
     </message>
 </context>
 <context>

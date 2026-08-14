@@ -113,9 +113,9 @@ Page {
                     Label {
                         width: parent.width
                         height: Math.min(width, Theme.itemSizeLarge * 1.5)
-                        text: qsTr("Aa Bb Cc 123")
+                        text: "Aa"
                         font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeSmall
+                        font.pixelSize: Theme.fontSizeHuge
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.WordWrap
@@ -127,7 +127,10 @@ Page {
                            / parent.columns
                     title: qsTr("Display density")
                     subtitle: qsTr("Tap to configure")
-                    onClicked: pageStack.push(Qt.resolvedUrl("DensityPage.qml"))
+                    onClicked: pageStack.push(Qt.resolvedUrl("DensityPage.qml"), {
+                        "themeWork": themeWork,
+                        "settings": settings
+                    })
 
                     Image {
                         anchors.centerIn: parent

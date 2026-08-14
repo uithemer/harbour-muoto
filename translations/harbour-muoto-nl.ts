@@ -159,15 +159,36 @@
 <context>
     <name>DensityPage</name>
     <message>
-        <source>Display density</source>
-        <translation type="unfinished">Pixeldichtheid</translation>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>DensityTabContent</name>
     <message>
-        <source>Restore display density</source>
-        <translation type="unfinished">Pixeldichtheid herstellen</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuleren</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launcher icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>System default</source>
@@ -194,31 +215,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Display scale</source>
+        <source>When you are done, restart the homescreen to apply these changes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Launcher icon size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">Instellingen toegepast.</translation>
-    </message>
-    <message>
-        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
+        <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -437,10 +438,6 @@
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Aa Bb Cc 123</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -681,29 +678,6 @@
     </message>
     <message>
         <source>The page is taking too long to load.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RestoreDDPage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Herstellen</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleren</translation>
-    </message>
-    <message>
-        <source>Default device pixel ratio</source>
-        <translation>Standaardpixelverhouding van apparaat</translation>
-    </message>
-    <message>
-        <source>Default icon size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

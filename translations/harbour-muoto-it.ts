@@ -159,67 +159,68 @@
 <context>
     <name>DensityPage</name>
     <message>
-        <source>Display density</source>
-        <translation type="unfinished">Densità display</translation>
-    </message>
-</context>
-<context>
-    <name>DensityTabContent</name>
-    <message>
-        <source>Restore display density</source>
-        <translation>Ripristina densità display</translation>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished">Impossibile sbloccare le impostazioni di densità display</translation>
     </message>
     <message>
-        <source>System default</source>
-        <translation>Predefinito di sistema</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Annulla</translation>
     </message>
     <message>
-        <source>Compact (86)</source>
-        <translation>Compatto (86)</translation>
-    </message>
-    <message>
-        <source>Normal (108)</source>
-        <translation>Normale (108)</translation>
-    </message>
-    <message>
-        <source>Medium (129)</source>
-        <translation>Medio (129)</translation>
-    </message>
-    <message>
-        <source>Large (151)</source>
-        <translation>Grande (151)</translation>
-    </message>
-    <message>
-        <source>Extra large (172)</source>
-        <translation>Molto grande (172)</translation>
+        <source>Apply</source>
+        <translation type="unfinished">Applica</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation>Scaling display</translation>
+        <translation type="unfinished">Scaling display</translation>
+    </message>
+    <message>
+        <source>Restore default</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation>Controlla quanto grandi appaiono gli elementi dell&apos;interfaccia Sailfish. Valore più basso = più elementi sullo schermo; valore più alto = testo e pulsanti più grandi.</translation>
+        <translation type="unfinished">Controlla quanto grandi appaiono gli elementi dell&apos;interfaccia Sailfish. Valore più basso = più elementi sullo schermo; valore più alto = testo e pulsanti più grandi.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation>Dimensione icone del launcher</translation>
-    </message>
-    <message>
-        <source>Could not unlock display density settings</source>
-        <translation>Impossibile sbloccare le impostazioni di densità display</translation>
-    </message>
-    <message>
-        <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
-        <translation>Quando hai finito, riavvia la schermata iniziale per applicare queste modifiche. Puoi riavviarla dal menu a trascinamento.</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Impostazioni applicate.</translation>
+        <translation type="unfinished">Dimensione icone del launcher</translation>
     </message>
     <message>
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation>Icone sulla schermata iniziale e nella griglia delle app. Il predefinito di sistema usa la dimensione normale del dispositivo.</translation>
+        <translation type="unfinished">Icone sulla schermata iniziale e nella griglia delle app. Il predefinito di sistema usa la dimensione normale del dispositivo.</translation>
+    </message>
+    <message>
+        <source>System default</source>
+        <translation type="unfinished">Predefinito di sistema</translation>
+    </message>
+    <message>
+        <source>Compact (86)</source>
+        <translation type="unfinished">Compatto (86)</translation>
+    </message>
+    <message>
+        <source>Normal (108)</source>
+        <translation type="unfinished">Normale (108)</translation>
+    </message>
+    <message>
+        <source>Medium (129)</source>
+        <translation type="unfinished">Medio (129)</translation>
+    </message>
+    <message>
+        <source>Large (151)</source>
+        <translation type="unfinished">Grande (151)</translation>
+    </message>
+    <message>
+        <source>Extra large (172)</source>
+        <translation type="unfinished">Molto grande (172)</translation>
+    </message>
+    <message>
+        <source>When you are done, restart the homescreen to apply these changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -437,10 +438,6 @@
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Aa Bb Cc 123</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -682,29 +679,6 @@
     <message>
         <source>The page is taking too long to load.</source>
         <translation>Il caricamento della pagina sta impiegando troppo tempo.</translation>
-    </message>
-</context>
-<context>
-    <name>RestoreDDPage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Ripristina</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-    <message>
-        <source>Default device pixel ratio</source>
-        <translation>Device pixel ratio predefinito</translation>
-    </message>
-    <message>
-        <source>Default icon size</source>
-        <translation>Dimensione icone predefinita</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
-        <translation>Riavvia la schermata iniziale dopo aver ripristinato la densità display, così tutte le app recepiscono le modifiche.</translation>
     </message>
 </context>
 <context>

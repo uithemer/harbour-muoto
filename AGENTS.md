@@ -54,9 +54,9 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconp
 
 ## Display density apply / restore
 
-- **Unlock:** Display density tab calls `Helper.densityEnable()` → system bus `org.muoto.Muoto1` → helperd `DensityEnable` (moves vendor dconf locks so user keys can change). Implemented in `src/ops/densityenabler.cpp` / daemon adaptor.
-- **Apply:** UI writes user dconf (`desktop/sailfish/silica/theme_pixel_ratio`, launcher icon size keys) once unlocked — see `qml/components/DensityTabContent.qml`.
-- **Restore:** Themes-style restore on the density tab → `ThemePackModel::restoreDpi` → `DensityEnabler::restoreDensity` (reset selected keys / re-lock as designed).
+- **Unlock:** Display density dialog calls `Helper.densityEnable()` → system bus `org.muoto.Muoto1` → helperd `DensityEnable` (moves vendor dconf locks so user keys can change). Implemented in `src/ops/densityenabler.cpp` / daemon adaptor.
+- **Apply:** On Dialog accept, UI writes user dconf (`desktop/sailfish/silica/theme_pixel_ratio`, launcher icon size keys) once unlocked — see `qml/pages/DensityPage.qml`. Cancel discards pending slider/combo/restore values.
+- **Restore:** Per-control Restore default buttons set pending reset; Apply calls `ThemePackModel::restoreDpi` → `DensityEnabler::restoreDensity` (dconf reset of selected keys). Completion is handled on `ThemeWork` (`dpiRestored`).
 - User docs: [docs/density.md](docs/density.md).
 
 ## Build and device
@@ -89,7 +89,7 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconp
 | Folder silica icons | `src/launcher/folderambient.cpp` |
 | Pack lookup | `src/launcher/harbourthemepack.cpp` |
 | Font apply / restore | `src/gui/fontapplier.cpp`, `src/gui/themepackmodel.cpp` |
-| Density unlock / restore | `src/ops/densityenabler.cpp`, `src/gui/helperclient.cpp`, `qml/components/DensityTabContent.qml` |
+| Density unlock / restore | `src/ops/densityenabler.cpp`, `src/gui/helperclient.cpp`, `qml/pages/DensityPage.qml` |
 | Confirm / Themes UI | `qml/pages/ConfirmPage.qml`, `qml/components/ThemesTabContent.qml` |
 | Dyn icons tab | `qml/components/DynamicIconsTabContent.qml` |
 | Session D-Bus | `dbus/org.muoto.Launcher1.Themes.xml`, `src/launcher-daemon/main.cpp` |

@@ -159,67 +159,68 @@
 <context>
     <name>DensityPage</name>
     <message>
-        <source>Display density</source>
-        <translation type="unfinished">Skärmupplösning</translation>
-    </message>
-</context>
-<context>
-    <name>DensityTabContent</name>
-    <message>
-        <source>Restore display density</source>
-        <translation>Återställ bildskärmsupplösning</translation>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished">Kunde inte låsa upp inställningarna för skärmupplösning</translation>
     </message>
     <message>
-        <source>System default</source>
-        <translation>Systemstandard</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
     </message>
     <message>
-        <source>Compact (86)</source>
-        <translation>Kompakt (86)</translation>
-    </message>
-    <message>
-        <source>Normal (108)</source>
-        <translation>Normal (108)</translation>
-    </message>
-    <message>
-        <source>Medium (129)</source>
-        <translation>Medium (129)</translation>
-    </message>
-    <message>
-        <source>Large (151)</source>
-        <translation>Stor (151)</translation>
-    </message>
-    <message>
-        <source>Extra large (172)</source>
-        <translation>Extra stor (172)</translation>
+        <source>Apply</source>
+        <translation type="unfinished">Tillämpa</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation>Skärmskala</translation>
+        <translation type="unfinished">Skärmskala</translation>
+    </message>
+    <message>
+        <source>Restore default</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation>Styr hur stora Sailfish UI-element ser ut. Lägre = fler på skärmen; högre = större text och knappar.</translation>
+        <translation type="unfinished">Styr hur stora Sailfish UI-element ser ut. Lägre = fler på skärmen; högre = större text och knappar.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation>Appstartikoners storlek</translation>
-    </message>
-    <message>
-        <source>Could not unlock display density settings</source>
-        <translation>Kunde inte låsa upp inställningarna för skärmupplösning</translation>
-    </message>
-    <message>
-        <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
-        <translation>Starta om hemskärmen för att tillämpa dessa ändringar när du är klar. Du kan starta om hemskärmen från toppmenyn.</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Inställningar tillämpas.</translation>
+        <translation type="unfinished">Appstartikoners storlek</translation>
     </message>
     <message>
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation>Ikoner på startskärmen och appstartfältet. Systemstandard använder enhetens vanliga storlek.</translation>
+        <translation type="unfinished">Ikoner på startskärmen och appstartfältet. Systemstandard använder enhetens vanliga storlek.</translation>
+    </message>
+    <message>
+        <source>System default</source>
+        <translation type="unfinished">Systemstandard</translation>
+    </message>
+    <message>
+        <source>Compact (86)</source>
+        <translation type="unfinished">Kompakt (86)</translation>
+    </message>
+    <message>
+        <source>Normal (108)</source>
+        <translation type="unfinished">Normal (108)</translation>
+    </message>
+    <message>
+        <source>Medium (129)</source>
+        <translation type="unfinished">Medium (129)</translation>
+    </message>
+    <message>
+        <source>Large (151)</source>
+        <translation type="unfinished">Stor (151)</translation>
+    </message>
+    <message>
+        <source>Extra large (172)</source>
+        <translation type="unfinished">Extra stor (172)</translation>
+    </message>
+    <message>
+        <source>When you are done, restart the homescreen to apply these changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -437,10 +438,6 @@
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Aa Bb Cc 123</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -682,29 +679,6 @@
     <message>
         <source>The page is taking too long to load.</source>
         <translation>Sidan tar för lång tid att läsa in.</translation>
-    </message>
-</context>
-<context>
-    <name>RestoreDDPage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Återställ</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <source>Default device pixel ratio</source>
-        <translation>Enhetens normala bildpunktsförhållande</translation>
-    </message>
-    <message>
-        <source>Default icon size</source>
-        <translation>Standard ikonstorlek</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
-        <translation>Starta om hemskärmen efter att ha återställt skärmupplösningen så att alla appar uppdaterar ändringarna.</translation>
     </message>
 </context>
 <context>
