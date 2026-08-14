@@ -14,6 +14,9 @@ Dialog {
     property int selectedIndex: -1
     property bool stockSelected: false
     property string selectedFont: ""
+    property bool appliedStock: false
+    property int appliedIndex: -1
+    property string appliedWeight: ""
 
     readonly property ThemePackModel packModel: themeWork.themepackmodel
     readonly property int effectiveIndex: {
@@ -35,7 +38,19 @@ Dialog {
         || (hasFont && selectedFont !== "")
         || (!hasFont && hasFontNonLatin)
 
-    canAccept: stockSelected || (effectiveIndex >= 0 && fontsApplyOk)
+    readonly property bool dirty: {
+        if (stockSelected !== appliedStock)
+            return true
+        if (stockSelected)
+            return false
+        if (effectiveIndex !== appliedIndex)
+            return true
+        if (hasFont && selectedFont !== appliedWeight)
+            return true
+        return false
+    }
+
+    canAccept: dirty && (stockSelected || (effectiveIndex >= 0 && fontsApplyOk))
 
     FontCarouselModel {
         id: fontCarousel
@@ -115,6 +130,9 @@ Dialog {
                 selectedIndex = -1
         }
         selectedFont = resolveSelectedWeight()
+        appliedStock = stockSelected
+        appliedIndex = stockSelected ? -1 : selectedIndex
+        appliedWeight = selectedFont
         scheduleCenterCarousel()
     }
 

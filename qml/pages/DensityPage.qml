@@ -15,10 +15,17 @@ Dialog {
     property real vendorDpr: 0
     property bool vendorDprKnown: false
 
+    property bool appliedSnapshotReady: false
+    property real appliedDpr: 0
+    property int appliedIconIndex: 0
+
     readonly property bool dprAtDefault: vendorDprKnown
                                          && Math.abs(sldpr.value - vendorDpr) < 0.001
+    readonly property bool dirty: appliedSnapshotReady
+                                  && (Math.abs(sldpr.value - appliedDpr) >= 0.001
+                                      || cbiz.currentIndex !== appliedIconIndex)
 
-    canAccept: densityReady
+    canAccept: densityReady && dirty
 
     function requestDensityUnlock() {
         densityReady = false
@@ -81,11 +88,14 @@ Dialog {
         onTriggered: {
             if (targetIndex < 0) {
                 cbiz.currentIndex = -1
-                return
+            } else {
+                if (cbiz.currentIndex === targetIndex)
+                    cbiz.currentIndex = -1
+                cbiz.currentIndex = targetIndex
             }
-            if (cbiz.currentIndex === targetIndex)
-                cbiz.currentIndex = -1
-            cbiz.currentIndex = targetIndex
+            dlg.appliedDpr = sldpr.value
+            dlg.appliedIconIndex = cbiz.currentIndex
+            dlg.appliedSnapshotReady = true
         }
     }
 

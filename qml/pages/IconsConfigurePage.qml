@@ -17,6 +17,12 @@ Dialog {
     property bool dynClockSelected: false
     property bool dynCalendarSelected: false
 
+    property bool appliedStock: false
+    property int appliedIndex: -1
+    property bool appliedOverlay: false
+    property bool appliedDynClock: false
+    property bool appliedDynCalendar: false
+
     readonly property ThemePackModel packModel: themeWork.themepackmodel
     readonly property int effectiveIndex: {
         if (stockSelected)
@@ -44,7 +50,28 @@ Dialog {
                                                && packModel.hasDynCalendar(effectiveIndex))
     readonly property bool wantsIconOps: hasIconApply || overlaySelected
 
-    canAccept: stockSelected || (effectiveIndex >= 0 && wantsIconOps)
+    readonly property bool dirty: {
+        if (stockSelected !== appliedStock)
+            return true
+        if (stockSelected) {
+            if (hasDynClock && dynClockSelected !== appliedDynClock)
+                return true
+            if (hasDynCalendar && dynCalendarSelected !== appliedDynCalendar)
+                return true
+            return false
+        }
+        if (effectiveIndex !== appliedIndex)
+            return true
+        if (hasIconOverlay && overlaySelected !== appliedOverlay)
+            return true
+        if (hasDynClock && dynClockSelected !== appliedDynClock)
+            return true
+        if (hasDynCalendar && dynCalendarSelected !== appliedDynCalendar)
+            return true
+        return false
+    }
+
+    canAccept: dirty && (stockSelected || (effectiveIndex >= 0 && wantsIconOps))
 
     ListModel { id: carouselModel }
 
@@ -125,6 +152,11 @@ Dialog {
             if (selectedIndex < 0 || !packModel.hasIcons(selectedIndex))
                 selectedIndex = themeWork.firstIconPackIndex()
         }
+        appliedStock = stockSelected
+        appliedIndex = stockSelected ? -1 : selectedIndex
+        appliedOverlay = overlaySelected
+        appliedDynClock = dynClockSelected
+        appliedDynCalendar = dynCalendarSelected
         scheduleCenterCarousel()
     }
 
