@@ -1,4 +1,3 @@
-import Nemo.Notifications 1.0
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Opal.SupportMe 1.0
@@ -12,10 +11,6 @@ ApplicationWindow
     id: app
 
     MuotoNotification { id: globalNotification }
-
-    function showNotification(summary, body) {
-        globalNotification.show(summary, body)
-    }
 
     function showProgressNotification(summary, body, progressValue) {
         globalNotification.updateProgress(summary, body, progressValue)
@@ -64,9 +59,8 @@ ApplicationWindow
     Component {
         id: welcomepage
         WelcomePage {}
-}
+    }
 
-    ThemePack { id: themepack }
     IconApplier {
         id: iconapplier
         // Preview only (IconPackPreview buildPreview). Icon apply/restore go
@@ -74,10 +68,6 @@ ApplicationWindow
     }
 
     property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
-
-    function showSupportDialog() {
-        askForSupport.show()
-    }
 
     initialPage: settings.wizardDone ? mainpage : welcomepage
     cover: Qt.resolvedUrl("cover/CoverPage.qml")

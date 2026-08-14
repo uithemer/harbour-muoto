@@ -1,13 +1,10 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.muoto 1.0
 import "../components"
 
 Page
 {
     property bool vDon: false
-
-    ThemePack { id: themepack }
 
     SilicaFlickable
     {

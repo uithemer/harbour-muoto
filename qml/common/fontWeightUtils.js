@@ -7,14 +7,6 @@ function fontBasenameFromFilename(filename) {
     return filename.replace(/\.(ttf|ttc)$/i, "")
 }
 
-function fontTtfPath(packName, basename) {
-    if (packName === "default")
-        return "file:///usr/share/fonts/sail-sans-pro/SailSansPro-Light.ttf"
-    if (!packName || !basename)
-        return ""
-    return "/usr/share/" + packName + "/font/" + basename + ".ttf"
-}
-
 function fontWeightFromBasename(name) {
     if (!name || name === "")
         return QtQuick.Font.Normal

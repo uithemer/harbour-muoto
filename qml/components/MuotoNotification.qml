@@ -8,14 +8,6 @@ Notification {
     appIcon: "/usr/share/icons/hicolor/86x86/apps/harbour-muoto.png"
     category: "x-nemo.muoto"
 
-    function show(title, message) {
-        summary = title
-        body = message
-        progress = undefined
-        isTransient = false
-        publish()
-    }
-
     function toast(message) {
         summary = ""
         body = message

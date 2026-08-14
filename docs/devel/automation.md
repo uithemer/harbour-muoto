@@ -112,12 +112,12 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 | Apply pack with overlay | Backup under `backup/folder-icons/<z>/icon-launcher-folder-01.png`; live silica PNG checksum changes when pack/overlay has assets |
 | RestoreIcons | Live checksum restored; `backup/folder-icons` removed |
 
-**T-23 dynamic icons (Confirm enable/disable contract)**
+**T-23 dynamic icons (enable/disable contract)**
 
 | Check | Expect |
 | ----- | ------ |
 | Pack has `dynclock/` and/or `dyncal/` | Otherwise T-23 soft-skips (no fail) |
-| dconf enable for present features (Confirm “selected”) | Flags match; clock/calendar `Icon=` under `launcher-icons/` when that feature is enabled |
+| dconf enable for present features (Icons / Dynamic icons Apply) | Flags match; clock/calendar `Icon=` under `launcher-icons/` when that feature is enabled |
 | Both dyn flags false | Flags false; clock/calendar `Icon=` not muoto dyn redirects |
 | RestoreIcons + dyn flags off | `activeIconPack=default`, both dyn dconf keys **false** (UI usable for stock; live icons not applied until toggled) |
 
