@@ -8,6 +8,8 @@ function fontBasenameFromFilename(filename) {
 }
 
 function fontTtfPath(packName, basename) {
+    if (packName === "default")
+        return "file:///usr/share/fonts/sail-sans-pro/SailSansPro-Light.ttf"
     if (!packName || !basename)
         return ""
     return "/usr/share/" + packName + "/font/" + basename + ".ttf"

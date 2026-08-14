@@ -316,6 +316,10 @@
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomescreenRestartSection</name>
@@ -381,6 +385,10 @@
         <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LicenseListPart</name>
@@ -402,10 +410,6 @@
     <message>
         <source>Download more themes</source>
         <translation type="unfinished">Ladda ner fler teman</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation type="unfinished">Återställ tema</translation>
     </message>
     <message>
         <source>Muoto</source>

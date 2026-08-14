@@ -15,22 +15,39 @@ Page {
     function refreshHomeIconPreview() {
         if (settings.isRunning)
             return
-        if (settings.hasActiveIconPack())
-            iconapplier.buildPreview(settings.activeIconPack)
+        iconapplier.buildPreview(settings.hasActiveIconPack()
+                                 ? settings.activeIconPack : "default")
     }
 
-    Component.onCompleted: refreshHomeIconPreview()
+    function refreshHomeFontPreview() {
+        if (settings.hasActiveFontPack() || mainpage.status !== PageStatus.Active) {
+            homeFontPreview.source = ""
+            return
+        }
+        homeFontPreview.setSource(Qt.resolvedUrl("../components/FontPreview.qml"), {
+            "compact": true,
+            "packName": "default",
+            "selectedFont": "Light"
+        })
+    }
+
+    Component.onCompleted: {
+        refreshHomeIconPreview()
+        refreshHomeFontPreview()
+    }
 
     onStatusChanged: {
         if (status === PageStatus.Active) {
             app.coverMode = "mainPage"
             refreshHomeIconPreview()
         }
+        refreshHomeFontPreview()
     }
 
     Connections {
         target: settings
         onActiveIconPackChanged: mainpage.refreshHomeIconPreview()
+        onActiveFontPackChanged: mainpage.refreshHomeFontPreview()
         onIsRunningChanged: {
             if (!settings.isRunning)
                 mainpage.refreshHomeIconPreview()
@@ -60,20 +77,6 @@ Page {
                 text: qsTr("Download more themes")
                 onClicked: openStore.call('openPage',
                     ['SearchPage', { initialSearch: 'themepack' }])
-            }
-
-            MenuItem {
-                text: qsTr("Restore theme")
-                onClicked: {
-                    var dlgrestore = pageStack.push(
-                        Qt.resolvedUrl("RestorePage.qml"),
-                        { "settings": settings })
-
-                    dlgrestore.accepted.connect(function() {
-                        themeWork.beginRestore(dlgrestore.restoreIcons,
-                                               dlgrestore.restoreFonts)
-                    })
-                }
             }
         }
 
@@ -106,20 +109,9 @@ Page {
 
                     IconPackPreview {
                         width: parent.width
-                        visible: settings.hasActiveIconPack()
                         packName: settings.hasActiveIconPack()
-                                    ? settings.activeIconPack : ""
+                                    ? settings.activeIconPack : "default"
                         previewHeight: Math.min(width, Theme.itemSizeLarge * 1.5)
-                    }
-
-                    Image {
-                        anchors.centerIn: parent
-                        width: Theme.iconSizeLarge
-                        height: width
-                        visible: !settings.hasActiveIconPack()
-                        source: app.isLightTheme
-                                ? "../../images/icon-light.png"
-                                : "../../images/icon-dark.png"
                     }
                 }
 
@@ -140,17 +132,18 @@ Page {
                         height: Math.min(width, Theme.itemSizeLarge * 1.5)
                         visible: settings.hasActiveFontPack()
                         text: qsTr("Aa Bb Cc 123")
+                        font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.WordWrap
                     }
 
-                    Label {
-                        anchors.centerIn: parent
+                    Loader {
+                        id: homeFontPreview
+                        width: parent.width
+                        height: Math.min(width, Theme.itemSizeLarge * 1.5)
                         visible: !settings.hasActiveFontPack()
-                        color: Theme.secondaryColor
-                        text: qsTr("Stock")
                     }
                 }
 

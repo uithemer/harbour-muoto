@@ -64,6 +64,7 @@ OTHER_FILES += \
     $$ROOT/qml/components/ThemeWork.qml \
     $$ROOT/qml/components/IconPackPreview.qml \
     $$ROOT/qml/components/IconPackCarouselTile.qml \
+    $$ROOT/qml/components/StockLauncherIcons.qml \
     $$ROOT/qml/components/FontPackCarouselTile.qml \
     $$ROOT/qml/components/FontPreview.qml \
     $$ROOT/qml/components/FontWeightSwitch.qml \

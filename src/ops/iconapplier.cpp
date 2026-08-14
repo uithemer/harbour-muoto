@@ -17,10 +17,31 @@ void IconApplier::buildPreview(const QString& packName)
         return;
     }
 
-    const QStringList sample = ImageUtil::samplePackIcons(IconPaths::packDir(packName), 8);
+    const QStringList sample = (packName == QLatin1String("default"))
+            ? ImageUtil::sampleStockLauncherIcons(8)
+            : ImageUtil::samplePackIcons(IconPaths::packDir(packName), 8);
     QImage img = ImageUtil::montage(sample, 4, 2);
     const bool ok = !img.isNull();
 
     IconPreviewCache::instance().put(packName, ok ? img : QImage());
     emit previewReady(packName, ok);
+}
+
+void IconApplier::buildStockFontPreview(int width, int headingPx, int bodyPx,
+                                        const QColor& color)
+{
+    static const QString kKey = QStringLiteral("stock-font");
+    static const QString kTtf =
+            QStringLiteral("/usr/share/fonts/sail-sans-pro/SailSansPro-Light.ttf");
+
+    const QImage img = ImageUtil::previewTtfText(
+                kTtf,
+                QStringLiteral("Lorem ipsum"),
+                QStringLiteral("Dolor sit amet, consectetur adipiscing elit. "
+                               "Maecenas imperdiet finibus venenatis. "
+                               "Suspendisse mollis urna sed luctus sodales."),
+                width, headingPx, bodyPx, color);
+    const bool ok = !img.isNull();
+    IconPreviewCache::instance().put(kKey, ok ? img : QImage());
+    emit stockFontPreviewReady(ok);
 }

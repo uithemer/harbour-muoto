@@ -10,12 +10,14 @@ Item {
     property bool hasNative: false
     property bool hasApk: false
     property bool hasJolla: false
+    property bool isDefault: false
+    property url stockThumbUrl: ""
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
 
     readonly property string thumbFolder: {
-        if (!packName || packName === "")
+        if (isDefault || !packName || packName === "")
             return ""
         var rootPath = "file:///usr/share/" + packName
         if (hasNative)
@@ -54,7 +56,9 @@ Item {
                 asynchronous: true
                 cache: false
                 fillMode: Image.PreserveAspectFit
-                source: thumbs.count > 0 ? thumbs.get(0, "fileURL") : ""
+                source: root.isDefault
+                        ? root.stockThumbUrl
+                        : (thumbs.count > 0 ? thumbs.get(0, "fileURL") : "")
             }
         }
 

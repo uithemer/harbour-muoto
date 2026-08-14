@@ -12,10 +12,13 @@ Dialog {
     property Settings settings
 
     property int selectedIndex: -1
+    property bool stockSelected: false
     property string selectedFont: ""
 
     readonly property ThemePackModel packModel: themeWork.themepackmodel
     readonly property int effectiveIndex: {
+        if (stockSelected)
+            return -1
         if (selectedIndex >= 0)
             return selectedIndex
         var idx = themeWork.indexForPackName(settings.activeFontPack)
@@ -32,7 +35,7 @@ Dialog {
         || (hasFont && selectedFont !== "")
         || (!hasFont && hasFontNonLatin)
 
-    canAccept: effectiveIndex >= 0 && fontsApplyOk
+    canAccept: stockSelected || (effectiveIndex >= 0 && fontsApplyOk)
 
     ListModel { id: carouselModel }
 
@@ -121,6 +124,13 @@ Dialog {
 
     function rebuildCarousel() {
         carouselModel.clear()
+        carouselModel.append({
+            packIndex: -1,
+            packName: "",
+            packDisplayName: qsTr("Default"),
+            sampleFontBasename: "",
+            isDefault: true
+        })
         for (var i = 0; i < packModel.rowCount(); ++i) {
             if (!packModel.hasFont(i) && !packModel.hasFontNonLatin(i))
                 continue
@@ -128,7 +138,8 @@ Dialog {
                 packIndex: i,
                 packName: packModel.packName(i),
                 packDisplayName: packModel.packDisplayName(i),
-                sampleFontBasename: sampleBasenameForPack(i)
+                sampleFontBasename: sampleBasenameForPack(i),
+                isDefault: false
             })
         }
         scheduleCenterCarousel()
@@ -136,10 +147,15 @@ Dialog {
 
     function syncFromSettings() {
         cacheActiveFontWeightFromConf()
-        selectedIndex = themeWork.indexForPackName(settings.activeFontPack)
-        if (selectedIndex < 0 || !(packModel.hasFont(selectedIndex)
-                                   || packModel.hasFontNonLatin(selectedIndex)))
+        stockSelected = !settings.hasActiveFontPack()
+        if (stockSelected) {
             selectedIndex = -1
+        } else {
+            selectedIndex = themeWork.indexForPackName(settings.activeFontPack)
+            if (selectedIndex < 0 || !(packModel.hasFont(selectedIndex)
+                                       || packModel.hasFontNonLatin(selectedIndex)))
+                selectedIndex = -1
+        }
         selectedFont = resolveSelectedWeight()
         scheduleCenterCarousel()
     }
@@ -170,6 +186,7 @@ Dialog {
 
     onPackNameChanged: schedulePreviewReload()
     onSelectedFontChanged: schedulePreviewReload()
+    onStockSelectedChanged: schedulePreviewReload()
 
     function schedulePreviewReload() {
         previewReloadTimer.unloadFirst = true
@@ -188,6 +205,13 @@ Dialog {
                 return
             }
             unloadFirst = true
+            if (dlg.stockSelected) {
+                previewLoader.setSource(Qt.resolvedUrl("../components/FontPreview.qml"), {
+                    "packName": "default",
+                    "selectedFont": "Light"
+                })
+                return
+            }
             if (!dlg.hasFont || dlg.packName === "" || dlg.selectedFont === "")
                 return
             previewLoader.setSource(Qt.resolvedUrl("../components/FontPreview.qml"), {
@@ -199,6 +223,10 @@ Dialog {
 
     onAccepted: {
         settings.homeRefresh = restartSection.homeRefreshSwitch.checked
+        if (stockSelected) {
+            themeWork.beginRestore(false, true)
+            return
+        }
         themeWork.applyFontOnly(effectiveIndex, selectedFont, packName)
     }
 
@@ -233,13 +261,15 @@ Dialog {
             }
             
             Item {
+                id: fontPreviewHost
                 width: parent.width
                 height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
 
                 Loader {
                     id: previewLoader
                     anchors.fill: parent
-                    visible: hasFont && selectedFont !== ""
+                    visible: dlg.stockSelected
+                             || (hasFont && selectedFont !== "")
                 }
 
                 Label {
@@ -248,7 +278,7 @@ Dialog {
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.Wrap
                     color: Theme.secondaryColor
-                    visible: !hasFont && hasFontNonLatin
+                    visible: !dlg.stockSelected && !hasFont && hasFontNonLatin
                     text: qsTr("This pack provides non-Latin fonts only.")
                 }
 
@@ -258,7 +288,7 @@ Dialog {
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.Wrap
                     color: Theme.secondaryColor
-                    visible: hasFont && selectedFont === ""
+                    visible: !dlg.stockSelected && hasFont && selectedFont === ""
                     text: qsTr("Choose a font weight to preview")
                 }
             }
@@ -278,11 +308,20 @@ Dialog {
                 delegate: BackgroundItem {
                     width: carousel.height * 0.72
                     height: carousel.height
-                    highlighted: model.packIndex === dlg.effectiveIndex
+                    highlighted: model.isDefault
+                                 ? dlg.stockSelected
+                                 : (!dlg.stockSelected && model.packIndex === dlg.effectiveIndex)
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: dlg.selectedIndex = model.packIndex
+                        onClicked: {
+                            if (model.isDefault) {
+                                dlg.stockSelected = true
+                            } else {
+                                dlg.stockSelected = false
+                                dlg.selectedIndex = model.packIndex
+                            }
+                        }
                     }
 
                     FontPackCarouselTile {
@@ -297,7 +336,7 @@ Dialog {
 
             SectionHeader {
                 text: qsTr("Font weight")
-                visible: hasFont
+                visible: !stockSelected && hasFont
             }
 
             Repeater {
@@ -306,6 +345,7 @@ Dialog {
 
                 delegate: FontWeightSwitch {
                     width: parent.width
+                    visible: !dlg.stockSelected
                     automaticCheck: false
                     enabled: hasFont
                     packName: dlg.packName

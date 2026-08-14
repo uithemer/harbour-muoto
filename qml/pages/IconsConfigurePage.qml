@@ -12,12 +12,15 @@ Dialog {
     property Settings settings
 
     property int selectedIndex: -1
+    property bool stockSelected: false
     property bool overlaySelected: false
     property bool dynClockSelected: false
     property bool dynCalendarSelected: false
 
     readonly property ThemePackModel packModel: themeWork.themepackmodel
     readonly property int effectiveIndex: {
+        if (stockSelected)
+            return -1
         if (selectedIndex >= 0)
             return selectedIndex
         var idx = themeWork.indexForPackName(settings.activeIconPack)
@@ -39,9 +42,11 @@ Dialog {
                                            && packModel.hasDynCalendar(effectiveIndex)
     readonly property bool wantsIconOps: hasIconApply || overlaySelected
 
-    canAccept: effectiveIndex >= 0 && wantsIconOps
+    canAccept: stockSelected || (effectiveIndex >= 0 && wantsIconOps)
 
     ListModel { id: carouselModel }
+
+    StockLauncherIcons { id: stockIcons }
 
     function carouselRowForPack(packIndex) {
         for (var i = 0; i < carouselModel.count; ++i) {
@@ -81,6 +86,15 @@ Dialog {
 
     function rebuildCarousel() {
         carouselModel.clear()
+        carouselModel.append({
+            packIndex: -1,
+            packName: "",
+            packDisplayName: qsTr("Default"),
+            hasNative: false,
+            hasApk: false,
+            hasJolla: false,
+            isDefault: true
+        })
         for (var i = 0; i < packModel.rowCount(); ++i) {
             if (!packModel.hasIcons(i))
                 continue
@@ -90,7 +104,8 @@ Dialog {
                 packDisplayName: packModel.packDisplayName(i),
                 hasNative: packModel.hasNative(i),
                 hasApk: packModel.hasApk(i),
-                hasJolla: packModel.hasJolla(i)
+                hasJolla: packModel.hasJolla(i),
+                isDefault: false
             })
         }
         scheduleCenterCarousel()
@@ -100,9 +115,14 @@ Dialog {
         overlaySelected = settings.iconOverlay
         dynClockSelected = settings.dynamicClockEnabled
         dynCalendarSelected = settings.dynamicCalendarEnabled
-        selectedIndex = themeWork.indexForPackName(settings.activeIconPack)
-        if (selectedIndex < 0 || !packModel.hasIcons(selectedIndex))
-            selectedIndex = themeWork.firstIconPackIndex()
+        stockSelected = !settings.hasActiveIconPack()
+        if (stockSelected) {
+            selectedIndex = -1
+        } else {
+            selectedIndex = themeWork.indexForPackName(settings.activeIconPack)
+            if (selectedIndex < 0 || !packModel.hasIcons(selectedIndex))
+                selectedIndex = themeWork.firstIconPackIndex()
+        }
         scheduleCenterCarousel()
     }
 
@@ -124,17 +144,24 @@ Dialog {
     }
 
     onEffectiveIndexChanged: {
-        if (!hasIconOverlay)
-            overlaySelected = false
-        else if (themeWork.indexForPackName(settings.activeIconPack) === effectiveIndex)
-            overlaySelected = settings.iconOverlay
-        else
-            overlaySelected = hasIconApply
+        if (!stockSelected) {
+            if (!hasIconOverlay)
+                overlaySelected = false
+            else if (themeWork.indexForPackName(settings.activeIconPack) === effectiveIndex)
+                overlaySelected = settings.iconOverlay
+            else
+                overlaySelected = hasIconApply
+        }
         scheduleCenterCarousel()
     }
 
     onAccepted: {
         settings.homeRefresh = restartSection.homeRefreshSwitch.checked
+        if (stockSelected) {
+            themeWork.beginRestore(true, false)
+            return
+        }
+
         if (hasDynClock)
             settings.dynamicClockEnabled = dynClockSelected
         if (hasDynCalendar)
@@ -180,7 +207,7 @@ Dialog {
 
             IconPackPreview {
                 width: parent.width
-                packName: dlg.packName
+                packName: dlg.stockSelected ? "default" : dlg.packName
                 previewHeight: Math.round(width / 2)
                 previewMargins: Theme.paddingLarge * 2
             }
@@ -200,11 +227,20 @@ Dialog {
                 delegate: BackgroundItem {
                     width: carousel.height * 0.72
                     height: carousel.height
-                    highlighted: model.packIndex === dlg.effectiveIndex
+                    highlighted: model.isDefault
+                                 ? dlg.stockSelected
+                                 : (!dlg.stockSelected && model.packIndex === dlg.effectiveIndex)
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: dlg.selectedIndex = model.packIndex
+                        onClicked: {
+                            if (model.isDefault) {
+                                dlg.stockSelected = true
+                            } else {
+                                dlg.stockSelected = false
+                                dlg.selectedIndex = model.packIndex
+                            }
+                        }
                     }
 
                     IconPackCarouselTile {
@@ -215,20 +251,23 @@ Dialog {
                         hasNative: model.hasNative
                         hasApk: model.hasApk
                         hasJolla: model.hasJolla
+                        isDefault: model.isDefault
+                        stockThumbUrl: stockIcons.count > 0
+                                       ? stockIcons.get(0, "fileURL") : ""
                     }
                 }
             }
 
             SectionHeader {
                 text: qsTr("Options")
-                visible: hasIconOverlay || hasDynClock || hasDynCalendar
+                visible: !stockSelected && (hasIconOverlay || hasDynClock || hasDynCalendar)
             }
 
             IconTextSwitch {
                 automaticCheck: true
                 text: qsTr("Style missing app icons")
                 description: qsTr("Uses this theme's look for apps that don't have a custom icon in the pack.")
-                visible: hasIconOverlay
+                visible: !stockSelected && hasIconOverlay
                 checked: overlaySelected
                 enabled: hasIconOverlay
                 onCheckedChanged: overlaySelected = checked
@@ -238,7 +277,7 @@ Dialog {
                 automaticCheck: true
                 text: qsTr("Dynamic clock icon")
                 description: qsTr("Show the current time on the Clock icon, in this theme's style.")
-                visible: hasDynClock
+                visible: !stockSelected && hasDynClock
                 checked: dynClockSelected
                 onCheckedChanged: dynClockSelected = checked
             }
@@ -247,7 +286,7 @@ Dialog {
                 automaticCheck: true
                 text: qsTr("Dynamic calendar icon")
                 description: qsTr("Show today's date on the Calendar icon, in this theme's style.")
-                visible: hasDynCalendar
+                visible: !stockSelected && hasDynCalendar
                 checked: dynCalendarSelected
                 onCheckedChanged: dynCalendarSelected = checked
             }

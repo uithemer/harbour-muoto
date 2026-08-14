@@ -5,6 +5,7 @@
 #include <QSize>
 #include <QString>
 #include <QStringList>
+#include <QColor>
 
 // Qt-based image helpers for ConfirmPage / Cover pack previews.
 namespace ImageUtil
@@ -20,6 +21,19 @@ namespace ImageUtil
     // Picks up to `count` PNGs without listing whole trees. Prefers native/
     // (skips jolla/ if native had any), then apk/, then overlay/.
     QStringList samplePackIcons(const QString& packDir, int count = 8);
+
+    // First existing silica z*/icons/icon-launcher-*.png (stop after count).
+    QStringList sampleStockLauncherIcons(int count = 8);
+
+    // Rasterize heading+body with QRawFont (does not register the TTF in
+    // QFontDatabase, so Theme.fontFamily is unchanged).
+    QImage previewTtfText(const QString& ttfPath,
+                          const QString& heading,
+                          const QString& body,
+                          int width,
+                          int headingPx,
+                          int bodyPx,
+                          const QColor& color);
 }
 
 #endif // IMAGEUTIL_H
