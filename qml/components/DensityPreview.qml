@@ -6,9 +6,11 @@ Item {
 
     property int iconPx: Theme.iconSizeLauncher
     property real fontScale: 1
+    // Pixel ratio used to pick the silica z* Settings asset (mosaic: Theme;
+    // density dialog: pending slider value).
+    property real pixelRatio: Theme.pixelRatio
 
-    readonly property url settingsIconUrl: {
-        var pr = Theme.pixelRatio
+    function settingsIconUrlForRatio(pr) {
         var z = "z1.0"
         if (pr >= 2.5)
             z = "z2.5"
@@ -23,6 +25,8 @@ Item {
         return "file:///usr/share/themes/sailfish-default/silica/" + z
                + "/icons/icon-launcher-settings.png"
     }
+
+    readonly property url settingsIconUrl: settingsIconUrlForRatio(pixelRatio)
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight

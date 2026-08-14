@@ -62,10 +62,10 @@ Dialog {
     }
 
     readonly property int previewIconPx: {
-        var px = iconSizePx()
-        if (px > 0)
-            return px
-        return Theme.iconSizeLauncher
+        var base = iconSizePx()
+        if (base <= 0)
+            base = Theme.iconSizeLauncher
+        return Math.max(1, Math.round(base * previewFontScale))
     }
     readonly property real previewFontScale: {
         var pr = Theme.pixelRatio
@@ -213,32 +213,16 @@ Dialog {
                         width: parent.width
                         height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
 
-                        StockLauncherIcons { id: stockIcons }
-
-                        Column {
-                            anchors.centerIn: parent
-                            spacing: Theme.paddingSmall
-                            width: parent.width
-
-                            Image {
-                                width: dlg.previewIconPx
-                                height: width
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                asynchronous: true
-                                cache: true
-                                fillMode: Image.PreserveAspectFit
-                                source: stockIcons.count > 0
-                                        ? stockIcons.get(0, "fileURL")
-                                        : "image://theme/icon-launcher-application"
+                        DensityPreview {
+                            anchors.fill: parent
+                            iconPx: {
+                                var cap = densityPreviewHost.height * 0.55
+                                if (cap > 1)
+                                    return Math.min(dlg.previewIconPx, Math.round(cap))
+                                return dlg.previewIconPx
                             }
-
-                            Label {
-                                width: parent.width
-                                horizontalAlignment: Text.AlignHCenter
-                                text: qsTr("Aa Bb")
-                                color: Theme.primaryColor
-                                font.pixelSize: Theme.fontSizeMedium * dlg.previewFontScale
-                            }
+                            fontScale: dlg.previewFontScale
+                            pixelRatio: sldpr.value
                         }
                     }
 

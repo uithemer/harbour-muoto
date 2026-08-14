@@ -137,10 +137,6 @@
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Aa Bb</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>DensityPreview</name>
