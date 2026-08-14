@@ -1,6 +1,7 @@
 ﻿import Nemo.DBus 2.0
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.muoto 1.0
 import "../components"
 
 Page {
@@ -21,8 +22,10 @@ Page {
     Component.onCompleted: refreshHomeIconPreview()
 
     onStatusChanged: {
-        if (status === PageStatus.Active)
+        if (status === PageStatus.Active) {
             refreshHomeIconPreview()
+            MceLpm.refresh()
+        }
     }
 
     Connections {
@@ -177,6 +180,21 @@ Page {
                         clockLive: settings.dynamicClockEnabled
                         calendarLive: settings.dynamicCalendarEnabled
                         iconPx: Theme.iconSizeMedium
+                    }
+                }
+
+                HomeTile {
+                    width: (parent.width - (parent.columns - 1) * parent.spacing)
+                           / parent.columns
+                    title: qsTr("Low-power mode")
+                    subtitle: !MceLpm.available
+                              ? qsTr("Not available")
+                              : (MceLpm.enabled ? qsTr("On") : qsTr("Off"))
+                    onClicked: pageStack.push(Qt.resolvedUrl("LowPowerPage.qml"))
+
+                    LowPowerPreview {
+                        anchors.fill: parent
+                        enabled: MceLpm.enabled
                     }
                 }
             }

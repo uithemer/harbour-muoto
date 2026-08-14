@@ -337,6 +337,41 @@
     </message>
 </context>
 <context>
+    <name>LowPowerPage</name>
+    <message>
+        <source>Could not update low-power mode settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Anuluj</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low-power mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically show time and status information when taking the device out of pocket.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Also wakes when you hover over the sensor, and keeps the proximity sensor ready so glance works reliably.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Also known as Sneak Peek. Shows when the device is uncovered; double tap to wake fully.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low-power mode settings are not available on this device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainPage</name>
     <message>
         <source>Display density</source>
@@ -380,6 +415,10 @@
     </message>
     <message>
         <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low-power mode</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

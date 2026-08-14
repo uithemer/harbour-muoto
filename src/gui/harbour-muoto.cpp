@@ -13,6 +13,7 @@
 #include "fontcarouselmodel.h"
 #include "iconapplier.h"
 #include "helperclient.h"
+#include "mcelpmsettings.h"
 #include "iconpreviewprovider.h"
 #include "fontsampleprovider.h"
 #include "launcherimageprovider.h"
@@ -39,6 +40,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<IconApplier>("harbour.muoto", 1, 0, "IconApplier");
     qmlRegisterSingletonType<HelperClient>("harbour.muoto", 1, 0, "Helper",
                                            &HelperClient::qmlSingleton);
+    qmlRegisterSingletonType<MceLpmSettings>("harbour.muoto", 1, 0, "MceLpm",
+                                             &MceLpmSettings::qmlSingleton);
 
     // image://muoto/preview/<packName>?t=<ts> serves the in-memory
     // icon pack preview built by IconApplier::buildPreview. Engine

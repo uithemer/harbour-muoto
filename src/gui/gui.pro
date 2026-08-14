@@ -42,6 +42,7 @@ HEADERS += \
     $$PWD/iconpreviewprovider.h \
     $$PWD/fontsampleprovider.h \
     $$PWD/helperclient.h \
+    $$PWD/mcelpmsettings.h \
     $$PWD/launcherimageprovider.h
 
 SOURCES += \
@@ -54,6 +55,7 @@ SOURCES += \
     $$PWD/iconpreviewprovider.cpp \
     $$PWD/fontsampleprovider.cpp \
     $$PWD/helperclient.cpp \
+    $$PWD/mcelpmsettings.cpp \
     $$PWD/launcherimageprovider.cpp
 
 ROOT = $$PWD/../..
@@ -69,6 +71,7 @@ OTHER_FILES += \
     $$ROOT/qml/components/IconPackPreview.qml \
     $$ROOT/qml/components/DensityPreview.qml \
     $$ROOT/qml/components/DynIconsPreview.qml \
+    $$ROOT/qml/components/LowPowerPreview.qml \
     $$ROOT/qml/components/IconPackCarouselTile.qml \
     $$ROOT/qml/components/StockLauncherIcons.qml \
     $$ROOT/qml/components/FontPackCarouselTile.qml \
@@ -90,6 +93,7 @@ OTHER_FILES += \
     $$ROOT/qml/pages/FontsConfigurePage.qml \
     $$ROOT/qml/pages/DensityPage.qml \
     $$ROOT/qml/pages/DynamicIconsPage.qml \
+    $$ROOT/qml/pages/LowPowerPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
     $$ROOT/rpm/* \
