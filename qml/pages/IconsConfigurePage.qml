@@ -232,12 +232,23 @@ Dialog {
                 acceptText: qsTr("Apply")
             }
 
-            IconPackPreview {
+            Grid {
                 width: parent.width
-                packName: dlg.stockSelected ? "default" : dlg.packName
-                previewHeight: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
-                previewMargins: Theme.paddingLarge * 2
-            }
+                columns: isLandscape ? 2 : 1
+
+                Column {
+                    width: isLandscape ? parent.width / 2 : parent.width
+
+                    IconPackPreview {
+                        width: parent.width
+                        packName: dlg.stockSelected ? "default" : dlg.packName
+                        previewHeight: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
+                        previewMargins: Theme.paddingLarge * 2
+                    }
+                }
+
+                Column {
+                    width: isLandscape ? parent.width / 2 : parent.width
 
             SectionHeader { text: qsTr("Icon packs") }
 
@@ -352,7 +363,9 @@ Dialog {
             }
 
             LabelSpacer { }
-            
+                }
+            }
+
             HomescreenRestartSection {
                 id: restartSection
                 settings: dlg.settings

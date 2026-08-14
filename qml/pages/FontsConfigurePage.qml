@@ -184,39 +184,50 @@ Dialog {
                 acceptText: qsTr("Apply")
             }
 
-            Item {
-                id: fontPreviewHost
+            Grid {
                 width: parent.width
-                height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
+                columns: isLandscape ? 2 : 1
 
-                FontPreview {
-                    anchors.fill: parent
-                    visible: dlg.stockSelected
-                             || (hasFont && selectedFont !== "")
-                    packName: dlg.stockSelected ? "default" : dlg.packName
-                    selectedFont: dlg.stockSelected ? "Light" : dlg.selectedFont
+                Column {
+                    width: isLandscape ? parent.width / 2 : parent.width
+
+                    Item {
+                        id: fontPreviewHost
+                        width: parent.width
+                        height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
+
+                        FontPreview {
+                            anchors.fill: parent
+                            visible: dlg.stockSelected
+                                     || (hasFont && selectedFont !== "")
+                            packName: dlg.stockSelected ? "default" : dlg.packName
+                            selectedFont: dlg.stockSelected ? "Light" : dlg.selectedFont
+                        }
+
+                        Label {
+                            anchors.centerIn: parent
+                            width: parent.width - Theme.paddingLarge * 2
+                            horizontalAlignment: Text.AlignHCenter
+                            wrapMode: Text.Wrap
+                            color: Theme.secondaryColor
+                            visible: !dlg.stockSelected && !hasFont && hasFontNonLatin
+                            text: qsTr("This pack provides non-Latin fonts only.")
+                        }
+
+                        Label {
+                            anchors.centerIn: parent
+                            width: parent.width - Theme.paddingLarge * 2
+                            horizontalAlignment: Text.AlignHCenter
+                            wrapMode: Text.Wrap
+                            color: Theme.secondaryColor
+                            visible: !dlg.stockSelected && hasFont && selectedFont === ""
+                            text: qsTr("Choose a font weight to preview")
+                        }
+                    }
                 }
 
-                Label {
-                    anchors.centerIn: parent
-                    width: parent.width - Theme.paddingLarge * 2
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.Wrap
-                    color: Theme.secondaryColor
-                    visible: !dlg.stockSelected && !hasFont && hasFontNonLatin
-                    text: qsTr("This pack provides non-Latin fonts only.")
-                }
-
-                Label {
-                    anchors.centerIn: parent
-                    width: parent.width - Theme.paddingLarge * 2
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.Wrap
-                    color: Theme.secondaryColor
-                    visible: !dlg.stockSelected && hasFont && selectedFont === ""
-                    text: qsTr("Choose a font weight to preview")
-                }
-            }
+                Column {
+                    width: isLandscape ? parent.width / 2 : parent.width
 
             SectionHeader { text: qsTr("Font packs") }
 
@@ -315,7 +326,9 @@ Dialog {
             }
 
             LabelSpacer { }
-            
+                }
+            }
+
             HomescreenRestartSection {
                 id: restartSection
                 settings: dlg.settings

@@ -201,46 +201,46 @@ Dialog {
                 acceptText: qsTr("Apply")
             }
 
-            Item {
-                id: densityPreviewHost
-                width: parent.width
-                height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
-
-                StockLauncherIcons { id: stockIcons }
-
-                Column {
-                    anchors.centerIn: parent
-                    spacing: Theme.paddingSmall
-                    width: parent.width
-
-                    Image {
-                        width: dlg.previewIconPx
-                        height: width
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        asynchronous: true
-                        cache: true
-                        fillMode: Image.PreserveAspectFit
-                        source: stockIcons.count > 0
-                                ? stockIcons.get(0, "fileURL")
-                                : "image://theme/icon-launcher-application"
-                    }
-
-                    Label {
-                        width: parent.width
-                        horizontalAlignment: Text.AlignHCenter
-                        text: qsTr("Aa Bb")
-                        color: Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeMedium * dlg.previewFontScale
-                    }
-                }
-            }
-
             Grid {
                 width: parent.width
                 columns: isLandscape ? 2 : 1
 
                 Column {
                     width: isLandscape ? parent.width / 2 : parent.width
+
+                    Item {
+                        id: densityPreviewHost
+                        width: parent.width
+                        height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
+
+                        StockLauncherIcons { id: stockIcons }
+
+                        Column {
+                            anchors.centerIn: parent
+                            spacing: Theme.paddingSmall
+                            width: parent.width
+
+                            Image {
+                                width: dlg.previewIconPx
+                                height: width
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                asynchronous: true
+                                cache: true
+                                fillMode: Image.PreserveAspectFit
+                                source: stockIcons.count > 0
+                                        ? stockIcons.get(0, "fileURL")
+                                        : "image://theme/icon-launcher-application"
+                            }
+
+                            Label {
+                                width: parent.width
+                                horizontalAlignment: Text.AlignHCenter
+                                text: qsTr("Aa Bb")
+                                color: Theme.primaryColor
+                                font.pixelSize: Theme.fontSizeMedium * dlg.previewFontScale
+                            }
+                        }
+                    }
 
                     SectionHeader { text: qsTr("Display scale") }
 
@@ -256,7 +256,11 @@ Dialog {
                         onPressAndHold: cancel()
                     }
 
-            LabelSpacer { }
+
+            Item {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
             
                     Button {
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -267,7 +271,12 @@ Dialog {
                         onClicked: dlg.restoreDefaultDpr()
                     }
 
-            LabelSpacer { }
+
+            Item {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
+
                     MuotoTextLabel {
                         text: qsTr("Controls how large Sailfish UI elements appear. "
                                    + "Lower = more on screen; higher = larger text and buttons.")

@@ -86,85 +86,98 @@ Dialog {
                 acceptText: qsTr("Apply")
             }
 
-            Item {
-                id: dynPreviewHost
+            Grid {
                 width: parent.width
-                height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
+                columns: isLandscape ? 2 : 1
 
-                Row {
-                    anchors.centerIn: parent
-                    spacing: Theme.paddingLarge
-                    visible: dlg.dynAvailable
+                Column {
+                    width: isLandscape ? parent.width / 2 : parent.width
 
-                    Image {
-                        width: Theme.iconSizeLauncher
-                        height: width
-                        fillMode: Image.PreserveAspectFit
-                        sourceSize.width: width
-                        sourceSize.height: height
-                        cache: false
-                        source: (dlg.clockSelected && dlg.hasActiveDynClock)
-                                ? ("image://muoto-launcher/dyn-clock/" + dlg.activePack
-                                   + "?t=" + dlg.previewTick)
-                                : (dlg.stockDyn
-                                   ? "image://theme/icon-launcher-clock"
-                                   : ("image://muoto-launcher/icon-pack/" + dlg.activePack
-                                      + "/icon-launcher-clock"))
-                    }
+                    Item {
+                        id: dynPreviewHost
+                        width: parent.width
+                        height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
 
-                    Image {
-                        width: Theme.iconSizeLauncher
-                        height: width
-                        fillMode: Image.PreserveAspectFit
-                        sourceSize.width: width
-                        sourceSize.height: height
-                        cache: false
-                        source: (dlg.calendarSelected && dlg.hasActiveDynCalendar)
-                                ? ("image://muoto-launcher/dyn-calendar/" + dlg.activePack
-                                   + "?t=" + dlg.previewTick)
-                                : (dlg.stockDyn
-                                   ? "image://theme/icon-launcher-calendar"
-                                   : ("image://muoto-launcher/icon-pack/" + dlg.activePack
-                                      + "/icon-launcher-calendar"))
+                        Row {
+                            anchors.centerIn: parent
+                            spacing: Theme.paddingLarge
+                            visible: dlg.dynAvailable
+
+                            Image {
+                                width: Theme.iconSizeLauncher
+                                height: width
+                                fillMode: Image.PreserveAspectFit
+                                sourceSize.width: width
+                                sourceSize.height: height
+                                cache: false
+                                source: (dlg.clockSelected && dlg.hasActiveDynClock)
+                                        ? ("image://muoto-launcher/dyn-clock/" + dlg.activePack
+                                           + "?t=" + dlg.previewTick)
+                                        : (dlg.stockDyn
+                                           ? "image://theme/icon-launcher-clock"
+                                           : ("image://muoto-launcher/icon-pack/" + dlg.activePack
+                                              + "/icon-launcher-clock"))
+                            }
+
+                            Image {
+                                width: Theme.iconSizeLauncher
+                                height: width
+                                fillMode: Image.PreserveAspectFit
+                                sourceSize.width: width
+                                sourceSize.height: height
+                                cache: false
+                                source: (dlg.calendarSelected && dlg.hasActiveDynCalendar)
+                                        ? ("image://muoto-launcher/dyn-calendar/" + dlg.activePack
+                                           + "?t=" + dlg.previewTick)
+                                        : (dlg.stockDyn
+                                           ? "image://theme/icon-launcher-calendar"
+                                           : ("image://muoto-launcher/icon-pack/" + dlg.activePack
+                                              + "/icon-launcher-calendar"))
+                            }
+                        }
+
+                        Label {
+                            anchors.centerIn: parent
+                            width: parent.width - Theme.paddingLarge * 2
+                            horizontalAlignment: Text.AlignHCenter
+                            wrapMode: Text.Wrap
+                            color: Theme.secondaryColor
+                            visible: !dlg.dynAvailable
+                            text: qsTr("This theme doesn't include live Clock or Calendar icons. Try another theme, or restore the default look.")
+                        }
                     }
                 }
 
-                Label {
-                    anchors.centerIn: parent
-                    width: parent.width - Theme.paddingLarge * 2
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.Wrap
-                    color: Theme.secondaryColor
-                    visible: !dlg.dynAvailable
-                    text: qsTr("This theme doesn't include live Clock or Calendar icons. Try another theme, or restore the default look.")
+                Column {
+                    width: isLandscape ? parent.width / 2 : parent.width
+
+                    MuotoTextLabel {
+                        visible: dlg.dynAvailable
+                        text: dlg.stockDyn
+                              ? qsTr("Show the current time and date on your Clock and Calendar icons.")
+                              : qsTr("Show the current time and date on your Clock and Calendar icons, using this theme's style.")
+                    }
+
+                    IconTextSwitch {
+                        automaticCheck: false
+                        text: qsTr("Dynamic clock icon")
+                        description: qsTr("Shows the current time on the Clock launcher icon.")
+                        visible: dlg.hasActiveDynClock
+                        checked: dlg.clockSelected
+                        enabled: dlg.hasActiveDynClock && !settings.isRunning
+                        onClicked: dlg.clockSelected = !dlg.clockSelected
+                    }
+
+                    IconTextSwitch {
+                        automaticCheck: false
+                        text: qsTr("Dynamic calendar icon")
+                        description: qsTr("Shows today's date on the Calendar launcher icon.")
+                        visible: dlg.hasActiveDynCalendar
+                        checked: dlg.calendarSelected
+                        enabled: dlg.hasActiveDynCalendar && !settings.isRunning
+                        onClicked: dlg.calendarSelected = !dlg.calendarSelected
+                    }
                 }
-            }
-
-            MuotoTextLabel {
-                visible: dlg.dynAvailable
-                text: dlg.stockDyn
-                      ? qsTr("Show the current time and date on your Clock and Calendar icons.")
-                      : qsTr("Show the current time and date on your Clock and Calendar icons, using this theme's style.")
-            }
-
-            IconTextSwitch {
-                automaticCheck: false
-                text: qsTr("Dynamic clock icon")
-                description: qsTr("Shows the current time on the Clock launcher icon.")
-                visible: dlg.hasActiveDynClock
-                checked: dlg.clockSelected
-                enabled: dlg.hasActiveDynClock && !settings.isRunning
-                onClicked: dlg.clockSelected = !dlg.clockSelected
-            }
-
-            IconTextSwitch {
-                automaticCheck: false
-                text: qsTr("Dynamic calendar icon")
-                description: qsTr("Shows today's date on the Calendar launcher icon.")
-                visible: dlg.hasActiveDynCalendar
-                checked: dlg.calendarSelected
-                enabled: dlg.hasActiveDynCalendar && !settings.isRunning
-                onClicked: dlg.calendarSelected = !dlg.calendarSelected
             }
 
             Item {
