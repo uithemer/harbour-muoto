@@ -140,20 +140,10 @@ Dialog
 
     Component.onCompleted: notifyCoverFontPreviewReady()
 
-    DialogHeader {
-        id: header
-        dialog: dlgconfirm
-        cancelText: qsTr("Cancel")
-        acceptText: qsTr("Apply")
-    }
-
     SilicaFlickable
     {
         id: flickable
-        anchors.top: header.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.fill: parent
         contentHeight: content.height
         enabled: !settings.isRunning
         opacity: settings.isRunning ? 0.2 : 1.0
@@ -164,6 +154,12 @@ Dialog
         {
             id: content
             width: parent.width
+
+            DialogHeader {
+                dialog: dlgconfirm
+                cancelText: qsTr("Cancel")
+                acceptText: qsTr("Apply")
+            }
 
             MuotoHeaderLabel { text: dlgconfirm.confirmheadername }
 

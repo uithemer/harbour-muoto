@@ -176,19 +176,9 @@ Dialog {
 
     BusyState { id: busyindicator }
 
-    DialogHeader {
-        id: header
-        dialog: dlg
-        cancelText: qsTr("Cancel")
-        acceptText: qsTr("Apply")
-    }
-
     SilicaFlickable {
         id: flickable
-        anchors.top: header.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.fill: parent
         contentHeight: content.height
         enabled: !settings.isRunning
         opacity: settings.isRunning ? 0.2 : 1.0
@@ -199,11 +189,11 @@ Dialog {
             id: content
             width: parent.width
 
-            Item {
-                width: parent.width
-                height: Theme.paddingLarge
+            DialogHeader {
+                dialog: dlg
+                cancelText: qsTr("Cancel")
+                acceptText: qsTr("Apply")
             }
-
 
             IconPackPreview {
                 width: parent.width

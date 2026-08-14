@@ -14,20 +14,10 @@ Dialog
 
     BusyState { id: busyindicator }
 
-    DialogHeader {
-        id: header
-        dialog: dlgrestore
-        acceptText: qsTr("Restore")
-        cancelText: qsTr("Cancel")
-    }
-
     SilicaFlickable
     {
         id: flickable
-        anchors.top: header.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.fill: parent
         contentHeight: column.height
         enabled: !settings.isRunning
         opacity: settings.isRunning ? 0.2 : 1.0
@@ -38,6 +28,12 @@ Dialog
         {
             id: column
             width: parent.width
+
+            DialogHeader {
+                dialog: dlgrestore
+                acceptText: qsTr("Restore")
+                cancelText: qsTr("Cancel")
+            }
 
             MuotoHeaderLabel { text: qsTr("Restore") }
 
