@@ -60,6 +60,11 @@ OTHER_FILES += \
     $$ROOT/qml/harbour-muoto.qml \
     $$ROOT/qml/common/Settings.qml \
     $$ROOT/qml/components/BusyState.qml \
+    $$ROOT/qml/components/HomeTile.qml \
+    $$ROOT/qml/components/ThemeWork.qml \
+    $$ROOT/qml/components/IconPackPreview.qml \
+    $$ROOT/qml/components/IconPackCarouselTile.qml \
+    $$ROOT/qml/components/FontPackCarouselTile.qml \
     $$ROOT/qml/components/FontPreview.qml \
     $$ROOT/qml/components/FontWeightSwitch.qml \
     $$ROOT/qml/components/LabelSpacer.qml \
@@ -82,6 +87,10 @@ OTHER_FILES += \
     $$ROOT/qml/components/ThemesTabContent.qml \
     $$ROOT/qml/components/MuotoSupportDialog.qml \
     $$ROOT/qml/pages/MainPage.qml \
+    $$ROOT/qml/pages/IconsConfigurePage.qml \
+    $$ROOT/qml/pages/FontsConfigurePage.qml \
+    $$ROOT/qml/pages/DensityPage.qml \
+    $$ROOT/qml/pages/DynamicIconsPage.qml \
     $$ROOT/qml/pages/RestorePage.qml \
     $$ROOT/qml/pages/RestoreDDPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \

@@ -1,69 +1,221 @@
-﻿import QtQuick 2.0
+﻿import Nemo.DBus 2.0
+import QtQuick 2.0
 import Sailfish.Silica 1.0
-import Opal.Tabs 1.0 as T
+import harbour.muoto 1.0
+import "../common/fontWeightUtils.js" as FontWeightUtils
 import "../components"
 
-Page
-{
+Page {
     id: mainpage
 
-    onStatusChanged: {
-        if (status === PageStatus.Active)
-            app.coverMode = "mainPage"
+    ThemeWork {
+        id: themeWork
+        reloadActive: mainpage.status === PageStatus.Active
     }
 
-    T.TabView {
-        id: tabs
+    function refreshHomeIconPreview() {
+        if (settings.hasActiveIconPack())
+            iconapplier.buildPreview(settings.activeIconPack)
+    }
+
+    Component.onCompleted: refreshHomeIconPreview()
+
+    onStatusChanged: {
+        if (status === PageStatus.Active) {
+            app.coverMode = "mainPage"
+            refreshHomeIconPreview()
+        }
+    }
+
+    Connections {
+        target: settings
+        onActiveIconPackChanged: mainpage.refreshHomeIconPreview()
+    }
+
+    SilicaFlickable {
+        id: flickable
         anchors.fill: parent
-        tabBarPosition: Qt.AlignTop
+        contentHeight: content.height
         enabled: !settings.isRunning
-        interactive: !settings.isRunning
+        opacity: settings.isRunning ? 0.2 : 1.0
 
-        T.Tab {
-            title: qsTr("Themes")
+        PullDownMenu {
+            flickable: flickable
+            enabled: !settings.isRunning
 
-            Component {
-                T.TabItem {
-                    flickable: themesTab
+            MuotoAboutMenuItem { }
 
-                    ThemesTabContent {
-                        id: themesTab
-                        anchors.fill: parent
-                        tabActive: tabs.currentIndex === 0
-                    }
+            MuotoRestartHomescreenMenuItem {
+                remorsePopup: themeWork.remorsePopup
+                themePack: themeWork.themePack
+            }
+
+            MenuItem {
+                visible: themeWork.themePack.hasStoremanInstalled()
+                text: qsTr("Download more themes")
+                onClicked: openStore.call('openPage',
+                    ['SearchPage', { initialSearch: 'themepack' }])
+            }
+
+            MenuItem {
+                text: qsTr("Restore theme")
+                onClicked: {
+                    var dlgrestore = pageStack.push(
+                        Qt.resolvedUrl("RestorePage.qml"),
+                        { "settings": settings })
+
+                    dlgrestore.accepted.connect(function() {
+                        themeWork.beginRestore(dlgrestore.restoreIcons,
+                                               dlgrestore.restoreFonts)
+                    })
                 }
             }
         }
 
-        T.Tab {
-            title: qsTr("Display density")
+        VerticalScrollDecorator { }
 
-            Component {
-                T.TabItem {
-                    flickable: densityTab
+        Column {
+            id: content
+            width: parent.width
 
-                    DensityTabContent {
-                        id: densityTab
-                        tabActive: tabs.currentIndex === 1
+            PageHeader {
+                title: qsTr("Muoto")
+            }
+
+            Grid {
+                width: parent.width
+                columns: isLandscape ? 4 : 2
+                spacing: Theme.paddingMedium
+
+                HomeTile {
+                    width: (parent.width - (parent.columns - 1) * parent.spacing)
+                           / parent.columns
+                    title: qsTr("Icons")
+                    subtitle: settings.hasActiveIconPack()
+                              ? themeWork.packLabel(settings.activeIconPack)
+                              : qsTr("Stock")
+                    onClicked: pageStack.push(Qt.resolvedUrl("IconsConfigurePage.qml"), {
+                        "themeWork": themeWork,
+                        "settings": settings
+                    })
+
+                    IconPackPreview {
+                        width: parent.width
+                        visible: settings.hasActiveIconPack()
+                        packName: settings.hasActiveIconPack()
+                                    ? settings.activeIconPack : ""
+                        previewHeight: Math.min(width, Theme.itemSizeLarge * 1.5)
+                    }
+
+                    Image {
+                        anchors.centerIn: parent
+                        width: Theme.iconSizeLarge
+                        height: width
+                        visible: !settings.hasActiveIconPack()
+                        source: app.isLightTheme
+                                ? "../../images/icon-light.png"
+                                : "../../images/icon-dark.png"
+                    }
+                }
+
+                HomeTile {
+                    width: (parent.width - (parent.columns - 1) * parent.spacing)
+                           / parent.columns
+                    title: qsTr("Fonts")
+                    subtitle: settings.hasActiveFontPack()
+                              ? themeWork.packLabel(settings.activeFontPack)
+                              : qsTr("Stock")
+                    onClicked: pageStack.push(Qt.resolvedUrl("FontsConfigurePage.qml"), {
+                        "themeWork": themeWork,
+                        "settings": settings
+                    })
+
+                    Loader {
+                        id: homeFontPreview
+                        width: parent.width
+                        height: Math.min(width, Theme.itemSizeLarge * 1.5)
+                        active: settings.hasActiveFontPack()
+
+                        sourceComponent: Component {
+                            Item {
+                                FontWeightModel { id: hw; packName: settings.activeFontPack }
+
+                                FontPreview {
+                                    anchors.fill: parent
+                                    compact: true
+                                    packName: settings.activeFontPack
+                                    selectedFont: hw.rowCount() > 0
+                                        ? FontWeightUtils.fontBasenameFromFilename(hw.firstWeight)
+                                        : ""
+                                }
+                            }
+                        }
+                    }
+
+                    Label {
+                        anchors.centerIn: parent
+                        visible: !settings.hasActiveFontPack()
+                        color: Theme.secondaryColor
+                        text: qsTr("Stock")
+                    }
+                }
+
+                HomeTile {
+                    width: (parent.width - (parent.columns - 1) * parent.spacing)
+                           / parent.columns
+                    title: qsTr("Display density")
+                    subtitle: qsTr("Tap to configure")
+                    onClicked: pageStack.push(Qt.resolvedUrl("DensityPage.qml"))
+
+                    Image {
+                        anchors.centerIn: parent
+                        anchors.bottomMargin: Theme.itemSizeLarge
+                        width: Theme.iconSizeLarge
+                        height: width
+                        source: "image://theme/icon-m-size"
+                    }
+                }
+
+                HomeTile {
+                    width: (parent.width - (parent.columns - 1) * parent.spacing)
+                           / parent.columns
+                    title: qsTr("Dynamic icons")
+                    subtitle: {
+                        var ap = settings.hasActiveIconPack()
+                                 ? settings.activeIconPack : "default"
+                        var stock = !settings.hasActiveIconPack()
+                        var clk = stock || themeWork.themepackmodel.hasDynClockForPack(ap)
+                        var cal = stock || themeWork.themepackmodel.hasDynCalendarForPack(ap)
+                        if (!clk && !cal)
+                            return qsTr("Not available")
+                        var on = (clk && settings.dynamicClockEnabled)
+                               || (cal && settings.dynamicCalendarEnabled)
+                        return on ? qsTr("On") : qsTr("Off")
+                    }
+                    onClicked: pageStack.push(Qt.resolvedUrl("DynamicIconsPage.qml"))
+
+                    Image {
+                        anchors.centerIn: parent
+                        anchors.bottomMargin: Theme.itemSizeLarge
+                        width: Theme.iconSizeLarge
+                        height: width
+                        source: "image://theme/icon-clock"
                     }
                 }
             }
-        }
 
-        T.Tab {
-            title: qsTr("Dynamic icons")
-
-            Component {
-                T.TabItem {
-                    flickable: dynTab
-
-                    DynamicIconsTabContent {
-                        id: dynTab
-                        tabActive: tabs.currentIndex === 2
-                    }
-                }
+            Item {
+                width: parent.width
+                height: Theme.paddingLarge
             }
         }
+    }
+
+    DBusInterface {
+        id: openStore
+        service: 'harbour.storeman.service'
+        path: '/harbour/storeman/service'
+        iface: 'harbour.storeman.service'
     }
 
     BusyState { id: busyindicator }

@@ -157,6 +157,13 @@
     </message>
 </context>
 <context>
+    <name>DensityPage</name>
+    <message>
+        <source>Display density</source>
+        <translation type="unfinished">Kijelzősűrűség</translation>
+    </message>
+</context>
+<context>
     <name>DensityTabContent</name>
     <message>
         <source>Restore display density</source>
@@ -273,6 +280,41 @@
     </message>
 </context>
 <context>
+    <name>FontsConfigurePage</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Mégse</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This pack provides non-Latin fonts only.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a font weight to preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font packs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>HomescreenRestartSection</name>
     <message>
         <source>Restart homescreen</source>
@@ -280,6 +322,68 @@
     </message>
     <message>
         <source>Restart homescreen automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>IconPackPreview</name>
+    <message>
+        <source>No preview available</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>IconsConfigurePage</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Mégse</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon packs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No icon packs installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style missing app icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -293,15 +397,51 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>Themes</source>
-        <translation type="unfinished">Témák</translation>
-    </message>
-    <message>
         <source>Display density</source>
         <translation type="unfinished">Kijelzősűrűség</translation>
     </message>
     <message>
         <source>Dynamic icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muoto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tap to configure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -624,6 +764,33 @@
     </message>
     <message>
         <source>icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ThemeWork</name>
+    <message>
+        <source>Stock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings applied.</source>
+        <translation type="unfinished">Beállítások alkalmazva.</translation>
+    </message>
+    <message>
+        <source>Applying icons…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying fonts…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restoring theme…</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
