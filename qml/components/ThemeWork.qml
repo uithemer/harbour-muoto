@@ -214,6 +214,31 @@ Item {
         _finalise()
     }
 
+    function uninstallPack(index) {
+        if (index < 0 || index >= themepackmodel.rowCount())
+            return
+
+        settings.isRunning = true
+        beginManualThemeWork(qsTr("Uninstalling theme…"))
+
+        var iconInstalled = themeWork.indexForPackName(settings.activeIconPack) === index
+        var fontInstalled = themeWork.indexForPackName(settings.activeFontPack) === index
+
+        if (iconInstalled) {
+            settings.dynamicClockEnabled = false
+            settings.dynamicCalendarEnabled = false
+            _pendingIconRestore = true
+            _uninstallAfterIconRestore = true
+            _uninstallPackIndex = index
+            Helper.restoreIcons()
+        } else {
+            themepackmodel.uninstall(index)
+        }
+
+        if (fontInstalled)
+            settings.deactivateFont()
+    }
+
     function beginRestore(restoreIcons, restoreFonts) {
         var nOps = (restoreIcons ? 1 : 0) + (restoreFonts ? 1 : 0)
         if (nOps === 0)
@@ -279,6 +304,10 @@ Item {
                 themeWork._abortThemeWork(message)
             } else if (op === "RestoreIcons") {
                 themeWork._pendingIconRestore = false
+                themeWork._uninstallAfterIconRestore = false
+                themeWork._uninstallPackIndex = -1
+                themeWork._abortThemeWork(message)
+            } else if (op === "UninstallPack") {
                 themeWork._uninstallAfterIconRestore = false
                 themeWork._uninstallPackIndex = -1
                 themeWork._abortThemeWork(message)

@@ -163,6 +163,8 @@ Dialog {
 
     BusyState { id: busyindicator }
 
+    RemorsePopup { id: uninstallRemorse }
+
     SilicaFlickable {
         id: flickable
         anchors.fill: parent
@@ -235,16 +237,22 @@ Dialog {
                                  ? dlg.stockSelected
                                  : (!dlg.stockSelected && model.packIndex === dlg.effectiveIndex)
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            if (model.isDefault) {
-                                dlg.stockSelected = true
-                            } else {
-                                dlg.stockSelected = false
-                                dlg.selectedIndex = model.packIndex
-                            }
+                    onClicked: {
+                        if (model.isDefault) {
+                            dlg.stockSelected = true
+                        } else {
+                            dlg.stockSelected = false
+                            dlg.selectedIndex = model.packIndex
                         }
+                    }
+                    onPressAndHold: {
+                        if (model.isDefault || settings.isRunning)
+                            return
+                        var idx = model.packIndex
+                        var name = model.packDisplayName
+                        uninstallRemorse.execute(
+                            qsTr("Uninstalling %1").arg(name),
+                            function() { themeWork.uninstallPack(idx) })
                     }
 
                     FontPackCarouselTile {
@@ -311,6 +319,6 @@ Dialog {
 
     Connections {
         target: fontCarousel
-        onModelReset: dlg.scheduleCenterCarousel()
+        onModelReset: dlg.syncFromSettings()
     }
 }
