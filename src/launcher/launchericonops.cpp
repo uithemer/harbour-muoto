@@ -1,6 +1,5 @@
 #include "launchericonops.h"
 #include "dynamicicon.h"
-#include "dynamicicon_p.h"
 #include "folderambient.h"
 #include "harbourthemepack.h"
 #include "iconpaths.h"

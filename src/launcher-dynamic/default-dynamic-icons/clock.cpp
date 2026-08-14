@@ -2,7 +2,6 @@
 #include "dynamicicon.h"
 #include "harbourthemepack.h"
 #include "iconprovider.h"
-#include "launchersettings.h"
 #include "svgiconrender.h"
 
 #include <MGConfItem>

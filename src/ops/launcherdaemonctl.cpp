@@ -58,7 +58,6 @@ bool ensureLauncherUnitSymlink()
 
     static const QStringList unitSources = {
         QStringLiteral("/usr/lib/systemd/user/harbour-muoto-launcher-icond.service"),
-        QStringLiteral("/usr/share/harbour-muoto/systemd/user/harbour-muoto-launcher-icond.service"),
     };
 
     for(const QString& source : unitSources)

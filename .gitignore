@@ -12,6 +12,12 @@
 *.dll
 *.dylib
 
+# Accidental in-tree qmake TARGET binaries (never commit these)
+src/**/harbour-muoto
+src/**/harbour-muoto-*
+src/**/sailfishos-uithemer
+src/**/sailfishos-uithemer*
+
 # Qt-es
 object_script.*.Release
 object_script.*.Debug

@@ -22,9 +22,9 @@ Use the [Sailfish SDK](https://developer.sailfishos.com/develop/sdk/) (`sfdk`):
 After installing an RPM **over SSH** (no active GUI session at install time), user units may be missing. As `defaultuser`:
 
 ```bash
-ln -sf /usr/share/harbour-muoto/systemd/user/harbour-muoto-launcher-icond.service \
+ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service \
   ~/.config/systemd/user/
-ln -sf /usr/share/harbour-muoto/systemd/user/harbour-muoto-install-listener.service \
+ln -sf /usr/lib/systemd/user/harbour-muoto-install-listener.service \
   ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable --now harbour-muoto-launcher-icond harbour-muoto-install-listener

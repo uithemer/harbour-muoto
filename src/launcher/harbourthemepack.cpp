@@ -1,7 +1,6 @@
 #include "harbourthemepack.h"
 
 #include "iconpaths.h"
-#include "svgiconrender.h"
 
 #include <silicatheme.h>
 #include <QCollator>
