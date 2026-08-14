@@ -12,9 +12,14 @@ Item {
         var pack = (!packName || packName === "") ? "default" : packName
         if (pack === "default")
             return "image://muoto-font/lorem/default?c=" + c
+                   + "&h=" + Theme.fontSizeExtraLarge
+                   + "&b=" + Theme.fontSizeMedium
         if (selectedFont === "")
             return ""
-        return "image://muoto-font/lorem/" + pack + "/" + selectedFont + "?c=" + c
+        return "image://muoto-font/lorem/" + pack + "/" + selectedFont
+               + "?c=" + c
+               + "&h=" + Theme.fontSizeExtraLarge
+               + "&b=" + Theme.fontSizeMedium
     }
 
     Image {

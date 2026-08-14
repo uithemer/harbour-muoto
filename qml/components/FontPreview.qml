@@ -13,12 +13,14 @@ Item {
         var c = String(Theme.primaryColor).replace("#", "")
         var kind = compact ? "aa" : "lorem"
         var pack = (!packName || packName === "") ? "default" : packName
+        var q = "?c=" + c
+        if (!compact)
+            q += "&h=" + Theme.fontSizeLarge + "&b=" + Theme.fontSizeSmall
         if (pack === "default")
-            return "image://muoto-font/" + kind + "/default?c=" + c
+            return "image://muoto-font/" + kind + "/default" + q
         if (selectedFont === "")
             return ""
-        return "image://muoto-font/" + kind + "/" + pack + "/" + selectedFont
-               + "?c=" + c
+        return "image://muoto-font/" + kind + "/" + pack + "/" + selectedFont + q
     }
 
     Image {

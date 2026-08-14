@@ -45,6 +45,19 @@ QColor colorFromQuery(const QString& query, const QColor& fallback)
     return col.isValid() ? col : fallback;
 }
 
+int intFromQuery(const QString& query, const char* name, int fallback)
+{
+    if(query.isEmpty())
+        return fallback;
+    QUrlQuery uq(query);
+    const QString v = uq.queryItemValue(QString::fromLatin1(name));
+    if(v.isEmpty())
+        return fallback;
+    bool ok = false;
+    const int n = v.toInt(&ok);
+    return (ok && n > 0) ? n : fallback;
+}
+
 QString ttfPath(const QString& pack, const QString& basename)
 {
     if(pack.isEmpty() || pack == QLatin1String("default"))
@@ -95,7 +108,8 @@ QImage FontSampleProvider::requestImage(const QString& id,
     const QString cacheKey = key
             + QLatin1Char('|') + color.name()
             + QLatin1Char('|') + QString::number(requestedSize.width())
-            + QLatin1Char('x') + QString::number(requestedSize.height());
+            + QLatin1Char('x') + QString::number(requestedSize.height())
+            + QLatin1Char('|') + query;
     QImage img = cachedImage(cacheKey);
     if(!img.isNull())
     {
@@ -135,9 +149,8 @@ QImage FontSampleProvider::requestImage(const QString& id,
         else
             height = qMax(1, width / 2);
         const int pad = qMax(12, width / 24);
-        const int inner = qMax(1, qMin(width, height) - pad * 2);
-        const int headingPx = qMax(18, inner / 10);
-        const int bodyPx = qMax(14, headingPx * 2 / 3);
+        const int headingPx = intFromQuery(query, "h", qMax(32, height / 8));
+        const int bodyPx = intFromQuery(query, "b", qMax(20, headingPx * 2 / 3));
         img = ImageUtil::previewTtfText(
                     path,
                     QStringLiteral("Lorem ipsum"),
