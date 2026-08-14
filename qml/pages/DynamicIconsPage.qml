@@ -50,7 +50,9 @@ Dialog {
 
     Timer {
         interval: 60 * 1000
-        running: dlg.status === PageStatus.Active && dlg.dynAvailable
+        running: dlg.status === PageStatus.Active
+                 && ((dlg.hasActiveDynClock && dlg.clockSelected)
+                     || (dlg.hasActiveDynCalendar && dlg.calendarSelected))
                  && Qt.application.active
         repeat: true
         onTriggered: dlg.bumpPreview()
@@ -92,27 +94,38 @@ Dialog {
                 Row {
                     anchors.centerIn: parent
                     spacing: Theme.paddingLarge
+                    visible: dlg.dynAvailable
 
                     Image {
-                        visible: dlg.hasActiveDynClock
                         width: Theme.iconSizeLauncher
                         height: width
                         fillMode: Image.PreserveAspectFit
                         sourceSize.width: width
                         sourceSize.height: height
-                        source: "image://muoto-launcher/dyn-clock/" + dlg.activePack
-                                + "?t=" + dlg.previewTick
+                        cache: false
+                        source: (dlg.clockSelected && dlg.hasActiveDynClock)
+                                ? ("image://muoto-launcher/dyn-clock/" + dlg.activePack
+                                   + "?t=" + dlg.previewTick)
+                                : (dlg.stockDyn
+                                   ? "image://theme/icon-launcher-clock"
+                                   : ("image://muoto-launcher/icon-pack/" + dlg.activePack
+                                      + "/icon-launcher-clock"))
                     }
 
                     Image {
-                        visible: dlg.hasActiveDynCalendar
                         width: Theme.iconSizeLauncher
                         height: width
                         fillMode: Image.PreserveAspectFit
                         sourceSize.width: width
                         sourceSize.height: height
-                        source: "image://muoto-launcher/dyn-calendar/" + dlg.activePack
-                                + "?t=" + dlg.previewTick
+                        cache: false
+                        source: (dlg.calendarSelected && dlg.hasActiveDynCalendar)
+                                ? ("image://muoto-launcher/dyn-calendar/" + dlg.activePack
+                                   + "?t=" + dlg.previewTick)
+                                : (dlg.stockDyn
+                                   ? "image://theme/icon-launcher-calendar"
+                                   : ("image://muoto-launcher/icon-pack/" + dlg.activePack
+                                      + "/icon-launcher-calendar"))
                     }
                 }
 
