@@ -231,6 +231,7 @@ Dialog {
                 boundsBehavior: Flickable.StopAtBounds
 
                 delegate: BackgroundItem {
+                    id: fontTile
                     width: carousel.height * 0.72
                     height: carousel.height
                     highlighted: model.isDefault
@@ -245,14 +246,13 @@ Dialog {
                             dlg.selectedIndex = model.packIndex
                         }
                     }
+
                     onPressAndHold: {
-                        if (model.isDefault || settings.isRunning)
+                        if (model.isDefault)
                             return
-                        var idx = model.packIndex
-                        var name = model.packDisplayName
-                        uninstallRemorse.execute(
-                            qsTr("Uninstalling %1").arg(name),
-                            function() { themeWork.uninstallPack(idx) })
+                        packUninstallMenu.packIndex = model.packIndex
+                        packUninstallMenu.packDisplayName = model.packDisplayName
+                        packUninstallMenu.open(packUninstallHost)
                     }
 
                     FontPackCarouselTile {
@@ -262,6 +262,30 @@ Dialog {
                         packDisplayName: model.packDisplayName
                         sampleFontBasename: model.sampleFontBasename
                         isDefault: model.isDefault
+                    }
+                }
+            }
+
+            Item {
+                id: packUninstallHost
+                width: parent.width
+                height: packUninstallMenu.height
+
+                ContextMenu {
+                    id: packUninstallMenu
+                    property int packIndex: -1
+                    property string packDisplayName: ""
+
+                    MenuItem {
+                        text: qsTr("Uninstall")
+                        enabled: !settings.isRunning
+                        onClicked: {
+                            var idx = packUninstallMenu.packIndex
+                            var name = packUninstallMenu.packDisplayName
+                            uninstallRemorse.execute(
+                                qsTr("Uninstalling %1").arg(name),
+                                function() { themeWork.uninstallPack(idx) })
+                        }
                     }
                 }
             }

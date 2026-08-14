@@ -256,6 +256,8 @@ Dialog {
                         onPressAndHold: cancel()
                     }
 
+            LabelSpacer { }
+            
                     Button {
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: Math.min(parent.width - Theme.paddingLarge * 2,
@@ -265,6 +267,7 @@ Dialog {
                         onClicked: dlg.restoreDefaultDpr()
                     }
 
+            LabelSpacer { }
                     MuotoTextLabel {
                         text: qsTr("Controls how large Sailfish UI elements appear. "
                                    + "Lower = more on screen; higher = larger text and buttons.")
