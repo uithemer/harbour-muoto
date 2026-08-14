@@ -15,7 +15,7 @@ ThemePackModel::ThemePackModel(QObject *parent)
     , _helper(HelperClient::instance())
 {
     // Errors are best-effort logged; the busy spinner in QML stays on
-    // until applied/restored/recovered actually fires.
+    // until applied/restored (or Helper error) actually fires.
     QObject::connect(&_fonts, &FontApplier::error,
                      this, [](const QString& m) { qWarning() << "FontApplier error:" << m; });
     QObject::connect(&_density, &DensityEnabler::error,

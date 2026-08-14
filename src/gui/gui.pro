@@ -25,10 +25,10 @@ load(sailfishapp)
 
 QT += dbus concurrent
 
-# Shared ops (IconApplier, DensityEnabler, file lock, spawner, manifest,
-# desktopfile, imageutil, iconpreviewcache, themepack-ops). FontApplier
-# and FontWeightModel stay GUI-only because they are unprivileged and
-# only the QML side ever touches them.
+# Shared ops (IconApplier preview, DensityEnabler, file lock, spawner,
+# imageutil, iconpreviewcache). FontApplier and FontWeightModel stay
+# GUI-only because they are unprivileged and only the QML side ever
+# touches them.
 include(../ops/ops.pri)
 
 INCLUDEPATH += $$PWD $$PWD/../launcher $$PWD/../ops

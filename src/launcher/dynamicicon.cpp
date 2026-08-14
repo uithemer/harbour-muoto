@@ -47,8 +47,6 @@ DynamicIconPrivate::DynamicIconPrivate(const QString& packageName,
     const QString none = QStringLiteral("<none>");
     if(applicationProvider->value(none).toString() == none)
         applicationProvider->set(QStringLiteral("dynamic-icon://") + name);
-
-    connect(applicationProvider, &MGConfItem::valueChanged, parent, &DynamicIcon::enabledChanged);
 }
 
 DynamicIcon::DynamicIcon(const QString& packageName, const QString& name, QObject* parent)

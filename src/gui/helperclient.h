@@ -9,17 +9,17 @@ class QDBusMessage;
 class QQmlEngine;
 class QJSEngine;
 
-// HelperClient: process-wide Q_OBJECT facade around the
-// org.muoto.Muoto1 system-bus service. Exposed to QML as the
-// `Helper` singleton (registered via qmlRegisterSingletonType in
-// main()), and shared with C++ peers (ThemePackModel, ThemePack) via
-// HelperClient::instance(). Singleton because each instance opens its
-// own match rule on the system bus, and we used to create up to six
-// of them (one per QML element instantiation) — wasteful and noisy.
+// HelperClient: process-wide Q_OBJECT facade for privileged theme ops.
+// Exposed to QML as the `Helper` singleton (qmlRegisterSingletonType)
+// and shared with ThemePackModel via HelperClient::instance().
+// Singleton because each instance opens its own D-Bus match rule, and
+// we used to create up to six of them — wasteful and noisy.
 //
-// All slots return immediately. Real success / failure comes through
-// the matching Qt signal; if the daemon is not available, the matching
-// error() signal fires synchronously so the GUI's busy spinner clears.
+// Icons go to session org.muoto.Launcher1.Themes; density unlock and
+// pack uninstall go to system org.muoto.Muoto1. All slots return
+// immediately. Real success / failure comes through the matching Qt
+// signal; if the daemon is not available, error() fires synchronously
+// so the GUI's busy spinner clears.
 class HelperClient : public QObject
 {
     Q_OBJECT
@@ -37,20 +37,17 @@ public:
     ~HelperClient() override;
 
 public slots:
-    // -- Themes interface (bus-policy gated) --
+    // -- session org.muoto.Launcher1.Themes --
     void applyIcons(const QString& pack, bool runPack, bool overlay);
     void restoreIcons();
+    // -- system org.muoto.Muoto1.Themes (bus-policy gated) --
     void densityEnable();
 
-    // -- Packs interface (bus-policy gated) --
+    // -- system org.muoto.Muoto1.Packs (bus-policy gated) --
     void uninstallPack(const QString& rpmName);
 
 signals:
-    // Bridged 1:1 from the daemon's per-interface OperationCompleted
-    // broadcast (via demux on the op string). Each signal mirrors
-    // exactly one of the Qt signals the existing IconApplier /
-    // DensityEnabler / ThemePack / ThemePackModel surface emitted
-    // when the work was still done in-process.
+    // Bridged from each daemon's OperationCompleted (demux on op).
     void iconsApplied();
     void iconsRestored();
     void densityEnabled();

@@ -4,7 +4,6 @@
 
 MUOTO_SERVICE=org.muoto.Muoto1
 MUOTO_PATH=/org/muoto/Muoto1
-MUOTO_THEMES=org.muoto.Muoto1.Themes
 MUOTO_LAUNCHER_SERVICE=org.muoto.Launcher1
 MUOTO_LAUNCHER_PATH=/org/muoto/Launcher1
 MUOTO_LAUNCHER_THEMES=org.muoto.Launcher1.Themes

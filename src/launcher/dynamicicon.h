@@ -26,9 +26,6 @@ public:
 protected:
     virtual IconProvider* createIconProvider(QObject* parent) = 0;
 
-signals:
-    void enabledChanged();
-
 private:
     DynamicIconPrivate* d_ptr;
 };
