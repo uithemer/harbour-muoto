@@ -32,23 +32,20 @@ CoverBackground {
         visible: !settings.isRunning
         opacity: 0.8
 
+        Label {
+            width: parent.width
+            text: "Muoto"
+            color: Theme.secondaryColor
+            font.family: Theme.fontFamily
+            font.pixelSize: Math.min(Theme.fontSizeLarge, Math.round(width * 0.28))
+            horizontalAlignment: Text.AlignHCenter
+        }
+
         IconPackPreview {
             width: parent.width
             packName: settings.hasActiveIconPack()
                       ? settings.activeIconPack : "default"
             previewHeight: Math.min(width, Theme.itemSizeLarge * 1.5)
-        }
-
-        Label {
-            width: parent.width
-            height: Math.min(width, Theme.itemSizeLarge * 1.5)
-            text: "Muoto"
-            color: Theme.secondaryColor
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSizeLarge
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.WordWrap
         }
     }
 
