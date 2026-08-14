@@ -159,17 +159,15 @@ Dialog {
 
     onAccepted: {
         settings.homeRefresh = restartSection.homeRefreshSwitch.checked
+        if (hasDynClock)
+            settings.dynamicClockEnabled = itsdynclock.checked
+        if (hasDynCalendar)
+            settings.dynamicCalendarEnabled = itsdyncal.checked
+
         if (stockSelected) {
-            settings.dynamicClockEnabled = dynClockSelected
-            settings.dynamicCalendarEnabled = dynCalendarSelected
             themeWork.beginRestore(true, false)
             return
         }
-
-        if (hasDynClock)
-            settings.dynamicClockEnabled = dynClockSelected
-        if (hasDynCalendar)
-            settings.dynamicCalendarEnabled = dynCalendarSelected
 
         var runPack = hasIconApply
         if (overlaySelected && !runPack)
@@ -278,21 +276,23 @@ Dialog {
             }
 
             IconTextSwitch {
-                automaticCheck: true
+                id: itsdynclock
+                automaticCheck: false
                 text: qsTr("Dynamic clock icon")
                 description: qsTr("Show the current time on the Clock icon, in this theme's style.")
                 visible: hasDynClock
                 checked: dynClockSelected
-                onCheckedChanged: dynClockSelected = checked
+                onClicked: dynClockSelected = !dynClockSelected
             }
 
             IconTextSwitch {
-                automaticCheck: true
+                id: itsdyncal
+                automaticCheck: false
                 text: qsTr("Dynamic calendar icon")
                 description: qsTr("Show today's date on the Calendar icon, in this theme's style.")
                 visible: hasDynCalendar
                 checked: dynCalendarSelected
-                onCheckedChanged: dynCalendarSelected = checked
+                onClicked: dynCalendarSelected = !dynCalendarSelected
             }
 
             HomescreenRestartSection {

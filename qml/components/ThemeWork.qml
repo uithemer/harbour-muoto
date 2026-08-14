@@ -23,6 +23,9 @@ Item {
     property bool _deferredIconRunPack: false
     property bool _deferredIconOverlay: false
     property bool _deferredIconRestore: false
+    property bool _reapplyDynAfterIconRestore: false
+    property bool _pendingDynClock: false
+    property bool _pendingDynCalendar: false
 
     readonly property alias themepackmodel: themepackmodel
     readonly property alias remorsePopup: remorsepopup
@@ -166,6 +169,7 @@ Item {
         _pendingFontRestore = false
         _uninstallAfterIconRestore = false
         _uninstallPackIndex = -1
+        _reapplyDynAfterIconRestore = false
         _clearDeferredIcons()
         settings.isRunning = false
         app.showHelperError(errMsg)
@@ -207,6 +211,11 @@ Item {
         settings.isRunning = true
         beginManualThemeWork(qsTr("Restoring theme…"))
         _armApply(nOps)
+        if (restoreIcons) {
+            _reapplyDynAfterIconRestore = true
+            _pendingDynClock = settings.dynamicClockEnabled
+            _pendingDynCalendar = settings.dynamicCalendarEnabled
+        }
         settings.syncToDisk()
 
         if (restoreFonts) {
@@ -239,6 +248,11 @@ Item {
         }
         onIconsRestored: {
             themeWork._commitPendingIconRestore()
+            if (themeWork._reapplyDynAfterIconRestore) {
+                themeWork._reapplyDynAfterIconRestore = false
+                settings.dynamicClockEnabled = themeWork._pendingDynClock
+                settings.dynamicCalendarEnabled = themeWork._pendingDynCalendar
+            }
             if (themeWork._uninstallAfterIconRestore) {
                 var idx = themeWork._uninstallPackIndex
                 themeWork._uninstallAfterIconRestore = false

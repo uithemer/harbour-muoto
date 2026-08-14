@@ -52,7 +52,10 @@ Item
     function hasActiveIconPack() { return packIdIsActive(activeIconPack) }
     function hasActiveFontPack() { return packIdIsActive(activeFontPack) }
 
-    function syncToDisk() { conf.sync(); }
+    function syncToDisk() {
+        conf.sync()
+        launcherConf.sync()
+    }
 
     id: settings
 
