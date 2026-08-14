@@ -27,14 +27,12 @@ namespace
     }
 }
 
-QImage montage9(const QStringList& pngs, const QSize& cell, int pad)
+QImage montage(const QStringList& pngs, int cols, int rows, const QSize& cell, int pad)
 {
-    const int cols = 3;
-    const int n = pngs.size();
-    if(n <= 0)
+    if(cols <= 0 || rows <= 0 || pngs.isEmpty())
         return QImage();
 
-    const int rows = (n + cols - 1) / cols;
+    const int n = qMin(pngs.size(), cols * rows);
     const int tileW = cell.width() + pad * 2;
     const int tileH = cell.height() + pad * 2;
 

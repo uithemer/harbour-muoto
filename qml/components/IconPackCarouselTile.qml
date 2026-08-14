@@ -35,9 +35,9 @@ Item {
                 clip: true
 
                 Image {
-                    // Pack preview montage is 3×3; show the top-left tile only.
-                    width: parent.width * 3
-                    height: parent.height * 3
+                    // Pack preview montage is 4×2; show the top-left tile only.
+                    width: parent.width * 4
+                    height: parent.height * 2
                     asynchronous: true
                     cache: false
                     fillMode: Image.PreserveAspectFit

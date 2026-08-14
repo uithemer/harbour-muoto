@@ -6,8 +6,7 @@ Item {
     id: root
 
     property string packName: ""
-    property int previewHeight: Math.min(parent ? parent.width : width,
-                                           Math.max(280, Screen.height * 0.32))
+    property int previewHeight: Math.round((parent ? parent.width : width) / 2)
 
     width: parent ? parent.width : implicitWidth
     height: previewHeight

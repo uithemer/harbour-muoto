@@ -178,7 +178,7 @@ Dialog {
             IconPackPreview {
                 width: parent.width
                 packName: dlg.packName
-                previewHeight: Math.min(parent.width, Math.max(320, flickable.height * 0.38))
+                previewHeight: Math.round(width / 2)
             }
 
             SectionHeader { text: qsTr("Icon packs") }

@@ -17,8 +17,8 @@ void IconApplier::buildPreview(const QString& packName)
         return;
     }
 
-    const QStringList sample = ImageUtil::samplePackIcons(IconPaths::packDir(packName), 9);
-    QImage img = ImageUtil::montage9(sample);
+    const QStringList sample = ImageUtil::samplePackIcons(IconPaths::packDir(packName), 8);
+    QImage img = ImageUtil::montage(sample, 4, 2);
     const bool ok = !img.isNull();
 
     IconPreviewCache::instance().put(packName, ok ? img : QImage());
