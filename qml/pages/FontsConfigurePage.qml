@@ -234,7 +234,7 @@ Dialog {
             ListView {
                 id: carousel
                 width: parent.width
-                height: Theme.itemSizeLarge * 1.6
+                height: Theme.itemSizeLarge * 1.9
                 orientation: ListView.Horizontal
                 spacing: Theme.paddingMedium
                 clip: true
