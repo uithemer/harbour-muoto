@@ -1,8 +1,6 @@
 #include "dynamicicon.h"
-#include "dynamicicon_p.h"
 #include "launchericonops.h"
 #include "launchermanifest.h"
-#include "launchersettings.h"
 #include "launcherpaths.h"
 #include "launcherservice.h"
 

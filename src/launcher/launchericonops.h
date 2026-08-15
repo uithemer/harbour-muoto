@@ -4,6 +4,9 @@
 #include "muotolauncherglobal.h"
 #include <QObject>
 #include <QString>
+#include <QTimer>
+
+class QFileSystemWatcher;
 
 class MUOTO_LAUNCHER_EXPORT LauncherIconOps : public QObject
 {
@@ -29,12 +32,37 @@ signals:
 private:
     explicit LauncherIconOps(QObject* parent = nullptr);
 
+    void rebuildIconUpdatersNow();
     void clearUpdaters(bool restoreOnDestroy);
     void reloadIconPacks();
     void ensureDesktopWatches();
+    void rearmApkDesktopWatches();
+    void rearmAllDesktopWatches();
+
+    // Re-theme only the APK bridge entries after apkd regenerated them.
+    void refreshApkIcons(bool scheduleVerify);
+    bool apkIconsClobbered() const;
+
+    // Theme apps installed or updated behind our back, whatever installer did it.
+    void ensureDesktopDirWatch();
+    void refreshNewDesktops();
+    QStringList desktopsNeedingTheme() const;
+
+    // Silent unless an apply/restore is in flight: rebuildIconUpdatersNow()
+    // also runs from dconf watches, where there is nothing to report.
+    void emitProgress(int done, int total);
+
+    QFileSystemWatcher* m_desktopDirWatcher = nullptr;
+    QTimer m_desktopScan;
 
     bool m_restoreOnUpdaterDestroy = true;
     bool m_applyPackIcons = true;
+    bool m_inIconOp = false;
+    bool m_rebuilding = false;
+    // Desktop entries plus one step for the folder-tile pass that follows.
+    int m_progressTotal = 0;
+    // Last reported percentage, used to rate-limit the progress signal.
+    int m_progressPercent = -1;
 };
 
 #endif // LAUNCHERICONOPS_H

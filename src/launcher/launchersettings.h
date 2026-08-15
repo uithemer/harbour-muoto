@@ -7,7 +7,6 @@
 class MUOTO_LAUNCHER_EXPORT LauncherSettings
 {
 public:
-    static QString activeIconPack();
     static bool iconOverlay();
     static bool dynamicClockEnabled();
     static bool dynamicCalendarEnabled();

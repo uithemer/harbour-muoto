@@ -4,7 +4,6 @@
 
 MUOTO_SERVICE=org.muoto.Muoto1
 MUOTO_PATH=/org/muoto/Muoto1
-MUOTO_THEMES=org.muoto.Muoto1.Themes
 MUOTO_LAUNCHER_SERVICE=org.muoto.Launcher1
 MUOTO_LAUNCHER_PATH=/org/muoto/Launcher1
 MUOTO_LAUNCHER_THEMES=org.muoto.Launcher1.Themes
@@ -103,7 +102,7 @@ muoto_ensure_launcher_icond() {
     done
     muoto_log "ensure_launcher_icond: systemctl failed, ensuring unit + binary"
     if ! muoto_run_as_user 'test -e ~/.config/systemd/user/harbour-muoto-launcher-icond.service'; then
-        muoto_run_as_user 'mkdir -p ~/.config/systemd/user && ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/ 2>/dev/null || ln -sf /usr/share/harbour-muoto/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/' || true
+        muoto_run_as_user 'mkdir -p ~/.config/systemd/user && ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/' || true
         muoto_run_as_user 'systemctl --user daemon-reload && systemctl --user start harbour-muoto-launcher-icond.service' || true
     fi
     muoto_run_as_user 'nohup /usr/libexec/harbour-muoto-launcher-icond >/dev/null 2>&1 &' || true

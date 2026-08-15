@@ -14,16 +14,15 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.2.2
-Release:        2
+Version:        3.5.0
+Release:        1
 Group:          Qt/Qt
 License:        GPLv3
-Packager:       fravaccaro <me@fravaccaro.com>
+Packager:       fravaccaro
 URL:            https://github.com/uithemer/harbour-muoto
 Source0:        %{name}-%{version}.tar.bz2
-Source100:      harbour-muoto.yaml
 
-Requires:       sailfish-version >= 2.1.4
+Requires:       sailfish-version >= 4.0.0
 Obsoletes:      harbour-themepacksupport < 0.8.14
 Provides:       harbour-themepacksupport = 0.8.14
 Conflicts:      harbour-iconpacksupport
@@ -46,7 +45,7 @@ BuildRequires:  desktop-file-utils
 
 %description
 Enables customization of icons, fonts and pixel density in Sailfish OS.
-Includes the former Theme pack support engine and CLI (themepacksupport).
+Includes the former Theme pack support engine.
 Icons are themed via the launcher daemon (desktop redirect and selective
 hicolor inplace); fonts via fontconfig. Compatible with harbour-themepack-*
 theme packages.
@@ -241,14 +240,14 @@ if [ -n "$MUOTO_UID" ]; then
         sleep 2
         _wait=$((_wait + 1))
     done
-    su defaultuser -c "mkdir -p ~/.config/systemd/user && ln -sf /usr/lib/systemd/user/harbour-muoto-install-listener.service ~/.config/systemd/user/ 2>/dev/null || ln -sf %{_datadir}/%{name}/systemd/user/harbour-muoto-install-listener.service ~/.config/systemd/user/; ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/ 2>/dev/null || ln -sf %{_datadir}/%{name}/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/" 2>/dev/null || :
+    su defaultuser -c "mkdir -p ~/.config/systemd/user && ln -sf /usr/lib/systemd/user/harbour-muoto-install-listener.service ~/.config/systemd/user/; ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/" 2>/dev/null || :
     if [ -d "/run/user/$MUOTO_UID" ]; then
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user daemon-reload" 2>/dev/null || :
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user enable --now harbour-muoto-install-listener.service" 2>/dev/null || :
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-install-listener.service" 2>/dev/null || :
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user enable --now harbour-muoto-launcher-icond.service" 2>/dev/null || :
     else
-        su defaultuser -c "mkdir -p ~/.config/systemd/user && ln -sf %{_datadir}/%{name}/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/" 2>/dev/null || :
+        su defaultuser -c "mkdir -p ~/.config/systemd/user && ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service ~/.config/systemd/user/" 2>/dev/null || :
         su defaultuser -c "systemctl --user daemon-reload" 2>/dev/null || :
         su defaultuser -c "systemctl --user enable harbour-muoto-install-listener.service" 2>/dev/null || :
         su defaultuser -c "systemctl --user enable harbour-muoto-launcher-icond.service" 2>/dev/null || :
@@ -300,7 +299,7 @@ rm -f %{_datadir}/%{name}/graphic-current
 rm -f %{_datadir}/%{name}/sound-current
 rm -rf %{_datadir}/%{name}/backup/sound
 # 2.4.5 and earlier kept a /usr/share/harbour-muoto/tmp/iconspreview.png
-# for the ConfirmPage / cover preview. The preview is now served from memory
+# for the pack / cover preview. The preview is now served from memory
 # via a QQuickImageProvider; drop the leftover file and the (now unused) dir.
 rm -f %{_datadir}/%{name}/tmp/iconspreview.png
 rmdir --ignore-fail-on-non-empty %{_datadir}/%{name}/tmp 2>/dev/null || :

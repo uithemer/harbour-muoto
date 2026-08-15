@@ -25,10 +25,10 @@ load(sailfishapp)
 
 QT += dbus concurrent
 
-# Shared ops (IconApplier, DensityEnabler, file lock, spawner, manifest,
-# desktopfile, imageutil, iconpreviewcache, themepack-ops). FontApplier
-# and FontWeightModel stay GUI-only because they are unprivileged and
-# only the QML side ever touches them.
+# Shared ops (IconApplier preview, DensityEnabler, file lock, spawner,
+# imageutil, iconpreviewcache). FontApplier and FontWeightModel stay
+# GUI-only because they are unprivileged and only the QML side ever
+# touches them.
 include(../ops/ops.pri)
 
 INCLUDEPATH += $$PWD $$PWD/../launcher $$PWD/../ops
@@ -37,9 +37,12 @@ HEADERS += \
     $$PWD/themepack.h \
     $$PWD/themepackmodel.h \
     $$PWD/fontweightmodel.h \
+    $$PWD/fontcarouselmodel.h \
     $$PWD/fontapplier.h \
     $$PWD/iconpreviewprovider.h \
+    $$PWD/fontsampleprovider.h \
     $$PWD/helperclient.h \
+    $$PWD/mcelpmsettings.h \
     $$PWD/launcherimageprovider.h
 
 SOURCES += \
@@ -47,9 +50,12 @@ SOURCES += \
     $$PWD/themepack.cpp \
     $$PWD/themepackmodel.cpp \
     $$PWD/fontweightmodel.cpp \
+    $$PWD/fontcarouselmodel.cpp \
     $$PWD/fontapplier.cpp \
     $$PWD/iconpreviewprovider.cpp \
+    $$PWD/fontsampleprovider.cpp \
     $$PWD/helperclient.cpp \
+    $$PWD/mcelpmsettings.cpp \
     $$PWD/launcherimageprovider.cpp
 
 ROOT = $$PWD/../..
@@ -60,6 +66,15 @@ OTHER_FILES += \
     $$ROOT/qml/harbour-muoto.qml \
     $$ROOT/qml/common/Settings.qml \
     $$ROOT/qml/components/BusyState.qml \
+    $$ROOT/qml/components/HomeTile.qml \
+    $$ROOT/qml/components/ThemeWork.qml \
+    $$ROOT/qml/components/IconPackPreview.qml \
+    $$ROOT/qml/components/DensityPreview.qml \
+    $$ROOT/qml/components/DynIconsPreview.qml \
+    $$ROOT/qml/components/LowPowerPreview.qml \
+    $$ROOT/qml/components/IconPackCarouselTile.qml \
+    $$ROOT/qml/components/StockLauncherIcons.qml \
+    $$ROOT/qml/components/FontPackCarouselTile.qml \
     $$ROOT/qml/components/FontPreview.qml \
     $$ROOT/qml/components/FontWeightSwitch.qml \
     $$ROOT/qml/components/LabelSpacer.qml \
@@ -69,21 +84,16 @@ OTHER_FILES += \
     $$ROOT/qml/components/HomescreenRestartSection.qml \
     $$ROOT/qml/components/homescreenRestart.js \
     $$ROOT/qml/components/MuotoNotification.qml \
-    $$ROOT/qml/components/themepacklistview/ThemePackItem.qml \
     $$ROOT/qml/cover/CoverPage.qml \
-    $$ROOT/qml/cover/CoverConfirm.qml \
-    $$ROOT/qml/cover/CoverLabel.qml \
-    $$ROOT/qml/cover/FontPreviewCover.qml \
-    $$ROOT/qml/pages/ConfirmPage.qml \
-    $$ROOT/qml/components/DensityTabContent.qml \
-    $$ROOT/qml/components/DynamicIconsTabContent.qml \
     $$ROOT/qml/components/MuotoAboutMenuItem.qml \
     $$ROOT/qml/components/MuotoRestartHomescreenMenuItem.qml \
-    $$ROOT/qml/components/ThemesTabContent.qml \
     $$ROOT/qml/components/MuotoSupportDialog.qml \
     $$ROOT/qml/pages/MainPage.qml \
-    $$ROOT/qml/pages/RestorePage.qml \
-    $$ROOT/qml/pages/RestoreDDPage.qml \
+    $$ROOT/qml/pages/IconsConfigurePage.qml \
+    $$ROOT/qml/pages/FontsConfigurePage.qml \
+    $$ROOT/qml/pages/DensityPage.qml \
+    $$ROOT/qml/pages/DynamicIconsPage.qml \
+    $$ROOT/qml/pages/LowPowerPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
     $$ROOT/rpm/* \
@@ -207,8 +217,7 @@ sessiondbusconf.files = $$ROOT/dbus/org.muoto.Launcher1.conf
 sessiondbusconf.path  = /etc/dbus-1/session.d
 
 # No polkit hand-off. See dbus/org.muoto.Muoto1.conf
-# for the new policy and src/daemon/helperservice.cpp for the
-# matching no-op authorize() stubs.
+# for the bus policy that authorizes DensityEnable / UninstallPack.
 
 # helperd.service ships under service/ and is moved into
 # /etc/systemd/system/ by the RPM %post.

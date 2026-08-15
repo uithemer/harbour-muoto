@@ -3,23 +3,28 @@
 
 #include <QObject>
 #include <QString>
+#include <QVariantList>
 
-class QDBusInterface;
-class QDBusMessage;
+class QTimer;
 class QQmlEngine;
 class QJSEngine;
 
-// HelperClient: process-wide Q_OBJECT facade around the
-// org.muoto.Muoto1 system-bus service. Exposed to QML as the
-// `Helper` singleton (registered via qmlRegisterSingletonType in
-// main()), and shared with C++ peers (ThemePackModel, ThemePack) via
-// HelperClient::instance(). Singleton because each instance opens its
-// own match rule on the system bus, and we used to create up to six
-// of them (one per QML element instantiation) — wasteful and noisy.
+// HelperClient: process-wide Q_OBJECT facade for privileged theme ops.
+// Exposed to QML as the `Helper` singleton (qmlRegisterSingletonType)
+// and shared with ThemePackModel via HelperClient::instance().
+// Singleton because each instance opens its own D-Bus match rule, and
+// we used to create up to six of them — wasteful and noisy.
 //
-// All slots return immediately. Real success / failure comes through
-// the matching Qt signal; if the daemon is not available, the matching
-// error() signal fires synchronously so the GUI's busy spinner clears.
+// Icons go to session org.muoto.Launcher1.Themes; density unlock and
+// pack uninstall go to system org.muoto.Muoto1. All slots return
+// immediately. Real success / failure comes through the matching Qt
+// signal; if the daemon is not available, error() fires so the GUI's
+// busy spinner clears.
+//
+// Nothing here may block the QML thread: calls go out as plain
+// QDBusMessage + asyncCall (a QDBusInterface would introspect
+// synchronously first), and the session daemon is started detached and
+// polled rather than waited on.
 class HelperClient : public QObject
 {
     Q_OBJECT
@@ -37,28 +42,30 @@ public:
     ~HelperClient() override;
 
 public slots:
-    // -- Themes interface (manage-themes) --
+    // -- session org.muoto.Launcher1.Themes --
     void applyIcons(const QString& pack, bool runPack, bool overlay);
     void restoreIcons();
+    // -- system org.muoto.Muoto1.Themes (bus-policy gated) --
     void densityEnable();
 
-    // -- Packs interface (manage-packs) --
+    // -- system org.muoto.Muoto1.Packs (bus-policy gated) --
     void uninstallPack(const QString& rpmName);
 
 signals:
-    // Bridged 1:1 from the daemon's per-interface OperationCompleted
-    // broadcast (via demux on the op string). Each signal mirrors
-    // exactly one of the Qt signals the existing IconApplier /
-    // DensityEnabler / ThemePack / ThemePackModel surface emitted
-    // when the work was still done in-process.
+    // Bridged from each daemon's OperationCompleted (demux on op).
     void iconsApplied();
     void iconsRestored();
     void densityEnabled();
     void packUninstalled(const QString& rpmName);
 
+    // Bridged from the launcher daemon's Progress broadcast so the GUI can
+    // show a real completion ratio instead of an indeterminate spinner.
+    void iconProgress(const QString& op, int done, int total);
+
     // op is the daemon-side method name ("ApplyIcons", "UninstallPack",
     // ...). Fired on daemon error, D-Bus transport failure, or when the
-    // theme-op lock is busy. Lets QML clear settings.isRunning.
+    // icon-ops lock stays busy past the client wait budget. Lets QML
+    // clear settings.isRunning.
     void error(const QString& op, const QString& message);
 
 private slots:
@@ -66,40 +73,44 @@ private slots:
                                     const QString& message);
     void onPacksOperationCompleted(const QString& op, bool ok,
                                    const QString& message);
-    void onNameOwnerChanged(const QString& name, const QString& oldOwner,
-                            const QString& newOwner);
+    void onLauncherProgress(const QString& op, int done, int total);
+
+    // Poll for the session daemon after startLauncherDaemonDetached().
+    void onLauncherWaitTick();
+    // Poll until icon-ops.lock is free (boot update-icons / prior apply).
+    void onLockWaitTick();
 
 private:
-    // dbus-activate helperd and drop stale QDBusInterface proxies when the
-    // well-known name leaves the bus (helperd idle-quits after 30 s).
-    bool ensureHelperService();
-    bool ensureLauncherService();
-    void dropDBusProxies();
-
-    // Lazy-construct a per-interface QDBusInterface on the system bus.
-    QDBusInterface* themesIface();
-    QDBusInterface* launcherThemesIface();
-    QDBusInterface* packsIface();
-
     // Wrap a fire-and-forget D-Bus method call. On transport failure
     // emit error(op, ...) so the GUI's busy state drains.
     void asyncCall(const QString& op, const QVariantList& args);
 
-    // Subscribe to the per-interface OperationCompleted broadcast signals
-    // once, before any method is invoked.
+    // Subscribe to the per-interface broadcast signals once, before any
+    // method is invoked.
     void hookBroadcastSignals();
 
-    bool beginIconOpOrError(const QString& op);
+    // Common entry for ApplyIcons / RestoreIcons: wait briefly if the
+    // icon-ops lock is taken, dispatch when the daemon is on the bus,
+    // otherwise kick it and retry from onLauncherWaitTick().
+    void queueIconOp(const QString& op, const QVariantList& args);
+    void dispatchPendingIconOp();
+    void failPendingIconOp(const QString& message);
+    void startLockWait(const QString& op, const QVariantList& args);
 
     // Private: callers go through HelperClient::instance() or the
     // QML `Helper` singleton.
     HelperClient();
     Q_DISABLE_COPY(HelperClient)
 
-    QDBusInterface* _themes;
-    QDBusInterface* _launcherThemes;
-    QDBusInterface* _packs;
-    bool            _hooked;
+    QTimer*      _launcherWait;
+    QTimer*      _lockWait;
+    int          _launcherWaitedMs;
+    int          _lockWaitedMs;
+    QString      _pendingIconOp;
+    QVariantList _pendingIconArgs;
+    QString      _inflightIconOp;
+    QVariantList _inflightIconArgs;
+    bool         _hooked;
 };
 
 #endif // HELPERCLIENT_H

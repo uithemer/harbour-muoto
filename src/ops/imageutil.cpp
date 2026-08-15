@@ -1,8 +1,14 @@
 #include "imageutil.h"
 #include "iconpaths.h"
 
+#include <QDir>
 #include <QDirIterator>
+#include <QFileInfo>
+#include <QGlyphRun>
+#include <QHash>
 #include <QPainter>
+#include <QRawFont>
+#include <QVector>
 #include <QtGlobal>
 #include <algorithm>
 #include <random>
@@ -12,8 +18,13 @@ namespace ImageUtil
 
 namespace
 {
-    QStringList collectPngsUnderCapability(const QString& packRoot, const QString& capability)
+    QStringList collectPngsUnderCapability(const QString& packRoot,
+                                           const QString& capability,
+                                           int limit)
     {
+        if(limit <= 0)
+            return QStringList();
+
         const QString path = IconPaths::resolvePackCapabilityDir(packRoot, capability);
         if(path.isEmpty())
             return QStringList();
@@ -22,19 +33,21 @@ namespace
         QDirIterator it(path, QStringList() << QStringLiteral("*.png"),
                         QDir::Files, QDirIterator::Subdirectories);
         while(it.hasNext())
+        {
             all << it.next();
+            if(all.size() >= limit)
+                break;
+        }
         return all;
     }
 }
 
-QImage montage9(const QStringList& pngs, const QSize& cell, int pad)
+QImage montage(const QStringList& pngs, int cols, int rows, const QSize& cell, int pad)
 {
-    const int cols = 3;
-    const int n = pngs.size();
-    if(n <= 0)
+    if(cols <= 0 || rows <= 0 || pngs.isEmpty())
         return QImage();
 
-    const int rows = (n + cols - 1) / cols;
+    const int n = qMin(pngs.size(), cols * rows);
     const int tileW = cell.width() + pad * 2;
     const int tileH = cell.height() + pad * 2;
 
@@ -68,13 +81,30 @@ QImage montage9(const QStringList& pngs, const QSize& cell, int pad)
 
 QStringList samplePackIcons(const QString& packDir, int count)
 {
+    if(count <= 0)
+        return QStringList();
+
     const QString packRoot = IconPaths::packDir(packDir);
 
+    const QStringList native = collectPngsUnderCapability(
+                packRoot, QStringLiteral("native"), count);
+    const QStringList jolla = native.isEmpty()
+            ? collectPngsUnderCapability(packRoot, QStringLiteral("jolla"), count)
+            : QStringList();
+    const QStringList primary = native.isEmpty() ? jolla : native;
+
+    const QStringList apk = collectPngsUnderCapability(
+                packRoot, QStringLiteral("apk"), count);
+
     QStringList all;
-    all << collectPngsUnderCapability(packRoot, QStringLiteral("native"));
-    all << collectPngsUnderCapability(packRoot, QStringLiteral("jolla"));
-    all << collectPngsUnderCapability(packRoot, QStringLiteral("apk"));
-    all << collectPngsUnderCapability(packRoot, QStringLiteral("overlay"));
+    const int apkTake = apk.isEmpty() ? 0 : qMin(apk.size(), count > 1 ? 2 : count);
+    const int primaryTake = qMin(primary.size(), count - apkTake);
+    all << primary.mid(0, primaryTake);
+    all << apk.mid(0, qMin(apk.size(), count - all.size()));
+
+    const int remain = count - all.size();
+    if(remain > 0)
+        all << collectPngsUnderCapability(packRoot, QStringLiteral("overlay"), remain);
 
     if(all.isEmpty())
         return all;
@@ -87,6 +117,221 @@ QStringList samplePackIcons(const QString& packDir, int count)
         all = all.mid(0, count);
 
     return all;
+}
+
+QStringList sampleStockLauncherIcons(int count)
+{
+    if(count <= 0)
+        return QStringList();
+
+    static const QString kFolderPrefix = QStringLiteral("icon-launcher-folder-");
+
+    const QStringList& sizes = IconPaths::jollaSizes();
+    for(int s = 0; s < sizes.size(); ++s)
+    {
+        const QString dir = IconPaths::liveJollaIconsDir(sizes.at(s));
+        if(!QDir(dir).exists())
+            continue;
+
+        QStringList all;
+        QDirIterator it(dir, QStringList() << QStringLiteral("icon-launcher-*.png"),
+                        QDir::Files);
+        while(it.hasNext())
+        {
+            const QString path = it.next();
+            if(QFileInfo(path).fileName().startsWith(kFolderPrefix))
+                continue;
+            all << path;
+            if(all.size() >= count)
+                break;
+        }
+        if(!all.isEmpty())
+            return all;
+    }
+    return QStringList();
+}
+
+namespace
+{
+qreal glyphRunWidth(const QRawFont& font, const QString& text)
+{
+    if(text.isEmpty())
+        return 0;
+
+    const QVector<quint32> glyphs = font.glyphIndexesForString(text);
+    const QVector<QPointF> adv = font.advancesForGlyphIndexes(glyphs);
+    qreal w = 0;
+    for(int i = 0; i < adv.size(); ++i)
+        w += adv.at(i).x();
+    return w;
+}
+
+QStringList wrapText(const QRawFont& font, const QString& text, qreal maxWidth)
+{
+    QStringList lines;
+    const QStringList paragraphs = text.split(QLatin1Char('\n'));
+    for(int p = 0; p < paragraphs.size(); ++p)
+    {
+        const QStringList words = paragraphs.at(p).split(QLatin1Char(' '),
+                                                         QString::SkipEmptyParts);
+        QString line;
+        for(int i = 0; i < words.size(); ++i)
+        {
+            const QString trial = line.isEmpty()
+                    ? words.at(i)
+                    : (line + QLatin1Char(' ') + words.at(i));
+            if(!line.isEmpty() && glyphRunWidth(font, trial) > maxWidth)
+            {
+                lines << line;
+                line = words.at(i);
+            }
+            else
+            {
+                line = trial;
+            }
+        }
+        if(!line.isEmpty())
+            lines << line;
+        else if(paragraphs.at(p).isEmpty())
+            lines << QString();
+    }
+    return lines;
+}
+
+qreal drawLines(QPainter* p, const QRawFont& font, const QStringList& lines,
+                qreal x, qreal y, const QColor& color)
+{
+    const qreal lineHeight = font.ascent() + font.descent()
+            + qMax(qreal(2), font.ascent() * qreal(0.2));
+    p->setPen(color);
+    for(int i = 0; i < lines.size(); ++i)
+    {
+        const QString& line = lines.at(i);
+        if(!line.isEmpty())
+        {
+            const QVector<quint32> glyphs = font.glyphIndexesForString(line);
+            const QVector<QPointF> adv = font.advancesForGlyphIndexes(glyphs);
+            QVector<QPointF> positions;
+            positions.reserve(glyphs.size());
+            QPointF pen(x, y);
+            for(int g = 0; g < glyphs.size(); ++g)
+            {
+                positions.append(pen);
+                pen += adv.at(g);
+            }
+            QGlyphRun run;
+            run.setRawFont(font);
+            run.setGlyphIndexes(glyphs);
+            run.setPositions(positions);
+            p->drawGlyphRun(QPointF(0, 0), run);
+        }
+        y += lineHeight;
+    }
+    return y;
+}
+QRawFont cachedRawFont(const QString& ttfPath, int pixelSize)
+{
+    if(ttfPath.isEmpty() || pixelSize <= 0)
+        return QRawFont();
+
+    static QHash<QString, QRawFont> cache;
+    const QString key = ttfPath + QLatin1Char('\n') + QString::number(pixelSize);
+    const auto it = cache.constFind(key);
+    if(it != cache.constEnd())
+        return it.value();
+
+    const QRawFont font(ttfPath, pixelSize);
+    if(!font.isValid())
+        return font;
+
+    if(cache.size() >= 64)
+        cache.erase(cache.begin());
+    cache.insert(key, font);
+    return font;
+}
+
+} // namespace
+
+QImage previewTtfText(const QString& ttfPath,
+                      const QString& heading,
+                      const QString& body,
+                      int width,
+                      int headingPx,
+                      int bodyPx,
+                      const QColor& color,
+                      int height,
+                      int pad)
+{
+    if(ttfPath.isEmpty() || width <= 0 || headingPx <= 0 || bodyPx <= 0)
+        return QImage();
+
+    const QRawFont headingFont = cachedRawFont(ttfPath, headingPx);
+    const QRawFont bodyFont = cachedRawFont(ttfPath, bodyPx);
+    if(!headingFont.isValid() || !bodyFont.isValid())
+        return QImage();
+
+    if(pad < 0)
+        pad = 0;
+    const int innerW = qMax(1, width - pad * 2);
+    const QStringList headingLines = wrapText(headingFont, heading, innerW);
+    const QStringList bodyLines = wrapText(bodyFont, body, innerW);
+    const qreal headingLh = headingFont.ascent() + headingFont.descent()
+            + qMax(qreal(2), headingFont.ascent() * qreal(0.2));
+    const qreal bodyLh = bodyFont.ascent() + bodyFont.descent()
+            + qMax(qreal(2), bodyFont.ascent() * qreal(0.2));
+    const qreal gap = headingPx * 0.4;
+
+    const bool fixed = height > 0;
+    if(!fixed)
+    {
+        height = qMax(1, qRound(headingFont.ascent()
+                                + headingLines.size() * headingLh
+                                + gap
+                                + bodyLines.size() * bodyLh
+                                + bodyFont.descent()
+                                + pad));
+    }
+
+    QImage out(width, height, QImage::Format_ARGB32_Premultiplied);
+    out.fill(Qt::transparent);
+
+    QPainter p(&out);
+    p.setRenderHint(QPainter::TextAntialiasing);
+    if(fixed)
+        p.setClipRect(QRectF(pad, pad, innerW, qMax(1, height - pad * 2)));
+    qreal y = pad + headingFont.ascent();
+    y = drawLines(&p, headingFont, headingLines, pad, y, color);
+    y += gap;
+    drawLines(&p, bodyFont, bodyLines, pad, y, color);
+    p.end();
+    return out;
+}
+
+QImage previewTtfGlyphs(const QString& ttfPath,
+                        const QString& text,
+                        int pixelSize,
+                        const QColor& color)
+{
+    if(ttfPath.isEmpty() || text.isEmpty() || pixelSize <= 0)
+        return QImage();
+
+    const QRawFont font = cachedRawFont(ttfPath, pixelSize);
+    if(!font.isValid())
+        return QImage();
+
+    const qreal gw = glyphRunWidth(font, text);
+    const int gpad = qMax(2, pixelSize / 8);
+    const int width = qMax(1, qRound(gw) + gpad * 2);
+    const int height = qMax(1, qRound(font.ascent() + font.descent()) + gpad * 2);
+
+    QImage out(width, height, QImage::Format_ARGB32_Premultiplied);
+    out.fill(Qt::transparent);
+
+    QPainter p(&out);
+    p.setRenderHint(QPainter::TextAntialiasing);
+    drawLines(&p, font, QStringList() << text, gpad, gpad + font.ascent(), color);
+    p.end();
+    return out;
 }
 
 } // namespace ImageUtil

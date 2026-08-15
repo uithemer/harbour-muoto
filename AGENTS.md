@@ -40,23 +40,37 @@ Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting byte
 2. **Inplace (hicolor)** — replace via temp `*.muoto-write.png` then rename onto the live path; `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick reloads the named icon.
 3. **Always touch the `.desktop`** after PNG / `Icon=` changes (`touchFile` / `futimens`).
 4. Avoid deleting a PNG while `Icon=` still names it (`inotify_add_watch` ENOENT → frozen tile until lipstick restart).
+5. **Re-arm the watch on APK desktops first.** Lipstick keeps a per-file inotify watch on every `.desktop` and only re-reads one when that watch fires. apkd rewrites `apkd_launcher_*.desktop` with `rename(2)`, so Qt drops the watch, and `LauncherMonitor::onDirectoryChanged` never re-adds it (the filename is already known). After that, `Icon=` rewrites are invisible. `LauncherWatch::rearmDesktopWatches` renames each entry aside and back with a short gap: two directory scans inside Lipstick's 2000 ms holdback, so the pending add and remove cancel — the watch comes back with no launcher item or grid-position churn. Apply and restore both call it before touching `Icon=`.
 
-Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
+Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatch.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
+
+## Android container restarts
+
+- apkd resets `Icon=` on all `apkd_launcher_*.desktop` whenever the container restarts. `AlienDalvikWatcher` waits for apkd's `containerReady` property (standard `PropertiesChanged` on session path `/com/jolla/apkd`, no sender filter — apkd's bus name changes every restart), then `LauncherIconOps::refreshApkIcons()` re-arms the watches and recreates **only** the APK updaters. No folder pass, no native entries, no `pruneOrphans`.
+- apkd syncs the entries a second time a few seconds after `containerReady`, so `refreshApkIcons` schedules a one-shot verification 15 s later and repeats itself if an entry it themed lost our `Icon=`.
+- Do not hook per-`IconUpdater` refreshes to container events: a single updater cannot re-arm the watch, so its `Icon=` write goes unread.
+
+## New apps / app updates
+
+Two independent triggers re-theme after an install or update while a pack is active:
+
+- **Listener** (`harbour-muoto-install-listener`) watches PackageKit roles `10` (`InstallFiles`, local RPM), `11` (`InstallPackages`), `22` (`UpdatePackages` — Storeman uses this for both install and update), `33` (`UpgradeSystem`). The `Package` signal is `(u info, s package_id, s summary)`; info `11`/`12` is the fallback. APK installs/updates still use session `com.jolla.apkd` `appInstalled` / `appUpdated`. On a hit it runs `/usr/bin/harbour-muoto-update-icons`, which calls `ApplyIcons`. `activeIconPack` is the full `harbour-themepack-*` name — strip that prefix before building `/usr/share/harbour-themepack-…` or the script no-ops.
+- **Daemon watch** (`LauncherIconOps::refreshNewDesktops`): `QFileSystemWatcher` on the applications dirs, 2 s debounce. Attaches an updater for every launcher `.desktop` that has none, and recreates inplace updaters whose hicolor PNG no longer matches the stored fingerprint (an RPM update overwrote it). Native RPM updates `rename(2)` the `.desktop` the same way apkd does, so this path (and `ApplyIcons` / `RestoreIcons`) re-arm Lipstick watches on **all** launcher desktops, not only APK. Same guards as `refreshApkIcons`. This is the path that still works if the listener is down.
 
 ## Fonts apply / restore
 
 - Unprivileged, in the **GUI process** via `FontApplier` (`src/gui/fontapplier.cpp`), driven by `ThemePackModel::applyTheme` / `restoreTheme`.
-- Confirm / Restore on the Themes tab call these (icons go through `Helper` → launcher-icond in parallel).
+- Icons/Fonts configure pages and `ThemeWork` call these (icons go through `Helper` → launcher-icond in parallel).
 - Apply: copy pack `font/` (+ optional `font-nonlatin/`) into `~/.local/share/fonts/muoto/` (Sailjail-readable), write `~/.config/fontconfig/conf.d/99-muoto.conf` with `<dir>` pointing at that staging tree, run `fc-cache`; sets `activeFontPack` in dconf. Real copies — not symlinks into `.themepack`.
 - Restore: remove that conf and wipe `~/.local/share/fonts/muoto/`, `fc-cache`, clear `activeFontPack`.
 - After upgrading to 3.2.2+, reapply the font once so jailed apps pick up staging (RPM update does not rewrite an existing conf).
-- User docs: [docs/fonts.md](docs/fonts.md). UI: `qml/pages/ConfirmPage.qml`, `RestorePage.qml`, `ThemesTabContent.qml`.
+- User docs: [docs/fonts.md](docs/fonts.md). UI: `qml/pages/FontsConfigurePage.qml`, `qml/components/ThemeWork.qml`.
 
 ## Display density apply / restore
 
-- **Unlock:** Display density tab calls `Helper.densityEnable()` → system bus `org.muoto.Muoto1` → helperd `DensityEnable` (moves vendor dconf locks so user keys can change). Implemented in `src/ops/densityenabler.cpp` / daemon adaptor.
-- **Apply:** UI writes user dconf (`desktop/sailfish/silica/theme_pixel_ratio`, launcher icon size keys) once unlocked — see `qml/components/DensityTabContent.qml`.
-- **Restore:** Themes-style restore on the density tab → `ThemePackModel::restoreDpi` → `DensityEnabler::restoreDensity` (reset selected keys / re-lock as designed).
+- **Unlock:** Display density dialog calls `Helper.densityEnable()` → system bus `org.muoto.Muoto1` → helperd `DensityEnable` (moves vendor dconf locks so user keys can change). Implemented in `src/ops/densityenabler.cpp` / daemon adaptor.
+- **Apply:** On Dialog accept, UI writes user dconf (`desktop/sailfish/silica/theme_pixel_ratio`, launcher icon size keys) once unlocked — see `qml/pages/DensityPage.qml`. Cancel discards pending slider/combo/restore values.
+- **Restore:** Per-control Restore default buttons set pending reset; Apply calls `ThemePackModel::restoreDpi` → `DensityEnabler::restoreDensity` (dconf reset of selected keys). Completion is handled on `ThemeWork` (`dpiRestored`).
 - User docs: [docs/density.md](docs/density.md).
 
 ## Build and device
@@ -83,13 +97,17 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconp
 | Concern | Files |
 | ------- | ----- |
 | Icon apply / rebuild | `src/launcher/launchericonops.cpp` |
+| Install / update re-theme | `src/listener/installlistener.cpp`, `src/listener/pktxwatch.cpp`, `service/harbour-muoto-update-icons` |
 | Icon inplace / redirect | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
+| Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |
+| apkd container readiness | `src/launcher/aliendalvikwatcher.cpp` |
 | Path resolve (hicolor size / APK) | `src/launcher/iconresolve.cpp` |
 | Overlay composite | `src/launcher/overlayiconprovider.cpp`, `overlayrender.cpp` |
 | Folder silica icons | `src/launcher/folderambient.cpp` |
 | Pack lookup | `src/launcher/harbourthemepack.cpp` |
 | Font apply / restore | `src/gui/fontapplier.cpp`, `src/gui/themepackmodel.cpp` |
-| Density unlock / restore | `src/ops/densityenabler.cpp`, `src/gui/helperclient.cpp`, `qml/components/DensityTabContent.qml` |
-| Confirm / Themes UI | `qml/pages/ConfirmPage.qml`, `qml/components/ThemesTabContent.qml` |
-| Dyn icons tab | `qml/components/DynamicIconsTabContent.qml` |
+| Density unlock / restore | `src/ops/densityenabler.cpp`, `src/gui/helperclient.cpp`, `qml/pages/DensityPage.qml` |
+| Mosaic home / theme work | `qml/pages/MainPage.qml`, `qml/components/ThemeWork.qml` |
+| Icons / fonts configure | `qml/pages/IconsConfigurePage.qml`, `qml/pages/FontsConfigurePage.qml` |
+| Dyn icons | `qml/pages/DynamicIconsPage.qml` |
 | Session D-Bus | `dbus/org.muoto.Launcher1.Themes.xml`, `src/launcher-daemon/main.cpp` |

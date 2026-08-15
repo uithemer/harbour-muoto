@@ -78,11 +78,25 @@ Look for `ApplyIcons start/done`, `rebuildIconUpdaters`, `file not found`, and `
 | ------- | ------------ | ----- |
 | Nothing themes after install | `launcher-icond` not running / no D-Bus name | User unit symlink + `enable --now`; GetNameOwner |
 | Half icons look stock after pack switch | Lipstick cache; pack lacks assets (overlay off); or inplace only updated launcher size | Check manifest `mode`; compare hicolor launcher-size vs 512; restart homescreen if needed |
-| APK icons stuck on previous pack | Absolute `Icon=` cached by Lipstick | Confirm on-disk `Icon=` path/md5 changed; restart homescreen |
+| APK icons stuck on previous pack | Lipstick lost its inotify watch on the desktop (apkd regenerated it) | Confirm on-disk `Icon=` changed, then check the watch (below); look for `re-armed launcher watches` in the icond journal |
+| APK icons stock after an Android container restart | `containerReady` not received, or apkd clobbered after the retry | icond journal should show `apkd containerReady` then `refreshApkIcons`; check the property with `dbus-send --session --print-reply --dest=com.jolla.apkd /com/jolla/apkd org.freedesktop.DBus.Properties.Get string:com.jolla.apkd string:containerReady` |
+| New app installed but icon is stock | Listener ignored the PackageKit role, or `update-icons` no-op'd on a double-prefixed pack dir | Listener journal: `role=` / `roleRelevant=` (expect `10`/`11`/`22` with `true`); `update-icons` must log `ApplyIcons`, not `missing /usr/share/harbour-themepack-harbour-themepack-…`. Icond should also log `refreshNewDesktops pending= N themed= N` |
 | Apply returns “upgrade in progress” | OS update guard | `/run/defaultuser/osupdate_running`, `system-update.target` — see [Automation](automation) |
 | Apply returns “busy” | `icon-ops.lock` held | Wait; check for stuck icond |
 | Blank tiles | Empty / deleted hicolor leftover | Manifest restore; `rpm -V` / reinstall app |
 | Dyn clock/calendar not live | Flags off or pack without `dynclock`/`dyncal` | dconf `dynamic*Enabled`; pack dirs |
+
+## Is Lipstick still watching a desktop entry?
+
+An `Icon=` rewrite only reaches the grid if Lipstick holds an inotify watch on that `.desktop`. Its watch descriptors list the watched inodes in hex:
+
+```sh
+LP=$(pgrep -f '^/usr/bin/lipstick')
+D=~/.local/share/applications/apkd_launcher_org_telegram_messenger-org_telegram_messenger_DefaultIcon.desktop
+sudo grep -h '^inotify' /proc/$LP/fdinfo/* | grep "ino:$(printf '%x' $(stat -c %i "$D")) "
+```
+
+No match means the watch is gone and the tile cannot refresh until it is re-armed — see the re-arm section in [Architecture](architecture). Beware inode reuse when comparing across a rename; a surer signal is that `~/.config/nemomobile/lipstick.conf` gets rewritten (`savePositions()`) every time Lipstick processes a desktop change.
 
 ## Architecture pointer
 

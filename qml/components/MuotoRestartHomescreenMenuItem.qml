@@ -8,6 +8,5 @@ MenuItem {
     property ThemePack themePack
 
     text: qsTr("Restart homescreen")
-    onClicked: HomescreenRestart.restartWithRemorse(
-        remorsePopup, themePack, qsTr("Restarting homescreen"))
+    onClicked: HomescreenRestart.restartWithRemorse(remorsePopup, themePack, qsTr("Restarting homescreen"))
 }

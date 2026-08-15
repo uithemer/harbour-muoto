@@ -32,15 +32,18 @@ namespace
 
     constexpr uint PK_EXIT_SUCCESS = 1;
 
-    // org.freedesktop.PackageKit.Transaction Role (u); 11 seen on SFOS for install-packages.
-    constexpr uint PK_ROLE_INSTALL_PACKAGES = 7;
-    constexpr uint PK_ROLE_UPDATE_PACKAGES = 8;
-    constexpr uint PK_ROLE_INSTALL_PACKAGES_SFOS = 11;
+    // org.freedesktop.PackageKit.Transaction Role (u), PkRoleEnum. Storeman drives
+    // both fresh installs and updates through UpdatePackages, so 22 is the one that
+    // matters in practice; 10 covers installing a downloaded rpm.
+    constexpr uint PK_ROLE_INSTALL_FILES = 10;
+    constexpr uint PK_ROLE_INSTALL_PACKAGES = 11;
+    constexpr uint PK_ROLE_UPDATE_PACKAGES = 22;
+    constexpr uint PK_ROLE_UPGRADE_SYSTEM = 33;
 
     bool pkRoleImpliesIconApply(uint role)
     {
-        return role == PK_ROLE_INSTALL_PACKAGES || role == PK_ROLE_UPDATE_PACKAGES
-               || role == PK_ROLE_INSTALL_PACKAGES_SFOS;
+        return role == PK_ROLE_INSTALL_FILES || role == PK_ROLE_INSTALL_PACKAGES
+               || role == PK_ROLE_UPDATE_PACKAGES || role == PK_ROLE_UPGRADE_SYSTEM;
     }
 }
 
@@ -115,12 +118,6 @@ void InstallListener::subscribeSession()
                       QStringLiteral("appUpdated"),
                       this,
                       SLOT(onApkdAppUpdated()));
-    _session.disconnect(QString::fromLatin1(kApkdService),
-                      QString::fromLatin1(kApkdPath),
-                      QString::fromLatin1(kApkdIface),
-                      QStringLiteral("PropertiesChanged"),
-                      this,
-                      SLOT(onApkdPropertiesChanged(QString, QVariantMap, QStringList)));
     _session.disconnect(QString::fromLatin1(kInstService),
                       QString::fromLatin1(kInstPath),
                       QString::fromLatin1(kInstIface),
@@ -140,13 +137,6 @@ void InstallListener::subscribeSession()
                      QStringLiteral("appUpdated"),
                      this,
                      SLOT(onApkdAppUpdated()));
-    _session.connect(QString::fromLatin1(kApkdService),
-                     QString::fromLatin1(kApkdPath),
-                     QString::fromLatin1(kApkdIface),
-                     QStringLiteral("PropertiesChanged"),
-                     this,
-                     SLOT(onApkdPropertiesChanged(QString, QVariantMap, QStringList)));
-
     _session.connect(QString::fromLatin1(kInstService),
                      QString::fromLatin1(kInstPath),
                      QString::fromLatin1(kInstIface),
@@ -243,18 +233,22 @@ void InstallListener::trackPkTransaction(const QString& path)
     qInfo() << "muoto-listener: tracking PK transaction" << path << "role=" << role
             << "roleRelevant=" << roleRelevant;
 
-    _system.connect(QString::fromLatin1(kPkService),
-                    path,
-                    QString::fromLatin1(kPkTxIface),
-                    QStringLiteral("Package"),
-                    watch,
-                    SLOT(onPackage(uint, QStringList, QString)));
-    _system.connect(QString::fromLatin1(kPkService),
-                    path,
-                    QString::fromLatin1(kPkTxIface),
-                    QStringLiteral("Finished"),
-                    watch,
-                    SLOT(onFinished(uint, uint)));
+    // Package is (u info, s package_id, s summary): a QStringList here silently
+    // fails to match and the info fallback never runs.
+    if(!_system.connect(QString::fromLatin1(kPkService),
+                        path,
+                        QString::fromLatin1(kPkTxIface),
+                        QStringLiteral("Package"),
+                        watch,
+                        SLOT(onPackage(uint, QString, QString))))
+        qWarning() << "muoto-listener: failed to connect Package for" << path;
+    if(!_system.connect(QString::fromLatin1(kPkService),
+                        path,
+                        QString::fromLatin1(kPkTxIface),
+                        QStringLiteral("Finished"),
+                        watch,
+                        SLOT(onFinished(uint, uint))))
+        qWarning() << "muoto-listener: failed to connect Finished for" << path;
 }
 
 void InstallListener::onPkFinished(const QString& path, uint exitCode, bool relevant)
@@ -305,18 +299,6 @@ void InstallListener::onApkdAppInstalled()
 void InstallListener::onApkdAppUpdated()
 {
     scheduleApply("apkd-appUpdated");
-}
-
-void InstallListener::onApkdPropertiesChanged(const QString& interface,
-                                                const QVariantMap& changed,
-                                                const QStringList& invalidated)
-{
-    Q_UNUSED(invalidated);
-    if(interface != QLatin1String(kApkdIface))
-        return;
-    const QVariant v = changed.value(QStringLiteral("containerReady"));
-    if(v.isValid() && v.toBool())
-        scheduleApply("apkd-containerReady");
 }
 
 void InstallListener::onInstallationFinished(bool success, const QString& errorString)

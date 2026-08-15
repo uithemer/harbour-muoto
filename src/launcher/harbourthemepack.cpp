@@ -1,7 +1,6 @@
 #include "harbourthemepack.h"
 
 #include "iconpaths.h"
-#include "svgiconrender.h"
 
 #include <silicatheme.h>
 #include <QCollator>
@@ -111,21 +110,6 @@ HarbourThemePack::HarbourThemePack(const QString& path, QObject* parent)
     }
 }
 
-QStringList HarbourThemePack::icons()
-{
-    if(!m_icons.isEmpty())
-        return m_icons;
-
-    for(const QString& iconName : m_jollaIcons.keys())
-        m_icons += findJollaIcon(iconName);
-    for(const QString& iconName : m_nativeIcons.keys())
-        m_icons += findNativeIcon(iconName);
-    for(const QString& iconName : m_apkIcons.keys())
-        m_icons += findApkIcon(iconName);
-
-    return m_icons;
-}
-
 QString HarbourThemePack::iconByPackageName(const QString& packageName)
 {
     static const QHash<QString, QString> jollaPackages = {
@@ -168,7 +152,7 @@ QImage HarbourThemePack::requestIcon(const QString& iconId, const QSize& request
     if(iconId.isEmpty())
         return {};
 
-    // Prefer packed relative paths (jolla/.../icons/foo.png) from icons()/find*.
+    // Prefer packed relative paths (jolla/.../icons/foo.png) from find*.
     if(iconId.contains(QLatin1Char('/')))
         return loadImageFromFile(m_path + QLatin1Char('/') + iconId, requestedSize);
 

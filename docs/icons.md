@@ -80,13 +80,13 @@ Pack layout:
 * `dd.png` — day of month (`01`–`31`)
 * `mmdd.png` — holiday icons (month + day, optional)
 
-Enable on **Confirm** when applying a pack that includes `dyncal/`, or on the **Dynamic icons** tab while such a pack is active (or on default after restore — UI available, switches off until enabled). The tab is greyed out only when a non-default pack without dyn assets is active.
+Enable on the **Icons** configure page when applying a pack that includes `dyncal/`, or on the **Dynamic icons** screen while such a pack is active (or on default after restore — UI available, switches off until enabled). When a non-default pack without dyn assets is active, the home mosaic tile subtitle shows **Not available** and the screen explains that switches are not offered.
 
 ### DynClock
 
 Live Clock launcher icon. With a theme pack that ships `dynclock/`, assets under `dynclock/256x256/` (`bg.png`, `hour.png`, `minute.png`) drive the live hands.
 
-Enable on **Confirm** when applying a pack that includes `dynclock/`, or on the **Dynamic icons** tab while such a pack is active (or on default after restore — UI available, switches off until enabled). The tab is greyed out only when a non-default pack without dyn assets is active.
+Enable on the **Icons** configure page when applying a pack that includes `dynclock/`, or on the **Dynamic icons** screen while such a pack is active (or on default after restore — UI available, switches off until enabled). When a non-default pack without dyn assets is active, the home mosaic tile subtitle shows **Not available** and the screen explains that switches are not offered.
 
 ## Style missing app icons (`overlay/`)
 
@@ -99,7 +99,7 @@ The old Android-only overlay trick (root file `type` containing `android`) is **
 | Path / file | Status |
 |-------------|--------|
 | `sound/` | Removed in 2.4.4 — see [Sounds](sounds) |
-| `dyncal/`, `dynclock/` | Launcher daemon when enabled via Confirm / Dynamic icons tab; pack assets when present |
+| `dyncal/`, `dynclock/` | Launcher daemon when enabled via Icons configure / Dynamic icons screen; pack assets when present |
 | Root `type` (`android` overlay-only packs) | Dropped in 2.7.1 |
 
 ## Icon file size hints

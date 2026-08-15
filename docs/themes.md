@@ -7,29 +7,29 @@ nav_order: 2
 
 # Themes
 
-The **Themes** tab lists installed `harbour-themepack-*` packages (e.g. from OpenRepos).
+From the home mosaic, open the **Icons** or **Fonts** tile. Each configure page lists installed `harbour-themepack-*` packages (e.g. from OpenRepos).
 
 ## Apply a theme
 
-Tap a pack, choose icons, style for missing icons, and/or fonts (and font weight if offered), then confirm.
+Swipe the pack carousel, choose options (style for missing icons and/or font weight if offered), then tap **Apply**.
 
-You can combine packs — for example icons from one pack and fonts from another (apply each part separately).
+You can combine packs — for example icons from one pack and fonts from another (apply each part from its configure page).
 
-If the pack includes live clock or calendar artwork, Confirm also offers **Dynamic clock** / **Dynamic calendar** switches. You can change those later on the **[Dynamic icons](dynamic-icons)** tab.
+If the pack includes live clock or calendar artwork, the Icons page also offers **Dynamic clock** / **Dynamic calendar** switches. You can change those later from the **[Dynamic icons](dynamic-icons)** tile.
 
 ## Style missing app icons
 
-If the pack supports it, enable **Style missing app icons** when applying a theme. Muoto uses frames or masks from the pack's `overlay/` folder to style app icons that don't have a custom icon in the pack.
+If the pack supports it, enable **Style missing app icons** when applying icons. Muoto uses frames or masks from the pack's `overlay/` folder to style app icons that don't have a custom icon in the pack.
 
 ## Homescreen refresh
 
-After apply or restore, launcher icons follow the active theme pack (and the Dynamic icons toggles for clock/calendar). They usually update automatically. If icons look stale, enable *Restart homescreen* in the confirm dialog, or use **Restart homescreen** from the pulley menu (with remorse).
+After apply or restore, launcher icons follow the active theme pack (and the Dynamic icons toggles for clock/calendar). They usually update automatically. If icons look stale, enable *Restart homescreen* on the configure page before Apply, or use **Restart homescreen** from the home pulley menu (with remorse).
 
 ## Restore theme
 
-Pulley menu → *Restore theme* — choose whether to restore icons and/or fonts to stock.
+On the Icons or Fonts configure page, select **Default** (stock) in the carousel and tap **Apply**.
 
-## Other pulley actions
+## Other home pulley actions
 
 * *About Muoto* — version, changelog, link to pack documentation
 * *Restart homescreen*
@@ -37,4 +37,4 @@ Pulley menu → *Restore theme* — choose whether to restore icons and/or fonts
 
 ## Uninstall
 
-Use the pack item menu to remove an RPM. If that pack is active for icons, Muoto restores stock icons first.
+Use the pack item menu on a configure page to remove an RPM. If that pack is active for icons, Muoto restores stock icons first.

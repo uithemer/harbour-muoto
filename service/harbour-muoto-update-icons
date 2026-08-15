@@ -28,8 +28,11 @@ if [ -z "$pack" ] || [ "$pack" = "default" ]; then
     exit 0
 fi
 
-if [ ! -d "/usr/share/harbour-themepack-$pack" ]; then
-    muoto_log "update-icons: no-op (missing /usr/share/harbour-themepack-$pack)"
+# activeIconPack holds the full rpm name; strip the prefix before prepending it
+# so this matches IconPaths::packDir, which accepts either form.
+packdir="/usr/share/harbour-themepack-${pack#harbour-themepack-}"
+if [ ! -d "$packdir" ]; then
+    muoto_log "update-icons: no-op (missing $packdir)"
     exit 0
 fi
 

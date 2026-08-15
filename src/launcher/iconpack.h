@@ -23,7 +23,6 @@ public:
 
     QString name() const;
 
-    virtual QStringList icons() = 0;
     virtual QString iconByPackageName(const QString& packageName) = 0;
     virtual QString iconByActivity(const QString& activity) = 0;
     virtual QImage requestIcon(const QString& iconId, const QSize& requestedSize) = 0;

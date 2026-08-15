@@ -4,8 +4,8 @@
 <!--
     org.muoto.Muoto1.Packs
     ----------------------------
-    Privileged theme-pack operations (currently just RPM uninstall). Gated
-    by the "manage-packs" polkit action.
+    Privileged theme-pack operations (currently just RPM uninstall).
+    Authorization is the system-bus policy in org.muoto.Muoto1.conf.
 -->
 <node>
   <interface name="org.muoto.Muoto1.Packs">

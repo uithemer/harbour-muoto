@@ -72,7 +72,11 @@
     </message>
 </context>
 <context>
-    <name>ConfirmPage</name>
+    <name>DensityPage</name>
+    <message>
+        <source>Could not unlock display density settings</source>
+        <translation>Impossibile sbloccare le impostazioni di densità display</translation>
+    </message>
     <message>
         <source>Cancel</source>
         <translation>Annulla</translation>
@@ -82,85 +86,24 @@
         <translation>Applica</translation>
     </message>
     <message>
-        <source>Icons</source>
-        <translation>Icone</translation>
+        <source>Display scale</source>
+        <translation>Scala del display</translation>
     </message>
     <message>
-        <source>No preview available</source>
-        <translation>Anteprima non disponibile</translation>
+        <source>Restore default</source>
+        <translation>Ripristina predefinito</translation>
     </message>
     <message>
-        <source>Apply icons</source>
-        <translation>Applica icone</translation>
+        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
+        <translation>Controlla quanto grandi appaiono gli elementi dell&apos;interfaccia Sailfish. Valore più basso = più elementi sullo schermo; valore più alto = testo e pulsanti più grandi.</translation>
     </message>
     <message>
-        <source>Fonts</source>
-        <translation>Font</translation>
+        <source>Launcher icon size</source>
+        <translation>Dimensione icone del launcher</translation>
     </message>
     <message>
-        <source>Choose a font weight to preview</source>
-        <translation>Scegli uno stile del font per l&apos;anteprima</translation>
-    </message>
-    <message>
-        <source>Apply fonts</source>
-        <translation>Applica font</translation>
-    </message>
-    <message>
-        <source>Font weight</source>
-        <translation>Stile del font</translation>
-    </message>
-    <message>
-        <source>Choose the main font weight for the UI.</source>
-        <translation>Scegli lo stile del font principale per l&apos;interfaccia.</translation>
-    </message>
-    <message>
-        <source>Style missing app icons</source>
-        <translation>Stilizza le icone mancanti</translation>
-    </message>
-    <message>
-        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation>Usa lo stile di questo tema per le app che non hanno un&apos;icona personalizzata nel pacchetto.</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
-        <translation>Riavvia la schermata iniziale per aggiornare icone e font del launcher e completare l&apos;applicazione del tema.</translation>
-    </message>
-    <message>
-        <source>Dynamic clock icon</source>
-        <translation>Icona Orologio dinamica</translation>
-    </message>
-    <message>
-        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio, nello stile di questo tema.</translation>
-    </message>
-    <message>
-        <source>Dynamic calendar icon</source>
-        <translation>Icona Calendario dinamica</translation>
-    </message>
-    <message>
-        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation>Mostra la data corrente nell&apos;icona Calendario, nello stile di questo tema.</translation>
-    </message>
-</context>
-<context>
-    <name>CoverConfirm</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Impostazioni applicate.</translation>
-    </message>
-</context>
-<context>
-    <name>CoverPage</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Impostazioni applicate.</translation>
-    </message>
-</context>
-<context>
-    <name>DensityTabContent</name>
-    <message>
-        <source>Restore display density</source>
-        <translation>Ripristina densità display</translation>
+        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
+        <translation>Icone sulla schermata iniziale e nella griglia delle app. Il predefinito di sistema usa la dimensione normale del dispositivo.</translation>
     </message>
     <message>
         <source>System default</source>
@@ -187,32 +130,12 @@
         <translation>Molto grande (172)</translation>
     </message>
     <message>
-        <source>Display scale</source>
-        <translation>Scaling display</translation>
+        <source>When you are done, restart the homescreen to apply these changes.</source>
+        <translation>Al termine, riavvia la schermata iniziale per applicare le modifiche.</translation>
     </message>
     <message>
-        <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation>Controlla quanto grandi appaiono gli elementi dell&apos;interfaccia Sailfish. Valore più basso = più elementi sullo schermo; valore più alto = testo e pulsanti più grandi.</translation>
-    </message>
-    <message>
-        <source>Launcher icon size</source>
-        <translation>Dimensione icone del launcher</translation>
-    </message>
-    <message>
-        <source>Could not unlock display density settings</source>
-        <translation>Impossibile sbloccare le impostazioni di densità display</translation>
-    </message>
-    <message>
-        <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
-        <translation>Quando hai finito, riavvia la schermata iniziale per applicare queste modifiche. Puoi riavviarla dal menu a trascinamento.</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Impostazioni applicate.</translation>
-    </message>
-    <message>
-        <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation>Icone sulla schermata iniziale e nella griglia delle app. Il predefinito di sistema usa la dimensione normale del dispositivo.</translation>
+        <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
+        <translation>Riavvia la schermata iniziale dopo aver applicato la densità display, così tutte le app ricevono le modifiche.</translation>
     </message>
 </context>
 <context>
@@ -227,10 +150,30 @@
     </message>
 </context>
 <context>
-    <name>DynamicIconsTabContent</name>
+    <name>DynamicIconsPage</name>
     <message>
-        <source>Dynamic icons</source>
-        <translation>Icone dinamiche</translation>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Applica</translation>
+    </message>
+    <message>
+        <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
+        <translation>Questo tema non include le icone dinamiche per l&apos;Orologio o il Calendario. Prova un altro tema o ripristina quello predefinito.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons.</source>
+        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
+        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
+    </message>
+    <message>
+        <source>Dynamic icons updated.</source>
+        <translation>Icone dinamiche aggiornate.</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
@@ -246,19 +189,7 @@
     </message>
     <message>
         <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation>Mostra la data corrente nell&apos;icona Calendario.</translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario.</translation>
-    </message>
-    <message>
-        <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation>Questo tema non include le icone dinamiche per l&apos;Orologio o il Calendario. Prova un altro tema o ripristina quello predefinito.</translation>
+        <translation>Mostra la data di oggi nell&apos;icona Calendario.</translation>
     </message>
 </context>
 <context>
@@ -273,6 +204,52 @@
     </message>
 </context>
 <context>
+    <name>FontCarouselModel</name>
+    <message>
+        <source>Default</source>
+        <translation>Predefinito</translation>
+    </message>
+</context>
+<context>
+    <name>FontsConfigurePage</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Applica</translation>
+    </message>
+    <message>
+        <source>This pack provides non-Latin fonts only.</source>
+        <translation>Questo pacchetto fornisce solo font non latini.</translation>
+    </message>
+    <message>
+        <source>Choose a font weight to preview</source>
+        <translation>Scegli uno stile del font per l&apos;anteprima</translation>
+    </message>
+    <message>
+        <source>Font packs</source>
+        <translation>Pacchetti font</translation>
+    </message>
+    <message>
+        <source>Font weight</source>
+        <translation>Stile del font</translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
+        <translation>Riavvia la schermata iniziale dopo aver applicato i font, così tutte le app usano il nuovo carattere.</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Disinstalla</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation>Disinstallazione di %1</translation>
+    </message>
+</context>
+<context>
     <name>HomescreenRestartSection</name>
     <message>
         <source>Restart homescreen</source>
@@ -284,10 +261,143 @@
     </message>
 </context>
 <context>
+    <name>IconPackPreview</name>
+    <message>
+        <source>No preview available</source>
+        <translation>Anteprima non disponibile</translation>
+    </message>
+</context>
+<context>
+    <name>IconsConfigurePage</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Applica</translation>
+    </message>
+    <message>
+        <source>Icon packs</source>
+        <translation>Pacchetti icone</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Opzioni</translation>
+    </message>
+    <message>
+        <source>Style missing app icons</source>
+        <translation>Stilizza le icone mancanti</translation>
+    </message>
+    <message>
+        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
+        <translation>Usa lo stile di questo tema per le app che non hanno un&apos;icona personalizzata nel pacchetto.</translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation>Icona Orologio dinamica</translation>
+    </message>
+    <message>
+        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
+        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio, nello stile di questo tema.</translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation>Icona Calendario dinamica</translation>
+    </message>
+    <message>
+        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
+        <translation>Mostra la data di oggi nell&apos;icona Calendario, nello stile di questo tema.</translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
+        <translation>Riavvia la schermata iniziale dopo aver applicato le icone, così tutte le tessere del launcher si aggiornano.</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Predefinito</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Disinstalla</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation>Disinstallazione di %1</translation>
+    </message>
+</context>
+<context>
     <name>LicenseListPart</name>
     <message>
         <source>License text</source>
         <translation>Testo della licenza</translation>
+    </message>
+</context>
+<context>
+    <name>LowPowerPage</name>
+    <message>
+        <source>Could not update low-power mode settings</source>
+        <translation>Impossibile aggiornare le impostazioni della modalità a basso consumo</translation>
+    </message>
+    <message>
+        <source>Low-power settings updated.</source>
+        <translation>Impostazioni risparmio energetico aggiornate.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Applica</translation>
+    </message>
+    <message>
+        <source>Low-power mode</source>
+        <translation>Modalità a basso consumo</translation>
+    </message>
+    <message>
+        <source>Low-power mode settings are not available on this device.</source>
+        <translation>Le impostazioni della modalità a basso consumo non sono disponibili su questo dispositivo.</translation>
+    </message>
+    <message>
+        <source>Wake from pocket</source>
+        <translation>Attiva dalla tasca</translation>
+    </message>
+    <message>
+        <source>Wake on hover</source>
+        <translation>Attiva al passaggio</translation>
+    </message>
+    <message>
+        <source>Show the glance screen when you hold your hand over the sensor.</source>
+        <translation>Mostra la schermata glance quando tieni la mano sul sensore.</translation>
+    </message>
+    <message>
+        <source>Keep proximity ready</source>
+        <translation>Mantieni il sensore di prossimità pronto</translation>
+    </message>
+    <message>
+        <source>Use recommended</source>
+        <translation>Usa consigliate</translation>
+    </message>
+    <message>
+        <source>Restore defaults</source>
+        <translation>Ripristina predefinite</translation>
+    </message>
+    <message>
+        <source>Automatically show time and status information when the screen is off.</source>
+        <translation>Mostra automaticamente ora e informazioni di stato quando lo schermo è spento.</translation>
+    </message>
+    <message>
+        <source>Show the glance screen when taking the device out of pocket.</source>
+        <translation>Mostra la schermata glance quando estrai il dispositivo dalla tasca.</translation>
+    </message>
+    <message>
+        <source>Needed for reliable glance on many devices. Enabling this may use more battery, and the screen may not turn off reliably during calls.</source>
+        <translation>Necessario per un glance affidabile su molti dispositivi. Abilitarlo può aumentare il consumo della batteria e lo schermo potrebbe non spegnersi in modo affidabile durante le chiamate.</translation>
+    </message>
+    <message>
+        <source>Double tap the glance screen to wake fully.</source>
+        <translation>Tocca due volte la schermata glance per riattivare completamente.</translation>
     </message>
 </context>
 <context>
@@ -297,12 +407,48 @@
         <translation>Densità display</translation>
     </message>
     <message>
-        <source>Themes</source>
-        <translation>Temi</translation>
-    </message>
-    <message>
         <source>Dynamic icons</source>
         <translation>Icone dinamiche</translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation>Scarica altri temi</translation>
+    </message>
+    <message>
+        <source>Muoto</source>
+        <translation>Muoto</translation>
+    </message>
+    <message>
+        <source>Icons</source>
+        <translation>Icone</translation>
+    </message>
+    <message>
+        <source>Stock</source>
+        <translation>Predefinite</translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation>Font</translation>
+    </message>
+    <message>
+        <source>Tap to configure</source>
+        <translation>Tocca per configurare</translation>
+    </message>
+    <message>
+        <source>Not available</source>
+        <translation>Non disponibile</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Attivo</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Disattivo</translation>
+    </message>
+    <message>
+        <source>Low-power mode</source>
+        <translation>Modalità a basso consumo</translation>
     </message>
 </context>
 <context>
@@ -546,52 +692,6 @@
     </message>
 </context>
 <context>
-    <name>RestoreDDPage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Ripristina</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-    <message>
-        <source>Default device pixel ratio</source>
-        <translation>Device pixel ratio predefinito</translation>
-    </message>
-    <message>
-        <source>Default icon size</source>
-        <translation>Dimensione icone predefinita</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
-        <translation>Riavvia la schermata iniziale dopo aver ripristinato la densità display, così tutte le app recepiscono le modifiche.</translation>
-    </message>
-</context>
-<context>
-    <name>RestorePage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Ripristina</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-    <message>
-        <source>Default icons</source>
-        <translation>Icone predefinite</translation>
-    </message>
-    <message>
-        <source>Default fonts</source>
-        <translation>Font predefiniti</translation>
-    </message>
-    <message>
-        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
-        <translation>La maggior parte delle modifiche appare subito. Riavvia la schermata iniziale per aggiornare icone e font del launcher dopo aver ripristinato i predefiniti.</translation>
-    </message>
-</context>
-<context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
@@ -615,61 +715,46 @@
     </message>
 </context>
 <context>
-    <name>ThemePackItem</name>
+    <name>ThemeWork</name>
     <message>
-        <source>Uninstall</source>
-        <translation>Disinstalla</translation>
-    </message>
-    <message>
-        <source>icons</source>
-        <translation>icone</translation>
-    </message>
-    <message>
-        <source>fonts</source>
-        <translation>font</translation>
-    </message>
-</context>
-<context>
-    <name>ThemesTabContent</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Impostazioni applicate.</translation>
-    </message>
-    <message>
-        <source>Download more themes</source>
-        <translation>Scarica altri temi</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation>Ripristina tema</translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation>Disinstallazione di %1</translation>
-    </message>
-    <message>
-        <source>No themes yet</source>
-        <translation>Nessun tema</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme to start</source>
-        <translation>Installa un tema compatibile per iniziare</translation>
+        <source>Stock</source>
+        <translation>Predefinite</translation>
     </message>
     <message>
         <source>Applying theme</source>
         <translation>Applicazione tema</translation>
     </message>
     <message>
+        <source>Theme updated.</source>
+        <translation>Tema aggiornato.</translation>
+    </message>
+    <message>
+        <source>Display settings updated.</source>
+        <translation>Impostazioni schermo aggiornate.</translation>
+    </message>
+    <message>
+        <source>Theme removed.</source>
+        <translation>Tema rimosso.</translation>
+    </message>
+    <message>
+        <source>Applying icons…</source>
+        <translation>Applicazione icone…</translation>
+    </message>
+    <message>
+        <source>Applying fonts…</source>
+        <translation>Applicazione font…</translation>
+    </message>
+    <message>
         <source>Restoring theme…</source>
         <translation>Ripristino tema…</translation>
     </message>
     <message>
-        <source>Applying theme…</source>
-        <translation>Applicazione tema…</translation>
-    </message>
-    <message>
         <source>Uninstalling theme…</source>
         <translation>Disinstallazione tema…</translation>
+    </message>
+    <message>
+        <source>Waiting…</source>
+        <translation>In attesa…</translation>
     </message>
 </context>
 <context>
@@ -783,6 +868,10 @@
     <message>
         <source>Operation failed</source>
         <translation>Operazione non riuscita</translation>
+    </message>
+    <message>
+        <source>Busy — try again in a moment</source>
+        <translation>Occupato — riprova tra un attimo</translation>
     </message>
 </context>
 </TS>

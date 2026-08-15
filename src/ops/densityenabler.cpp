@@ -22,8 +22,11 @@ DensityEnabler::DensityEnabler(QObject* parent) : QObject(parent)
 {
 }
 
-bool DensityEnabler::moveLockToBackup(const QString& fileName)
+bool DensityEnabler::moveLockToBackup(const QString& fileName, bool* moved)
 {
+    if(moved)
+        *moved = false;
+
     const QString src = QString::fromLatin1(kVendorLocksDir)
                       + QLatin1Char('/') + fileName;
     const QString dst = QString::fromLatin1(kBackupDir)
@@ -43,6 +46,8 @@ bool DensityEnabler::moveLockToBackup(const QString& fileName)
         qWarning() << "DensityEnabler: failed to move" << src << "->" << dst;
         return false;
     }
+    if(moved)
+        *moved = true;
     return true;
 }
 
@@ -76,10 +81,16 @@ void DensityEnabler::ensureEnabled()
     QDir().mkpath(QString::fromLatin1(kBackupDir));
 
     bool ok = true;
-    ok &= moveLockToBackup(QStringLiteral("silica-configs.txt"));
-    ok &= moveLockToBackup(QStringLiteral("ui-configs.txt"));
+    bool movedAny = false;
+    bool moved = false;
+    ok &= moveLockToBackup(QStringLiteral("silica-configs.txt"), &moved);
+    movedAny |= moved;
+    moved = false;
+    ok &= moveLockToBackup(QStringLiteral("ui-configs.txt"), &moved);
+    movedAny |= moved;
 
-    runDconfUpdate();
+    if(movedAny)
+        runDconfUpdate();
 
     if(!ok)
     {

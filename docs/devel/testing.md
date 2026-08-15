@@ -22,9 +22,9 @@ Use the [Sailfish SDK](https://developer.sailfishos.com/develop/sdk/) (`sfdk`):
 After installing an RPM **over SSH** (no active GUI session at install time), user units may be missing. As `defaultuser`:
 
 ```bash
-ln -sf /usr/share/harbour-muoto/systemd/user/harbour-muoto-launcher-icond.service \
+ln -sf /usr/lib/systemd/user/harbour-muoto-launcher-icond.service \
   ~/.config/systemd/user/
-ln -sf /usr/share/harbour-muoto/systemd/user/harbour-muoto-install-listener.service \
+ln -sf /usr/lib/systemd/user/harbour-muoto-install-listener.service \
   ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable --now harbour-muoto-launcher-icond harbour-muoto-install-listener
@@ -34,11 +34,11 @@ Confirm session D-Bus name `org.muoto.Launcher1` is owned before calling `ApplyI
 
 ## Manual smoke
 
-1. Open Muoto → Themes → apply a pack with icons (and optionally overlay / fonts).
+1. Open Muoto → **Icons** tile → apply a pack (and optionally overlay). Use **Fonts** for font packs.
 2. Check homescreen: Jolla, harbour apps, and APK icons look themed.
 3. Switch to a second pack; icons should follow without a full reboot (APK may need pulley **Restart homescreen** if Lipstick caches absolute `Icon=`).
-4. Dynamic icons tab / Confirm: enable clock or calendar when the pack ships `dynclock/` / `dyncal/`.
-5. Restore theme → stock icons; `activeIconPack` is `default`.
+4. **Icons** page or **Dynamic icons** tile: enable clock or calendar when the pack ships `dynclock/` / `dyncal/`.
+5. On Icons (and Fonts if needed), select **Default** and **Apply** → stock; `activeIconPack` is `default`.
 6. Display density: change scale, apply, restore.
 
 ## Automated device scripts

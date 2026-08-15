@@ -3,6 +3,7 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     $$PWD/muotolauncherglobal.h \
     $$PWD/launcherpaths.h \
+    $$PWD/launcherwatch.h \
     $$PWD/launchersettings.h \
     $$PWD/desktopentry.h \
     $$PWD/launchermanifest.h \
@@ -25,6 +26,7 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/launcherpaths.cpp \
+    $$PWD/launcherwatch.cpp \
     $$PWD/launchersettings.cpp \
     $$PWD/desktopentry.cpp \
     $$PWD/launchermanifest.cpp \

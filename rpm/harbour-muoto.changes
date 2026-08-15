@@ -1,3 +1,9 @@
+* Sat Aug 15 2026 3.5.0-1
+- Mosaic home with Icons, Fonts, Display density, and Dynamic icons pages.
+- UI polish for cover, previews and notification.
+- Added Low-power mode settings.
+- Icons applied without a homescreen restart. Folder icons still need the homescreen to be restarted, as per lipstick limitation.
+
 * Tue Aug 11 2026 3.2.2-2
 - Font support for jailed apps.
 - Translations updated.

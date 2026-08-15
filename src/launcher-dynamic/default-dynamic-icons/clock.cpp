@@ -2,7 +2,6 @@
 #include "dynamicicon.h"
 #include "harbourthemepack.h"
 #include "iconprovider.h"
-#include "launchersettings.h"
 #include "svgiconrender.h"
 
 #include <MGConfItem>
@@ -109,7 +108,12 @@ public:
         connect(&m_activePackConf, &MGConfItem::valueChanged, this, &ClockIconProvider::updateRenderer);
         connect(&m_activePackConf, &MGConfItem::valueChanged, this, &IconProvider::imageUpdated);
         connect(&m_timer, &QTimer::timeout, this, &IconProvider::imageUpdated);
-        connect(&m_devicelockStatus, &DevicelockStatus::unlocked, this, &IconProvider::imageUpdated);
+        connect(&m_devicelockStatus, &DevicelockStatus::locked, &m_timer, &QTimer::stop);
+        connect(&m_devicelockStatus, &DevicelockStatus::unlocked, this, [this]() {
+            if(!m_timer.isActive())
+                m_timer.start();
+            emit imageUpdated();
+        });
         m_timer.start(60 * 1000);
     }
 

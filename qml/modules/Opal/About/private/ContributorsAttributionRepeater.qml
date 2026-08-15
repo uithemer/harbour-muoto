@@ -5,6 +5,7 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 import"functions.js"as Func
+import"../../LinkHandler"as L
 Repeater{delegate:DetailList{property string spdxString:modelData._getSpdxString(" • • •")
 property bool showLicensePage:false
 activeLastValue:spdxString!==""||modelData.sources!==""||modelData.homepage!==""||modelData.description!==""

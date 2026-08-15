@@ -12,6 +12,7 @@ readonly property string name:__name
 readonly property string fullText:__fullText
 property bool __online:false
 property string __localUrl:"%1/%2.json".arg(StandardPaths.temporary).arg(spdxId)
+property string __bundledUrl:Qt.resolvedUrl("private/spdx/%1.json".arg(spdxId))
 property string __remoteUrl:"https://spdx.org/licenses/%1.json".arg(spdxId)
 property string __name:""
 property string __fullText:""
@@ -35,5 +36,5 @@ return
 }__name=""
 __fullText=""
 __error=false
-__worker.sendMessage({spdxId:spdxId,localUrl:__localUrl,remoteUrl:__remoteUrl,shortText:customShortText,online:!!__online})
+__worker.sendMessage({spdxId:spdxId,localUrl:__localUrl,bundledUrl:__bundledUrl,remoteUrl:__remoteUrl,shortText:customShortText,online:!!__online})
 }}

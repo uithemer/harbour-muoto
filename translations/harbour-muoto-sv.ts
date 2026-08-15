@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sv">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sv">
 <context>
     <name>AboutPage</name>
     <message>
@@ -70,147 +72,70 @@
     </message>
 </context>
 <context>
-    <name>ConfirmPage</name>
+    <name>DensityPage</name>
+    <message>
+        <source>Could not unlock display density settings</source>
+        <translation type="unfinished">Kunde inte låsa upp inställningarna för skärmupplösning</translation>
+    </message>
     <message>
         <source>Cancel</source>
-        <translation>Avbryt</translation>
+        <translation type="unfinished">Avbryt</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation>Tillämpa</translation>
-    </message>
-    <message>
-        <source>Icons</source>
-        <translation>Ikoner</translation>
-    </message>
-    <message>
-        <source>No preview available</source>
-        <translation>Ingen förhandsgranskning tillgänglig</translation>
-    </message>
-    <message>
-        <source>Apply icons</source>
-        <translation>Tillämpa ikoner</translation>
-    </message>
-    <message>
-        <source>Fonts</source>
-        <translation>Teckensnitt</translation>
-    </message>
-    <message>
-        <source>Choose a font weight to preview</source>
-        <translation>Välj en teckengrovlek att förhandsgranska</translation>
-    </message>
-    <message>
-        <source>Apply fonts</source>
-        <translation>Tillämpa teckensnitt</translation>
-    </message>
-    <message>
-        <source>Font weight</source>
-        <translation>Teckengrovlek</translation>
-    </message>
-    <message>
-        <source>Choose the main font weight for the UI.</source>
-        <translation>Välj huvudgrovlek för UI.</translation>
-    </message>
-    <message>
-        <source>Style missing app icons</source>
-        <translation>Stilen saknar app-ikoner</translation>
-    </message>
-    <message>
-        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation>Använder detta temas utseende för appar som inte har en egen ikon i paketet.</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen to refresh launcher icons and fonts and finish applying your theme.</source>
-        <translation>Starta om hemskärmen för att uppdatera startikoner och teckensnitt, samt slutföra tillämpningen av ditt tema.</translation>
-    </message>
-    <message>
-        <source>Dynamic clock icon</source>
-        <translation>Dynamisk klockikon</translation>
-    </message>
-    <message>
-        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation>Visa aktuell tid på klockikonen, i den här temastilen.</translation>
-    </message>
-    <message>
-        <source>Dynamic calendar icon</source>
-        <translation>Dynamisk kalenderikon</translation>
-    </message>
-    <message>
-        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation>Visa dagens datum på kalenderikonen, i den här temastilen.</translation>
-    </message>
-</context>
-<context>
-    <name>CoverConfirm</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Inställningar tillämpas.</translation>
-    </message>
-</context>
-<context>
-    <name>CoverPage</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Inställningar tillämpas.</translation>
-    </message>
-</context>
-<context>
-    <name>DensityTabContent</name>
-    <message>
-        <source>Restore display density</source>
-        <translation>Återställ bildskärmsupplösning</translation>
-    </message>
-    <message>
-        <source>System default</source>
-        <translation>Systemstandard</translation>
-    </message>
-    <message>
-        <source>Compact (86)</source>
-        <translation>Kompakt (86)</translation>
-    </message>
-    <message>
-        <source>Normal (108)</source>
-        <translation>Normal (108)</translation>
-    </message>
-    <message>
-        <source>Medium (129)</source>
-        <translation>Medium (129)</translation>
-    </message>
-    <message>
-        <source>Large (151)</source>
-        <translation>Stor (151)</translation>
-    </message>
-    <message>
-        <source>Extra large (172)</source>
-        <translation>Extra stor (172)</translation>
+        <translation type="unfinished">Tillämpa</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation>Skärmskala</translation>
+        <translation type="unfinished">Skärmskala</translation>
+    </message>
+    <message>
+        <source>Restore default</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation>Styr hur stora Sailfish UI-element ser ut. Lägre = fler på skärmen; högre = större text och knappar.</translation>
+        <translation type="unfinished">Styr hur stora Sailfish UI-element ser ut. Lägre = fler på skärmen; högre = större text och knappar.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation>Appstartikoners storlek</translation>
-    </message>
-    <message>
-        <source>Could not unlock display density settings</source>
-        <translation>Kunde inte låsa upp inställningarna för skärmupplösning</translation>
-    </message>
-    <message>
-        <source>When you are done, restart the homescreen to apply these changes. You can restart the homescreen from the pulley menu.</source>
-        <translation>Starta om hemskärmen för att tillämpa dessa ändringar när du är klar. Du kan starta om hemskärmen från toppmenyn.</translation>
-    </message>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Inställningar tillämpas.</translation>
+        <translation type="unfinished">Appstartikoners storlek</translation>
     </message>
     <message>
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation>Ikoner på startskärmen och appstartfältet. Systemstandard använder enhetens vanliga storlek.</translation>
+        <translation type="unfinished">Ikoner på startskärmen och appstartfältet. Systemstandard använder enhetens vanliga storlek.</translation>
+    </message>
+    <message>
+        <source>System default</source>
+        <translation type="unfinished">Systemstandard</translation>
+    </message>
+    <message>
+        <source>Compact (86)</source>
+        <translation type="unfinished">Kompakt (86)</translation>
+    </message>
+    <message>
+        <source>Normal (108)</source>
+        <translation type="unfinished">Normal (108)</translation>
+    </message>
+    <message>
+        <source>Medium (129)</source>
+        <translation type="unfinished">Medium (129)</translation>
+    </message>
+    <message>
+        <source>Large (151)</source>
+        <translation type="unfinished">Stor (151)</translation>
+    </message>
+    <message>
+        <source>Extra large (172)</source>
+        <translation type="unfinished">Extra stor (172)</translation>
+    </message>
+    <message>
+        <source>When you are done, restart the homescreen to apply these changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -225,38 +150,46 @@
     </message>
 </context>
 <context>
-    <name>DynamicIconsTabContent</name>
+    <name>DynamicIconsPage</name>
     <message>
-        <source>Dynamic icons</source>
-        <translation>Dynamiska ikoner</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
     </message>
     <message>
-        <source>Dynamic clock icon</source>
-        <translation>Dynamisk klockikon</translation>
-    </message>
-    <message>
-        <source>Shows the current time on the Clock launcher icon.</source>
-        <translation>Visa aktuell tid på klockans startikon.</translation>
-    </message>
-    <message>
-        <source>Dynamic calendar icon</source>
-        <translation>Dynamisk kalenderikon</translation>
-    </message>
-    <message>
-        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation>Visa dagens datum på kalenderns startikon</translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation>Visa aktuell tid och datum på klock- och kalenderikonerna, i den här temastilen.</translation>
-    </message>
-    <message>
-        <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation>Visa aktuell tid och datum på klock- och kalenderikonerna.</translation>
+        <source>Apply</source>
+        <translation type="unfinished">Tillämpa</translation>
     </message>
     <message>
         <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation>Detta tema innehåller inga live klock- och kalenderikoner. Försök med ett annat tema, eller återställ standardutseendet.</translation>
+        <translation type="unfinished">Detta tema innehåller inga live klock- och kalenderikoner. Försök med ett annat tema, eller återställ standardutseendet.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons.</source>
+        <translation type="unfinished">Visa aktuell tid och datum på klock- och kalenderikonerna.</translation>
+    </message>
+    <message>
+        <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
+        <translation type="unfinished">Visa aktuell tid och datum på klock- och kalenderikonerna, i den här temastilen.</translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished">Dynamisk klockikon</translation>
+    </message>
+    <message>
+        <source>Shows the current time on the Clock launcher icon.</source>
+        <translation type="unfinished">Visa aktuell tid på klockans startikon.</translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished">Dynamisk kalenderikon</translation>
+    </message>
+    <message>
+        <source>Shows today&apos;s date on the Calendar launcher icon.</source>
+        <translation type="unfinished">Visa dagens datum på kalenderns startikon</translation>
+    </message>
+    <message>
+        <source>Dynamic icons updated.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -271,6 +204,52 @@
     </message>
 </context>
 <context>
+    <name>FontCarouselModel</name>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FontsConfigurePage</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished">Tillämpa</translation>
+    </message>
+    <message>
+        <source>This pack provides non-Latin fonts only.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a font weight to preview</source>
+        <translation type="unfinished">Välj en teckengrovlek att förhandsgranska</translation>
+    </message>
+    <message>
+        <source>Font packs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font weight</source>
+        <translation type="unfinished">Teckengrovlek</translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished">Avinstallera</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished">Avinstallerar %1</translation>
+    </message>
+</context>
+<context>
     <name>HomescreenRestartSection</name>
     <message>
         <source>Restart homescreen</source>
@@ -282,10 +261,143 @@
     </message>
 </context>
 <context>
+    <name>IconPackPreview</name>
+    <message>
+        <source>No preview available</source>
+        <translation type="unfinished">Ingen förhandsgranskning tillgänglig</translation>
+    </message>
+</context>
+<context>
+    <name>IconsConfigurePage</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished">Tillämpa</translation>
+    </message>
+    <message>
+        <source>Icon packs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style missing app icons</source>
+        <translation type="unfinished">Stilen saknar app-ikoner</translation>
+    </message>
+    <message>
+        <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
+        <translation type="unfinished">Använder detta temas utseende för appar som inte har en egen ikon i paketet.</translation>
+    </message>
+    <message>
+        <source>Dynamic clock icon</source>
+        <translation type="unfinished">Dynamisk klockikon</translation>
+    </message>
+    <message>
+        <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
+        <translation type="unfinished">Visa aktuell tid på klockikonen, i den här temastilen.</translation>
+    </message>
+    <message>
+        <source>Dynamic calendar icon</source>
+        <translation type="unfinished">Dynamisk kalenderikon</translation>
+    </message>
+    <message>
+        <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
+        <translation type="unfinished">Visa dagens datum på kalenderikonen, i den här temastilen.</translation>
+    </message>
+    <message>
+        <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished">Avinstallera</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished">Avinstallerar %1</translation>
+    </message>
+</context>
+<context>
     <name>LicenseListPart</name>
     <message>
         <source>License text</source>
         <translation>Licenstext</translation>
+    </message>
+</context>
+<context>
+    <name>LowPowerPage</name>
+    <message>
+        <source>Could not update low-power mode settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished">Tillämpa</translation>
+    </message>
+    <message>
+        <source>Low-power mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low-power mode settings are not available on this device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wake from pocket</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wake on hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the glance screen when you hold your hand over the sensor.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep proximity ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use recommended</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically show time and status information when the screen is off.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the glance screen when taking the device out of pocket.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Needed for reliable glance on many devices. Enabling this may use more battery, and the screen may not turn off reliably during calls.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double tap the glance screen to wake fully.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low-power settings updated.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -295,12 +407,48 @@
         <translation>Skärmupplösning</translation>
     </message>
     <message>
-        <source>Themes</source>
-        <translation>Teman</translation>
-    </message>
-    <message>
         <source>Dynamic icons</source>
         <translation>Dynamiska ikoner</translation>
+    </message>
+    <message>
+        <source>Download more themes</source>
+        <translation type="unfinished">Ladda ner fler teman</translation>
+    </message>
+    <message>
+        <source>Muoto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons</source>
+        <translation type="unfinished">Ikoner</translation>
+    </message>
+    <message>
+        <source>Stock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation type="unfinished">Teckensnitt</translation>
+    </message>
+    <message>
+        <source>Tap to configure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low-power mode</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -424,7 +572,10 @@
     </message>
     <message numerus="yes">
         <source>show license(s)</source>
-        <translation><numerusform>visa licens</numerusform><numerusform>visa licenser</numerusform></translation>
+        <translation>
+            <numerusform>visa licens</numerusform>
+            <numerusform>visa licenser</numerusform>
+        </translation>
     </message>
     <message>
         <source>News</source>
@@ -468,7 +619,10 @@
     </message>
     <message numerus="yes">
         <source>License(s)</source>
-        <translation><numerusform>Licens</numerusform><numerusform>Licenser</numerusform></translation>
+        <translation>
+            <numerusform>Licens</numerusform>
+            <numerusform>Licenser</numerusform>
+        </translation>
     </message>
     <message>
         <source>Note: please check the source code for most accurate information.</source>
@@ -538,52 +692,6 @@
     </message>
 </context>
 <context>
-    <name>RestoreDDPage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Återställ</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <source>Default device pixel ratio</source>
-        <translation>Enhetens normala bildpunktsförhållande</translation>
-    </message>
-    <message>
-        <source>Default icon size</source>
-        <translation>Standard ikonstorlek</translation>
-    </message>
-    <message>
-        <source>Restart the homescreen after restoring display density so all apps pick up the changes.</source>
-        <translation>Starta om hemskärmen efter att ha återställt skärmupplösningen så att alla appar uppdaterar ändringarna.</translation>
-    </message>
-</context>
-<context>
-    <name>RestorePage</name>
-    <message>
-        <source>Restore</source>
-        <translation>Återställ</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <source>Default icons</source>
-        <translation>Standardikoner</translation>
-    </message>
-    <message>
-        <source>Default fonts</source>
-        <translation>Standardteckensnitt</translation>
-    </message>
-    <message>
-        <source>Most changes appear right away. Restart the homescreen to refresh launcher icons and fonts after restoring defaults.</source>
-        <translation>De flesta ändringar syns omedelbart. Starta om hemskärmen för att uppdatera appikoner och teckensnitt, efter att ha återställt standardinställningarna.</translation>
-    </message>
-</context>
-<context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
@@ -607,61 +715,46 @@
     </message>
 </context>
 <context>
-    <name>ThemePackItem</name>
+    <name>ThemeWork</name>
     <message>
-        <source>Uninstall</source>
-        <translation>Avinstallera</translation>
-    </message>
-    <message>
-        <source>icons</source>
-        <translation>ikoner</translation>
-    </message>
-    <message>
-        <source>fonts</source>
-        <translation>teckensnitt</translation>
-    </message>
-</context>
-<context>
-    <name>ThemesTabContent</name>
-    <message>
-        <source>Settings applied.</source>
-        <translation>Inställningar tillämpas.</translation>
-    </message>
-    <message>
-        <source>Download more themes</source>
-        <translation>Ladda ner fler teman</translation>
-    </message>
-    <message>
-        <source>Restore theme</source>
-        <translation>Återställ tema</translation>
-    </message>
-    <message>
-        <source>Uninstalling %1</source>
-        <translation>Avinstallerar %1</translation>
-    </message>
-    <message>
-        <source>No themes yet</source>
-        <translation>Inga teman ännu</translation>
-    </message>
-    <message>
-        <source>Install a compatible theme to start</source>
-        <translation>Installera ett kompatibelt tema för att komma igång</translation>
+        <source>Stock</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Applying theme</source>
-        <translation>Tillämpar tema</translation>
+        <translation type="unfinished">Tillämpar tema</translation>
+    </message>
+    <message>
+        <source>Applying icons…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying fonts…</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Restoring theme…</source>
-        <translation>Återställer tema…</translation>
-    </message>
-    <message>
-        <source>Applying theme…</source>
-        <translation>Tillämpar tema…</translation>
+        <translation type="unfinished">Återställer tema…</translation>
     </message>
     <message>
         <source>Uninstalling theme…</source>
-        <translation>Avinstallerar tema…</translation>
+        <translation type="unfinished">Avinstallerar tema…</translation>
+    </message>
+    <message>
+        <source>Waiting…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Theme updated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display settings updated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Theme removed.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -775,6 +868,10 @@
     <message>
         <source>Operation failed</source>
         <translation>Åtgärden misslyckades</translation>
+    </message>
+    <message>
+        <source>Busy — try again in a moment</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

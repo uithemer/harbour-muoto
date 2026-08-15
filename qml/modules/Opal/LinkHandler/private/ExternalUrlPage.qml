@@ -25,7 +25,8 @@ on_NetworkStatusChanged:console.log("[Opal.LinkHandler] network connected:",_net
 on_HaveWebviewModuleChanged:console.log("[Opal.LinkHandler] have webview module:",_haveWebviewModule)
 on_PreviewEnabledChanged:{console.log("[Opal.LinkHandler] preview enabled:",_previewEnabled)
 if(!_previewEnabled&&pageStack.nextPage(root)&&pageStack.nextPage(root).hasOwnProperty("__linkhandler_webview")){pageStack.popAttached()
-}}function _testWebview(){if(!_haveWebviewModuleTested){try{const tester=Qt.createQmlObject("\n                        import Sailfish.WebView 1.0\n                        import QtQuick 2.0\n                        QtObject {}",root,"WebviewTester [inline]")
+}}function _testWebview(){if(!_haveWebviewModuleTested){var tester
+try{tester=Qt.createQmlObject("\n                        import Sailfish.WebView 1.0\n                        import QtQuick 2.0\n                        QtObject {}",root,"WebviewTester [inline]")
 }catch(err){console.log(err)
 _haveWebviewModule=false
 }if(typeof tester!=="undefined"){tester.destroy()

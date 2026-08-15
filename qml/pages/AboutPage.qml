@@ -11,7 +11,7 @@ A.AboutPageBase {
     opacity: settings.isRunning ? 0.2 : 1
     appName: "Muoto"
     appIcon: Qt.resolvedUrl("../../images/appinfo.png")
-    appVersion: "3.2.2"
+    appVersion: "3.5.0"
     appRelease: ""
     description: qsTr("Muoto lets you customize icons, fonts and pixel density in Sailfish OS.")
     authors: ["fravaccaro"]
@@ -55,7 +55,7 @@ A.AboutPageBase {
             buttons: [
                 A.InfoButton {
                     text: qsTr("Documentation")
-                    onClicked: Qt.openUrlExternally("https://uithemer.github.io/harbour-muoto/docs/getstarted")
+                    onClicked: openOrCopyUrl("https://uithemer.github.io/harbour-muoto/docs/getstarted", text)
                 }
             ]
         },
@@ -65,7 +65,7 @@ A.AboutPageBase {
             buttons: [
                 A.InfoButton {
                     text: qsTr("Issues")
-                    onClicked: Qt.openUrlExternally("https://github.com/uithemer/harbour-muoto/issues")
+                    onClicked: openOrCopyUrl("https://github.com/uithemer/harbour-muoto/issues", text)
                 }
             ]
         },
@@ -85,17 +85,21 @@ A.AboutPageBase {
             name: "Original Icon pack support GUI"
             entries: ["RikudouSennin"]
             homepage: "https://github.com/RikudouSage/sailfish-iconpacksupport-gui"
-
         },
         A.Attribution {
             name: "Per-user font theming via fontconfig"
+            entries: ["dumol"]
             homepage: "https://dt.iki.fi/sailfish-os-change-default-font"
         },
         A.Attribution {
             name: "Clockwork"
             entries: ["dseight"]
             homepage: "https://github.com/dseight/clockwork"
-            licenses: A.License { spdxId: "MIT" }
+
+            licenses: A.License {
+                spdxId: "MIT"
+            }
+
         }
     ]
 
