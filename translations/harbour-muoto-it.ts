@@ -75,74 +75,74 @@
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
-        <translation type="unfinished">Impossibile sbloccare le impostazioni di densità display</translation>
+        <translation>Impossibile sbloccare le impostazioni di densità display</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annulla</translation>
+        <translation>Annulla</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Applica</translation>
+        <translation>Applica</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation type="unfinished">Scaling display</translation>
+        <translation>Scala del display</translation>
     </message>
     <message>
         <source>Restore default</source>
-        <translation type="unfinished"></translation>
+        <translation>Ripristina predefinito</translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation type="unfinished">Controlla quanto grandi appaiono gli elementi dell&apos;interfaccia Sailfish. Valore più basso = più elementi sullo schermo; valore più alto = testo e pulsanti più grandi.</translation>
+        <translation>Controlla quanto grandi appaiono gli elementi dell&apos;interfaccia Sailfish. Valore più basso = più elementi sullo schermo; valore più alto = testo e pulsanti più grandi.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation type="unfinished">Dimensione icone del launcher</translation>
+        <translation>Dimensione icone del launcher</translation>
     </message>
     <message>
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation type="unfinished">Icone sulla schermata iniziale e nella griglia delle app. Il predefinito di sistema usa la dimensione normale del dispositivo.</translation>
+        <translation>Icone sulla schermata iniziale e nella griglia delle app. Il predefinito di sistema usa la dimensione normale del dispositivo.</translation>
     </message>
     <message>
         <source>System default</source>
-        <translation type="unfinished">Predefinito di sistema</translation>
+        <translation>Predefinito di sistema</translation>
     </message>
     <message>
         <source>Compact (86)</source>
-        <translation type="unfinished">Compatto (86)</translation>
+        <translation>Compatto (86)</translation>
     </message>
     <message>
         <source>Normal (108)</source>
-        <translation type="unfinished">Normale (108)</translation>
+        <translation>Normale (108)</translation>
     </message>
     <message>
         <source>Medium (129)</source>
-        <translation type="unfinished">Medio (129)</translation>
+        <translation>Medio (129)</translation>
     </message>
     <message>
         <source>Large (151)</source>
-        <translation type="unfinished">Grande (151)</translation>
+        <translation>Grande (151)</translation>
     </message>
     <message>
         <source>Extra large (172)</source>
-        <translation type="unfinished">Molto grande (172)</translation>
+        <translation>Molto grande (172)</translation>
     </message>
     <message>
         <source>When you are done, restart the homescreen to apply these changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Al termine, riavvia la schermata iniziale per applicare le modifiche.</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia la schermata iniziale dopo aver applicato la densità display, così tutte le app ricevono le modifiche.</translation>
     </message>
 </context>
 <context>
     <name>DensityPreview</name>
     <message>
         <source>Aa Bb</source>
-        <translation type="unfinished"></translation>
+        <translation>Aa Bb</translation>
     </message>
 </context>
 <context>
@@ -160,23 +160,23 @@
     <name>DynamicIconsPage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annulla</translation>
+        <translation>Annulla</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Applica</translation>
+        <translation>Applica</translation>
     </message>
     <message>
         <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation type="unfinished">Questo tema non include le icone dinamiche per l&apos;Orologio o il Calendario. Prova un altro tema o ripristina quello predefinito.</translation>
+        <translation>Questo tema non include le icone dinamiche per l&apos;Orologio o il Calendario. Prova un altro tema o ripristina quello predefinito.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation type="unfinished">Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario.</translation>
+        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation type="unfinished">Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
+        <translation>Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
     </message>
     <message>
         <source>Dynamic icons updated.</source>
@@ -184,19 +184,19 @@
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished">Icona Orologio dinamica</translation>
+        <translation>Icona Orologio dinamica</translation>
     </message>
     <message>
         <source>Shows the current time on the Clock launcher icon.</source>
-        <translation type="unfinished">Mostra l&apos;ora corrente nell&apos;icona Orologio.</translation>
+        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished">Icona Calendario dinamica</translation>
+        <translation>Icona Calendario dinamica</translation>
     </message>
     <message>
         <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation type="unfinished">Mostra la data corrente nell&apos;icona Calendario.</translation>
+        <translation>Mostra la data di oggi nell&apos;icona Calendario.</translation>
     </message>
 </context>
 <context>
@@ -214,46 +214,46 @@
     <name>FontCarouselModel</name>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Predefinito</translation>
     </message>
 </context>
 <context>
     <name>FontsConfigurePage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annulla</translation>
+        <translation>Annulla</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Applica</translation>
+        <translation>Applica</translation>
     </message>
     <message>
         <source>This pack provides non-Latin fonts only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Questo pacchetto fornisce solo font non latini.</translation>
     </message>
     <message>
         <source>Choose a font weight to preview</source>
-        <translation type="unfinished">Scegli uno stile del font per l&apos;anteprima</translation>
+        <translation>Scegli uno stile del font per l&apos;anteprima</translation>
     </message>
     <message>
         <source>Font packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Pacchetti font</translation>
     </message>
     <message>
         <source>Font weight</source>
-        <translation type="unfinished">Stile del font</translation>
+        <translation>Stile del font</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia la schermata iniziale dopo aver applicato i font, così tutte le app usano il nuovo carattere.</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished">Disinstalla</translation>
+        <translation>Disinstalla</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished">Disinstallazione di %1</translation>
+        <translation>Disinstallazione di %1</translation>
     </message>
 </context>
 <context>
@@ -271,66 +271,66 @@
     <name>IconPackPreview</name>
     <message>
         <source>No preview available</source>
-        <translation type="unfinished">Anteprima non disponibile</translation>
+        <translation>Anteprima non disponibile</translation>
     </message>
 </context>
 <context>
     <name>IconsConfigurePage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annulla</translation>
+        <translation>Annulla</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Applica</translation>
+        <translation>Applica</translation>
     </message>
     <message>
         <source>Icon packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Pacchetti icone</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opzioni</translation>
     </message>
     <message>
         <source>Style missing app icons</source>
-        <translation type="unfinished">Stilizza le icone mancanti</translation>
+        <translation>Stilizza le icone mancanti</translation>
     </message>
     <message>
         <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation type="unfinished">Usa lo stile di questo tema per le app che non hanno un&apos;icona personalizzata nel pacchetto.</translation>
+        <translation>Usa lo stile di questo tema per le app che non hanno un&apos;icona personalizzata nel pacchetto.</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished">Icona Orologio dinamica</translation>
+        <translation>Icona Orologio dinamica</translation>
     </message>
     <message>
         <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation type="unfinished">Mostra l&apos;ora corrente nell&apos;icona Orologio, nello stile di questo tema.</translation>
+        <translation>Mostra l&apos;ora corrente nell&apos;icona Orologio, nello stile di questo tema.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished">Icona Calendario dinamica</translation>
+        <translation>Icona Calendario dinamica</translation>
     </message>
     <message>
         <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation type="unfinished">Mostra la data corrente nell&apos;icona Calendario, nello stile di questo tema.</translation>
+        <translation>Mostra la data di oggi nell&apos;icona Calendario, nello stile di questo tema.</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia la schermata iniziale dopo aver applicato le icone, così tutte le tessere del launcher si aggiornano.</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Predefinito</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished">Disinstalla</translation>
+        <translation>Disinstalla</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished">Disinstallazione di %1</translation>
+        <translation>Disinstallazione di %1</translation>
     </message>
 </context>
 <context>
@@ -344,7 +344,7 @@
     <name>LowPowerPage</name>
     <message>
         <source>Could not update low-power mode settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiornare le impostazioni della modalità a basso consumo</translation>
     </message>
     <message>
         <source>Low-power settings updated.</source>
@@ -352,59 +352,59 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annulla</translation>
+        <translation>Annulla</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Applica</translation>
+        <translation>Applica</translation>
     </message>
     <message>
         <source>Low-power mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modalità a basso consumo</translation>
     </message>
     <message>
         <source>Low-power mode settings are not available on this device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le impostazioni della modalità a basso consumo non sono disponibili su questo dispositivo.</translation>
     </message>
     <message>
         <source>Wake from pocket</source>
-        <translation type="unfinished"></translation>
+        <translation>Attiva dalla tasca</translation>
     </message>
     <message>
         <source>Wake on hover</source>
-        <translation type="unfinished"></translation>
+        <translation>Attiva al passaggio</translation>
     </message>
     <message>
         <source>Show the glance screen when you hold your hand over the sensor.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra la schermata glance quando tieni la mano sul sensore.</translation>
     </message>
     <message>
         <source>Keep proximity ready</source>
-        <translation type="unfinished"></translation>
+        <translation>Mantieni il sensore di prossimità pronto</translation>
     </message>
     <message>
         <source>Use recommended</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa consigliate</translation>
     </message>
     <message>
         <source>Restore defaults</source>
-        <translation type="unfinished"></translation>
+        <translation>Ripristina predefinite</translation>
     </message>
     <message>
         <source>Automatically show time and status information when the screen is off.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra automaticamente ora e informazioni di stato quando lo schermo è spento.</translation>
     </message>
     <message>
         <source>Show the glance screen when taking the device out of pocket.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra la schermata glance quando estrai il dispositivo dalla tasca.</translation>
     </message>
     <message>
         <source>Needed for reliable glance on many devices. Enabling this may use more battery, and the screen may not turn off reliably during calls.</source>
-        <translation type="unfinished"></translation>
+        <translation>Necessario per un glance affidabile su molti dispositivi. Abilitarlo può aumentare il consumo della batteria e lo schermo potrebbe non spegnersi in modo affidabile durante le chiamate.</translation>
     </message>
     <message>
         <source>Double tap the glance screen to wake fully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tocca due volte la schermata glance per riattivare completamente.</translation>
     </message>
 </context>
 <context>
@@ -419,43 +419,43 @@
     </message>
     <message>
         <source>Download more themes</source>
-        <translation type="unfinished">Scarica altri temi</translation>
+        <translation>Scarica altri temi</translation>
     </message>
     <message>
         <source>Muoto</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto</translation>
     </message>
     <message>
         <source>Icons</source>
-        <translation type="unfinished">Icone</translation>
+        <translation>Icone</translation>
     </message>
     <message>
         <source>Stock</source>
-        <translation type="unfinished"></translation>
+        <translation>Predefinite</translation>
     </message>
     <message>
         <source>Fonts</source>
-        <translation type="unfinished">Font</translation>
+        <translation>Font</translation>
     </message>
     <message>
         <source>Tap to configure</source>
-        <translation type="unfinished"></translation>
+        <translation>Tocca per configurare</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Non disponibile</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"></translation>
+        <translation>Attivo</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Disattivo</translation>
     </message>
     <message>
         <source>Low-power mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modalità a basso consumo</translation>
     </message>
 </context>
 <context>
@@ -725,11 +725,11 @@
     <name>ThemeWork</name>
     <message>
         <source>Stock</source>
-        <translation type="unfinished"></translation>
+        <translation>Predefinite</translation>
     </message>
     <message>
         <source>Applying theme</source>
-        <translation type="unfinished">Applicazione tema</translation>
+        <translation>Applicazione tema</translation>
     </message>
     <message>
         <source>Theme updated.</source>
@@ -745,19 +745,19 @@
     </message>
     <message>
         <source>Applying icons…</source>
-        <translation type="unfinished"></translation>
+        <translation>Applicazione icone…</translation>
     </message>
     <message>
         <source>Applying fonts…</source>
-        <translation type="unfinished"></translation>
+        <translation>Applicazione font…</translation>
     </message>
     <message>
         <source>Restoring theme…</source>
-        <translation type="unfinished">Ripristino tema…</translation>
+        <translation>Ripristino tema…</translation>
     </message>
     <message>
         <source>Uninstalling theme…</source>
-        <translation type="unfinished">Disinstallazione tema…</translation>
+        <translation>Disinstallazione tema…</translation>
     </message>
     <message>
         <source>Waiting…</source>

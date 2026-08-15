@@ -51,7 +51,7 @@ Item {
             id: caption
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr("Aa Bb")
+            text: "Aa Bb"
             color: Theme.primaryColor
             font.pixelSize: Theme.fontSizeMedium * root.fontScale
         }
