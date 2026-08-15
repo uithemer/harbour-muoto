@@ -79,6 +79,7 @@ Look for `ApplyIcons start/done`, `rebuildIconUpdaters`, `file not found`, and `
 | Nothing themes after install | `launcher-icond` not running / no D-Bus name | User unit symlink + `enable --now`; GetNameOwner |
 | Half icons look stock after pack switch | Lipstick cache; pack lacks assets (overlay off); or inplace only updated launcher size | Check manifest `mode`; compare hicolor launcher-size vs 512; restart homescreen if needed |
 | APK icons stuck on previous pack | Lipstick lost its inotify watch on the desktop (apkd regenerated it) | Confirm on-disk `Icon=` changed, then check the watch (below); look for `re-armed launcher watches` in the icond journal |
+| APK icons stock after an Android container restart | `containerReady` not received, or apkd clobbered after the retry | icond journal should show `apkd containerReady` then `refreshApkIcons`; check the property with `dbus-send --session --print-reply --dest=com.jolla.apkd /com/jolla/apkd org.freedesktop.DBus.Properties.Get string:com.jolla.apkd string:containerReady` |
 | Apply returns “upgrade in progress” | OS update guard | `/run/defaultuser/osupdate_running`, `system-update.target` — see [Automation](automation) |
 | Apply returns “busy” | `icon-ops.lock` held | Wait; check for stuck icond |
 | Blank tiles | Empty / deleted hicolor leftover | Manifest restore; `rpm -V` / reinstall app |

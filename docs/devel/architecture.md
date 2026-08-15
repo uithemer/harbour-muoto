@@ -62,7 +62,24 @@ Lipstick's `LauncherMonitor` holds a per-file inotify watch on every `.desktop` 
 
 `applyIcons()` and `restoreIcons()` both call it up front — restore rewrites `Icon=` too and needs a live watch just as much. `rebuildIconUpdatersNow()` sweeps leftover `*.muoto-rearm` files, which also covers a daemon killed mid-round-trip since the daemon rebuilds at startup.
 
-A homescreen restart is still needed after Android support itself restarts: apkd regenerates the desktops a while after `containerReady`, and the install-listener's re-apply does not currently retrigger on that.
+### Recovering after an Android container restart
+
+When Android support restarts, apkd rewrites `apkd_launcher_*.desktop` and resets `Icon=` to the stock bridge path, so the APK tiles need re-theming. `AlienDalvikWatcher` (`src/launcher/aliendalvikwatcher.cpp`) listens for apkd's `containerReady` property going true — the standard `org.freedesktop.DBus.Properties.PropertiesChanged` on session-bus path `/com/jolla/apkd`, subscribed with no sender filter because apkd takes a new bus name each restart.
+
+`LauncherIconOps::refreshApkIcons()` then re-arms the watches and recreates only the APK `IconUpdater`s. It deliberately skips the folder pass, the native entries and `pruneOrphans` (which takes the full desktop list and would drop every native entry), so a container restart costs a couple of seconds rather than a full `ApplyIcons`.
+
+Measured on device, apkd rewrites the desktops around 9 s into the restart and announces `containerReady` at about 26 s — but it then syncs them **again** roughly 5 s later, which wipes the first refresh. Hence the one-shot verification pass 15 s after a refresh: if an APK entry that has an updater no longer carries one of our generated `Icon=` paths, the refresh runs once more. Journal for a healthy recovery:
+
+```
+apkd containerReady
+re-armed launcher watches for 15 desktop entries
+refreshApkIcons pack= "..." desktops= 15 themed= 15
+APK icons clobbered after refresh, retrying
+re-armed launcher watches for 15 desktop entries
+refreshApkIcons pack= "..." desktops= 15 themed= 15
+```
+
+Note apkd only rewrites the entries when their content differs from its canonical form, so a device with no pack applied sees no churn at all.
 
 **Not themed in 3.2+:** bulk silica ambient (`graphic-*`, status bar, etc.). Only launcher-relevant `icon-launcher-*` / native / APK paths.
 
@@ -88,6 +105,7 @@ A homescreen restart is still needed after Android support itself restarts: apkd
 | Pack index | `src/launcher/harbourthemepack.cpp` |
 | Path resolve (hicolor / APK) | `src/launcher/iconresolve.cpp` |
 | Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |
+| apkd container readiness | `src/launcher/aliendalvikwatcher.cpp` |
 | Overlay | `src/launcher/overlayiconprovider.cpp`, `overlayrender.cpp` |
 | Folder silica | `src/launcher/folderambient.cpp` |
 | Manifest | `src/launcher/launchermanifest.cpp` |

@@ -35,6 +35,10 @@ private:
     void ensureDesktopWatches();
     void rearmApkDesktopWatches();
 
+    // Re-theme only the APK bridge entries after apkd regenerated them.
+    void refreshApkIcons(bool scheduleVerify);
+    bool apkIconsClobbered() const;
+
     // Silent unless an apply/restore is in flight: rebuildIconUpdatersNow()
     // also runs from dconf watches, where there is nothing to report.
     void emitProgress(int done, int total);

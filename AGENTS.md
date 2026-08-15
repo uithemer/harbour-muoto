@@ -44,6 +44,12 @@ Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting byte
 
 Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatch.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
 
+## Android container restarts
+
+- apkd resets `Icon=` on all `apkd_launcher_*.desktop` whenever the container restarts. `AlienDalvikWatcher` waits for apkd's `containerReady` property (standard `PropertiesChanged` on session path `/com/jolla/apkd`, no sender filter — apkd's bus name changes every restart), then `LauncherIconOps::refreshApkIcons()` re-arms the watches and recreates **only** the APK updaters. No folder pass, no native entries, no `pruneOrphans`.
+- apkd syncs the entries a second time a few seconds after `containerReady`, so `refreshApkIcons` schedules a one-shot verification 15 s later and repeats itself if an entry it themed lost our `Icon=`.
+- Do not hook per-`IconUpdater` refreshes to container events: a single updater cannot re-arm the watch, so its `Icon=` write goes unread.
+
 ## Fonts apply / restore
 
 - Unprivileged, in the **GUI process** via `FontApplier` (`src/gui/fontapplier.cpp`), driven by `ThemePackModel::applyTheme` / `restoreTheme`.
@@ -86,6 +92,7 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatc
 | Icon apply / rebuild | `src/launcher/launchericonops.cpp` |
 | Icon inplace / redirect | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
 | Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |
+| apkd container readiness | `src/launcher/aliendalvikwatcher.cpp` |
 | Path resolve (hicolor size / APK) | `src/launcher/iconresolve.cpp` |
 | Overlay composite | `src/launcher/overlayiconprovider.cpp`, `overlayrender.cpp` |
 | Folder silica icons | `src/launcher/folderambient.cpp` |

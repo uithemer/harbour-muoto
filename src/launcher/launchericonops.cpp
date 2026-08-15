@@ -1,4 +1,5 @@
 #include "launchericonops.h"
+#include "aliendalvikwatcher.h"
 #include "dynamicicon.h"
 #include "folderambient.h"
 #include "harbourthemepack.h"
@@ -23,12 +24,17 @@
 #include <QHash>
 #include <QSize>
 #include <QStandardPaths>
+#include <QTimer>
 #include <QUrl>
 
 namespace {
 
 QHash<QString, IconPack*> s_iconPacks;
 QHash<QString, IconUpdater*> s_updaters;
+
+// Long enough to outlast a slow apkd launcher-entry sync, short enough that a
+// user who opens the homescreen right after a container restart sees it heal.
+const int kApkVerifyDelayMs = 15000;
 
 MGConfItem* activeIconPackConf()
 {
@@ -240,6 +246,8 @@ LauncherIconOps* LauncherIconOps::instance()
 LauncherIconOps::LauncherIconOps(QObject* parent)
     : QObject(parent)
 {
+    connect(AlienDalvikWatcher::instance(), &AlienDalvikWatcher::containerReady,
+            this, [this]() { refreshApkIcons(true); });
 }
 
 void LauncherIconOps::reloadIconPacks()
@@ -302,6 +310,85 @@ void LauncherIconOps::rearmApkDesktopWatches()
     // loses on the old inode. Any Icon= we write afterwards goes unnoticed, so
     // put the watches back before an apply or restore touches those entries.
     LauncherWatch::rearmDesktopWatches(apkBridgeDesktops());
+}
+
+bool LauncherIconOps::apkIconsClobbered() const
+{
+    // Only entries we actually themed count: an APK app the pack has no icon
+    // for legitimately keeps its stock Icon=.
+    for(const QString& desktopPath : apkBridgeDesktops())
+    {
+        if(!s_updaters.contains(desktopPath))
+            continue;
+        if(!LauncherPaths::isOurGeneratedIconPath(MDesktopEntry(desktopPath).icon()))
+            return true;
+    }
+    return false;
+}
+
+void LauncherIconOps::refreshApkIcons(bool scheduleVerify)
+{
+    if(m_inIconOp || m_rebuilding)
+    {
+        qInfo() << "muoto-launcher: skip refreshApkIcons during icon op";
+        return;
+    }
+
+    const QString active = activeIconPackConf()->value(QStringLiteral("default")).toString();
+    if(active.isEmpty() || active == QLatin1String("default"))
+        return;
+
+    if(OsUpdateGuard::running())
+    {
+        qInfo() << "muoto-launcher: skip refreshApkIcons (upgrade in progress)";
+        return;
+    }
+
+    FileLock lock(FileLock::defaultLockPath(), false);
+    if(!lock.isHeld())
+    {
+        qInfo() << "muoto-launcher: skip refreshApkIcons (busy)";
+        return;
+    }
+
+    const QStringList apkDesktops = apkBridgeDesktops();
+    if(apkDesktops.isEmpty())
+        return;
+
+    m_inIconOp = true;
+    rearmApkDesktopWatches();
+
+    // Recreate rather than update() the existing updaters: apkd may have added
+    // entries for Android apps installed while the container was down.
+    m_restoreOnUpdaterDestroy = false;
+    int themed = 0;
+    for(const QString& desktopPath : apkDesktops)
+    {
+        delete s_updaters.take(desktopPath);
+        if(IconUpdater* updater = createIconUpdater(desktopPath))
+        {
+            s_updaters.insert(desktopPath, updater);
+            ++themed;
+        }
+    }
+    m_restoreOnUpdaterDestroy = true;
+    m_inIconOp = false;
+
+    qInfo() << "muoto-launcher: refreshApkIcons pack=" << active
+            << "desktops=" << apkDesktops.size() << "themed=" << themed;
+
+    if(!scheduleVerify)
+        return;
+
+    // The gap between apkd rewriting the desktops and announcing containerReady
+    // measured comfortable, but on one device only; re-check once so a slower
+    // apkd costs a second pass rather than stock icons until the next apply.
+    QTimer::singleShot(kApkVerifyDelayMs, this, [this]() {
+        if(!apkIconsClobbered())
+            return;
+        qInfo() << "muoto-launcher: APK icons clobbered after refresh, retrying";
+        refreshApkIcons(false);
+    });
 }
 
 void LauncherIconOps::rebuildIconUpdatersNow()

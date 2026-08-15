@@ -1,16 +1,31 @@
 #include "aliendalvikwatcher.h"
 
+#include <QDBusConnection>
+#include <QDBusError>
+#include <QDebug>
+
+namespace {
+
+const char* kApkdPath = "/com/jolla/apkd";
+const char* kApkdIface = "com.jolla.apkd";
+
+} // namespace
+
 AlienDalvikWatcher::AlienDalvikWatcher(QObject* parent)
     : QObject(parent)
-    , m_systemdInterface(QStringLiteral("org.freedesktop.systemd1"),
-                         QStringLiteral("/org/freedesktop/systemd1"),
-                         QStringLiteral("org.freedesktop.systemd1.Manager"),
-                         QDBusConnection::systemBus())
 {
-    connect(&m_systemdInterface,
-            SIGNAL(JobRemoved(quint32, QDBusObjectPath, QString, QString)),
-            this,
-            SLOT(handleJobRemoval(quint32, QDBusObjectPath, QString, QString)));
+    // No sender filter: apkd takes a new bus name every time the container is
+    // restarted, which is exactly the case this watcher exists for.
+    if(!QDBusConnection::sessionBus().connect(QString(),
+                                              QString::fromLatin1(kApkdPath),
+                                              QStringLiteral("org.freedesktop.DBus.Properties"),
+                                              QStringLiteral("PropertiesChanged"),
+                                              this,
+                                              SLOT(handlePropertiesChanged(QString, QVariantMap, QStringList))))
+    {
+        qWarning() << "muoto-launcher: could not subscribe to apkd PropertiesChanged:"
+                   << QDBusConnection::sessionBus().lastError().message();
+    }
 }
 
 AlienDalvikWatcher* AlienDalvikWatcher::instance()
@@ -19,13 +34,19 @@ AlienDalvikWatcher* AlienDalvikWatcher::instance()
     return watcher;
 }
 
-void AlienDalvikWatcher::handleJobRemoval(quint32,
-                                          const QDBusObjectPath&,
-                                          const QString& unit,
-                                          const QString& result)
+void AlienDalvikWatcher::handlePropertiesChanged(const QString& interface,
+                                                 const QVariantMap& changed,
+                                                 const QStringList& invalidated)
 {
-    if(unit != QStringLiteral("aliendalvik.service"))
+    Q_UNUSED(invalidated);
+
+    if(interface != QLatin1String(kApkdIface))
         return;
-    if(result == QStringLiteral("done"))
-        emit serviceStateChanged();
+
+    const QVariant ready = changed.value(QStringLiteral("containerReady"));
+    if(!ready.isValid() || !ready.toBool())
+        return;
+
+    qInfo() << "muoto-launcher: apkd containerReady";
+    emit containerReady();
 }

@@ -19,9 +19,6 @@ public:
 private slots:
     void onApkdAppInstalled();
     void onApkdAppUpdated();
-    void onApkdPropertiesChanged(const QString& interface,
-                                 const QVariantMap& changed,
-                                 const QStringList& invalidated);
     void onInstallationFinished(bool success, const QString& errorString);
     void onPkTransactionListChanged(const QStringList& transactions);
     void onPrepareForShutdown(bool active);

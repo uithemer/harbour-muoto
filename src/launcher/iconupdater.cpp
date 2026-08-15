@@ -1,5 +1,4 @@
 #include "iconupdater.h"
-#include "aliendalvikwatcher.h"
 #include "desktopentry.h"
 #include "iconprovider.h"
 #include "iconresolve.h"
@@ -321,11 +320,9 @@ IconUpdater::IconUpdater(IconProvider* provider, const QString& desktopPath,
 {
     connect(provider, &IconProvider::imageUpdated, this, &IconUpdater::update);
 
-    if(d_ptr->alienDalvikIcon)
-    {
-        connect(AlienDalvikWatcher::instance(), &AlienDalvikWatcher::serviceStateChanged,
-                this, &IconUpdater::update);
-    }
+    // APK entries are refreshed as a batch by LauncherIconOps::refreshApkIcons:
+    // a per-updater update() cannot re-arm Lipstick's watch, so the Icon= it
+    // wrote would go unread.
 
     update();
 }

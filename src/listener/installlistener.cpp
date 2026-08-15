@@ -115,12 +115,6 @@ void InstallListener::subscribeSession()
                       QStringLiteral("appUpdated"),
                       this,
                       SLOT(onApkdAppUpdated()));
-    _session.disconnect(QString::fromLatin1(kApkdService),
-                      QString::fromLatin1(kApkdPath),
-                      QString::fromLatin1(kApkdIface),
-                      QStringLiteral("PropertiesChanged"),
-                      this,
-                      SLOT(onApkdPropertiesChanged(QString, QVariantMap, QStringList)));
     _session.disconnect(QString::fromLatin1(kInstService),
                       QString::fromLatin1(kInstPath),
                       QString::fromLatin1(kInstIface),
@@ -140,13 +134,6 @@ void InstallListener::subscribeSession()
                      QStringLiteral("appUpdated"),
                      this,
                      SLOT(onApkdAppUpdated()));
-    _session.connect(QString::fromLatin1(kApkdService),
-                     QString::fromLatin1(kApkdPath),
-                     QString::fromLatin1(kApkdIface),
-                     QStringLiteral("PropertiesChanged"),
-                     this,
-                     SLOT(onApkdPropertiesChanged(QString, QVariantMap, QStringList)));
-
     _session.connect(QString::fromLatin1(kInstService),
                      QString::fromLatin1(kInstPath),
                      QString::fromLatin1(kInstIface),
@@ -305,18 +292,6 @@ void InstallListener::onApkdAppInstalled()
 void InstallListener::onApkdAppUpdated()
 {
     scheduleApply("apkd-appUpdated");
-}
-
-void InstallListener::onApkdPropertiesChanged(const QString& interface,
-                                                const QVariantMap& changed,
-                                                const QStringList& invalidated)
-{
-    Q_UNUSED(invalidated);
-    if(interface != QLatin1String(kApkdIface))
-        return;
-    const QVariant v = changed.value(QStringLiteral("containerReady"));
-    if(v.isValid() && v.toBool())
-        scheduleApply("apkd-containerReady");
 }
 
 void InstallListener::onInstallationFinished(bool success, const QString& errorString)
