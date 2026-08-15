@@ -192,10 +192,10 @@ Item {
         app.showHelperError(errMsg)
     }
 
-    function _finalise() {
+    function _finalise(message) {
         _progressBody = ""
         settings.isRunning = false
-        app.showToast(qsTr("Settings applied."))
+        app.showToast(message || qsTr("Theme updated."))
         settings.syncToDisk()
         if (settings.homeRefresh === true)
             lipstickRestartTimer.start()
@@ -229,7 +229,7 @@ Item {
     }
 
     function finishDensityApply() {
-        _finalise()
+        _finalise(qsTr("Display settings updated."))
     }
 
     function uninstallPack(index) {
@@ -379,7 +379,7 @@ Item {
         onThemeRestoreFailed: themeWork._abortThemeWork(message)
         onUninstallCompleted: {
             settings.isRunning = false
-            app.showToast(qsTr("Settings applied."))
+            app.showToast(qsTr("Theme removed."))
         }
         onDpiRestored: themeWork.finishDensityApply()
     }

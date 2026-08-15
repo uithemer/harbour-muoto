@@ -65,7 +65,7 @@ Dialog {
         var hover = pendingFromPocket && pendingHover
         if (MceLpm.apply(pendingEnabled, pendingFromPocket, hover,
                          pendingProximityReady))
-            app.showToast(qsTr("Settings applied."))
+            app.showToast(qsTr("Low-power settings updated."))
         else
             app.showToast(qsTr("Could not update low-power mode settings"))
     }
