@@ -272,8 +272,6 @@ Dialog {
                     }
 
                     MuotoButton {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: Math.min(parent.width - Theme.paddingLarge * 2, Theme.buttonWidthMedium)
                         text: qsTr("Restore default")
                         enabled: dlg.densityReady && dlg.vendorDprKnown && !dlg.dprAtDefault
                         onClicked: dlg.restoreDefaultDpr()

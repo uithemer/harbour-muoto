@@ -67,6 +67,41 @@ bool isMonitoredIcon(const QString& iconPath)
     return re.match(iconPath).hasMatch();
 }
 
+bool hasAlternateHicolor(const QString& iconPath)
+{
+    if(!isMonitoredIcon(iconPath))
+        return false;
+
+    const QFileInfo info(iconPath);
+    const QString fileName = info.fileName();
+    if(fileName.isEmpty())
+        return false;
+
+    const QString baseName = info.completeBaseName();
+    const QString hicolorRoot = QStringLiteral("/usr/share/icons/hicolor");
+    QDir hicolor(hicolorRoot);
+    const QStringList sizeDirs = hicolor.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+    for(const QString& sizeDir : sizeDirs)
+    {
+        const QString candidate = hicolorRoot + QLatin1Char('/') + sizeDir
+                                  + QStringLiteral("/apps/") + fileName;
+        if(candidate != iconPath && QFile::exists(candidate))
+            return true;
+
+        // Scalable SVG sibling of a raster (or another scalable path).
+        if(sizeDir == QLatin1String("scalable"))
+        {
+            const QString svg = hicolorRoot + QStringLiteral("/scalable/apps/")
+                                + baseName + QStringLiteral(".svg");
+            if(svg != iconPath && QFile::exists(svg))
+                return true;
+        }
+    }
+
+    return false;
+}
+
 QString resolveIconPath(const QString& iconId)
 {
     if(iconId.isEmpty())

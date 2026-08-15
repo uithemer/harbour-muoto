@@ -129,14 +129,14 @@ IconUpdaterPrivate::IconUpdaterPrivate(IconProvider* provider, const QString& de
     iconPath = IconResolve::resolveIconPath(iconRef);
     alienDalvikIcon = IconResolve::isApkBridgeIcon(iconPath);
 
-    // Hicolor: inplace so Icon=harbour-* keeps resolving to the stock path.
-    // APK bridge: always redirect. Lipstick caches absolute Icon= paths and will
-    // not reload when we only overwrite the bridge PNG (even after touching the
-    // .desktop) — a new Icon= path is required for the homescreen to update.
+    // APK bridge: always redirect (Lipstick caches absolute Icon= paths).
+    // Hicolor with a single size slot: inplace (Icon=harbour-* unchanged).
+    // Multi-size hicolor: redirect — inplace only rewrites one slot while
+    // image://theme/ may paint another sibling (looks stock on the grid).
     if(alienDalvikIcon)
         forceRedirect = true;
     else if(IconResolve::isMonitoredIcon(iconPath))
-        forceRedirect = false;
+        forceRedirect = IconResolve::hasAlternateHicolor(iconPath);
 
     monitoredIcon = !forceRedirect && IconResolve::isMonitoredIcon(iconPath);
 }

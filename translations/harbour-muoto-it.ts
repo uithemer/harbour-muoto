@@ -130,10 +130,6 @@
         <translation>Molto grande (172)</translation>
     </message>
     <message>
-        <source>When you are done, restart the homescreen to apply these changes.</source>
-        <translation>Al termine, riavvia la schermata iniziale per applicare le modifiche.</translation>
-    </message>
-    <message>
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
         <translation>Riavvia la schermata iniziale dopo aver applicato la densità display, così tutte le app ricevono le modifiche.</translation>
     </message>

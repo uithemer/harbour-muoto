@@ -24,7 +24,7 @@ flowchart LR
   GUI -->|system D-Bus density uninstall| HD
   IL -->|exec update-icons| UI
   UI -->|session ApplyIcons / RestoreIcons| IC
-  IC -->|inplace hicolor / redirect APK| L
+  IC -->|inplace or redirect| L
 ```
 
 | Process | Bus / unit | Role |
@@ -41,7 +41,7 @@ flowchart LR
 2. `LauncherIconOps` re-arms Lipstick's watches on the APK desktops (see below), rebuilds one `IconUpdater` per launcher `.desktop` (system + user APK desktops), then applies homescreen **folders** via `FolderAmbient`.
 3. Pack assets come from `/usr/share/harbour-themepack-<name>/` (`jolla/`, `native/`, `apk/` — often symlinked to `~/.themepack/…`). Overlay frames from `overlay/` composite onto stock when the pack has no matching icon.
 4. **Write model (hybrid):**
-   - **Hicolor** (native / many overlay targets): **inplace** — keep `Icon=` as the theme name; replace the single resolved launcher-size PNG under `/usr/share/icons/hicolor/<N>x<N>/apps/` (`N` ≥ `iconSizeLauncher`, first hit); `futimens` the `.desktop`. Other hicolor sizes stay stock.
+   - **Hicolor** (native / many overlay targets): **inplace** when the basename exists in exactly one hicolor size — keep `Icon=` as the theme name; replace that PNG (`N` ≥ `iconSizeLauncher` when upgrading from 86); `futimens` the `.desktop`. If other sizes or `scalable/` also ship the same basename, **redirect** instead (otherwise Lipstick may paint a stock sibling while we themed only one slot).
    - **APK bridge**: **redirect** — write `/usr/share/harbour-muoto/launcher-icons/<desktop>-<msecs>.png`, set `Icon=` to that path, touch the desktop (absolute paths need a new `Icon=` for Lipstick to refresh).
 5. Original `Icon=` / paths are tracked in dconf `saved-id`, fingerprints (inplace), and `launcher-manifest.json`.
 6. Homescreen **folders** (`icon-launcher-folder-01`…`16`) use scoped silica writeback + `backup/folder-icons/` (`FolderAmbient`).

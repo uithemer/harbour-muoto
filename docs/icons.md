@@ -67,7 +67,7 @@ Stock reference paths on device (read-only):
 
 From **Muoto 3.2**, only **`icon-launcher-*`** keys under `jolla/<z>/icons/` are themed (via the launcher daemon). Status bar, covers, in-app `graphic-*`, and other ambient families are **not** bulk-copied into silica anymore.
 
-Ship launcher keys under `jolla/<z>/icons/`. Jolla/system ids are usually applied via **redirect** to `/usr/share/harbour-muoto/launcher-icons/`; harbour/native pack icons under `native/` are applied **inplace** on the launcher-size hicolor PNG (`Icon=` name unchanged). Engine details: [Architecture](devel/architecture).
+Ship launcher keys under `jolla/<z>/icons/`. Jolla/system ids are usually applied via **redirect** to `/usr/share/harbour-muoto/launcher-icons/`; harbour/native pack icons under `native/` use **inplace** when the app ships a single hicolor size (`Icon=` name unchanged), or **redirect** when multiple hicolor sizes (or scalable) exist for the same basename. Engine details: [Architecture](devel/architecture).
 
 Homescreen **folders** use theme ids `icon-launcher-folder-01` … `16` (`image://theme/` / Lipstick `Folder*.directory`). Muoto themes those by scoped writeback into sailfish-default silica (`icon-launcher-folder-NN.png` only), with backups under `/usr/share/harbour-muoto/backup/folder-icons/`. Ship matching PNGs under `jolla/`, or enable overlay to replace stock folder glyphs with the overlay frame alone (no inner stock icon). Folder **picker** and tiles then both show the themed silica assets.
 
@@ -90,7 +90,7 @@ Enable on the **Icons** configure page when applying a pack that includes `dyncl
 
 ## Style missing app icons (`overlay/`)
 
-If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto **launcher-visible** stock icons not already covered by the pack. On hicolor that is usually **inplace** (live launcher-size PNG replaced; other sizes untouched). APK bridge targets use **redirect** to `launcher-icons/`.
+If your theme uses a consistent mask or frame, add PNGs under `overlay/`. Muoto composites them onto **launcher-visible** stock icons not already covered by the pack. Single-slot hicolor targets use **inplace**; multi-size hicolor and APK bridge targets use **redirect** to `launcher-icons/`.
 
 The old Android-only overlay trick (root file `type` containing `android`) is **no longer supported**.
 

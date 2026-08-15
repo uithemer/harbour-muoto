@@ -21,12 +21,12 @@ Muoto lets users apply `harbour-themepack-*` icon/font packs and display density
 - Session D-Bus `org.muoto.Launcher1.Themes` (`ApplyIcons` / `RestoreIcons`).
 - **ApplyIcons** sets `activeIconPack` / `iconOverlay`, `rebuildIconUpdaters()`, then `FolderAmbient::apply` (no stock intermediate).
 - **Hybrid write model** (`IconUpdater` ctor):
-  - **Hicolor** (`/usr/share/icons/hicolor/…/apps/`) → **inplace**: keep `Icon=harbour-foo`, replace the single resolved launcher-size PNG, touch desktop. Fingerprint in dconf detects “our” bytes.
+  - **Hicolor** (`/usr/share/icons/hicolor/…/apps/`) → **inplace** when the basename exists in exactly one size slot: keep `Icon=harbour-foo`, replace that PNG, touch desktop. Fingerprint in dconf detects “our” bytes. If siblings exist in other sizes (or `scalable/`), **redirect** instead — Lipstick’s `image://theme/` may paint a different size than the one we would overwrite.
   - **APK bridge** (`~/.local/share/apkd-bridge/launcherIcon/`) → **redirect**: unique `launcher-icons/<desktop>-<msecs>.png` + `Icon=` rewrite (absolute paths need a new path for Lipstick to refresh).
-  - **Overlay** (missing pack icons only): `RedirectOnly` updater, but hicolor still forces inplace via the rule above.
+  - **Overlay** (missing pack icons only): `RedirectOnly` updater; hicolor still follows the single-slot inplace / multi-size redirect rule above.
 - Pack lookup (`HarbourThemePack`): prefer `native|apk/<iconSizeLauncher>x…/`, else largest available pack size; jolla uses `jolla/z<pixelRatio>/`. Pack trees under `/usr/share/harbour-themepack-*` may be **symlinks** into `~/.themepack/` — follow them when debugging “empty native/”.
 - Overlay composites pack `overlay/*.png` onto **stock** (backup if live was already themed). Not used when the pack already has that app.
-- Only the **launcher-resolved** hicolor size is written (e.g. 172); other sizes (512, …) stay stock by design.
+- Single-slot hicolor: only that PNG is written inplace. Multi-size hicolor uses redirect (siblings stay stock on disk; Lipstick paints the generated path).
 - Manifest + `saved-id` for restore; folder tiles via `FolderAmbient` (silica `icon-launcher-folder-*`).
 - Per-app dconf `launcher/applications/<desktop>/provider`: only `dynamic-icon://` (clock/calendar) is honored.
 
@@ -34,10 +34,10 @@ Muoto lets users apply `harbour-themepack-*` icon/font packs and display density
 
 Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting bytes at a path Lipstick already resolved often leaves the grid stuck (no lipstick restart). Muoto’s refresh trick (`IconUpdater`):
 
-1. **Redirect (APK / non-hicolor)** — write  
+1. **Redirect (APK / non-hicolor / multi-size hicolor)** — write  
    `/usr/share/harbour-muoto/launcher-icons/<desktopBase>-<msecs>.png`  
    (`generateIconPath`), set `Icon=` to that path. A **new path** busts the cache.
-2. **Inplace (hicolor)** — replace via temp `*.muoto-write.png` then rename onto the live path; `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick reloads the named icon.
+2. **Inplace (single-slot hicolor)** — replace via temp `*.muoto-write.png` then rename onto the live path; `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick reloads the named icon.
 3. **Always touch the `.desktop`** after PNG / `Icon=` changes (`touchFile` / `futimens`).
 4. Avoid deleting a PNG while `Icon=` still names it (`inotify_add_watch` ENOENT → frozen tile until lipstick restart).
 5. **Re-arm the watch on APK desktops first.** Lipstick keeps a per-file inotify watch on every `.desktop` and only re-reads one when that watch fires. apkd rewrites `apkd_launcher_*.desktop` with `rename(2)`, so Qt drops the watch, and `LauncherMonitor::onDirectoryChanged` never re-adds it (the filename is already known). After that, `Icon=` rewrites are invisible. `LauncherWatch::rearmDesktopWatches` renames each entry aside and back with a short gap: two directory scans inside Lipstick's 2000 ms holdback, so the pending add and remove cancel — the watch comes back with no launcher item or grid-position churn. Apply and restore both call it before touching `Icon=`.
