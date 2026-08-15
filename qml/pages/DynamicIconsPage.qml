@@ -62,6 +62,7 @@ Dialog {
             settings.dynamicClockEnabled = clockSelected
         if (hasActiveDynCalendar)
             settings.dynamicCalendarEnabled = calendarSelected
+        app.showToast(qsTr("Settings applied."))
     }
 
     BusyState { id: busyindicator }
