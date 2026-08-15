@@ -271,7 +271,7 @@ Dialog {
                     LabelSpacer {
                     }
 
-                    Button {
+                    MuotoButton {
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: Math.min(parent.width - Theme.paddingLarge * 2, Theme.buttonWidthMedium)
                         text: qsTr("Restore default")
