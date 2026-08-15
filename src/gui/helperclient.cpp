@@ -2,15 +2,14 @@
 #include "filelock.h"
 #include "launcherdaemonctl.h"
 
-#include <QDBusInterface>
 #include <QDBusConnection>
-#include <QDBusReply>
+#include <QDBusMessage>
 #include <QDBusPendingCall>
 #include <QDBusPendingCallWatcher>
-#include <QDBusMessage>
+#include <QDBusPendingReply>
 #include <QDBusError>
-#include <QDBusConnectionInterface>
-#include <QVariantList>
+#include <QElapsedTimer>
+#include <QTimer>
 #include <QDebug>
 #include <QQmlEngine>
 #include <QJSEngine>
@@ -25,35 +24,59 @@ namespace
     const char* kLauncherServiceName = "org.muoto.Launcher1";
     const char* kLauncherObjectPath  = "/org/muoto/Launcher1";
     const char* kLauncherIfaceThemes = "org.muoto.Launcher1.Themes";
+
+    // Poll cadence and budget for a launcher daemon we just kicked.
+    const int kLauncherPollMs  = 250;
+    const int kLauncherGiveUpMs = 15000;
+
+    struct Endpoint
+    {
+        const char* service;
+        const char* path;
+        const char* iface;
+        bool systemBus;
+    };
+
+    bool endpointForOp(const QString& op, Endpoint* out)
+    {
+        if(op == QLatin1String("ApplyIcons") || op == QLatin1String("RestoreIcons"))
+        {
+            *out = { kLauncherServiceName, kLauncherObjectPath,
+                     kLauncherIfaceThemes, false };
+            return true;
+        }
+        if(op == QLatin1String("DensityEnable"))
+        {
+            *out = { kRootServiceName, kRootObjectPath, kRootIfaceThemes, true };
+            return true;
+        }
+        if(op == QLatin1String("UninstallPack"))
+        {
+            *out = { kRootServiceName, kRootObjectPath, kRootIfacePacks, true };
+            return true;
+        }
+        return false;
+    }
 }
 
 HelperClient::HelperClient()
     : QObject(nullptr)
-    , _themes(nullptr)
-    , _launcherThemes(nullptr)
-    , _packs(nullptr)
+    , _launcherWait(new QTimer(this))
+    , _launcherWaitedMs(0)
     , _hooked(false)
 {
+    _launcherWait->setInterval(kLauncherPollMs);
+    connect(_launcherWait, &QTimer::timeout, this, &HelperClient::onLauncherWaitTick);
+
     hookBroadcastSignals();
 
-    QDBusConnection bus = QDBusConnection::systemBus();
-    if(bus.isConnected())
-    {
-        bus.connect(QStringLiteral("org.freedesktop.DBus"),
-                    QStringLiteral("/org/freedesktop/DBus"),
-                    QStringLiteral("org.freedesktop.DBus"),
-                    QStringLiteral("NameOwnerChanged"),
-                    this,
-                    SLOT(onNameOwnerChanged(QString, QString, QString)));
-    }
+    // Warm the session daemon at startup so the first apply finds it on the
+    // bus instead of paying for the unit start.
+    if(!launcherDaemonRegistered())
+        startLauncherDaemonDetached();
 }
 
-HelperClient::~HelperClient()
-{
-    delete _themes;
-    delete _launcherThemes;
-    delete _packs;
-}
+HelperClient::~HelperClient() = default;
 
 HelperClient* HelperClient::instance()
 {
@@ -68,113 +91,6 @@ QObject* HelperClient::qmlSingleton(QQmlEngine* engine, QJSEngine* scriptEngine)
     HelperClient* h = instance();
     QQmlEngine::setObjectOwnership(h, QQmlEngine::CppOwnership);
     return h;
-}
-
-bool HelperClient::ensureHelperService()
-{
-    QDBusConnection bus = QDBusConnection::systemBus();
-    if(!bus.isConnected())
-        return false;
-    QDBusConnectionInterface* bi = bus.interface();
-    if(!bi)
-        return false;
-    const QString svc = QString::fromLatin1(kRootServiceName);
-    const QDBusReply<bool> registered = bi->isServiceRegistered(svc);
-    if(registered.isValid() && registered.value())
-        return true;
-    const QDBusReply<void> started = bi->startService(svc);
-    return started.isValid();
-}
-
-bool HelperClient::ensureLauncherService()
-{
-    return ensureLauncherDaemonRunning();
-}
-
-void HelperClient::dropDBusProxies()
-{
-    delete _themes;
-    _themes = nullptr;
-    delete _launcherThemes;
-    _launcherThemes = nullptr;
-    delete _packs;
-    _packs = nullptr;
-}
-
-void HelperClient::onNameOwnerChanged(const QString& name,
-                                      const QString& oldOwner,
-                                      const QString& newOwner)
-{
-    if(name != QLatin1String(kRootServiceName)
-       && name != QLatin1String(kLauncherServiceName))
-        return;
-    if(!newOwner.isEmpty() || oldOwner.isEmpty())
-        return;
-
-    QDBusConnection bus = name == QLatin1String(kRootServiceName)
-                              ? QDBusConnection::systemBus()
-                              : QDBusConnection::sessionBus();
-    QDBusConnectionInterface* bi = bus.interface();
-    const QDBusReply<bool> registered =
-        bi ? bi->isServiceRegistered(name) : QDBusReply<bool>();
-    if(registered.isValid() && registered.value())
-        return;
-
-    dropDBusProxies();
-}
-
-QDBusInterface* HelperClient::themesIface()
-{
-    ensureHelperService();
-    if(_themes && !_themes->isValid())
-    {
-        delete _themes;
-        _themes = nullptr;
-    }
-    if(!_themes)
-    {
-        _themes = new QDBusInterface(QString::fromLatin1(kRootServiceName),
-                                     QString::fromLatin1(kRootObjectPath),
-                                     QString::fromLatin1(kRootIfaceThemes),
-                                     QDBusConnection::systemBus(), this);
-    }
-    return _themes;
-}
-
-QDBusInterface* HelperClient::launcherThemesIface()
-{
-    ensureLauncherService();
-    if(_launcherThemes && !_launcherThemes->isValid())
-    {
-        delete _launcherThemes;
-        _launcherThemes = nullptr;
-    }
-    if(!_launcherThemes)
-    {
-        _launcherThemes = new QDBusInterface(QString::fromLatin1(kLauncherServiceName),
-                                             QString::fromLatin1(kLauncherObjectPath),
-                                             QString::fromLatin1(kLauncherIfaceThemes),
-                                             QDBusConnection::sessionBus(), this);
-    }
-    return _launcherThemes;
-}
-
-QDBusInterface* HelperClient::packsIface()
-{
-    ensureHelperService();
-    if(_packs && !_packs->isValid())
-    {
-        delete _packs;
-        _packs = nullptr;
-    }
-    if(!_packs)
-    {
-        _packs = new QDBusInterface(QString::fromLatin1(kRootServiceName),
-                                    QString::fromLatin1(kRootObjectPath),
-                                    QString::fromLatin1(kRootIfacePacks),
-                                    QDBusConnection::systemBus(), this);
-    }
-    return _packs;
 }
 
 void HelperClient::hookBroadcastSignals()
@@ -210,6 +126,13 @@ void HelperClient::hookBroadcastSignals()
                            QStringLiteral("OperationCompleted"),
                            this,
                            SLOT(onThemesOperationCompleted(QString, bool, QString)));
+
+        sessionBus.connect(QString::fromLatin1(kLauncherServiceName),
+                           QString::fromLatin1(kLauncherObjectPath),
+                           QString::fromLatin1(kLauncherIfaceThemes),
+                           QStringLiteral("Progress"),
+                           this,
+                           SLOT(onLauncherProgress(QString, int, int)));
     }
     else
     {
@@ -219,78 +142,146 @@ void HelperClient::hookBroadcastSignals()
 
 void HelperClient::asyncCall(const QString& op, const QVariantList& args)
 {
-    QDBusInterface* iface = nullptr;
-    if(op == QLatin1String("ApplyIcons") || op == QLatin1String("RestoreIcons"))
-        iface = launcherThemesIface();
-    else if(op == QLatin1String("DensityEnable"))
-        iface = themesIface();
-    else if(op == QLatin1String("UninstallPack"))
-        iface = packsIface();
+    QElapsedTimer t;
+    t.start();
 
-    if(!iface || !iface->isValid())
+    Endpoint ep;
+    if(!endpointForOp(op, &ep))
     {
-        qWarning() << "HelperClient::asyncCall:" << op
-                   << "iface invalid:"
-                   << (iface ? iface->lastError().message()
-                             : QStringLiteral("null"));
+        qWarning() << "HelperClient::asyncCall: unknown op" << op;
         emit error(op, QStringLiteral("D-Bus interface unavailable"));
         return;
     }
 
-    QDBusPendingCall pending = iface->asyncCallWithArgumentList(op, args);
-    QDBusPendingCallWatcher* w = new QDBusPendingCallWatcher(pending, this);
+    QDBusConnection bus = ep.systemBus ? QDBusConnection::systemBus()
+                                       : QDBusConnection::sessionBus();
+    if(!bus.isConnected())
+    {
+        qWarning() << "HelperClient::asyncCall:" << op << "bus not connected";
+        emit error(op, QStringLiteral("D-Bus interface unavailable"));
+        return;
+    }
+
+    QDBusMessage call = QDBusMessage::createMethodCall(
+                QString::fromLatin1(ep.service),
+                QString::fromLatin1(ep.path),
+                QString::fromLatin1(ep.iface),
+                op);
+    call.setArguments(args);
+
+    QDBusPendingCall pending = bus.asyncCall(call);
+    auto* w = new QDBusPendingCallWatcher(pending, this);
     connect(w, &QDBusPendingCallWatcher::finished, this,
-            [op](QDBusPendingCallWatcher* watcher) {
+            [this, op](QDBusPendingCallWatcher* watcher) {
         QDBusPendingReply<> r = *watcher;
         if(r.isError())
         {
+            // No OperationCompleted will follow a transport failure, so the
+            // GUI needs this to drain its busy state.
             qWarning() << "HelperClient::asyncCall:" << op
                        << "method reply:" << r.error().message();
+            emit error(op, QStringLiteral("D-Bus interface unavailable"));
         }
         watcher->deleteLater();
     });
+
+    qInfo() << "HelperClient: dispatched" << op << "in" << t.elapsed() << "ms";
 }
 
-bool HelperClient::beginIconOpOrError(const QString& op)
+void HelperClient::queueIconOp(const QString& op, const QVariantList& args)
 {
+    QElapsedTimer t;
+    t.start();
+
     if(!FileLock::tryProbe())
     {
         emit error(op, QStringLiteral("busy"));
-        return false;
+        return;
     }
-    if(!ensureLauncherService())
+    const qint64 afterProbe = t.elapsed();
+
+    if(launcherDaemonRegistered())
     {
-        qWarning() << "HelperClient:" << op << "launcher daemon not running";
-        emit error(op, QStringLiteral("launcher daemon not running"));
-        return false;
+        qInfo() << "HelperClient:" << op << "lock probe" << afterProbe
+                << "ms, name probe" << (t.elapsed() - afterProbe) << "ms";
+        asyncCall(op, args);
+        return;
     }
-    return true;
+
+    if(_launcherWait->isActive())
+    {
+        emit error(op, QStringLiteral("busy"));
+        return;
+    }
+
+    qInfo() << "HelperClient:" << op << "launcher daemon absent, starting detached";
+    _pendingIconOp = op;
+    _pendingIconArgs = args;
+    _launcherWaitedMs = 0;
+    startLauncherDaemonDetached();
+    _launcherWait->start();
+}
+
+void HelperClient::failPendingIconOp(const QString& message)
+{
+    const QString op = _pendingIconOp;
+    _pendingIconOp.clear();
+    _pendingIconArgs.clear();
+    if(!op.isEmpty())
+        emit error(op, message);
+}
+
+void HelperClient::onLauncherWaitTick()
+{
+    if(launcherDaemonRegistered())
+    {
+        _launcherWait->stop();
+        const QString op = _pendingIconOp;
+        const QVariantList args = _pendingIconArgs;
+        _pendingIconOp.clear();
+        _pendingIconArgs.clear();
+        qInfo() << "HelperClient: launcher daemon up after" << _launcherWaitedMs
+                << "ms, dispatching" << op;
+        if(!op.isEmpty())
+            asyncCall(op, args);
+        return;
+    }
+
+    _launcherWaitedMs += kLauncherPollMs;
+    if(_launcherWaitedMs < kLauncherGiveUpMs)
+        return;
+
+    _launcherWait->stop();
+    qWarning() << "HelperClient:" << _pendingIconOp << "launcher daemon not running";
+    failPendingIconOp(QStringLiteral("launcher daemon not running"));
 }
 
 void HelperClient::applyIcons(const QString& pack, bool runPack, bool overlay)
 {
-    const QString op = QStringLiteral("ApplyIcons");
-    if(!beginIconOpOrError(op))
-        return;
-    asyncCall(op, QVariantList() << pack << runPack << overlay);
+    queueIconOp(QStringLiteral("ApplyIcons"),
+                QVariantList() << pack << runPack << overlay);
 }
 
 void HelperClient::restoreIcons()
 {
-    const QString op = QStringLiteral("RestoreIcons");
-    if(!beginIconOpOrError(op))
-        return;
-    asyncCall(op, QVariantList());
+    queueIconOp(QStringLiteral("RestoreIcons"), QVariantList());
 }
 
 void HelperClient::densityEnable()
 {
+    // org.muoto.Muoto1 is dbus-activatable (system-services + SystemdService),
+    // so the bus starts helperd for us while the call is in flight.
     asyncCall(QStringLiteral("DensityEnable"), QVariantList());
 }
 
 void HelperClient::uninstallPack(const QString& rpmName)
 {
     asyncCall(QStringLiteral("UninstallPack"), QVariantList() << rpmName);
+}
+
+void HelperClient::onLauncherProgress(const QString& op, int done, int total)
+{
+    emit iconProgress(op, done, total);
 }
 
 void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,

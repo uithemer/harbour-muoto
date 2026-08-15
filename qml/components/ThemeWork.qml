@@ -26,6 +26,9 @@ Item {
     property bool _reapplyDynAfterIconRestore: false
     property bool _pendingDynClock: false
     property bool _pendingDynCalendar: false
+    // Body text of the in-flight progress notification, kept so daemon
+    // progress updates can republish it with a real completion ratio.
+    property string _progressBody: ""
 
     readonly property alias themepackmodel: themepackmodel
     readonly property alias remorsePopup: remorsepopup
@@ -153,6 +156,7 @@ Item {
     }
 
     function beginManualThemeWork(progressBody) {
+        _progressBody = progressBody
         app.showProgressNotification(
             qsTr("Applying theme"),
             progressBody,
@@ -171,11 +175,13 @@ Item {
         _uninstallPackIndex = -1
         _reapplyDynAfterIconRestore = false
         _clearDeferredIcons()
+        _progressBody = ""
         settings.isRunning = false
         app.showHelperError(errMsg)
     }
 
     function _finalise() {
+        _progressBody = ""
         settings.isRunning = false
         app.showToast(qsTr("Settings applied."))
         settings.syncToDisk()
@@ -278,6 +284,13 @@ Item {
 
     Connections {
         target: Helper
+        onIconProgress: {
+            if (total <= 0 || themeWork._progressBody === "")
+                return
+            app.showProgressNotification(qsTr("Applying theme"),
+                                         themeWork._progressBody,
+                                         done / total)
+        }
         onIconsApplied: {
             themeWork._commitPendingIconApply()
             themeWork._opDone()

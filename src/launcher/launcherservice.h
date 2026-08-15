@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QDBusAbstractAdaptor>
 #include <QDBusMessage>
+#include <QString>
 
 #include <functional>
 
@@ -46,13 +47,19 @@ public slots:
 
 signals:
     void OperationCompleted(const QString& op, bool ok, const QString& message);
+    void Progress(const QString& op, int done, int total);
 
 private:
+    // Replies to message straight away, then runs start() from the event
+    // loop so the daemon stays responsive for the duration of the op.
     void runIconOpVoid(const QString& op,
+                       const QDBusMessage& message,
                        std::function<void(LauncherIconOps&)> start,
                        void (LauncherIconOps::*doneSignal)(bool, const QString&));
 
     LauncherBackend* m_backend;
+    // Op the deferred worker is currently running, used to label Progress.
+    QString m_currentOp;
 };
 
 #endif // LAUNCHERSERVICE_H

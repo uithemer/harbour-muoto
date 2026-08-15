@@ -5,6 +5,7 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QMetaObject>
+#include <QTimer>
 #include <QDebug>
 
 namespace {
@@ -57,23 +58,43 @@ LauncherThemesAdaptor::LauncherThemesAdaptor(LauncherBackend* backend, QObject* 
     , m_backend(backend)
 {
     setAutoRelaySignals(false);
+
+    LauncherIconOps* ops = m_backend->iconOps();
+    connect(ops, &LauncherIconOps::progress, this,
+            [this](int done, int total) {
+                emit Progress(m_currentOp, done, total);
+            });
 }
 
 void LauncherThemesAdaptor::runIconOpVoid(const QString& op,
+                                          const QDBusMessage& message,
                                           std::function<void(LauncherIconOps&)> start,
                                           void (LauncherIconOps::*doneSignal)(bool, const QString&))
 {
     LauncherIconOps* ops = m_backend->iconOps();
 
-    auto* conn = new QMetaObject::Connection;
-    *conn = connect(ops, doneSignal, this,
-                    [this, op, conn](bool ok, const QString& message) {
-                        emit OperationCompleted(op, ok, message);
-                        QObject::disconnect(*conn);
-                        delete conn;
-                    });
+    // Reply before the work, not after: the caller's pending call completes
+    // immediately and this connection keeps serving Introspect and signal
+    // traffic while the icons are rewritten.
+    sendMethodReply(message);
 
-    start(*ops);
+    // Context is the adaptor: if it goes away at shutdown the queued op is
+    // dropped rather than firing on a dangling `this`.
+    QTimer::singleShot(0, this, [this, ops, op, start, doneSignal]() {
+        // Connect here rather than at method-call time so back-to-back ops
+        // cannot both latch onto the first completion.
+        auto* conn = new QMetaObject::Connection;
+        *conn = connect(ops, doneSignal, this,
+                        [this, op, conn](bool ok, const QString& msg) {
+                            emit OperationCompleted(op, ok, msg);
+                            QObject::disconnect(*conn);
+                            delete conn;
+                        });
+
+        m_currentOp = op;
+        start(*ops);
+        m_currentOp.clear();
+    });
 }
 
 void LauncherThemesAdaptor::ApplyIcons(const QString& pack, bool runPack, bool overlay,
@@ -93,10 +114,9 @@ void LauncherThemesAdaptor::ApplyIcons(const QString& pack, bool runPack, bool o
         return;
     }
 
-    runIconOpVoid(op, [pack, runPack, overlay](LauncherIconOps& o) {
+    runIconOpVoid(op, message, [pack, runPack, overlay](LauncherIconOps& o) {
                   o.applyIcons(pack, runPack, overlay); },
                   &LauncherIconOps::applied);
-    sendMethodReply(message);
 }
 
 void LauncherThemesAdaptor::RestoreIcons(const QDBusMessage& message)
@@ -109,7 +129,6 @@ void LauncherThemesAdaptor::RestoreIcons(const QDBusMessage& message)
         return;
     }
 
-    runIconOpVoid(op, [](LauncherIconOps& o) { o.restoreIcons(); },
+    runIconOpVoid(op, message, [](LauncherIconOps& o) { o.restoreIcons(); },
                   &LauncherIconOps::restored);
-    sendMethodReply(message);
 }

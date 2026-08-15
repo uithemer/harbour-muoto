@@ -13,10 +13,20 @@ Item {
 
     property string _previewBuiltPack: ""
     property string _previewLoadedPack: ""
+    property bool _refreshDeferred: false
     readonly property bool previewAvailable: _previewLoadedPack !== ""
                                          && _previewLoadedPack === packName
 
     function refresh() {
+        // buildPreview samples and montages on the QML thread. An apply
+        // rewrites activeIconPack mid-flight, so without this every tile
+        // would re-render while the daemon is still working.
+        if (settings.isRunning) {
+            _refreshDeferred = true
+            return
+        }
+        _refreshDeferred = false
+
         if (!packName || packName === "") {
             busyimg.running = false
             imgpreview.source = ""
@@ -37,6 +47,14 @@ Item {
     onPackNameChanged: refresh()
 
     Component.onCompleted: refresh()
+
+    Connections {
+        target: settings
+        onIsRunningChanged: {
+            if (!settings.isRunning && root._refreshDeferred)
+                root.refresh()
+        }
+    }
 
     Connections {
         target: iconapplier

@@ -22,6 +22,7 @@ public:
     void rebuildIconUpdaters();
 
 signals:
+    void progress(int done, int total);
     void applied(bool ok, const QString& message);
     void restored(bool ok, const QString& message);
 
@@ -33,10 +34,18 @@ private:
     void reloadIconPacks();
     void ensureDesktopWatches();
 
+    // Silent unless an apply/restore is in flight: rebuildIconUpdatersNow()
+    // also runs from dconf watches, where there is nothing to report.
+    void emitProgress(int done, int total);
+
     bool m_restoreOnUpdaterDestroy = true;
     bool m_applyPackIcons = true;
     bool m_inIconOp = false;
     bool m_rebuilding = false;
+    // Desktop entries plus one step for the folder-tile pass that follows.
+    int m_progressTotal = 0;
+    // Last reported percentage, used to rate-limit the progress signal.
+    int m_progressPercent = -1;
 };
 
 #endif // LAUNCHERICONOPS_H

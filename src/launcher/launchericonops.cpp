@@ -247,6 +247,22 @@ void LauncherIconOps::rebuildIconUpdaters()
     rebuildIconUpdatersNow();
 }
 
+void LauncherIconOps::emitProgress(int done, int total)
+{
+    if(!m_inIconOp || total <= 0)
+        return;
+
+    // One signal per desktop entry would be ~100 D-Bus messages and as many
+    // notification republishes on the GUI side; 5% steps animate a bar just
+    // as well.
+    const int percent = (done * 100) / total;
+    if(done < total && percent - m_progressPercent < 5)
+        return;
+
+    m_progressPercent = percent;
+    emit progress(done, total);
+}
+
 void LauncherIconOps::rebuildIconUpdatersNow()
 {
     m_rebuilding = true;
@@ -261,8 +277,13 @@ void LauncherIconOps::rebuildIconUpdatersNow()
     // With no pack, still attach dynamic clock/calendar updaters (stock SVG assets).
     QStringList desktopPaths;
     const QFileInfoList infoList = desktopEntries();
+    m_progressTotal = infoList.size() + 1;
+    m_progressPercent = -1;
+    int examined = 0;
     for(const QFileInfo& info : infoList)
     {
+        emitProgress(++examined, m_progressTotal);
+
         const QString desktopPath = info.absoluteFilePath();
         MDesktopEntry desktopEntry(desktopPath);
         if(desktopEntry.noDisplay())
@@ -350,6 +371,7 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
 
     rebuildIconUpdatersNow();
     FolderAmbient::apply(pack, overlay);
+    emitProgress(m_progressTotal, m_progressTotal);
     m_inIconOp = false;
     qInfo() << "muoto-launcher: ApplyIcons done ok=true msg= updaters=" << s_updaters.size();
     emit applied(true, QString());
@@ -402,6 +424,7 @@ void LauncherIconOps::restoreIcons()
     m_applyPackIcons = true;
 
     rebuildIconUpdatersNow();
+    emitProgress(m_progressTotal, m_progressTotal);
     m_inIconOp = false;
 
     if(!restoredOk)
