@@ -14,15 +14,15 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.3.0
+Version:        3.5.0
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
-Packager:       fravaccaro <me@fravaccaro.com>
+Packager:       fravaccaro
 URL:            https://github.com/uithemer/harbour-muoto
 Source0:        %{name}-%{version}.tar.bz2
 
-Requires:       sailfish-version >= 2.1.4
+Requires:       sailfish-version >= 4.0.0
 Obsoletes:      harbour-themepacksupport < 0.8.14
 Provides:       harbour-themepacksupport = 0.8.14
 Conflicts:      harbour-iconpacksupport

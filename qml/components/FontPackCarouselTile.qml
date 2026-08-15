@@ -9,21 +9,20 @@ Item {
     property string sampleFontBasename: ""
     property bool isDefault: false
     property bool highlighted: false
+    readonly property int aaPx: Math.round(Theme.fontSizeLarge * 2)
+    readonly property string aaSource: {
+        var c = String(Theme.primaryColor).replace("#", "");
+        if (root.isDefault)
+            return "image://muoto-font/aa/default?c=" + c;
+
+        if (root.packName === "" || root.sampleFontBasename === "")
+            return "";
+
+        return "image://muoto-font/aa/" + root.packName + "/" + root.sampleFontBasename + "?c=" + c;
+    }
 
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
-
-    readonly property int aaPx: Math.round(Theme.fontSizeLarge * 2)
-
-    readonly property string aaSource: {
-        var c = String(Theme.primaryColor).replace("#", "")
-        if (root.isDefault)
-            return "image://muoto-font/aa/default?c=" + c
-        if (root.packName === "" || root.sampleFontBasename === "")
-            return ""
-        return "image://muoto-font/aa/" + root.packName + "/"
-               + root.sampleFontBasename + "?c=" + c
-    }
 
     Column {
         anchors.fill: parent
@@ -31,6 +30,7 @@ Item {
 
         Item {
             id: previewHost
+
             width: parent.width
             height: (parent.height - parent.spacing) * 0.58
 
@@ -43,8 +43,7 @@ Item {
                 sourceSize.width: root.aaPx
                 sourceSize.height: root.aaPx
                 visible: source !== ""
-                source: (previewHost.width > 8 && previewHost.height > 8
-                         && root.aaSource !== "") ? root.aaSource : ""
+                source: (previewHost.width > 8 && previewHost.height > 8 && root.aaSource !== "") ? root.aaSource : ""
             }
 
             Label {
@@ -54,6 +53,7 @@ Item {
                 font.pixelSize: Theme.fontSizeLarge * 1.25
                 color: root.highlighted ? Theme.highlightColor : Theme.primaryColor
             }
+
         }
 
         Label {
@@ -66,5 +66,7 @@ Item {
             color: root.highlighted ? Theme.highlightColor : Theme.secondaryColor
             text: root.packDisplayName
         }
+
     }
+
 }

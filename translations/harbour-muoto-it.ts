@@ -139,13 +139,6 @@
     </message>
 </context>
 <context>
-    <name>DensityPreview</name>
-    <message>
-        <source>Aa Bb</source>
-        <translation>Aa Bb</translation>
-    </message>
-</context>
-<context>
     <name>DetailsDrawer</name>
     <message>
         <source>show less</source>

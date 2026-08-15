@@ -1,5 +1,5 @@
-import QtQuick 2.0
 import Qt.labs.folderlistmodel 2.1
+import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Item {
@@ -13,53 +13,67 @@ Item {
     property bool isDefault: false
     property bool highlighted: false
     property var stockModel: null
-
-    width: parent ? parent.width : implicitWidth
-    height: parent ? parent.height : implicitHeight
-
     property url lockedThumb: ""
-
     readonly property string thumbFolder: {
         if (isDefault || !packName || packName === "")
-            return ""
-        var rootPath = "file:///usr/share/" + packName
+            return "";
+
+        var rootPath = "file:///usr/share/" + packName;
         if (hasNative)
-            return rootPath + "/native/86x86/apps"
+            return rootPath + "/native/86x86/apps";
+
         if (hasApk)
-            return rootPath + "/apk/86x86"
+            return rootPath + "/apk/86x86";
+
         if (hasJolla)
-            return rootPath + "/jolla/z1.0/icons"
-        return ""
+            return rootPath + "/jolla/z1.0/icons";
+
+        return "";
     }
 
     function applyPick() {
-        var url = ""
+        var url = "";
         if (root.isDefault) {
-            var m = root.stockModel
+            var m = root.stockModel;
             if (m && m.count > 0) {
                 // FolderAmbient themes icon-launcher-folder-* inplace; never
                 // use those for the Default stock thumb.
-                var tries = Math.min(m.count, 32)
+                var tries = Math.min(m.count, 32);
                 for (var t = 0; t < tries; ++t) {
-                    var candidate = m.get(Math.floor(Math.random() * m.count), "fileURL")
-                    var name = String(candidate).split("/").pop()
+                    var candidate = m.get(Math.floor(Math.random() * m.count), "fileURL");
+                    var name = String(candidate).split("/").pop();
                     if (name.indexOf("icon-launcher-folder-") !== 0) {
-                        url = candidate
-                        break
+                        url = candidate;
+                        break;
                     }
                 }
             }
         } else {
-            var n = thumbs.count
+            var n = thumbs.count;
             if (n > 0)
-                url = thumbs.get(Math.floor(Math.random() * n), "fileURL")
+                url = thumbs.get(Math.floor(Math.random() * n), "fileURL");
+
         }
         if (lockedThumb !== url)
-            lockedThumb = url
+            lockedThumb = url;
+
     }
+
+    width: parent ? parent.width : implicitWidth
+    height: parent ? parent.height : implicitHeight
+    onIsDefaultChanged: {
+        lockedThumb = "";
+        pickTimer.restart();
+    }
+    onThumbFolderChanged: {
+        lockedThumb = "";
+        pickTimer.restart();
+    }
+    Component.onCompleted: pickTimer.restart()
 
     FolderListModel {
         id: thumbs
+
         folder: root.thumbFolder
         nameFilters: ["*.png"]
         showDirs: false
@@ -74,26 +88,17 @@ Item {
         target: root.stockModel
         onCountChanged: {
             if (root.isDefault)
-                pickTimer.restart()
+                pickTimer.restart();
+
         }
     }
 
     Timer {
         id: pickTimer
+
         interval: 50
         onTriggered: applyPick()
     }
-
-    onIsDefaultChanged: {
-        lockedThumb = ""
-        pickTimer.restart()
-    }
-    onThumbFolderChanged: {
-        lockedThumb = ""
-        pickTimer.restart()
-    }
-
-    Component.onCompleted: pickTimer.restart()
 
     Column {
         anchors.fill: parent
@@ -101,6 +106,7 @@ Item {
 
         Item {
             id: previewHost
+
             width: parent.width
             height: (parent.height - parent.spacing) * 0.58
 
@@ -113,6 +119,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 source: root.lockedThumb
             }
+
         }
 
         Label {
@@ -125,5 +132,7 @@ Item {
             color: root.highlighted ? Theme.highlightColor : Theme.secondaryColor
             text: root.packDisplayName
         }
+
     }
+
 }

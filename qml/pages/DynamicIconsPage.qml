@@ -1,83 +1,79 @@
-import QtQuick 2.0
-import Sailfish.Silica 1.0
 import "../common"
 import "../components"
+import QtQuick 2.0
+import Sailfish.Silica 1.0
 
 Dialog {
     id: dlg
 
     property var themeWork
     property Settings settings
-
     property string previewTick: "0"
     property bool clockSelected: false
     property bool calendarSelected: false
     property bool appliedClock: false
     property bool appliedCalendar: false
-
-    readonly property string activePack: settings.hasActiveIconPack()
-                                         ? settings.activeIconPack : "default"
+    readonly property string activePack: settings.hasActiveIconPack() ? settings.activeIconPack : "default"
     readonly property bool stockDyn: !settings.hasActiveIconPack()
-    readonly property bool hasActiveDynClock: stockDyn
-                                              || themeWork.themepackmodel.hasDynClockForPack(activePack)
-    readonly property bool hasActiveDynCalendar: stockDyn
-                                                 || themeWork.themepackmodel.hasDynCalendarForPack(activePack)
+    readonly property bool hasActiveDynClock: stockDyn || themeWork.themepackmodel.hasDynClockForPack(activePack)
+    readonly property bool hasActiveDynCalendar: stockDyn || themeWork.themepackmodel.hasDynCalendarForPack(activePack)
     readonly property bool dynAvailable: hasActiveDynClock || hasActiveDynCalendar
-    readonly property bool dirty: (hasActiveDynClock && clockSelected !== appliedClock)
-                                  || (hasActiveDynCalendar && calendarSelected !== appliedCalendar)
-
-    canAccept: dynAvailable && dirty
+    readonly property bool dirty: (hasActiveDynClock && clockSelected !== appliedClock) || (hasActiveDynCalendar && calendarSelected !== appliedCalendar)
 
     function bumpPreview() {
-        previewTick = String(Date.now())
+        previewTick = String(Date.now());
     }
 
     function initFromSettings() {
-        clockSelected = hasActiveDynClock && settings.dynamicClockEnabled
-        calendarSelected = hasActiveDynCalendar && settings.dynamicCalendarEnabled
-        appliedClock = clockSelected
-        appliedCalendar = calendarSelected
-        bumpPreview()
+        clockSelected = hasActiveDynClock && settings.dynamicClockEnabled;
+        calendarSelected = hasActiveDynCalendar && settings.dynamicCalendarEnabled;
+        appliedClock = clockSelected;
+        appliedCalendar = calendarSelected;
+        bumpPreview();
     }
 
+    canAccept: dynAvailable && dirty
     Component.onCompleted: initFromSettings()
-
     onStatusChanged: {
         if (status === PageStatus.Active)
-            bumpPreview()
+            bumpPreview();
+
+    }
+    onAccepted: {
+        if (hasActiveDynClock)
+            settings.dynamicClockEnabled = clockSelected;
+
+        if (hasActiveDynCalendar)
+            settings.dynamicCalendarEnabled = calendarSelected;
+
+        app.showToast(qsTr("Dynamic icons updated."));
     }
 
     Timer {
         interval: 60 * 1000
-        running: dlg.status === PageStatus.Active
-                 && ((dlg.hasActiveDynClock && dlg.clockSelected)
-                     || (dlg.hasActiveDynCalendar && dlg.calendarSelected))
-                 && Qt.application.active
+        running: dlg.status === PageStatus.Active && ((dlg.hasActiveDynClock && dlg.clockSelected) || (dlg.hasActiveDynCalendar && dlg.calendarSelected)) && Qt.application.active
         repeat: true
         onTriggered: dlg.bumpPreview()
     }
 
-    onAccepted: {
-        if (hasActiveDynClock)
-            settings.dynamicClockEnabled = clockSelected
-        if (hasActiveDynCalendar)
-            settings.dynamicCalendarEnabled = calendarSelected
-        app.showToast(qsTr("Dynamic icons updated."))
+    BusyState {
+        id: busyindicator
     }
-
-    BusyState { id: busyindicator }
 
     SilicaFlickable {
         id: flickable
+
         anchors.fill: parent
         contentHeight: content.height
         enabled: !settings.isRunning
-        opacity: settings.isRunning ? 0.2 : 1.0
+        opacity: settings.isRunning ? 0.2 : 1
 
-        VerticalScrollDecorator { }
+        VerticalScrollDecorator {
+        }
 
         Column {
             id: content
+
             width: parent.width
 
             DialogHeader {
@@ -95,6 +91,7 @@ Dialog {
 
                     Item {
                         id: dynPreviewHost
+
                         width: parent.width
                         height: Math.min(parent.width, Math.max(280, flickable.height * 0.32))
 
@@ -110,13 +107,7 @@ Dialog {
                                 sourceSize.width: width
                                 sourceSize.height: height
                                 cache: false
-                                source: (dlg.clockSelected && dlg.hasActiveDynClock)
-                                        ? ("image://muoto-launcher/dyn-clock/" + dlg.activePack
-                                           + "?t=" + dlg.previewTick)
-                                        : (dlg.stockDyn
-                                           ? "image://theme/icon-launcher-clock"
-                                           : ("image://muoto-launcher/icon-pack/" + dlg.activePack
-                                              + "/icon-launcher-clock"))
+                                source: (dlg.clockSelected && dlg.hasActiveDynClock) ? ("image://muoto-launcher/dyn-clock/" + dlg.activePack + "?t=" + dlg.previewTick) : (dlg.stockDyn ? "image://theme/icon-launcher-clock" : ("image://muoto-launcher/icon-pack/" + dlg.activePack + "/icon-launcher-clock"))
                             }
 
                             Image {
@@ -126,14 +117,9 @@ Dialog {
                                 sourceSize.width: width
                                 sourceSize.height: height
                                 cache: false
-                                source: (dlg.calendarSelected && dlg.hasActiveDynCalendar)
-                                        ? ("image://muoto-launcher/dyn-calendar/" + dlg.activePack
-                                           + "?t=" + dlg.previewTick)
-                                        : (dlg.stockDyn
-                                           ? "image://theme/icon-launcher-calendar"
-                                           : ("image://muoto-launcher/icon-pack/" + dlg.activePack
-                                              + "/icon-launcher-calendar"))
+                                source: (dlg.calendarSelected && dlg.hasActiveDynCalendar) ? ("image://muoto-launcher/dyn-calendar/" + dlg.activePack + "?t=" + dlg.previewTick) : (dlg.stockDyn ? "image://theme/icon-launcher-calendar" : ("image://muoto-launcher/icon-pack/" + dlg.activePack + "/icon-launcher-calendar"))
                             }
+
                         }
 
                         Label {
@@ -145,7 +131,9 @@ Dialog {
                             visible: !dlg.dynAvailable
                             text: qsTr("This theme doesn't include live Clock or Calendar icons. Try another theme, or restore the default look.")
                         }
+
                     }
+
                 }
 
                 Column {
@@ -153,9 +141,7 @@ Dialog {
 
                     MuotoTextLabel {
                         visible: dlg.dynAvailable
-                        text: dlg.stockDyn
-                              ? qsTr("Show the current time and date on your Clock and Calendar icons.")
-                              : qsTr("Show the current time and date on your Clock and Calendar icons, using this theme's style.")
+                        text: dlg.stockDyn ? qsTr("Show the current time and date on your Clock and Calendar icons.") : qsTr("Show the current time and date on your Clock and Calendar icons, using this theme's style.")
                     }
 
                     IconTextSwitch {
@@ -177,9 +163,16 @@ Dialog {
                         enabled: dlg.hasActiveDynCalendar && !settings.isRunning
                         onClicked: dlg.calendarSelected = !dlg.calendarSelected
                     }
+
                 }
+
             }
 
-LabelSpacer { }        }
+            LabelSpacer {
+            }
+
+        }
+
     }
+
 }

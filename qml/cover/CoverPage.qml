@@ -1,18 +1,18 @@
+import "../components"
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../components"
 
 CoverBackground {
     Image {
         id: coverimg
+
         fillMode: Image.PreserveAspectFit
-        source: app.isLightTheme ? "../../images/coverbg-light.png"
-                                 : "../../images/coverbg-dark.png"
+        source: app.isLightTheme ? "../../images/coverbg-light.png" : "../../images/coverbg-dark.png"
         opacity: {
             if (settings.isRunning)
-                0.1
+                0.1;
             else
-                (settings.hasActiveIconPack() || settings.hasActiveFontPack()) ? 0.1 : 0.3
+                (settings.hasActiveIconPack() || settings.hasActiveFontPack()) ? 0.1 : 0.3;
         }
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
@@ -20,6 +20,10 @@ CoverBackground {
     }
 
     Column {
+        spacing: Theme.paddingSmall
+        visible: !settings.isRunning
+        opacity: 0.8
+
         anchors {
             left: parent.left
             right: parent.right
@@ -28,9 +32,6 @@ CoverBackground {
             rightMargin: Theme.paddingSmall
             topMargin: Theme.paddingLarge
         }
-        spacing: Theme.paddingSmall
-        visible: !settings.isRunning
-        opacity: 0.8
 
         Label {
             width: parent.width
@@ -43,10 +44,10 @@ CoverBackground {
 
         IconPackPreview {
             width: parent.width
-            packName: settings.hasActiveIconPack()
-                      ? settings.activeIconPack : "default"
+            packName: settings.hasActiveIconPack() ? settings.activeIconPack : "default"
             previewHeight: Math.min(width, Theme.itemSizeLarge * 1.5)
         }
+
     }
 
     Image {
@@ -58,6 +59,7 @@ CoverBackground {
         width: Theme.itemSizeLarge
         height: Theme.itemSizeLarge
         opacity: 0.6
+
         RotationAnimation on rotation {
             duration: 2000
             loops: Animation.Infinite
@@ -65,5 +67,7 @@ CoverBackground {
             from: 0
             to: 360
         }
+
     }
+
 }

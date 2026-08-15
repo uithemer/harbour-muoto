@@ -14,7 +14,8 @@ Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundl
 
 ## Features
 
-<a href="docs/screenshots/screenshot1.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot1.png" alt="Home mosaic" /></a> <a href="docs/screenshots/screenshot2.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot2.png" alt="Configure icons" /></a> <a href="docs/screenshots/screenshot3.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot3.png" alt="Configure fonts" /></a> <a href="docs/screenshots/screenshot4.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot4.png" alt="Display density" /></a> <a href="docs/screenshots/screenshot5.png"><img width="20%" style="float: left;" src="docs/screenshots/screenshot5.png" alt="Dynamic icons" /></a>
+<a href="docs/screenshots/screenshot1.png"><img width="33%" style="float: left;" src="docs/screenshots/screenshot1.png" alt="Home mosaic" /></a> <a href="docs/screenshots/screenshot2.png"><img width="33%" style="float: left;" src="docs/screenshots/screenshot2.png" alt="Configure icons" /></a> <a href="docs/screenshots/screenshot3.png"><img width="33%" style="float: left;" src="docs/screenshots/screenshot3.png" alt="Configure fonts" /></a><br style="clear: both; height:5px;" />
+<a href="docs/screenshots/screenshot4.png"><img width="33%" style="float: left;" src="docs/screenshots/screenshot4.png" alt="Display density" /></a> <a href="docs/screenshots/screenshot5.png"><img width="33%" style="float: left;" src="docs/screenshots/screenshot5.png" alt="Dynamic icons" /></a> <a href="docs/screenshots/screenshot6.png"><img width="33%" style="float: left;" src="docs/screenshots/screenshot6.png" alt="Low-power mode" /></a>
 <br style="clear: both; height:5px;" />
 
 - Icon theming (native, Jolla, Android).
@@ -22,6 +23,7 @@ Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundl
 - Dynamic clock and calendar icons on the homescreen.
 - Font theming.
 - Display density (pixel ratio, launcher icon size).
+- Low-power mode settings.
 
 ## Using Muoto
 

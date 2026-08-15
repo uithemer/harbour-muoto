@@ -1,90 +1,104 @@
+import Opal.SupportMe 1.0
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import Opal.SupportMe 1.0
-import harbour.muoto 1.0
-import "pages"
 import "common"
 import "components"
+import harbour.muoto 1.0
+import "pages"
 
-ApplicationWindow
-{
+ApplicationWindow {
     id: app
 
-    MuotoNotification { id: globalNotification }
+    property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
 
     function showProgressNotification(summary, body, progressValue) {
-        globalNotification.updateProgress(summary, body, progressValue)
+        globalNotification.updateProgress(summary, body, progressValue);
     }
 
     function showToast(body) {
-        globalNotification.toast(body)
+        globalNotification.toast(body);
     }
 
     function formatHelperError(message, emptyFallback) {
         switch (message) {
         case "busy":
-            return qsTr("Busy...")
+            return qsTr("Busy...");
         case "timed out waiting for icon operation":
-            return qsTr("Busy — try again in a moment")
+            return qsTr("Busy — try again in a moment");
         case "shutting down":
-            return qsTr("Cannot apply changes while shutting down")
+            return qsTr("Cannot apply changes while shutting down");
         case "launcher daemon not running":
-            return qsTr("Try again in a moment")
+            return qsTr("Try again in a moment");
         case "upgrade in progress":
-            return qsTr("Wait for the system update to finish")
+            return qsTr("Wait for the system update to finish");
         case "D-Bus interface unavailable":
-            return qsTr("Try again in a moment")
+            return qsTr("Try again in a moment");
         case "failed to relocate one or more vendor locks":
-            return qsTr("Could not unlock display density settings")
+            return qsTr("Could not unlock display density settings");
         case "invalid pack":
-            return qsTr("This theme pack cannot be used")
+            return qsTr("This theme pack cannot be used");
         case "no icon operation":
-            return qsTr("No icons to apply")
+            return qsTr("No icons to apply");
         case "pack not found":
-            return qsTr("Theme pack is not installed")
+            return qsTr("Theme pack is not installed");
         case "overlay not applied":
-            return qsTr("Could not style missing app icons")
+            return qsTr("Could not style missing app icons");
         case "pack run produced no copies":
-            return qsTr("No icons could be installed from this theme")
+            return qsTr("No icons could be installed from this theme");
         default:
-            return message.length ? qsTr("Something went wrong")
-                                  : (emptyFallback || qsTr("Operation failed"))
+            return message.length ? qsTr("Something went wrong") : (emptyFallback || qsTr("Operation failed"));
         }
     }
 
     function showHelperError(message, emptyFallback) {
-        showToast(formatHelperError(message, emptyFallback))
+        showToast(formatHelperError(message, emptyFallback));
     }
+
+    initialPage: settings.wizardDone ? mainpage : welcomepage
+    cover: Qt.resolvedUrl("cover/CoverPage.qml")
+    allowedOrientations: defaultAllowedOrientations
+    _defaultPageOrientations: defaultAllowedOrientations
+
+    MuotoNotification {
+        id: globalNotification
+    }
+
     Component {
         id: mainpage
-        MainPage {}
+
+        MainPage {
+        }
+
     }
 
     Component {
         id: welcomepage
-        WelcomePage {}
+
+        WelcomePage {
+        }
+
     }
 
     IconApplier {
-        id: iconapplier
         // Preview only (IconPackPreview buildPreview). Icon apply/restore go
         // through Helper -> session launcher D-Bus.
+
+        id: iconapplier
     }
 
-    property bool isLightTheme: (Theme.colorScheme === Theme.LightOnDark) ? false : true
-
-    initialPage: settings.wizardDone ? mainpage : welcomepage
-    cover: Qt.resolvedUrl("cover/CoverPage.qml")
-
-    allowedOrientations: defaultAllowedOrientations
-    _defaultPageOrientations: defaultAllowedOrientations
-
-    Settings { id: settings }
+    Settings {
+        id: settings
+    }
 
     AskForSupport {
         id: askForSupport
+
         contents: Component {
-            MuotoSupportDialog {}
+            MuotoSupportDialog {
+            }
+
         }
+
     }
+
 }

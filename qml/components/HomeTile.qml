@@ -7,7 +7,6 @@ BackgroundItem {
     property string title: ""
     property string subtitle: ""
     property int previewHeight: Theme.itemSizeLarge * 1.5
-
     default property alias previewContent: previewHost.data
 
     width: parent ? parent.width : implicitWidth
@@ -17,6 +16,7 @@ BackgroundItem {
 
     Column {
         id: labelColumn
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -27,8 +27,7 @@ BackgroundItem {
             width: parent.width
             text: root.title
             font.pixelSize: Theme.fontSizeMedium
-            color: root.highlighted || root.down
-                   ? Theme.highlightColor : Theme.primaryColor
+            color: root.highlighted || root.down ? Theme.highlightColor : Theme.primaryColor
             truncationMode: TruncationMode.Fade
         }
 
@@ -36,21 +35,25 @@ BackgroundItem {
             width: parent.width
             text: root.subtitle
             font.pixelSize: Theme.fontSizeSmall
-            color: root.highlighted || root.down
-                   ? Theme.secondaryHighlightColor : Theme.secondaryColor
+            color: root.highlighted || root.down ? Theme.secondaryHighlightColor : Theme.secondaryColor
             truncationMode: TruncationMode.Fade
         }
+
     }
 
     Item {
         id: previewHost
+
+        height: root.previewHeight
+        clip: true
+
         anchors {
             top: parent.top
             left: parent.left
             right: parent.right
             margins: Theme.paddingMedium
         }
-        height: root.previewHeight
-        clip: true
+
     }
+
 }
