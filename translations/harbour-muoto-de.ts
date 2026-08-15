@@ -743,6 +743,14 @@
         <source>Uninstalling theme…</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Updating homescreen…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waiting…</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TranslatorPage</name>
@@ -854,6 +862,10 @@
     </message>
     <message>
         <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Busy — try again in a moment</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

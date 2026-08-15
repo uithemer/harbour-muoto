@@ -25,9 +25,12 @@ namespace
     const char* kLauncherObjectPath  = "/org/muoto/Launcher1";
     const char* kLauncherIfaceThemes = "org.muoto.Launcher1.Themes";
 
-    // Poll cadence and budget for a launcher daemon we just kicked.
+    // Poll cadence and budget for a launcher daemon we just kicked, and for
+    // waiting out a held icon-ops.lock (boot update-icons / in-flight apply).
     const int kLauncherPollMs  = 250;
     const int kLauncherGiveUpMs = 15000;
+    const int kLockPollMs = 400;
+    const int kLockGiveUpMs = 15000;
 
     struct Endpoint
     {
@@ -62,11 +65,16 @@ namespace
 HelperClient::HelperClient()
     : QObject(nullptr)
     , _launcherWait(new QTimer(this))
+    , _lockWait(new QTimer(this))
     , _launcherWaitedMs(0)
+    , _lockWaitedMs(0)
     , _hooked(false)
 {
     _launcherWait->setInterval(kLauncherPollMs);
     connect(_launcherWait, &QTimer::timeout, this, &HelperClient::onLauncherWaitTick);
+
+    _lockWait->setInterval(kLockPollMs);
+    connect(_lockWait, &QTimer::timeout, this, &HelperClient::onLockWaitTick);
 
     hookBroadcastSignals();
 
@@ -190,33 +198,54 @@ void HelperClient::asyncCall(const QString& op, const QVariantList& args)
 
 void HelperClient::queueIconOp(const QString& op, const QVariantList& args)
 {
-    QElapsedTimer t;
-    t.start();
+    // Latest request wins if we are already waiting on the lock or daemon.
+    _pendingIconOp = op;
+    _pendingIconArgs = args;
 
     if(!FileLock::tryProbe())
     {
-        emit error(op, QStringLiteral("busy"));
+        startLockWait(op, args);
         return;
     }
-    const qint64 afterProbe = t.elapsed();
+
+    dispatchPendingIconOp();
+}
+
+void HelperClient::startLockWait(const QString& op, const QVariantList& args)
+{
+    Q_UNUSED(args);
+    _lockWaitedMs = 0;
+    if(!_lockWait->isActive())
+    {
+        qInfo() << "HelperClient:" << op << "icon-ops.lock held, waiting";
+        _lockWait->start();
+    }
+    // total=0 → ThemeWork shows an indeterminate “Waiting…” progress body.
+    emit iconProgress(op, 0, 0);
+}
+
+void HelperClient::dispatchPendingIconOp()
+{
+    const QString op = _pendingIconOp;
+    const QVariantList args = _pendingIconArgs;
+    if(op.isEmpty())
+        return;
 
     if(launcherDaemonRegistered())
     {
-        qInfo() << "HelperClient:" << op << "lock probe" << afterProbe
-                << "ms, name probe" << (t.elapsed() - afterProbe) << "ms";
+        _pendingIconOp.clear();
+        _pendingIconArgs.clear();
+        _lockWait->stop();
+        _launcherWait->stop();
+        qInfo() << "HelperClient: dispatching" << op;
         asyncCall(op, args);
         return;
     }
 
     if(_launcherWait->isActive())
-    {
-        emit error(op, QStringLiteral("busy"));
         return;
-    }
 
     qInfo() << "HelperClient:" << op << "launcher daemon absent, starting detached";
-    _pendingIconOp = op;
-    _pendingIconArgs = args;
     _launcherWaitedMs = 0;
     startLauncherDaemonDetached();
     _launcherWait->start();
@@ -224,6 +253,8 @@ void HelperClient::queueIconOp(const QString& op, const QVariantList& args)
 
 void HelperClient::failPendingIconOp(const QString& message)
 {
+    _lockWait->stop();
+    _launcherWait->stop();
     const QString op = _pendingIconOp;
     _pendingIconOp.clear();
     _pendingIconArgs.clear();
@@ -231,19 +262,49 @@ void HelperClient::failPendingIconOp(const QString& message)
         emit error(op, message);
 }
 
+void HelperClient::onLockWaitTick()
+{
+    if(_pendingIconOp.isEmpty())
+    {
+        _lockWait->stop();
+        return;
+    }
+
+    if(FileLock::tryProbe())
+    {
+        _lockWait->stop();
+        qInfo() << "HelperClient: icon-ops.lock free after" << _lockWaitedMs
+                << "ms";
+        dispatchPendingIconOp();
+        return;
+    }
+
+    _lockWaitedMs += kLockPollMs;
+    if(_lockWaitedMs < kLockGiveUpMs)
+    {
+        emit iconProgress(_pendingIconOp, 0, 0);
+        return;
+    }
+
+    qWarning() << "HelperClient:" << _pendingIconOp
+               << "timed out waiting for icon-ops.lock";
+    failPendingIconOp(QStringLiteral("timed out waiting for icon operation"));
+}
+
 void HelperClient::onLauncherWaitTick()
 {
     if(launcherDaemonRegistered())
     {
         _launcherWait->stop();
-        const QString op = _pendingIconOp;
-        const QVariantList args = _pendingIconArgs;
-        _pendingIconOp.clear();
-        _pendingIconArgs.clear();
         qInfo() << "HelperClient: launcher daemon up after" << _launcherWaitedMs
-                << "ms, dispatching" << op;
-        if(!op.isEmpty())
-            asyncCall(op, args);
+                << "ms";
+        // Lock may have been taken while we waited for the name.
+        if(!FileLock::tryProbe())
+        {
+            startLockWait(_pendingIconOp, _pendingIconArgs);
+            return;
+        }
+        dispatchPendingIconOp();
         return;
     }
 
@@ -251,7 +312,6 @@ void HelperClient::onLauncherWaitTick()
     if(_launcherWaitedMs < kLauncherGiveUpMs)
         return;
 
-    _launcherWait->stop();
     qWarning() << "HelperClient:" << _pendingIconOp << "launcher daemon not running";
     failPendingIconOp(QStringLiteral("launcher daemon not running"));
 }

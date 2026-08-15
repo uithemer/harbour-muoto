@@ -64,7 +64,8 @@ signals:
 
     // op is the daemon-side method name ("ApplyIcons", "UninstallPack",
     // ...). Fired on daemon error, D-Bus transport failure, or when the
-    // theme-op lock is busy. Lets QML clear settings.isRunning.
+    // icon-ops lock stays busy past the client wait budget. Lets QML
+    // clear settings.isRunning.
     void error(const QString& op, const QString& message);
 
 private slots:
@@ -76,6 +77,8 @@ private slots:
 
     // Poll for the session daemon after startLauncherDaemonDetached().
     void onLauncherWaitTick();
+    // Poll until icon-ops.lock is free (boot update-icons / prior apply).
+    void onLockWaitTick();
 
 private:
     // Wrap a fire-and-forget D-Bus method call. On transport failure
@@ -86,11 +89,13 @@ private:
     // method is invoked.
     void hookBroadcastSignals();
 
-    // Common entry for ApplyIcons / RestoreIcons: refuse when the icon-ops
-    // lock is taken, dispatch straight away when the daemon is on the bus,
+    // Common entry for ApplyIcons / RestoreIcons: wait briefly if the
+    // icon-ops lock is taken, dispatch when the daemon is on the bus,
     // otherwise kick it and retry from onLauncherWaitTick().
     void queueIconOp(const QString& op, const QVariantList& args);
+    void dispatchPendingIconOp();
     void failPendingIconOp(const QString& message);
+    void startLockWait(const QString& op, const QVariantList& args);
 
     // Private: callers go through HelperClient::instance() or the
     // QML `Helper` singleton.
@@ -98,7 +103,9 @@ private:
     Q_DISABLE_COPY(HelperClient)
 
     QTimer*      _launcherWait;
+    QTimer*      _lockWait;
     int          _launcherWaitedMs;
+    int          _lockWaitedMs;
     QString      _pendingIconOp;
     QVariantList _pendingIconArgs;
     bool         _hooked;

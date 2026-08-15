@@ -142,20 +142,31 @@ Item {
     function _armApply(nOps) {
         _waitForFinalise = true
         _pendingOps = nOps
+        launcherSettleTimer.stop()
     }
 
-    function _opDone() {
+    // deferLauncher: wait for Lipstick's ~2s monitor holdback before toasting.
+    function _opDone(deferLauncher) {
         if (!_waitForFinalise)
             return
         if (_pendingOps > 0)
             _pendingOps -= 1
         if (_pendingOps === 0) {
             _waitForFinalise = false
-            _finalise()
+            if (deferLauncher) {
+                app.showProgressNotification(
+                    qsTr("Applying theme"),
+                    qsTr("Updating homescreen…"),
+                    Notification.ProgressIndeterminate)
+                launcherSettleTimer.start()
+            } else {
+                _finalise()
+            }
         }
     }
 
     function beginManualThemeWork(progressBody) {
+        launcherSettleTimer.stop()
         _progressBody = progressBody
         app.showProgressNotification(
             qsTr("Applying theme"),
@@ -164,6 +175,7 @@ Item {
     }
 
     function _abortThemeWork(errMsg) {
+        launcherSettleTimer.stop()
         _waitForFinalise = false
         _pendingOps = 0
         _pendingIconPack = ""
@@ -282,18 +294,33 @@ Item {
         onTriggered: themepack.restartHomescreen()
     }
 
+    // Lipstick LauncherMonitor holdback is 2s; wait a bit longer before toast.
+    Timer {
+        id: launcherSettleTimer
+        interval: 2500
+        repeat: false
+        onTriggered: themeWork._finalise()
+    }
+
     Connections {
         target: Helper
         onIconProgress: {
-            if (total <= 0 || themeWork._progressBody === "")
+            if (themeWork._progressBody === "")
                 return
+            if (total <= 0) {
+                app.showProgressNotification(
+                    qsTr("Applying theme"),
+                    qsTr("Waiting…"),
+                    Notification.ProgressIndeterminate)
+                return
+            }
             app.showProgressNotification(qsTr("Applying theme"),
                                          themeWork._progressBody,
                                          done / total)
         }
         onIconsApplied: {
             themeWork._commitPendingIconApply()
-            themeWork._opDone()
+            themeWork._opDone(true)
         }
         onIconsRestored: {
             themeWork._commitPendingIconRestore()
@@ -317,7 +344,7 @@ Item {
                 if (idx >= 0)
                     themepackmodel.uninstall(idx)
             }
-            themeWork._opDone()
+            themeWork._opDone(true)
         }
         onError: {
             if (op === "ApplyIcons") {
@@ -340,13 +367,13 @@ Item {
         id: themepackmodel
         onThemeApplied: {
             themeWork._commitPendingFontApply()
-            themeWork._opDone()
+            themeWork._opDone(false)
             themeWork._startDeferredIcons()
         }
         onThemeApplyFailed: themeWork._abortThemeWork(message)
         onThemeRestored: {
             themeWork._commitPendingFontRestore()
-            themeWork._opDone()
+            themeWork._opDone(false)
             themeWork._startDeferredIcons()
         }
         onThemeRestoreFailed: themeWork._abortThemeWork(message)

@@ -24,8 +24,12 @@ ApplicationWindow
         switch (message) {
         case "busy":
             return qsTr("Busy...")
+        case "timed out waiting for icon operation":
+            return qsTr("Busy — try again in a moment")
         case "shutting down":
             return qsTr("Cannot apply changes while shutting down")
+        case "launcher daemon not running":
+            return qsTr("Try again in a moment")
         case "upgrade in progress":
             return qsTr("Wait for the system update to finish")
         case "D-Bus interface unavailable":
