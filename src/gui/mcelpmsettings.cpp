@@ -19,12 +19,15 @@ namespace
 
     // Bitmask: from-pocket=1, hover-over=2
     const int kTriggerFromPocket = 1;
-    const int kTriggerFromPocketAndHover = 1 | 2;
+    const int kTriggerHoverOver = 2;
 }
 
 MceLpmSettings::MceLpmSettings()
     : QObject(nullptr)
     , _enabled(false)
+    , _triggerFromPocket(true)
+    , _triggerHoverOver(false)
+    , _proximityReady(false)
     , _available(false)
 {
     refresh();
@@ -47,6 +50,16 @@ QObject* MceLpmSettings::qmlSingleton(QQmlEngine* engine, QJSEngine* scriptEngin
     MceLpmSettings* s = instance();
     QQmlEngine::setObjectOwnership(s, QQmlEngine::CppOwnership);
     return s;
+}
+
+int MceLpmSettings::triggeringMask(bool fromPocket, bool hoverOver)
+{
+    int mask = 0;
+    if(fromPocket)
+        mask |= kTriggerFromPocket;
+    if(hoverOver)
+        mask |= kTriggerHoverOver;
+    return mask;
 }
 
 bool MceLpmSettings::getBool(const QString& key, bool* ok)
@@ -74,6 +87,33 @@ bool MceLpmSettings::getBool(const QString& key, bool* ok)
     if(ok)
         *ok = true;
     return inner.toBool();
+}
+
+int MceLpmSettings::getInt(const QString& key, bool* ok)
+{
+    QDBusMessage msg = QDBusMessage::createMethodCall(
+        QString::fromLatin1(kService),
+        QString::fromLatin1(kPath),
+        QString::fromLatin1(kIface),
+        QStringLiteral("get_config"));
+    msg << key;
+
+    const QDBusMessage reply = QDBusConnection::systemBus().call(msg);
+    if(reply.type() != QDBusMessage::ReplyMessage || reply.arguments().isEmpty())
+    {
+        if(ok)
+            *ok = false;
+        return 0;
+    }
+
+    const QVariant v = reply.arguments().at(0);
+    QVariant inner = v;
+    if(v.canConvert<QDBusVariant>())
+        inner = qvariant_cast<QDBusVariant>(v).variant();
+
+    if(ok)
+        *ok = true;
+    return inner.toInt();
 }
 
 bool MceLpmSettings::setBool(const QString& key, bool value)
@@ -120,9 +160,14 @@ bool MceLpmSettings::setInt(const QString& key, int value)
 
 void MceLpmSettings::refresh()
 {
-    bool ok = false;
-    const bool lpm = getBool(QString::fromLatin1(kUseLpm), &ok);
-    if(!ok)
+    bool okLpm = false;
+    bool okTrig = false;
+    bool okPs = false;
+    const bool lpm = getBool(QString::fromLatin1(kUseLpm), &okLpm);
+    const int trig = getInt(QString::fromLatin1(kLpmTriggering), &okTrig);
+    const bool onDemand = getBool(QString::fromLatin1(kPsOnDemand), &okPs);
+
+    if(!okLpm || !okTrig || !okPs)
     {
         if(_available)
         {
@@ -143,25 +188,38 @@ void MceLpmSettings::refresh()
         _enabled = lpm;
         emit enabledChanged();
     }
+
+    const bool fromPocket = (trig & kTriggerFromPocket) != 0;
+    const bool hoverOver = (trig & kTriggerHoverOver) != 0;
+    if(_triggerFromPocket != fromPocket)
+    {
+        _triggerFromPocket = fromPocket;
+        emit triggerFromPocketChanged();
+    }
+    if(_triggerHoverOver != hoverOver)
+    {
+        _triggerHoverOver = hoverOver;
+        emit triggerHoverOverChanged();
+    }
+
+    // proximityReady <=> !ps-on-demand
+    const bool ready = !onDemand;
+    if(_proximityReady != ready)
+    {
+        _proximityReady = ready;
+        emit proximityReadyChanged();
+    }
 }
 
-bool MceLpmSettings::applyProfile(bool on)
+bool MceLpmSettings::apply(bool enabled, bool fromPocket, bool hoverOver,
+                           bool proximityReady)
 {
     bool ok = true;
-    if(on)
-    {
-        ok = setBool(QString::fromLatin1(kUseLpm), true) && ok;
-        ok = setInt(QString::fromLatin1(kLpmTriggering),
-                    kTriggerFromPocketAndHover) && ok;
-        ok = setBool(QString::fromLatin1(kPsOnDemand), false) && ok;
-    }
-    else
-    {
-        ok = setBool(QString::fromLatin1(kUseLpm), false) && ok;
-        ok = setInt(QString::fromLatin1(kLpmTriggering),
-                    kTriggerFromPocket) && ok;
-        ok = setBool(QString::fromLatin1(kPsOnDemand), true) && ok;
-    }
+    ok = setBool(QString::fromLatin1(kUseLpm), enabled) && ok;
+    ok = setInt(QString::fromLatin1(kLpmTriggering),
+                triggeringMask(fromPocket, hoverOver)) && ok;
+    // proximityReady true => ps-on-demand disabled
+    ok = setBool(QString::fromLatin1(kPsOnDemand), !proximityReady) && ok;
 
     refresh();
 
@@ -171,4 +229,10 @@ bool MceLpmSettings::applyProfile(bool on)
         return false;
     }
     return true;
+}
+
+bool MceLpmSettings::applyDefaults()
+{
+    // Stock: LPM off, from-pocket only, ps-on-demand on (proximityReady false).
+    return apply(false, true, false, false);
 }

@@ -13,6 +13,10 @@ class MceLpmSettings : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool triggerFromPocket READ triggerFromPocket NOTIFY triggerFromPocketChanged)
+    Q_PROPERTY(bool triggerHoverOver READ triggerHoverOver NOTIFY triggerHoverOverChanged)
+    // true = proximity kept ready (MCE ps-on-demand disabled); needed for reliable glance.
+    Q_PROPERTY(bool proximityReady READ proximityReady NOTIFY proximityReadyChanged)
     Q_PROPERTY(bool available READ available NOTIFY availableChanged)
 
 public:
@@ -22,16 +26,23 @@ public:
     ~MceLpmSettings() override;
 
     bool enabled() const { return _enabled; }
+    bool triggerFromPocket() const { return _triggerFromPocket; }
+    bool triggerHoverOver() const { return _triggerHoverOver; }
+    bool proximityReady() const { return _proximityReady; }
     bool available() const { return _available; }
 
 public slots:
     void refresh();
-    // On: LPM + from-pocket|hover-over + ps-on-demand off.
-    // Off: stock defaults (LPM off, from-pocket only, ps-on-demand on).
-    bool applyProfile(bool on);
+    // Writes all three MCE keys from the given UI state.
+    bool apply(bool enabled, bool fromPocket, bool hoverOver, bool proximityReady);
+    // Stock defaults: LPM off, from-pocket only, proximity on-demand on.
+    bool applyDefaults();
 
 signals:
     void enabledChanged();
+    void triggerFromPocketChanged();
+    void triggerHoverOverChanged();
+    void proximityReadyChanged();
     void availableChanged();
     void error(const QString& message);
 
@@ -39,10 +50,15 @@ private:
     MceLpmSettings();
 
     bool getBool(const QString& key, bool* ok = nullptr);
+    int getInt(const QString& key, bool* ok = nullptr);
     bool setBool(const QString& key, bool value);
     bool setInt(const QString& key, int value);
+    static int triggeringMask(bool fromPocket, bool hoverOver);
 
     bool _enabled;
+    bool _triggerFromPocket;
+    bool _triggerHoverOver;
+    bool _proximityReady;
     bool _available;
 };
 

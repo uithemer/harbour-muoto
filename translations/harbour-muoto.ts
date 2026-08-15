@@ -359,15 +359,43 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Also wakes when you hover over the sensor, and keeps the proximity sensor ready so glance works reliably.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Also known as Sneak Peek. Shows when the device is uncovered; double tap to wake fully.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Low-power mode settings are not available on this device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wake from pocket</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the glance screen when the device is uncovered.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wake on hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the glance screen when you hold your hand over the sensor.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep proximity ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Needed for reliable glance on many devices. May affect proximity blanking during calls.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Also known as Sneak Peek. Double tap the glance screen to wake fully.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use recommended</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore defaults</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
