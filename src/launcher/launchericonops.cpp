@@ -643,6 +643,9 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
     rebuildIconUpdatersNow();
     FolderAmbient::apply(pack, overlay);
     emitProgress(m_progressTotal, m_progressTotal);
+    // Lipstick coalesces desktop events for 2s; don't tell the GUI we're done
+    // until that holdback has expired or the success toast races the grid.
+    LauncherWatch::waitForMonitorHoldback();
     m_inIconOp = false;
     qInfo() << "muoto-launcher: ApplyIcons done ok=true msg= updaters=" << s_updaters.size();
     emit applied(true, QString());
@@ -700,6 +703,7 @@ void LauncherIconOps::restoreIcons()
 
     rebuildIconUpdatersNow();
     emitProgress(m_progressTotal, m_progressTotal);
+    LauncherWatch::waitForMonitorHoldback();
     m_inIconOp = false;
 
     if(!restoredOk)

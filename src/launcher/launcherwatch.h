@@ -14,6 +14,11 @@ namespace LauncherWatch {
 // restart.
 MUOTO_LAUNCHER_EXPORT void rearmDesktopWatches(const QStringList& desktopPaths);
 
+// Sit out Lipstick's LauncherMonitor holdback after desktop/PNG writes so a
+// caller can toast or release the icon-ops lock only once the grid has had a
+// chance to reload.
+MUOTO_LAUNCHER_EXPORT void waitForMonitorHoldback();
+
 // Put back entries left renamed aside by a re-arm that did not finish.
 MUOTO_LAUNCHER_EXPORT void sweepStaleRearmFiles(const QStringList& directories);
 

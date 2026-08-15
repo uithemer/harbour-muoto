@@ -179,6 +179,10 @@
         <translation type="unfinished">Mostra l&apos;ora e la data correnti nelle icone Orologio e Calendario, nello stile del tema.</translation>
     </message>
     <message>
+        <source>Dynamic icons updated.</source>
+        <translation>Icone dinamiche aggiornate.</translation>
+    </message>
+    <message>
         <source>Dynamic clock icon</source>
         <translation type="unfinished">Icona Orologio dinamica</translation>
     </message>
@@ -341,6 +345,10 @@
     <message>
         <source>Could not update low-power mode settings</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low-power settings updated.</source>
+        <translation>Impostazioni risparmio energetico aggiornate.</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -724,8 +732,16 @@
         <translation type="unfinished">Applicazione tema</translation>
     </message>
     <message>
-        <source>Settings applied.</source>
-        <translation type="unfinished">Impostazioni applicate.</translation>
+        <source>Theme updated.</source>
+        <translation>Tema aggiornato.</translation>
+    </message>
+    <message>
+        <source>Display settings updated.</source>
+        <translation>Impostazioni schermo aggiornate.</translation>
+    </message>
+    <message>
+        <source>Theme removed.</source>
+        <translation>Tema rimosso.</translation>
     </message>
     <message>
         <source>Applying icons…</source>
@@ -744,12 +760,8 @@
         <translation type="unfinished">Disinstallazione tema…</translation>
     </message>
     <message>
-        <source>Updating homescreen…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Waiting…</source>
-        <translation type="unfinished"></translation>
+        <translation>In attesa…</translation>
     </message>
 </context>
 <context>
@@ -866,7 +878,7 @@
     </message>
     <message>
         <source>Busy — try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Occupato — riprova tra un attimo</translation>
     </message>
 </context>
 </TS>

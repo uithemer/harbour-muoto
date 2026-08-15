@@ -30,7 +30,7 @@ namespace
     const int kLauncherPollMs  = 250;
     const int kLauncherGiveUpMs = 15000;
     const int kLockPollMs = 400;
-    const int kLockGiveUpMs = 15000;
+    const int kLockGiveUpMs = 180000;
 
     struct Endpoint
     {
@@ -233,6 +233,8 @@ void HelperClient::dispatchPendingIconOp()
 
     if(launcherDaemonRegistered())
     {
+        _inflightIconOp = op;
+        _inflightIconArgs = args;
         _pendingIconOp.clear();
         _pendingIconArgs.clear();
         _lockWait->stop();
@@ -255,9 +257,13 @@ void HelperClient::failPendingIconOp(const QString& message)
 {
     _lockWait->stop();
     _launcherWait->stop();
-    const QString op = _pendingIconOp;
+    QString op = _pendingIconOp;
+    if(op.isEmpty())
+        op = _inflightIconOp;
     _pendingIconOp.clear();
     _pendingIconArgs.clear();
+    _inflightIconOp.clear();
+    _inflightIconArgs.clear();
     if(!op.isEmpty())
         emit error(op, message);
 }
@@ -281,10 +287,7 @@ void HelperClient::onLockWaitTick()
 
     _lockWaitedMs += kLockPollMs;
     if(_lockWaitedMs < kLockGiveUpMs)
-    {
-        emit iconProgress(_pendingIconOp, 0, 0);
         return;
-    }
 
     qWarning() << "HelperClient:" << _pendingIconOp
                << "timed out waiting for icon-ops.lock";
@@ -349,9 +352,25 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
 {
     if(!ok)
     {
+        // ApplyIcons/RestoreIcons return busy when icon-ops.lock is held.
+        // The probe can race the holder; wait it out instead of aborting.
+        if(message == QLatin1String("busy")
+           && (op == QLatin1String("ApplyIcons") || op == QLatin1String("RestoreIcons"))
+           && !_inflightIconOp.isEmpty())
+        {
+            qInfo() << "HelperClient:" << op << "daemon busy, waiting for lock";
+            _pendingIconOp = _inflightIconOp;
+            _pendingIconArgs = _inflightIconArgs;
+            startLockWait(op, _pendingIconArgs);
+            return;
+        }
+        _inflightIconOp.clear();
+        _inflightIconArgs.clear();
         emit error(op, message);
         return;
     }
+    _inflightIconOp.clear();
+    _inflightIconArgs.clear();
     if(op == QLatin1String("ApplyIcons"))
     {
         Q_UNUSED(message);

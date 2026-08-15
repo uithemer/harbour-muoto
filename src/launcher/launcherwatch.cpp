@@ -72,6 +72,11 @@ void LauncherWatch::rearmDesktopWatches(const QStringList& desktopPaths)
     qInfo() << "muoto-launcher: re-armed launcher watches for" << moved.size() << "desktop entries";
 }
 
+void LauncherWatch::waitForMonitorHoldback()
+{
+    waitMs(kHoldbackMs);
+}
+
 void LauncherWatch::sweepStaleRearmFiles(const QStringList& directories)
 {
     const QString suffix = QLatin1String(kRearmSuffix);

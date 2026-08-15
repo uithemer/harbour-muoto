@@ -108,6 +108,8 @@ private:
     int          _lockWaitedMs;
     QString      _pendingIconOp;
     QVariantList _pendingIconArgs;
+    QString      _inflightIconOp;
+    QVariantList _inflightIconArgs;
     bool         _hooked;
 };
 

@@ -194,6 +194,10 @@
         <source>Shows today&apos;s date on the Calendar launcher icon.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Dynamic icons updated.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ExternalUrlPage</name>
@@ -396,6 +400,10 @@
     </message>
     <message>
         <source>Double tap the glance screen to wake fully.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low-power settings updated.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -722,7 +730,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Settings applied.</source>
+        <source>Theme updated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display settings updated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Theme removed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -739,6 +755,10 @@
     </message>
     <message>
         <source>Uninstalling theme…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waiting…</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -852,6 +872,10 @@
     </message>
     <message>
         <source>Operation failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Busy — try again in a moment</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
