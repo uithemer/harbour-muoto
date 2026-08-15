@@ -313,6 +313,11 @@ void IconUpdaterPrivate::restoreNonMonitoredIcon()
     LauncherManifest::removeEntryForDesktop(desktopPath);
 }
 
+bool IconUpdater::isThemedIconIntact(const QString& iconPath)
+{
+    return isOurIcon(iconPath);
+}
+
 IconUpdater::IconUpdater(IconProvider* provider, const QString& desktopPath,
                          QObject* parent, Mode mode)
     : QObject(parent)

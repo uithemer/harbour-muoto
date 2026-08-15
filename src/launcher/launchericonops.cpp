@@ -21,6 +21,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfoList>
+#include <QFileSystemWatcher>
 #include <QHash>
 #include <QSize>
 #include <QStandardPaths>
@@ -35,6 +36,10 @@ QHash<QString, IconUpdater*> s_updaters;
 // Long enough to outlast a slow apkd launcher-entry sync, short enough that a
 // user who opens the homescreen right after a container restart sees it heal.
 const int kApkVerifyDelayMs = 15000;
+
+// rpm writes the desktop entry and its icons as separate events; wait for the
+// transaction to settle before looking at what changed.
+const int kDesktopScanDelayMs = 2000;
 
 MGConfItem* activeIconPackConf()
 {
@@ -235,6 +240,19 @@ IconUpdater* createIconUpdater(const QString& desktopPath)
     return nullptr;
 }
 
+QStringList visibleDesktopPaths()
+{
+    QStringList paths;
+    for(const QFileInfo& info : desktopEntries())
+    {
+        const QString desktopPath = info.absoluteFilePath();
+        if(MDesktopEntry(desktopPath).noDisplay())
+            continue;
+        paths.append(desktopPath);
+    }
+    return paths;
+}
+
 } // namespace
 
 LauncherIconOps* LauncherIconOps::instance()
@@ -248,6 +266,16 @@ LauncherIconOps::LauncherIconOps(QObject* parent)
 {
     connect(AlienDalvikWatcher::instance(), &AlienDalvikWatcher::containerReady,
             this, [this]() { refreshApkIcons(true); });
+
+    // An install writes several files; coalesce the burst into one pass.
+    m_desktopScan.setSingleShot(true);
+    m_desktopScan.setInterval(kDesktopScanDelayMs);
+    connect(&m_desktopScan, &QTimer::timeout, this, &LauncherIconOps::refreshNewDesktops);
+
+    m_desktopDirWatcher = new QFileSystemWatcher(this);
+    connect(m_desktopDirWatcher, &QFileSystemWatcher::directoryChanged,
+            this, [this](const QString&) { m_desktopScan.start(); });
+    ensureDesktopDirWatch();
 }
 
 void LauncherIconOps::reloadIconPacks()
@@ -310,6 +338,13 @@ void LauncherIconOps::rearmApkDesktopWatches()
     // loses on the old inode. Any Icon= we write afterwards goes unnoticed, so
     // put the watches back before an apply or restore touches those entries.
     LauncherWatch::rearmDesktopWatches(apkBridgeDesktops());
+}
+
+void LauncherIconOps::rearmAllDesktopWatches()
+{
+    // Native RPM updates do the same rename(2) to /usr/share/applications, so
+    // apply/restore have to re-arm those watches too — not only the APK ones.
+    LauncherWatch::rearmDesktopWatches(visibleDesktopPaths());
 }
 
 bool LauncherIconOps::apkIconsClobbered() const
@@ -389,6 +424,112 @@ void LauncherIconOps::refreshApkIcons(bool scheduleVerify)
         qInfo() << "muoto-launcher: APK icons clobbered after refresh, retrying";
         refreshApkIcons(false);
     });
+}
+
+void LauncherIconOps::ensureDesktopDirWatch()
+{
+    if(!m_desktopDirWatcher)
+        return;
+
+    // A directory replaced wholesale takes its watch with it, so re-add after
+    // every pass rather than only at startup.
+    const QStringList watched = m_desktopDirWatcher->directories();
+    for(const QString& dirPath : applicationsDirs())
+    {
+        if(watched.contains(dirPath) || !QDir(dirPath).exists())
+            continue;
+        m_desktopDirWatcher->addPath(dirPath);
+    }
+}
+
+QStringList LauncherIconOps::desktopsNeedingTheme() const
+{
+    QStringList paths;
+
+    // Installed while we were not looking: no updater attached yet.
+    for(const QFileInfo& info : desktopEntries())
+    {
+        const QString desktopPath = info.absoluteFilePath();
+        if(s_updaters.contains(desktopPath))
+            continue;
+        if(MDesktopEntry(desktopPath).noDisplay())
+            continue;
+        paths.append(desktopPath);
+    }
+
+    // Updated behind our back: rpm reinstalled the app and overwrote the
+    // hicolor png we had composited in place.
+    QList<LauncherManifestEntry> entries;
+    LauncherManifest::load(&entries);
+    for(const LauncherManifestEntry& entry : entries)
+    {
+        if(entry.mode != QLatin1String("inplace"))
+            continue;
+        if(paths.contains(entry.desktop) || !QFile::exists(entry.desktop))
+            continue;
+        if(IconUpdater::isThemedIconIntact(entry.themedPath))
+            continue;
+        paths.append(entry.desktop);
+    }
+
+    return paths;
+}
+
+void LauncherIconOps::refreshNewDesktops()
+{
+    if(m_inIconOp || m_rebuilding)
+    {
+        qInfo() << "muoto-launcher: skip refreshNewDesktops during icon op";
+        return;
+    }
+
+    const QString active = activeIconPackConf()->value(QStringLiteral("default")).toString();
+    if(active.isEmpty() || active == QLatin1String("default"))
+        return;
+
+    if(OsUpdateGuard::running())
+        return;
+
+    // Our own writes wake the watcher too; deciding there is nothing to do
+    // before taking the lock keeps that the cheap path.
+    const QStringList pending = desktopsNeedingTheme();
+    if(pending.isEmpty())
+    {
+        ensureDesktopDirWatch();
+        return;
+    }
+
+    FileLock lock(FileLock::defaultLockPath(), false);
+    if(!lock.isHeld())
+    {
+        // An apply already in flight covers these entries anyway.
+        qInfo() << "muoto-launcher: skip refreshNewDesktops (busy)";
+        return;
+    }
+
+    m_inIconOp = true;
+    // rpm install/update replaces the .desktop with rename(2), which drops
+    // Lipstick's per-file watch. Re-arm before we write the themed PNG.
+    LauncherWatch::rearmDesktopWatches(pending);
+    m_restoreOnUpdaterDestroy = false;
+    int themed = 0;
+    for(const QString& desktopPath : pending)
+    {
+        delete s_updaters.take(desktopPath);
+        if(IconUpdater* updater = createIconUpdater(desktopPath))
+        {
+            s_updaters.insert(desktopPath, updater);
+            ++themed;
+        }
+    }
+    m_restoreOnUpdaterDestroy = true;
+    m_inIconOp = false;
+
+    ensureDesktopWatches();
+    ensureDesktopDirWatch();
+
+    qInfo() << "muoto-launcher: refreshNewDesktops pack=" << active
+            << "pending=" << pending.size() << "themed=" << themed;
 }
 
 void LauncherIconOps::rebuildIconUpdatersNow()
@@ -487,7 +628,7 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
     }
 
     m_inIconOp = true;
-    rearmApkDesktopWatches();
+    rearmAllDesktopWatches();
 
     // Overlay styles apps missing from the pack — only valid with pack apply.
     if(overlay && !runPack)
@@ -521,8 +662,9 @@ void LauncherIconOps::restoreIcons()
 
     m_inIconOp = true;
     // Restoring rewrites Icon= back to the stock value, which needs a live
-    // watch just as much as applying does.
-    rearmApkDesktopWatches();
+    // watch just as much as applying does. Native RPM updates drop those
+    // watches too, so re-arm every launcher desktop, not only APK.
+    rearmAllDesktopWatches();
     clearUpdaters(false);
 
     const bool restoredOk = LauncherManifest::restoreAll();

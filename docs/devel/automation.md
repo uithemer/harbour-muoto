@@ -101,7 +101,7 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 | Check | Expect |
 | ----- | ------ |
 | Listener active | `harbour-muoto-install-listener` running |
-| `pkcon install --allow-reinstall` probe pkg (default `harbour-file-browser`) | Journal shows `muoto-listener` trigger / `update-icons finished` |
+| `pkcon install` / Storeman / `pkcon install-local` | Listener `roleRelevant= true` for roles 11 / 22 / 10; `update-icons` logs `ApplyIcons` (not a missing `harbour-themepack-harbour-themepack-…` path); icond `refreshNewDesktops` |
 | After ~debounce+apply | Pack still active, probe app themed (manifest and/or generated `Icon=`), other launchers still themed |
 | With `/run/defaultuser/osupdate_running` | Apply skipped (guard) |
 

@@ -25,6 +25,10 @@ public:
                 QObject* parent = nullptr, Mode mode = Default);
     ~IconUpdater() override;
 
+    // False once something else has written the file we themed inplace, which is
+    // what an rpm update of the owning app does to a hicolor icon.
+    static bool isThemedIconIntact(const QString& iconPath);
+
 public slots:
     void update();
 

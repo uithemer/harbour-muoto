@@ -50,6 +50,13 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatc
 - apkd syncs the entries a second time a few seconds after `containerReady`, so `refreshApkIcons` schedules a one-shot verification 15 s later and repeats itself if an entry it themed lost our `Icon=`.
 - Do not hook per-`IconUpdater` refreshes to container events: a single updater cannot re-arm the watch, so its `Icon=` write goes unread.
 
+## New apps / app updates
+
+Two independent triggers re-theme after an install or update while a pack is active:
+
+- **Listener** (`harbour-muoto-install-listener`) watches PackageKit roles `10` (`InstallFiles`, local RPM), `11` (`InstallPackages`), `22` (`UpdatePackages` — Storeman uses this for both install and update), `33` (`UpgradeSystem`). The `Package` signal is `(u info, s package_id, s summary)`; info `11`/`12` is the fallback. APK installs/updates still use session `com.jolla.apkd` `appInstalled` / `appUpdated`. On a hit it runs `/usr/bin/harbour-muoto-update-icons`, which calls `ApplyIcons`. `activeIconPack` is the full `harbour-themepack-*` name — strip that prefix before building `/usr/share/harbour-themepack-…` or the script no-ops.
+- **Daemon watch** (`LauncherIconOps::refreshNewDesktops`): `QFileSystemWatcher` on the applications dirs, 2 s debounce. Attaches an updater for every launcher `.desktop` that has none, and recreates inplace updaters whose hicolor PNG no longer matches the stored fingerprint (an RPM update overwrote it). Native RPM updates `rename(2)` the `.desktop` the same way apkd does, so this path (and `ApplyIcons` / `RestoreIcons`) re-arm Lipstick watches on **all** launcher desktops, not only APK. Same guards as `refreshApkIcons`. This is the path that still works if the listener is down.
+
 ## Fonts apply / restore
 
 - Unprivileged, in the **GUI process** via `FontApplier` (`src/gui/fontapplier.cpp`), driven by `ThemePackModel::applyTheme` / `restoreTheme`.
@@ -90,6 +97,7 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatc
 | Concern | Files |
 | ------- | ----- |
 | Icon apply / rebuild | `src/launcher/launchericonops.cpp` |
+| Install / update re-theme | `src/listener/installlistener.cpp`, `src/listener/pktxwatch.cpp`, `service/harbour-muoto-update-icons` |
 | Icon inplace / redirect | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
 | Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |
 | apkd container readiness | `src/launcher/aliendalvikwatcher.cpp` |

@@ -16,7 +16,7 @@ public:
     void markRelevant();
 
 public slots:
-    void onPackage(uint info, const QStringList& packageIds, const QString& summary);
+    void onPackage(uint info, const QString& packageId, const QString& summary);
     void onFinished(uint exitCode, uint runtime);
 
 private:

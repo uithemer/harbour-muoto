@@ -81,6 +81,33 @@ refreshApkIcons pack= "..." desktops= 15 themed= 15
 
 Note apkd only rewrites the entries when their content differs from its canonical form, so a device with no pack applied sees no churn at all.
 
+### New apps and app updates
+
+A pack already applied should pick up a newly installed or updated launcher without the user opening Muoto.
+
+**Listener.** `harbour-muoto-install-listener` tracks PackageKit transactions on the system bus. Relevant roles (canonical `PkRoleEnum`, measured on SFOS 5.1 / PackageKit 1.2.5):
+
+| Role | Meaning | Who uses it |
+| ---- | ------- | ----------- |
+| 10 | `InstallFiles` | `pkcon install-local`, Storeman installing a downloaded RPM |
+| 11 | `InstallPackages` | `pkcon install` from a repo |
+| 22 | `UpdatePackages` | Storeman install *and* update |
+| 33 | `UpgradeSystem` | OS-image upgrades (usually blocked by the update guard) |
+
+The `Package` signal is `(u info, s package_id, s summary)` — info `11` updating / `12` installing is a fallback if the role query misses. APK apps use session `com.jolla.apkd` `appInstalled` / `appUpdated`. A hit execs `/usr/bin/harbour-muoto-update-icons`, which calls session `ApplyIcons`.
+
+`activeIconPack` stores the full package name (`harbour-themepack-xenlism-wildfire`). The script must strip that prefix before testing `/usr/share/harbour-themepack-$short` — prepending it a second time makes every apply a silent no-op.
+
+**Daemon watch.** Role constants have been wrong before, so `LauncherIconOps` also watches `/usr/share/applications` and `~/.local/share/applications`. After a 2 s debounce, `refreshNewDesktops()` (same lock / pack / upgrade guards as `refreshApkIcons`) attaches an `IconUpdater` for every non-`NoDisplay` desktop that has none, and recreates inplace updaters whose PNG no longer matches the stored fingerprint. Native RPM updates `rename(2)` the `.desktop` and drop Lipstick's watch, so this pass (and a full `ApplyIcons` / `RestoreIcons`) re-arm **all** launcher desktops, not only APK. Our own writes call `storeFingerprint`, so the wake-up they cause is a no-op. Journal for a healthy native install:
+
+```
+tracking PK transaction "..." role= 11 roleRelevant= true
+refreshNewDesktops pack= "..." pending= 1 themed= 1
+scheduled apply, trigger packagekit
+update-icons: attempt 1 ApplyIcons pack=... overlay=true
+ApplyIcons done ok=true
+```
+
 **Not themed in 3.2+:** bulk silica ambient (`graphic-*`, status bar, etc.). Only launcher-relevant `icon-launcher-*` / native / APK paths.
 
 ## dconf (`/apps/harbour-muoto/`)
@@ -101,6 +128,7 @@ Note apkd only rewrites the entries when their content differs from its canonica
 | Area | Path |
 | ---- | ---- |
 | Apply / rebuild | `src/launcher/launchericonops.cpp` |
+| Install / update re-theme | `src/listener/installlistener.cpp`, `src/listener/pktxwatch.cpp` |
 | Per-desktop update | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
 | Pack index | `src/launcher/harbourthemepack.cpp` |
 | Path resolve (hicolor / APK) | `src/launcher/iconresolve.cpp` |

@@ -1,5 +1,7 @@
 **/icon-options/**
 **/__pycache__/
+*.rpm
+*.so.*
 *.pyc
 # C++ objects and libs
 *.slo
