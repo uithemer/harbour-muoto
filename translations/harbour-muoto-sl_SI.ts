@@ -355,19 +355,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Automatically show time and status information when taking the device out of pocket.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Low-power mode settings are not available on this device.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wake from pocket</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the glance screen when the device is uncovered.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -383,19 +375,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Needed for reliable glance on many devices. May affect proximity blanking during calls.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Also known as Sneak Peek. Double tap the glance screen to wake fully.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Use recommended</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Restore defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically show time and status information when the screen is off.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the glance screen when taking the device out of pocket.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Needed for reliable glance on many devices. Enabling this may use more battery, and the screen may not turn off reliably during calls.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double tap the glance screen to wake fully.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

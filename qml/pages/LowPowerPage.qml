@@ -27,7 +27,7 @@ Dialog {
         MceLpm.refresh()
         pendingEnabled = MceLpm.enabled
         pendingFromPocket = MceLpm.triggerFromPocket
-        pendingHover = MceLpm.triggerHoverOver
+        pendingHover = MceLpm.triggerFromPocket && MceLpm.triggerHoverOver
         pendingProximityReady = MceLpm.proximityReady
         appliedEnabled = pendingEnabled
         appliedFromPocket = pendingFromPocket
@@ -49,6 +49,11 @@ Dialog {
         pendingProximityReady = false
     }
 
+    onPendingFromPocketChanged: {
+        if (!pendingFromPocket)
+            pendingHover = false
+    }
+
     Component.onCompleted: initFromMce()
 
     onStatusChanged: {
@@ -57,7 +62,8 @@ Dialog {
     }
 
     onAccepted: {
-        if (!MceLpm.apply(pendingEnabled, pendingFromPocket, pendingHover,
+        var hover = pendingFromPocket && pendingHover
+        if (!MceLpm.apply(pendingEnabled, pendingFromPocket, hover,
                           pendingProximityReady))
             app.showToast(qsTr("Could not update low-power mode settings"))
     }
@@ -96,6 +102,8 @@ Dialog {
                             enabled: dlg.pendingEnabled
                         }
                     }
+
+            LabelSpacer { }
                 }
 
                 Column {
@@ -124,7 +132,7 @@ Dialog {
                         text: qsTr("Wake on hover")
                         description: qsTr("Show the glance screen when you hold your hand over the sensor.")
                         checked: dlg.pendingHover
-                        enabled: MceLpm.available
+                        enabled: MceLpm.available && dlg.pendingFromPocket
                         onClicked: dlg.pendingHover = !dlg.pendingHover
                     }
 

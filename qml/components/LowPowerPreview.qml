@@ -7,13 +7,21 @@ Item {
     property bool enabled: false
     property int clockTick: 0
 
+    // Visible crop height — fonts scale against this, not the full phone body.
+    readonly property real cropHeight: height > 0 ? height : Theme.itemSizeLarge * 1.5
+
     width: parent ? parent.width : implicitWidth
     height: parent ? parent.height : implicitHeight
+    clip: true
 
     Rectangle {
         id: phone
-        anchors.centerIn: parent
-        width: Math.min(parent.width * 0.55, parent.height * 0.62)
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: Theme.paddingSmall
+        // Wide enough to read; tall full-body silhouette mostly clipped away.
+        width: Math.min(parent.width * 0.72,
+                        Math.max(Theme.itemSizeLarge, parent.height * 1.15))
         height: width * 1.7
         radius: Theme.paddingMedium
         color: Theme.rgba(Theme.highlightBackgroundColor, 0.12)
@@ -28,10 +36,17 @@ Item {
             }
             radius: Theme.paddingSmall
             color: "black"
+            clip: true
 
             Column {
-                anchors.centerIn: parent
-                width: parent.width - Theme.paddingMedium
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                    topMargin: Theme.paddingLarge * 1.6
+                    leftMargin: Theme.paddingSmall
+                    rightMargin: Theme.paddingSmall
+                }
                 spacing: Theme.paddingSmall
                 opacity: root.enabled ? 1.0 : 0.0
                 Behavior on opacity { FadeAnimation { } }
@@ -39,15 +54,14 @@ Item {
                 Label {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
-                    // clockTick forces re-eval when the minute timer fires
                     text: {
                         var _ = root.clockTick
                         return Qt.formatTime(new Date(), "hh:mm")
                     }
                     color: Theme.highlightColor
                     opacity: 0.85
-                    font.pixelSize: Math.max(Theme.fontSizeMedium,
-                                             Math.round(screen.height * 0.18))
+                    font.pixelSize: Math.max(Theme.fontSizeLarge,
+                                             Math.round(root.cropHeight * 0.28))
                     font.family: Theme.fontFamilyHeading
                 }
 
@@ -60,8 +74,8 @@ Item {
                     }
                     color: Theme.highlightColor
                     opacity: 0.55
-                    font.pixelSize: Math.max(Theme.fontSizeTiny,
-                                             Math.round(screen.height * 0.07))
+                    font.pixelSize: Math.max(Theme.fontSizeExtraSmall,
+                                             Math.round(root.cropHeight * 0.1))
                     truncationMode: TruncationMode.Fade
                 }
             }
