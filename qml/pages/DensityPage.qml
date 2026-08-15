@@ -331,8 +331,7 @@ Dialog {
 
                     }
 
-                    MuotoTextLabel {
-                        text: qsTr("When you are done, restart the homescreen to apply these changes.")
+                    LabelSpacer {
                     }
 
                 }
