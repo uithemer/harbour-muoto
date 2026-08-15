@@ -40,8 +40,9 @@ Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting byte
 2. **Inplace (hicolor)** — replace via temp `*.muoto-write.png` then rename onto the live path; `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick reloads the named icon.
 3. **Always touch the `.desktop`** after PNG / `Icon=` changes (`touchFile` / `futimens`).
 4. Avoid deleting a PNG while `Icon=` still names it (`inotify_add_watch` ENOENT → frozen tile until lipstick restart).
+5. **Re-arm the watch on APK desktops first.** Lipstick keeps a per-file inotify watch on every `.desktop` and only re-reads one when that watch fires. apkd rewrites `apkd_launcher_*.desktop` with `rename(2)`, so Qt drops the watch, and `LauncherMonitor::onDirectoryChanged` never re-adds it (the filename is already known). After that, `Icon=` rewrites are invisible. `LauncherWatch::rearmDesktopWatches` renames each entry aside and back with a short gap: two directory scans inside Lipstick's 2000 ms holdback, so the pending add and remove cancel — the watch comes back with no launcher item or grid-position churn. Apply and restore both call it before touching `Icon=`.
 
-Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
+Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatch.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
 
 ## Fonts apply / restore
 
@@ -84,6 +85,7 @@ Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `overlayiconp
 | ------- | ----- |
 | Icon apply / rebuild | `src/launcher/launchericonops.cpp` |
 | Icon inplace / redirect | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
+| Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |
 | Path resolve (hicolor size / APK) | `src/launcher/iconresolve.cpp` |
 | Overlay composite | `src/launcher/overlayiconprovider.cpp`, `overlayrender.cpp` |
 | Folder silica icons | `src/launcher/folderambient.cpp` |

@@ -3,10 +3,12 @@
 #include "folderambient.h"
 #include "harbourthemepack.h"
 #include "iconpaths.h"
+#include "iconresolve.h"
 #include "iconupdater.h"
 #include "launchermanifest.h"
 #include "launchersettings.h"
 #include "launcherpaths.h"
+#include "launcherwatch.h"
 #include "overlayiconprovider.h"
 #include "filelock.h"
 #include "osupdateguard.h"
@@ -40,15 +42,45 @@ void mgconfSetBool(const char* path, bool value)
     item.set(value);
 }
 
+QStringList applicationsDirs()
+{
+    return {QStringLiteral("/usr/share/applications"),
+            QStringLiteral("%1/applications")
+                .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))};
+}
+
 QFileInfoList desktopEntries()
 {
-    QDir globalApplicationsDir(QStringLiteral("/usr/share/applications"));
-    const QString userApplicationsPath = QStringLiteral("%1/applications")
-        .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation));
-    QDir userApplicationsDir(userApplicationsPath);
+    QFileInfoList entries;
+    for(const QString& dirPath : applicationsDirs())
+        entries += QDir(dirPath).entryInfoList({QStringLiteral("*.desktop")}, QDir::Files);
+    return entries;
+}
 
-    return globalApplicationsDir.entryInfoList({QStringLiteral("*.desktop")}, QDir::Files)
-           + userApplicationsDir.entryInfoList({QStringLiteral("*.desktop")}, QDir::Files);
+// Mirrors IconUpdater's resolution: once a pack is applied Icon= names a
+// generated PNG, so fall back to the saved original to classify the entry.
+QString stockIconRef(const QString& desktopPath)
+{
+    const QString iconRef = MDesktopEntry(desktopPath).icon();
+    if(!LauncherPaths::isOurGeneratedIconPath(iconRef))
+        return iconRef;
+
+    const QFileInfo info(desktopPath);
+    MGConfItem dconf(LauncherPaths::savedIconKey(info.completeBaseName()));
+    const QString stored = dconf.value().toString();
+    return stored.isEmpty() ? iconRef : stored;
+}
+
+QStringList apkBridgeDesktops()
+{
+    QStringList paths;
+    for(const QFileInfo& info : desktopEntries())
+    {
+        const QString desktopPath = info.absoluteFilePath();
+        if(IconResolve::isApkBridgeIcon(IconResolve::resolveIconPath(stockIconRef(desktopPath))))
+            paths.append(desktopPath);
+    }
+    return paths;
 }
 
 bool packHasOverlayAssets(const QString& packRoot)
@@ -263,9 +295,19 @@ void LauncherIconOps::emitProgress(int done, int total)
     emit progress(done, total);
 }
 
+void LauncherIconOps::rearmApkDesktopWatches()
+{
+    // apkd rewrites apkd_launcher_*.desktop with rename(2) whenever Android
+    // support regenerates them, and Lipstick never re-adds the inotify watch it
+    // loses on the old inode. Any Icon= we write afterwards goes unnoticed, so
+    // put the watches back before an apply or restore touches those entries.
+    LauncherWatch::rearmDesktopWatches(apkBridgeDesktops());
+}
+
 void LauncherIconOps::rebuildIconUpdatersNow()
 {
     m_rebuilding = true;
+    LauncherWatch::sweepStaleRearmFiles(applicationsDirs());
     // Restore previous redirects before re-attaching so toggling dyn off
     // (or leaving a pack) does not leave stale generated Icon= values.
     clearUpdaters(true);
@@ -358,6 +400,7 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
     }
 
     m_inIconOp = true;
+    rearmApkDesktopWatches();
 
     // Overlay styles apps missing from the pack — only valid with pack apply.
     if(overlay && !runPack)
@@ -390,6 +433,9 @@ void LauncherIconOps::restoreIcons()
     }
 
     m_inIconOp = true;
+    // Restoring rewrites Icon= back to the stock value, which needs a live
+    // watch just as much as applying does.
+    rearmApkDesktopWatches();
     clearUpdaters(false);
 
     const bool restoredOk = LauncherManifest::restoreAll();

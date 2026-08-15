@@ -38,7 +38,7 @@ flowchart LR
 ## Icon apply (launcher daemon)
 
 1. GUI (or `update-icons`) sets dconf `activeIconPack` / `iconOverlay`, then calls session `org.muoto.Launcher1.Themes.ApplyIcons`.
-2. `LauncherIconOps` rebuilds one `IconUpdater` per launcher `.desktop` (system + user APK desktops), then applies homescreen **folders** via `FolderAmbient`.
+2. `LauncherIconOps` re-arms Lipstick's watches on the APK desktops (see below), rebuilds one `IconUpdater` per launcher `.desktop` (system + user APK desktops), then applies homescreen **folders** via `FolderAmbient`.
 3. Pack assets come from `/usr/share/harbour-themepack-<name>/` (`jolla/`, `native/`, `apk/` — often symlinked to `~/.themepack/…`). Overlay frames from `overlay/` composite onto stock when the pack has no matching icon.
 4. **Write model (hybrid):**
    - **Hicolor** (native / many overlay targets): **inplace** — keep `Icon=` as the theme name; replace the single resolved launcher-size PNG under `/usr/share/icons/hicolor/<N>x<N>/apps/` (`N` ≥ `iconSizeLauncher`, first hit); `futimens` the `.desktop`. Other hicolor sizes stay stock.
@@ -48,6 +48,21 @@ flowchart LR
 7. Dynamic clock/calendar use pack `dynclock/` / `dyncal/` (or stock SVG when pack is `default`) when dconf dyn flags are on.
 
 Restore uses the manifest (redirect + inplace backups), restores folder backups, clears generated `launcher-icons/`, and sets `activeIconPack` to `default`.
+
+### Re-arming Lipstick's desktop watches
+
+Lipstick's `LauncherMonitor` holds a per-file inotify watch on every `.desktop` it has discovered, and `LauncherModel` only re-reads an entry when that watch fires. apkd regenerates `apkd_launcher_*.desktop` with `rename(2)` whenever the Android container is rebuilt; Qt drops the watch on the replaced inode, and `onDirectoryChanged` only calls `addPaths()` for filenames it has not seen before — so the watch is gone for good. Measured on device, all 15 APK desktops were unwatched while all 76 system ones were fine. From then on the `Icon=` redirect is invisible and the tiles need a homescreen restart.
+
+`LauncherWatch::rearmDesktopWatches` (`src/launcher/launcherwatch.cpp`) fixes this by renaming each entry to `<name>.muoto-rearm` and back, batched across all APK desktops:
+
+- The two renames land in **separate** directory scans (400 ms apart), so Lipstick actually observes the name leaving and returning and calls `addPaths()` again.
+- Both scans fall inside the 2000 ms `LAUNCHER_MONITOR_HOLDBACK_TIMEOUT_MS` window, so the pending remove and add cancel out and no launcher item is rebuilt — grid positions in `[LauncherOrder]` are untouched.
+- `rename(2)` keeps the inode, owner, mode and contents, so nothing else about the entry changes.
+- Callers then wait out the remaining holdback before rewriting `Icon=`. The waits use a nested `QEventLoop` so the daemon keeps serving D-Bus.
+
+`applyIcons()` and `restoreIcons()` both call it up front — restore rewrites `Icon=` too and needs a live watch just as much. `rebuildIconUpdatersNow()` sweeps leftover `*.muoto-rearm` files, which also covers a daemon killed mid-round-trip since the daemon rebuilds at startup.
+
+A homescreen restart is still needed after Android support itself restarts: apkd regenerates the desktops a while after `containerReady`, and the install-listener's re-apply does not currently retrigger on that.
 
 **Not themed in 3.2+:** bulk silica ambient (`graphic-*`, status bar, etc.). Only launcher-relevant `icon-launcher-*` / native / APK paths.
 
@@ -72,6 +87,7 @@ Restore uses the manifest (redirect + inplace backups), restores folder backups,
 | Per-desktop update | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
 | Pack index | `src/launcher/harbourthemepack.cpp` |
 | Path resolve (hicolor / APK) | `src/launcher/iconresolve.cpp` |
+| Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |
 | Overlay | `src/launcher/overlayiconprovider.cpp`, `overlayrender.cpp` |
 | Folder silica | `src/launcher/folderambient.cpp` |
 | Manifest | `src/launcher/launchermanifest.cpp` |

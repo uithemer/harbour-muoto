@@ -33,6 +33,7 @@ private:
     void clearUpdaters(bool restoreOnDestroy);
     void reloadIconPacks();
     void ensureDesktopWatches();
+    void rearmApkDesktopWatches();
 
     // Silent unless an apply/restore is in flight: rebuildIconUpdatersNow()
     // also runs from dconf watches, where there is nothing to report.
