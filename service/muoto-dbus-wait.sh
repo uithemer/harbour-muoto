@@ -9,6 +9,7 @@ MUOTO_LAUNCHER_PATH=/org/muoto/Launcher1
 MUOTO_LAUNCHER_THEMES=org.muoto.Launcher1.Themes
 OS_UPDATE_FLAG=/run/defaultuser/osupdate_running
 MUOTO_BACKUP_ICONS=/usr/share/harbour-muoto/backup/icons
+MUOTO_OP_STATUS=/usr/share/harbour-muoto/last-op.json
 
 # stderr → journal when run under harbour-muoto-install-listener (ForwardedChannels).
 muoto_log() {
@@ -208,6 +209,23 @@ _muoto_wait_flock() {
     echo "muoto: timed out waiting for icon op lock (${_WAIT_OP:-?})" >&2
     muoto_wait_op_cancel
     return 1
+}
+
+# Last operation outcome, written by launcher-icond next to the manifest.
+# The lock lifecycle only tells us an operation ran, never whether it did
+# anything -- which is why a rejected apply used to be logged as a success.
+# Reading OperationCompleted from a script would mean dbus-monitor; this is a
+# file with a monotonic sequence instead.
+muoto_op_status_sequence() {
+    [ -r "$MUOTO_OP_STATUS" ] || { echo 0; return 0; }
+    _seq=$(sed -n 's/.*"sequence":\([0-9][0-9]*\).*/\1/p' "$MUOTO_OP_STATUS" 2>/dev/null)
+    echo "${_seq:-0}"
+}
+
+muoto_op_status_outcome() {
+    [ -r "$MUOTO_OP_STATUS" ] || { echo unknown; return 0; }
+    _out=$(sed -n 's/.*"outcome":"\([a-z][a-z]*\)".*/\1/p' "$MUOTO_OP_STATUS" 2>/dev/null)
+    echo "${_out:-unknown}"
 }
 
 muoto_wait_op_begin() {

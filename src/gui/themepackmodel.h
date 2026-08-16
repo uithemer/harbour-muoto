@@ -65,6 +65,7 @@ class ThemePackModel : public QAbstractListModel
         void themeRestored();
         void themeRestoreFailed(const QString& message);
         void uninstallCompleted();
+        void uninstallFailed(const QString& message);
         void dpiRestored();
 
     private:

@@ -33,6 +33,9 @@ private:
     explicit LauncherIconOps(QObject* parent = nullptr);
 
     void rebuildIconUpdatersNow();
+    // Drops generated PNGs nothing references; keeps the ones a desktop or a
+    // manifest entry still names.
+    void reconcileGeneratedIcons();
     void clearUpdaters(bool restoreOnDestroy);
     void reloadIconPacks();
     void ensureDesktopWatches();
@@ -54,6 +57,12 @@ private:
 
     QFileSystemWatcher* m_desktopDirWatcher = nullptr;
     QTimer m_desktopScan;
+
+    // Reset per rebuild. Apply reports ok / partial / hard failure from these
+    // instead of assuming success, so a device that themed nothing (a lost
+    // cap_dac_override, say) stops toasting "Theme updated."
+    int m_updatersBuilt = 0;
+    int m_updatersWritten = 0;
 
     bool m_restoreOnUpdaterDestroy = true;
     bool m_applyPackIcons = true;

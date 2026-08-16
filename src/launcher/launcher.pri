@@ -5,8 +5,11 @@ HEADERS += \
     $$PWD/launcherpaths.h \
     $$PWD/launcherwatch.h \
     $$PWD/launchersettings.h \
-    $$PWD/desktopentry.h \
+    $$PWD/desktopfile.h \
+    $$PWD/filewrite.h \
+    $$PWD/iconbackup.h \
     $$PWD/launchermanifest.h \
+    $$PWD/opstatus.h \
     $$PWD/iconprovider.h \
     $$PWD/svgiconrender.h \
     $$PWD/iconpack.h \
@@ -28,8 +31,11 @@ SOURCES += \
     $$PWD/launcherpaths.cpp \
     $$PWD/launcherwatch.cpp \
     $$PWD/launchersettings.cpp \
-    $$PWD/desktopentry.cpp \
+    $$PWD/desktopfile.cpp \
+    $$PWD/filewrite.cpp \
+    $$PWD/iconbackup.cpp \
     $$PWD/launchermanifest.cpp \
+    $$PWD/opstatus.cpp \
     $$PWD/iconprovider.cpp \
     $$PWD/svgiconrender.cpp \
     $$PWD/iconpack.cpp \

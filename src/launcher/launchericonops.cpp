@@ -10,6 +10,7 @@
 #include "launchersettings.h"
 #include "launcherpaths.h"
 #include "launcherwatch.h"
+#include "opstatus.h"
 #include "overlayiconprovider.h"
 #include "filelock.h"
 #include "osupdateguard.h"
@@ -426,6 +427,49 @@ void LauncherIconOps::refreshApkIcons(bool scheduleVerify)
     });
 }
 
+void LauncherIconOps::reconcileGeneratedIcons()
+{
+    QDir generated(LauncherPaths::generatedIconsDir());
+    if(!generated.exists())
+        return;
+
+    // Two failure modes, one rule. Deleting a PNG a desktop still names gives
+    // Lipstick inotify ENOENT and a frozen tile, so a partial restore must not
+    // wipe the directory; and nothing ever removed superseded files, so they
+    // accumulated. Keep exactly what something still points at.
+    QSet<QString> referenced;
+    for(const QFileInfo& info : desktopEntries())
+    {
+        const QString icon = MDesktopEntry(info.absoluteFilePath()).icon();
+        if(LauncherPaths::isOurGeneratedIconPath(icon))
+            referenced.insert(icon);
+    }
+
+    QList<LauncherManifestEntry> entries;
+    if(LauncherManifest::load(&entries))
+    {
+        for(const LauncherManifestEntry& e : entries)
+        {
+            if(LauncherPaths::isOurGeneratedIconPath(e.themedPath))
+                referenced.insert(e.themedPath);
+        }
+    }
+
+    int removed = 0;
+    const QStringList pngs = generated.entryList({QStringLiteral("*.png")}, QDir::Files);
+    for(const QString& f : pngs)
+    {
+        const QString path = generated.absoluteFilePath(f);
+        if(referenced.contains(path))
+            continue;
+        if(QFile::remove(path))
+            ++removed;
+    }
+
+    if(removed > 0)
+        qInfo() << "muoto-launcher: reclaimed" << removed << "unreferenced generated icons";
+}
+
 void LauncherIconOps::ensureDesktopDirWatch()
 {
     if(!m_desktopDirWatcher)
@@ -535,6 +579,8 @@ void LauncherIconOps::refreshNewDesktops()
 void LauncherIconOps::rebuildIconUpdatersNow()
 {
     m_rebuilding = true;
+    m_updatersBuilt = 0;
+    m_updatersWritten = 0;
     LauncherWatch::sweepStaleRearmFiles(applicationsDirs());
     // Restore previous redirects before re-attaching so toggling dyn off
     // (or leaving a pack) does not leave stale generated Icon= values.
@@ -563,7 +609,15 @@ void LauncherIconOps::rebuildIconUpdatersNow()
 
         IconUpdater* updater = createIconUpdater(desktopPath);
         if(updater)
+        {
+            // Only entries we actually built an updater for count. A pack that
+            // simply has no icon for an app yields no updater and is not a
+            // failure, or every device would report one.
+            ++m_updatersBuilt;
+            if(updater->lastUpdateOk())
+                ++m_updatersWritten;
             s_updaters.insert(desktopPath, updater);
+        }
     }
 
     LauncherManifest::pruneOrphans(desktopPaths);
@@ -642,12 +696,43 @@ void LauncherIconOps::applyIcons(const QString& pack, bool runPack, bool overlay
 
     rebuildIconUpdatersNow();
     FolderAmbient::apply(pack, overlay);
+    reconcileGeneratedIcons();
     emitProgress(m_progressTotal, m_progressTotal);
     // Lipstick coalesces desktop events for 2s; don't tell the GUI we're done
     // until that holdback has expired or the success toast races the grid.
     LauncherWatch::waitForMonitorHoldback();
     m_inIconOp = false;
+
+    const int built = m_updatersBuilt;
+    const int written = m_updatersWritten;
+
+    // Nothing written at all where work was expected means the writes are
+    // failing wholesale -- most likely the daemon lost cap_dac_override on an
+    // upgrade. Reporting success there is what hid this for so long.
+    if(built > 0 && written == 0)
+    {
+        const QString msg = QStringLiteral("no icons could be written");
+        qWarning() << "muoto-launcher: ApplyIcons done ok=false msg=" << msg
+                   << "built=" << built;
+        OpStatus::record(QStringLiteral("ApplyIcons"), OpStatus::HardFailure, msg, built, written);
+        emit applied(false, msg);
+        return;
+    }
+
+    if(written < built)
+    {
+        const QString msg = QStringLiteral("some icons could not be updated");
+        qWarning() << "muoto-launcher: ApplyIcons done ok=partial built=" << built
+                   << "written=" << written;
+        // Partial is still an applied pack: the GUI says so, but update-icons
+        // must not fail on it or the repair oneshot would never self-delete.
+        OpStatus::record(QStringLiteral("ApplyIcons"), OpStatus::Partial, msg, built, written);
+        emit applied(false, msg);
+        return;
+    }
+
     qInfo() << "muoto-launcher: ApplyIcons done ok=true msg= updaters=" << s_updaters.size();
+    OpStatus::record(QStringLiteral("ApplyIcons"), OpStatus::Ok, QString(), built, written);
     emit applied(true, QString());
 }
 
@@ -682,13 +767,7 @@ void LauncherIconOps::restoreIcons()
     else if(!restoredOk)
         qWarning() << "muoto-launcher: keeping launcher-backup after partial restore failure";
 
-    QDir generated(LauncherPaths::generatedIconsDir());
-    if(generated.exists())
-    {
-        const QStringList pngs = generated.entryList({QStringLiteral("*.png")}, QDir::Files);
-        for(const QString& f : pngs)
-            QFile::remove(generated.absoluteFilePath(f));
-    }
+    reconcileGeneratedIcons();
 
     FolderAmbient::restore();
 
@@ -708,11 +787,14 @@ void LauncherIconOps::restoreIcons()
 
     if(!restoredOk)
     {
-        qInfo() << "muoto-launcher: RestoreIcons done ok=false msg=inplace restore failed";
-        emit restored(false, QStringLiteral("inplace restore failed"));
+        const QString msg = QStringLiteral("inplace restore failed");
+        qInfo() << "muoto-launcher: RestoreIcons done ok=false msg=" << msg;
+        OpStatus::record(QStringLiteral("RestoreIcons"), OpStatus::Partial, msg, 0, 0);
+        emit restored(false, msg);
         return;
     }
 
     qInfo() << "muoto-launcher: RestoreIcons done ok=true msg=";
+    OpStatus::record(QStringLiteral("RestoreIcons"), OpStatus::Ok, QString(), 0, 0);
     emit restored(true, QString());
 }

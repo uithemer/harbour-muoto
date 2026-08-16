@@ -227,11 +227,17 @@ systemctl stop harbour-muoto-helperd.service 2>/dev/null || :
 systemctl enable harbour-muoto-update-icons.service 2>/dev/null || :
 systemctl enable harbour-muoto-oneshot-restore.service 2>/dev/null || :
 
-# A1: on upgrade only — heal folder glyphs after the transaction (pkcon must not
-# run inside %post; rpm db is locked). Repair owns restore → pkcon → reapply.
+# A1: on upgrade only — heal folder glyphs and destroyed launcher entries after
+# the transaction (pkcon must not run inside %post; rpm db is locked). Repair
+# owns restore → pkcon → reapply.
+#
+# Enabled here but deliberately NOT started yet. rpm has just replaced the daemon
+# binary, which clears its file capability, and setcap does not run until further
+# down: starting the repair here makes it restart the daemon off a cap-less
+# binary, after which every write fails silently. Observed doing exactly that.
+# The start moved to the end of %post, after setcap and the daemon restart.
 if [ "$1" -ge 2 ]; then
     systemctl enable harbour-muoto-repair-folder-icons.service 2>/dev/null || :
-    systemctl start --no-block harbour-muoto-repair-folder-icons.service 2>/dev/null || :
 else
     # Fresh install: re-apply active pack if any (repair not started).
     pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
@@ -267,21 +273,27 @@ mkdir -p %{_datadir}/%{name}/launcher-icons 2>/dev/null || :
 
 # 3.2: one-shot bulk stock restore from 3.1 backup/icons, then retire tree.
 /usr/bin/harbour-muoto-migrate-bulk-icons 2>/dev/null || :
-# Drop folder backups before wiping backup/icons: may be nested (bug) or poisoned
-# after a prior wipe + re-apply. Repair oneshot restores live stock via pkcon.
-rm -rf %{_datadir}/%{name}/backup/icons/folder-icons \
-       %{_datadir}/%{name}/backup/folder-icons 2>/dev/null || :
+# Legacy nested folder backups under the retired backup/icons tree only.
 rm -rf %{_datadir}/%{name}/backup/icons 2>/dev/null || :
+# NOTE: backup/folder-icons is deliberately NOT wiped here. Wiping it without
+# restoring stock first means the next apply captures already-themed glyphs as
+# "stock" and restore is permanently poisoned. The repair oneshot discards them
+# at the one point where it is safe: immediately after the rpm force-install.
 
 su defaultuser -c "dconf reset /apps/harbour-muoto/launcherInstantApply" 2>/dev/null || :
 
 MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
 if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
-    _pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
-    _pack=${_pack#\'}; _pack=${_pack%\'}
-    if [ -n "$_pack" ] && [ "$_pack" != "default" ]; then
-        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-launcher-icond.service" 2>/dev/null || :
-    fi
+    # Unconditional: rpm replaced the binary and cleared its capability, so the
+    # running daemon is stale whether or not a pack is active. setcap above has
+    # already re-applied cap_dac_override, so the restart picks it up.
+    su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-launcher-icond.service" 2>/dev/null || :
+fi
+
+# A1: now that setcap has run and the daemon is back on the new binary, the
+# repair can safely start. Its own preamble re-checks both anyway.
+if [ "$1" -ge 2 ]; then
+    systemctl start --no-block harbour-muoto-repair-folder-icons.service 2>/dev/null || :
 fi
 
 # Icon ops flock sentinel (GUI probe + launcher-icond).

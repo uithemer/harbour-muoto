@@ -63,7 +63,12 @@ bool isApkBridgeIcon(const QString& iconPath)
 
 bool isMonitoredIcon(const QString& iconPath)
 {
-    static QRegularExpression re(QStringLiteral("/usr/share/icons/hicolor/\\w+/apps/.*"));
+    // Raster size slots only. `\w+` also matched `scalable`, so an app whose icon
+    // resolved to scalable/apps/foo.svg was treated as a single-slot inplace
+    // candidate and got PNG bytes written over its SVG. AGENTS.md already states
+    // the rule as "siblings in other sizes or scalable/ force a redirect"; only
+    // the sibling half was implemented.
+    static QRegularExpression re(QStringLiteral("/usr/share/icons/hicolor/\\d+x\\d+/apps/.*"));
     return re.match(iconPath).hasMatch();
 }
 

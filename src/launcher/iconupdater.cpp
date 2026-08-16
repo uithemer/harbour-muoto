@@ -1,5 +1,7 @@
 #include "iconupdater.h"
-#include "desktopentry.h"
+#include "desktopfile.h"
+#include "filewrite.h"
+#include "iconbackup.h"
 #include "iconprovider.h"
 #include "iconresolve.h"
 #include "iconupdater_p.h"
@@ -12,6 +14,7 @@
 #include <silicatheme.h>
 
 #include <sys/stat.h>
+#include <QBuffer>
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QDebug>
@@ -78,24 +81,14 @@ bool isOurIcon(const QString& iconPath)
     return getFileFingerprint(iconPath) == getStoredFingerprint(iconPath);
 }
 
-QString getIconBackupPath(const QString& iconPath)
+bool backupIcon(const QString& iconPath)
 {
-    return LauncherPaths::iconBackupPath(iconPath);
+    return IconBackup::create(iconPath);
 }
 
-void backupIcon(const QString& iconPath)
+bool restoreIcon(const QString& iconPath)
 {
-    const QString iconBackupPath = getIconBackupPath(iconPath);
-    QFileInfo(iconBackupPath).dir().mkpath(QStringLiteral("."));
-    QFile::remove(iconBackupPath);
-    QFile::copy(iconPath, iconBackupPath);
-}
-
-void restoreIcon(const QString& iconPath)
-{
-    const QString iconBackupPath = getIconBackupPath(iconPath);
-    QFile::remove(iconPath);
-    QFile::copy(iconBackupPath, iconPath);
+    return IconBackup::restore(iconPath);
 }
 
 bool touchFile(const QString& path)
@@ -141,12 +134,12 @@ IconUpdaterPrivate::IconUpdaterPrivate(IconProvider* provider, const QString& de
     monitoredIcon = !forceRedirect && IconResolve::isMonitoredIcon(iconPath);
 }
 
-void IconUpdaterPrivate::updateMonitoredIcon()
+bool IconUpdaterPrivate::updateMonitoredIcon()
 {
     if(iconPath.isEmpty())
     {
         qWarning() << "muoto-launcher: unresolved icon for" << desktopPath;
-        return;
+        return false;
     }
 
     // Revert a prior redirect Icon= so Lipstick uses the inplace path again.
@@ -158,7 +151,7 @@ void IconUpdaterPrivate::updateMonitoredIcon()
             const QString orig = storedIconPath(desktopPath);
             if(!orig.isEmpty())
             {
-                DesktopEntry desktop(desktopPath);
+                DesktopFile desktop(desktopPath);
                 desktop.setIcon(orig);
                 if(desktop.save())
                     QFile::remove(currentIcon);
@@ -166,8 +159,13 @@ void IconUpdaterPrivate::updateMonitoredIcon()
         }
     }
 
-    if(!isOurIcon(iconPath))
-        backupIcon(iconPath);
+    // Without a stock backup an inplace restore has nothing to put back, so do
+    // not theme the slot at all rather than theme it irreversibly.
+    if(!isOurIcon(iconPath) && !backupIcon(iconPath))
+    {
+        qWarning() << "muoto-launcher: not theming" << desktopPath << "- no stock backup";
+        return false;
+    }
 
     const int size = qRound(Silica::Theme::instance()->iconSizeLauncher());
     // Request while backup exists so overlay can load stock from backup or live path.
@@ -175,35 +173,27 @@ void IconUpdaterPrivate::updateMonitoredIcon()
     if(icon.isNull())
     {
         qWarning() << "muoto-launcher: could not render icon for" << desktopPath;
-        return;
+        return false;
     }
 
-    const QString tmpPath = iconPath + QStringLiteral(".muoto-write.png");
-    QFile::remove(tmpPath);
-    // Explicit PNG: QImage::save() keys off the suffix; ".muoto-write" alone fails.
-    if(!icon.save(tmpPath, "PNG") || QFileInfo(tmpPath).size() <= 0)
+    // Encode first, then replace the bytes of the existing hicolor PNG. The old
+    // remove-and-rename dropped the file to defaultuser ownership (no CAP_CHOWN
+    // to put it back) and left the icon missing entirely if the rename failed.
+    QByteArray png;
     {
-        QFile::remove(tmpPath);
-        qWarning() << "muoto-launcher: could not save icon to" << iconPath;
-        return;
-    }
-    QFile::remove(iconPath);
-    if(!QFile::rename(tmpPath, iconPath))
-    {
-        const bool copied = QFile::copy(tmpPath, iconPath);
-        QFile::remove(tmpPath);
-        if(!copied)
+        QBuffer buffer(&png);
+        buffer.open(QIODevice::WriteOnly);
+        if(!icon.save(&buffer, "PNG") || png.isEmpty())
         {
-            qWarning() << "muoto-launcher: could not replace icon" << iconPath;
-            return;
+            qWarning() << "muoto-launcher: could not encode icon for" << desktopPath;
+            return false;
         }
     }
 
-    if(QFileInfo(iconPath).size() <= 0)
+    if(!FileWrite::inPlace(iconPath, png))
     {
-        qWarning() << "muoto-launcher: refusing empty icon at" << iconPath;
-        QFile::remove(iconPath);
-        return;
+        qWarning() << "muoto-launcher: could not write icon" << iconPath;
+        return false;
     }
 
     if(!touchFile(desktopPath))
@@ -219,6 +209,7 @@ void IconUpdaterPrivate::updateMonitoredIcon()
     entry.themedPath = iconPath;
     entry.mode = QStringLiteral("inplace");
     LauncherManifest::appendEntry(entry);
+    return true;
 }
 
 void IconUpdaterPrivate::restoreMonitoredIcon()
@@ -231,9 +222,11 @@ void IconUpdaterPrivate::restoreMonitoredIcon()
     LauncherManifest::removeEntryForDesktop(desktopPath);
 }
 
-void IconUpdaterPrivate::updateNonMonitoredIcon()
+bool IconUpdaterPrivate::updateNonMonitoredIcon()
 {
-    DesktopEntry desktop(desktopPath);
+    DesktopFile desktop(desktopPath);
+    if(!desktop.loaded())
+        return false;
 
     const QString currentIconPath = desktop.icon();
     const bool isOurIconPath = LauncherPaths::isOurGeneratedIconPath(currentIconPath);
@@ -249,19 +242,37 @@ void IconUpdaterPrivate::updateNonMonitoredIcon()
     {
         const QString stockRef = isOurIconPath ? storedIconPath(desktopPath) : currentIconPath;
         const QString stockPath = IconResolve::resolveIconPath(stockRef);
-        if(!stockPath.isEmpty() && QFile::exists(getIconBackupPath(stockPath)))
+        if(!stockPath.isEmpty() && IconBackup::exists(stockPath))
             restoreIcon(stockPath);
     }
 
     const QString newIconPath = generateIconPath(desktopPath);
     QDir dir = QFileInfo(newIconPath).absoluteDir();
     if(!dir.mkpath(QStringLiteral(".")))
-        return;
+        return false;
 
     const int size = qRound(Silica::Theme::instance()->iconSizeLauncher());
     QImage newIcon = provider->requestImage(QSize(size, size));
-    if(newIcon.isNull() || !newIcon.save(newIconPath, "PNG"))
-        return;
+    if(newIcon.isNull())
+        return false;
+
+    // Same discipline as the inplace path: stage, verify non-empty, then move
+    // into place. A truncated PNG here is a blank tile on the grid.
+    const QString newIconTmp = newIconPath + QStringLiteral(".muoto-write.png");
+    QFile::remove(newIconTmp);
+    if(!newIcon.save(newIconTmp, "PNG") || QFileInfo(newIconTmp).size() <= 0)
+    {
+        QFile::remove(newIconTmp);
+        qWarning() << "muoto-launcher: could not stage icon for" << desktopPath;
+        return false;
+    }
+    QFile::remove(newIconPath);
+    if(!QFile::rename(newIconTmp, newIconPath))
+    {
+        QFile::remove(newIconTmp);
+        qWarning() << "muoto-launcher: could not place icon at" << newIconPath;
+        return false;
+    }
 
     LauncherManifestEntry entry;
     entry.desktop = desktopPath;
@@ -272,7 +283,7 @@ void IconUpdaterPrivate::updateNonMonitoredIcon()
     {
         qWarning() << "muoto-launcher: manifest append failed for" << desktopPath;
         QFile::remove(newIconPath);
-        return;
+        return false;
     }
 
     desktop.setIcon(newIconPath);
@@ -280,7 +291,7 @@ void IconUpdaterPrivate::updateNonMonitoredIcon()
     {
         LauncherManifest::removeEntryForDesktop(desktopPath);
         QFile::remove(newIconPath);
-        return;
+        return false;
     }
 
     // Same-second rebuilds reuse the same path; never delete the file we just wrote.
@@ -288,6 +299,7 @@ void IconUpdaterPrivate::updateNonMonitoredIcon()
         QFile::remove(currentIconPath);
 
     touchFile(desktopPath);
+    return true;
 }
 
 void IconUpdaterPrivate::restoreNonMonitoredIcon()
@@ -296,7 +308,10 @@ void IconUpdaterPrivate::restoreNonMonitoredIcon()
     if(originalIcon.isEmpty())
         return;
 
-    DesktopEntry desktop(desktopPath);
+    DesktopFile desktop(desktopPath);
+    if(!desktop.loaded())
+        return;
+
     const QString currentIconPath = desktop.icon();
     if(!LauncherPaths::isOurGeneratedIconPath(currentIconPath))
         return;
@@ -307,7 +322,7 @@ void IconUpdaterPrivate::restoreNonMonitoredIcon()
 
     // Undo any leftover inplace composite on the stock bridge/hicolor path.
     const QString stockPath = IconResolve::resolveIconPath(originalIcon);
-    if(!stockPath.isEmpty() && QFile::exists(getIconBackupPath(stockPath)))
+    if(!stockPath.isEmpty() && IconBackup::exists(stockPath))
         restoreIcon(stockPath);
 
     LauncherManifest::removeEntryForDesktop(desktopPath);
@@ -345,8 +360,11 @@ IconUpdater::~IconUpdater()
 
 void IconUpdater::update()
 {
-    if(d_ptr->monitoredIcon)
-        d_ptr->updateMonitoredIcon();
-    else
-        d_ptr->updateNonMonitoredIcon();
+    d_ptr->lastUpdateOk = d_ptr->monitoredIcon ? d_ptr->updateMonitoredIcon()
+                                               : d_ptr->updateNonMonitoredIcon();
+}
+
+bool IconUpdater::lastUpdateOk() const
+{
+    return d_ptr->lastUpdateOk;
 }

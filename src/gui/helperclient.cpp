@@ -350,6 +350,22 @@ void HelperClient::onLauncherProgress(const QString& op, int done, int total)
 void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
                                               const QString& message)
 {
+    // ApplyIcons and RestoreIcons also arrive unsolicited: the install listener
+    // re-themes in the background, and OperationCompleted is a broadcast. Acting
+    // on those is what put a toast on screen with the app closed. Only ops this
+    // process dispatched are ours.
+    //
+    // Scoped to those two on purpose. DensityEnable shares this slot (helperd's
+    // Themes interface on the system bus) but goes out through asyncCall without
+    // ever setting _inflightIconOp, so a blanket check would strand the density
+    // dialog waiting for a completion it already had.
+    const bool iconOp = op == QLatin1String("ApplyIcons") || op == QLatin1String("RestoreIcons");
+    if(iconOp && op != _inflightIconOp)
+    {
+        qInfo() << "HelperClient: ignoring unsolicited" << op << "ok=" << ok;
+        return;
+    }
+
     if(!ok)
     {
         // ApplyIcons/RestoreIcons return busy when icon-ops.lock is held.
