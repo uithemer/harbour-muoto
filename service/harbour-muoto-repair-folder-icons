@@ -1,0 +1,96 @@
+#!/bin/sh
+# Reinstall RPMs that own silica icon-launcher-folder-*.png, then drop Muoto
+# folder-backup trees (may be missing or poisoned after backup/icons was wiped).
+# Intended as a oneshot after Muoto upgrade (A1); safe to re-run with --force.
+# shellcheck shell=sh
+set -eu
+
+DATADIR=/usr/share/harbour-muoto
+MARKER="$DATADIR/folder-icons-rpm-healed"
+SILICA=/usr/share/themes/sailfish-default/silica
+OS_UPDATE_FLAG=/run/defaultuser/osupdate_running
+
+FORCE=0
+[ "${1:-}" = "--force" ] && FORCE=1
+
+log() {
+    echo "muoto-repair-folder-icons: $*" >&2
+}
+
+if [ "$FORCE" -eq 0 ] && [ -f "$MARKER" ]; then
+    log "already healed ($MARKER)"
+    exit 0
+fi
+
+if [ -f "$OS_UPDATE_FLAG" ]; then
+    log "skip (os update: $OS_UPDATE_FLAG)"
+    exit 1
+fi
+for _u in system-update.target sailfish-upgrade-ui.service; do
+    if systemctl is-active --quiet "$_u" 2>/dev/null; then
+        log "skip (os update: $_u active)"
+        exit 1
+    fi
+done
+
+if ! command -v pkcon >/dev/null 2>&1; then
+    log "pkcon missing"
+    exit 1
+fi
+if ! command -v rpm >/dev/null 2>&1; then
+    log "rpm missing"
+    exit 1
+fi
+
+# Unique package names that own live folder glyphs (discovery, not a hardcoded list).
+pkgs=""
+for z in z2.0 z1.75 z1.5-large z1.5 z1.25 z1.0; do
+    for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16; do
+        f="$SILICA/$z/icons/icon-launcher-folder-$i.png"
+        [ -e "$f" ] || continue
+        name=$(rpm -qf --queryformat '%{NAME}' "$f" 2>/dev/null) || continue
+        case "$name" in
+            *not\ owned*|*"no package"*) continue ;;
+        esac
+        case " $pkgs " in
+            *" $name "*) ;;
+            *) pkgs="$pkgs $name" ;;
+        esac
+    done
+done
+
+# shellcheck disable=SC2086
+pkgs=$(echo $pkgs)
+
+if [ -z "$pkgs" ]; then
+    log "no owning packages found for folder icons"
+    exit 1
+fi
+
+log "reinstalling:$pkgs"
+# PackageKit while another rpm transaction holds the db will fail; the systemd
+# oneshot runs after %post. Non-zero → no marker → retry next upgrade/start.
+# shellcheck disable=SC2086
+if ! pkcon -y install --allow-reinstall $pkgs; then
+    log "pkcon failed"
+    exit 1
+fi
+
+rm -rf "$DATADIR/backup/icons/folder-icons" \
+       "$DATADIR/backup/folder-icons"
+mkdir -p "$DATADIR"
+touch "$MARKER"
+log "done (marker $MARKER)"
+
+# If a pack is still active, re-apply so folder backups are seeded from real stock.
+pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+pack=${pack#\'}
+pack=${pack%\'}
+if [ -n "$pack" ] && [ "$pack" != "default" ]; then
+    log "activeIconPack=$pack; scheduling update-icons"
+    systemctl start --no-block harbour-muoto-update-icons.service 2>/dev/null \
+        || ( systemctl start harbour-muoto-update-icons.service >/dev/null 2>&1 & ) \
+        || true
+fi
+
+exit 0

@@ -84,6 +84,7 @@ Look for `ApplyIcons start/done`, `rebuildIconUpdaters`, `file not found`, and `
 | Apply returns “upgrade in progress” | OS update guard | `/run/defaultuser/osupdate_running`, `system-update.target` — see [Automation](automation) |
 | Apply returns “busy” | `icon-ops.lock` held | Wait; check for stuck icond |
 | Blank tiles | Empty / deleted hicolor leftover | Manifest restore; `rpm -V` / reinstall app |
+| Folder icons stay themed after restore | Stock backups were under wiped `backup/icons/` or poisoned after re-apply | After 3.5.2: `systemctl start harbour-muoto-repair-folder-icons` (or wait for upgrade oneshot); marker `/usr/share/harbour-muoto/folder-icons-rpm-healed`; then restore/re-apply. Manual: `pkcon install --allow-reinstall $(rpm -qf …/icon-launcher-folder-01.png)` |
 | Dyn clock/calendar not live | Flags off or pack without `dynclock`/`dyncal` | dconf `dynamic*Enabled`; pack dirs |
 
 ## Is Lipstick still watching a desktop entry?

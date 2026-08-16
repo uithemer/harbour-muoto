@@ -112,6 +112,13 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 | Apply pack with overlay | Backup under `backup/folder-icons/<z>/icon-launcher-folder-01.png`; live silica PNG checksum changes when pack/overlay has assets |
 | RestoreIcons | Live checksum restored; `backup/folder-icons` removed |
 
+**Folder-icon RPM heal (3.5.2+)**
+
+| Check | Expect |
+| ----- | ------ |
+| Upgrade Muoto while folders themed / backups wiped | `%post` starts `harbour-muoto-repair-folder-icons.service`; on success marker `folder-icons-rpm-healed` and live folder PNGs match graphics RPM; Muoto folder-backup trees empty |
+| Offline / pkcon fail | No marker; service retries on next boot/upgrade (`ConditionPathExists=!…healed`) |
+
 **T-23 dynamic icons (enable/disable contract)**
 
 | Check | Expect |

@@ -14,8 +14,8 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.5.1
-Release:        2
+Version:        3.5.2
+Release:        1
 Group:          Qt/Qt
 License:        GPLv3
 Packager:       fravaccaro
@@ -129,6 +129,7 @@ rm -rf %{buildroot}
 chmod 755 %{buildroot}%{_bindir}/harbour-muoto-update-icons 2>/dev/null || :
 chmod 755 %{buildroot}%{_bindir}/harbour-muoto-oneshot-restore 2>/dev/null || :
 chmod 755 %{buildroot}%{_bindir}/harbour-muoto-migrate-bulk-icons 2>/dev/null || :
+chmod 755 %{buildroot}%{_bindir}/harbour-muoto-repair-folder-icons 2>/dev/null || :
 chmod 755 %{buildroot}%{_datadir}/%{name}/service/muoto-dbus-wait.sh 2>/dev/null || :
 
 mkdir -p %{buildroot}%{_datadir}/%{name}/launcher-icons
@@ -151,6 +152,7 @@ desktop-file-install --delete-original       \
 %attr(0755,root,root) %{_bindir}/harbour-muoto-update-icons
 %attr(0755,root,root) %{_bindir}/harbour-muoto-oneshot-restore
 %attr(0755,root,root) %{_bindir}/harbour-muoto-migrate-bulk-icons
+%attr(0755,root,root) %{_bindir}/harbour-muoto-repair-folder-icons
 %attr(0755,root,root) /usr/libexec/harbour-muoto-helperd
 %attr(0755,root,root) /usr/libexec/harbour-muoto-install-listener
 %attr(0755,root,root) /usr/libexec/harbour-muoto-launcher-icond
@@ -186,6 +188,7 @@ systemctl stop sailfishos-uithemer-helperd.service 2>/dev/null || :
 mv -f %{_datadir}/%{name}/service/harbour-muoto-helperd.service /etc/systemd/system/
 mv -f %{_datadir}/%{name}/service/harbour-muoto-update-icons.service /etc/systemd/system/
 mv -f %{_datadir}/%{name}/service/harbour-muoto-oneshot-restore.service /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/harbour-muoto-repair-folder-icons.service /etc/systemd/system/
 mkdir -p /etc/systemd/system/sailfish-upgrade-ui.service.d
 cp -f %{_datadir}/%{name}/service/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf \
     /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
@@ -224,7 +227,15 @@ systemctl stop harbour-muoto-helperd.service 2>/dev/null || :
 systemctl enable harbour-muoto-update-icons.service 2>/dev/null || :
 systemctl enable harbour-muoto-oneshot-restore.service 2>/dev/null || :
 
+# A1: on upgrade only — reinstall graphics RPMs that own folder glyphs after the
+# transaction (pkcon must not run inside %post; rpm db is locked). Marker gates retries.
+if [ "$1" -ge 2 ]; then
+    systemctl enable harbour-muoto-repair-folder-icons.service 2>/dev/null || :
+    systemctl start --no-block harbour-muoto-repair-folder-icons.service 2>/dev/null || :
+fi
+
 # If a theme is already active, run boot apply once (no need to wait for reboot).
+# Folder re-apply after a successful repair is also chained from the repair script.
 pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
 pack=${pack#\'}; pack=${pack%\'}
 if [ -n "$pack" ] && [ "$pack" != "default" ]; then
@@ -258,6 +269,10 @@ mkdir -p %{_datadir}/%{name}/launcher-icons 2>/dev/null || :
 
 # 3.2: one-shot bulk stock restore from 3.1 backup/icons, then retire tree.
 /usr/bin/harbour-muoto-migrate-bulk-icons 2>/dev/null || :
+# Drop folder backups before wiping backup/icons: may be nested (bug) or poisoned
+# after a prior wipe + re-apply. Repair oneshot restores live stock via pkcon.
+rm -rf %{_datadir}/%{name}/backup/icons/folder-icons \
+       %{_datadir}/%{name}/backup/folder-icons 2>/dev/null || :
 rm -rf %{_datadir}/%{name}/backup/icons 2>/dev/null || :
 
 su defaultuser -c "dconf reset /apps/harbour-muoto/launcherInstantApply" 2>/dev/null || :
@@ -365,6 +380,7 @@ if [ $1 -eq 0 ]; then
     systemctl disable --now harbour-muoto-rescan.path 2>/dev/null || :
     systemctl disable --now harbour-muoto-update-icons.service 2>/dev/null || :
     systemctl disable --now harbour-muoto-oneshot-restore.service 2>/dev/null || :
+    systemctl disable --now harbour-muoto-repair-folder-icons.service 2>/dev/null || :
     rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
     rmdir /etc/systemd/system/sailfish-upgrade-ui.service.d 2>/dev/null || :
 fi
@@ -379,7 +395,9 @@ if [ $1 -eq 0 ]; then
     rm -f /etc/systemd/system/harbour-muoto-rescan.service
     rm -f /etc/systemd/system/harbour-muoto-update-icons.service
     rm -f /etc/systemd/system/harbour-muoto-oneshot-restore.service
+    rm -f /etc/systemd/system/harbour-muoto-repair-folder-icons.service
     rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
+    rm -f %{_datadir}/%{name}/folder-icons-rpm-healed
     systemctl daemon-reload
     # 2.6.0: refresh dbus so the just-removed system bus name drops
     # from the registry. 2.6.2: polkit reload dropped.

@@ -36,10 +36,15 @@ const QStringList& folderIconNames()
     return names;
 }
 
+/** Stock backups: sibling of retired backup/icons (must not nest under it — %post wipes that tree). */
+QString folderBackupRoot()
+{
+    return IconPaths::muotoShare() + QStringLiteral("/backup/folder-icons");
+}
+
 QString folderBackupDir(const QString& zSize)
 {
-    return IconPaths::backupIconsRoot() + QStringLiteral("/folder-icons/") + zSize
-           + QLatin1Char('/');
+    return folderBackupRoot() + QLatin1Char('/') + zSize + QLatin1Char('/');
 }
 
 QString packJollaIconPath(const QString& packRoot, const QString& zSize, const QString& iconName)
@@ -122,6 +127,18 @@ bool writeOverlayOnly(const QString& sizeRefPath, const QString& overlayBasePath
     return true;
 }
 
+void removeBackupTrees()
+{
+    const QString root = folderBackupRoot();
+    if(QDir(root).exists())
+        QDir(root).removeRecursively();
+
+    // Legacy nest under retired backup/icons (wiped by %post; drop if still present).
+    const QString legacy = IconPaths::backupIconsRoot() + QStringLiteral("/folder-icons");
+    if(QDir(legacy).exists())
+        QDir(legacy).removeRecursively();
+}
+
 } // namespace
 
 void apply(const QString& packShortName, bool overlayEnabled)
@@ -174,13 +191,16 @@ void apply(const QString& packShortName, bool overlayEnabled)
         }
     }
 
-    qDebug() << "FolderAmbient: apply pack=" << packShortName
-             << "overlay=" << overlayEnabled << "updated=" << updated;
+    qInfo() << "FolderAmbient: apply pack=" << packShortName
+            << "overlay=" << overlayEnabled << "updated=" << updated;
 }
 
 void restore()
 {
     int restored = 0;
+    int failures = 0;
+    int pending = 0;
+
     for(const QString& zSize : IconPaths::jollaSizes())
     {
         const QString bakDir = folderBackupDir(zSize);
@@ -193,17 +213,24 @@ void restore()
             const QString backupPath = bakDir + iconName + QStringLiteral(".png");
             if(!QFileInfo::exists(backupPath))
                 continue;
+            ++pending;
             const QString livePath = liveDir + iconName + QStringLiteral(".png");
             if(copyFileOverwrite(backupPath, livePath))
                 ++restored;
+            else
+                ++failures;
         }
     }
 
-    const QString root = IconPaths::backupIconsRoot() + QStringLiteral("/folder-icons");
-    if(QDir(root).exists())
-        QDir(root).removeRecursively();
+    // Only drop backups when every pending restore succeeded — otherwise keep them for retry.
+    if(failures == 0)
+        removeBackupTrees();
+    else
+        qWarning() << "FolderAmbient: restore partial failures=" << failures
+                    << "restored=" << restored << "; keeping backup/folder-icons";
 
-    qDebug() << "FolderAmbient: restore count=" << restored;
+    qInfo() << "FolderAmbient: restore count=" << restored << "pending=" << pending
+            << "failures=" << failures;
 }
 
 } // namespace FolderAmbient

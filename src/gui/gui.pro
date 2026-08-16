@@ -141,13 +141,15 @@ service.files = \
     $$ROOT/service/harbour-muoto-helperd.service \
     $$ROOT/service/harbour-muoto-update-icons.service \
     $$ROOT/service/harbour-muoto-oneshot-restore.service \
+    $$ROOT/service/harbour-muoto-repair-folder-icons.service \
     $$ROOT/service/muoto-dbus-wait.sh
 service.path  = /usr/share/$$TARGET/service
 
 autobin.files = \
     $$ROOT/service/harbour-muoto-update-icons \
     $$ROOT/service/harbour-muoto-oneshot-restore \
-    $$ROOT/service/harbour-muoto-migrate-bulk-icons
+    $$ROOT/service/harbour-muoto-migrate-bulk-icons \
+    $$ROOT/service/harbour-muoto-repair-folder-icons
 autobin.path = /usr/bin
 
 upgrade_dropin.files = \
