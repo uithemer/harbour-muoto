@@ -1,9 +1,10 @@
 * Sun Aug 16 2026 3.5.2-1
 - Folder icons: store stock backups under backup/folder-icons/ (not under
   backup/icons/, which %post deletes). Keep backups on partial restore failure.
-- One-shot harbour-muoto-repair-folder-icons: reinstall owning
-  sailfish-content-graphics RPMs after upgrade so wiped/poisoned folder
-  glyphs return to vendor stock.
+- One-shot harbour-muoto-repair-folder-icons on upgrade: save pack → RestoreIcons
+  → pkcon --allow-reinstall for installed graphics packages that own folder
+  glyphs → reapply pack → disable/remove the unit (no healed marker; disable
+  without --now so the oneshot is not SIGTERM'd).
 
 * Sat Aug 15 2026 3.5.1-1
 - Fix for apps missing hicon sizes

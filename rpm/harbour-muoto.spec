@@ -227,21 +227,19 @@ systemctl stop harbour-muoto-helperd.service 2>/dev/null || :
 systemctl enable harbour-muoto-update-icons.service 2>/dev/null || :
 systemctl enable harbour-muoto-oneshot-restore.service 2>/dev/null || :
 
-# A1: on upgrade only — reinstall graphics RPMs that own folder glyphs after the
-# transaction (pkcon must not run inside %post; rpm db is locked). Marker gates retries.
+# A1: on upgrade only — heal folder glyphs after the transaction (pkcon must not
+# run inside %post; rpm db is locked). Repair owns restore → pkcon → reapply.
 if [ "$1" -ge 2 ]; then
     systemctl enable harbour-muoto-repair-folder-icons.service 2>/dev/null || :
     systemctl start --no-block harbour-muoto-repair-folder-icons.service 2>/dev/null || :
-fi
-
-# If a theme is already active, run boot apply once (no need to wait for reboot).
-# Folder re-apply after a successful repair is also chained from the repair script.
-pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
-pack=${pack#\'}; pack=${pack%\'}
-if [ -n "$pack" ] && [ "$pack" != "default" ]; then
-    # Do not block RPM install on a full icon re-apply (can take minutes).
-    systemctl start --no-block harbour-muoto-update-icons.service 2>/dev/null \
-        || ( systemctl start harbour-muoto-update-icons.service >/dev/null 2>&1 & )
+else
+    # Fresh install: re-apply active pack if any (repair not started).
+    pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+    pack=${pack#\'}; pack=${pack%\'}
+    if [ -n "$pack" ] && [ "$pack" != "default" ]; then
+        systemctl start --no-block harbour-muoto-update-icons.service 2>/dev/null \
+            || ( systemctl start harbour-muoto-update-icons.service >/dev/null 2>&1 & )
+    fi
 fi
 
 MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
@@ -397,7 +395,7 @@ if [ $1 -eq 0 ]; then
     rm -f /etc/systemd/system/harbour-muoto-oneshot-restore.service
     rm -f /etc/systemd/system/harbour-muoto-repair-folder-icons.service
     rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
-    rm -f %{_datadir}/%{name}/folder-icons-rpm-healed
+    rm -f %{_datadir}/%{name}/repair-folder-icons.state
     systemctl daemon-reload
     # 2.6.0: refresh dbus so the just-removed system bus name drops
     # from the registry. 2.6.2: polkit reload dropped.

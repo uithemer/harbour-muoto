@@ -116,8 +116,8 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 
 | Check | Expect |
 | ----- | ------ |
-| Upgrade Muoto while folders themed / backups wiped | `%post` starts `harbour-muoto-repair-folder-icons.service`; on success marker `folder-icons-rpm-healed` and live folder PNGs match graphics RPM; Muoto folder-backup trees empty |
-| Offline / pkcon fail | No marker; service retries on next boot/upgrade (`ConditionPathExists=!…healed`) |
+| Upgrade Muoto while folders themed / backups wiped | `%post` starts `harbour-muoto-repair-folder-icons.service`; script saves pack, RestoreIcons, pkcon reinstalls owning graphics packages, reapplies pack, then disables/removes the unit |
+| Offline / pkcon fail | Unit stays enabled for boot retry; `repair-folder-icons.state` keeps the saved pack across retries |
 
 **T-23 dynamic icons (enable/disable contract)**
 
