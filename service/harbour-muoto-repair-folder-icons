@@ -1,7 +1,7 @@
 #!/bin/sh
-# Upgrade heal for silica folder glyphs: save pack → RestoreIcons → reinstall
-# owning graphics RPMs → reapply pack → disable/remove this unit.
-# No healed marker; boot retries while the unit stays enabled.
+# Upgrade heal for silica folder glyphs: save pack → RestoreIcons → download
+# owning graphics RPMs and rpm force-install → reapply pack → disable/remove
+# this unit. No healed marker; boot retries while the unit stays enabled.
 # shellcheck shell=sh
 set -eu
 
@@ -12,9 +12,17 @@ SILICA=/usr/share/themes/sailfish-default/silica
 UNIT=harbour-muoto-repair-folder-icons.service
 STATE="$DATADIR/repair-folder-icons.state"
 ICON_WAIT_SEC=180
+TMPDIR=""
 
 log() {
     echo "muoto-repair-folder-icons: $*" >&2
+}
+
+cleanup() {
+    if [ -n "$TMPDIR" ] && [ -d "$TMPDIR" ]; then
+        rm -rf "$TMPDIR"
+        TMPDIR=""
+    fi
 }
 
 self_delete() {
@@ -25,6 +33,8 @@ self_delete() {
     rm -f /etc/systemd/system/"$UNIT"
     systemctl daemon-reload 2>/dev/null || true
 }
+
+trap cleanup EXIT
 
 if muoto_os_update_running; then
     log "skip (OS update in progress)"
@@ -116,13 +126,31 @@ if [ -z "$pkgs" ]; then
     exit 1
 fi
 
-# --- 4) pkcon reinstall (listener may schedule update-icons; pack is default → no-op) ---
-log "reinstalling:$pkgs"
+# --- 4) pkcon download + rpm force-install (reinstall alone may not rewrite files) ---
+TMPDIR=$(mktemp -d /tmp/muoto-repair-folder-icons.XXXXXX)
+log "downloading:$pkgs → $TMPDIR"
+# SFOS pkcon: download DIRECTORY PACKAGES (no --destdir).
 # shellcheck disable=SC2086
-if ! pkcon -y install --allow-reinstall $pkgs; then
-    log "pkcon failed"
+if ! pkcon -y download "$TMPDIR" $pkgs; then
+    log "pkcon download failed"
     exit 1
 fi
+
+# shellcheck disable=SC2012
+rpm_count=$(ls "$TMPDIR"/*.rpm 2>/dev/null | wc -l | tr -d ' ')
+if [ "$rpm_count" -lt 1 ]; then
+    log "no RPMs in $TMPDIR after download"
+    exit 1
+fi
+
+log "rpm force-install $rpm_count package(s)"
+# shellcheck disable=SC2086
+if ! rpm -Uvh --replacepkgs --replacefiles "$TMPDIR"/*.rpm; then
+    log "rpm force-install failed"
+    exit 1
+fi
+
+cleanup
 
 # Drop any poison/legacy folder backups so the next apply seeds from real stock.
 rm -rf "$DATADIR/backup/icons/folder-icons" \
