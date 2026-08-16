@@ -27,15 +27,10 @@ cleanup() {
 
 self_delete() {
     # Do not use disable --now: that SIGTERMs this running oneshot.
-    # Do not rm the unit file while we are still MainPID — systemd then logs
-    # "Current command vanished from the unit file". Disable now; remove later.
-    log "disabling $UNIT (unit file removed after exit)"
+    # Leave the unit file in place; disabled is enough to stop boot retries.
+    log "disabling $UNIT"
     rm -f "$STATE"
     systemctl disable "$UNIT" 2>/dev/null || true
-    ( sleep 2
-      rm -f /etc/systemd/system/"$UNIT"
-      systemctl daemon-reload 2>/dev/null || true
-    ) >/dev/null 2>&1 &
 }
 
 trap cleanup EXIT
@@ -130,8 +125,15 @@ if [ -z "$pkgs" ]; then
     exit 1
 fi
 
-# --- 4) pkcon download + rpm force-install (reinstall alone may not rewrite files) ---
+# --- 4) Refresh jolla metadata, then download + rpm force-install ---
+# pkcon install --allow-reinstall alone may not rewrite already-installed files.
 TMPDIR=$(mktemp -d /tmp/muoto-repair-folder-icons.XXXXXX)
+log "refreshing jolla repo metadata"
+if ! pkcon repo-set-data jolla refresh-now true; then
+    log "jolla repo refresh failed"
+    exit 1
+fi
+
 log "downloading:$pkgs → $TMPDIR"
 # SFOS pkcon: download DIRECTORY PACKAGES (no --destdir).
 # shellcheck disable=SC2086
