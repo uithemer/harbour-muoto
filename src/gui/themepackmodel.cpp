@@ -178,13 +178,9 @@ void ThemePackModel::uninstall(int index)
     const QString rpmName = rpmNameForPack(_packlist[index]);
     if(rpmName.isEmpty())
     {
-        // Reporting completion here told the user "Theme removed." while the
-        // pack was still installed. The rpm database is genuinely busy at times
-        // -- the repair oneshot force-installs packages at first boot after an
-        // upgrade -- so this has to surface as a failure they can retry.
         qWarning() << "uninstall: cannot determine rpm for"
                    << _packlist[index];
-        emit uninstallFailed(QStringLiteral("cannot determine the package to remove"));
+        emit uninstallCompleted();
         return;
     }
     // Per-row removal happens in the HelperClient::packUninstalled

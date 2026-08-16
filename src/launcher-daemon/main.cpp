@@ -3,7 +3,6 @@
 #include "launchermanifest.h"
 #include "launcherpaths.h"
 #include "launcherservice.h"
-#include "opstatus.h"
 
 #include <MGConfItem>
 
@@ -105,10 +104,6 @@ int main(int argc, char* argv[])
 
     setupSignalHandlers();
     checkCapabilities();
-    // Continue the sequence rather than restarting it: the repair oneshot
-    // restarts the daemon and then immediately runs update-icons, which
-    // compares the sequence to decide whether the result is its own.
-    OpStatus::seedSequence();
 
     QDir().mkpath(LauncherPaths::generatedIconsDir());
 

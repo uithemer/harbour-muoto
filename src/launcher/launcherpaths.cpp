@@ -56,14 +56,6 @@ QString iconBackupPath(const QString& iconPath)
     return QStringLiteral("%1/harbour-muoto/launcher-backup/%2").arg(dataPath, key);
 }
 
-QString desktopBackupPath(const QString& desktopPath)
-{
-    const QString dataPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
-    const QString key = QCryptographicHash::hash(desktopPath.toLatin1(),
-                                                 QCryptographicHash::Sha1).toHex();
-    return QStringLiteral("%1/harbour-muoto/desktop-backup/%2").arg(dataPath, key);
-}
-
 bool isOurGeneratedIconPath(const QString& iconPath)
 {
     return iconPath.startsWith(generatedIconsDir());

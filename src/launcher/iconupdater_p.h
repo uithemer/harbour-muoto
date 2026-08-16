@@ -11,9 +11,9 @@ public:
     IconUpdaterPrivate(IconProvider* provider, const QString& desktopPath,
                        IconUpdater::Mode mode);
 
-    bool updateMonitoredIcon();
+    void updateMonitoredIcon();
     void restoreMonitoredIcon();
-    bool updateNonMonitoredIcon();
+    void updateNonMonitoredIcon();
     void restoreNonMonitoredIcon();
 
     IconProvider* provider;
@@ -22,7 +22,6 @@ public:
     bool monitoredIcon;
     bool alienDalvikIcon;
     bool forceRedirect;
-    bool lastUpdateOk = false;
 };
 
 #endif // ICONUPDATER_P_H

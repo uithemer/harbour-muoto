@@ -750,10 +750,6 @@
         <source>Waiting…</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Font applied. %1</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>TranslatorPage</name>
@@ -869,22 +865,6 @@
     </message>
     <message>
         <source>Busy — try again in a moment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icons could not be changed — try restarting the device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Some icons could not be updated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Some icons could not be restored</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not remove this theme — try again in a moment</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

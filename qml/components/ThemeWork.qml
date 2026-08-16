@@ -10,7 +10,6 @@ Item {
     property bool reloadActive: true
     property int _pendingOps: 0
     property bool _waitForFinalise: false
-    property bool _fontCommittedThisRun: false
     property string _pendingIconPack: ""
     property bool _pendingIconOverlay: false
     property bool _pendingIconRestore: false
@@ -134,10 +133,6 @@ Item {
             settings.activeFontWeight = _pendingFontWeight;
             _pendingFontPack = "";
             _pendingFontWeight = "";
-            // Icons are deferred behind fonts, so an icon failure after this
-            // point leaves the font genuinely applied. Say that rather than
-            // reporting a bare icon error.
-            _fontCommittedThisRun = true;
         }
     }
 
@@ -151,7 +146,6 @@ Item {
     function _armApply(nOps) {
         _waitForFinalise = true;
         _pendingOps = nOps;
-        _fontCommittedThisRun = false;
     }
 
     function _opDone() {
@@ -183,17 +177,14 @@ Item {
         _uninstallAfterIconRestore = false;
         _uninstallPackIndex = -1;
         _reapplyDynAfterIconRestore = false;
-        _fontCommittedThisRun = false;
         _clearDeferredIcons();
         _progressBody = "";
         settings.isRunning = false;
-        if (errMsg !== "")
-            app.showHelperError(errMsg);
+        app.showHelperError(errMsg);
     }
 
     function _finalise(message) {
         _progressBody = "";
-        _fontCommittedThisRun = false;
         settings.isRunning = false;
         app.showToast(message || qsTr("Theme updated."));
         settings.syncToDisk();
@@ -345,12 +336,7 @@ Item {
         onError: {
             if (op === "ApplyIcons") {
                 themeWork._pendingIconPack = "";
-                if (themeWork._fontCommittedThisRun) {
-                    themeWork._abortThemeWork("");
-                    app.showToast(qsTr("Font applied. %1").arg(app.formatHelperError(message)));
-                } else {
-                    themeWork._abortThemeWork(message);
-                }
+                themeWork._abortThemeWork(message);
             } else if (op === "RestoreIcons") {
                 themeWork._pendingIconRestore = false;
                 themeWork._uninstallAfterIconRestore = false;
@@ -381,10 +367,8 @@ Item {
         onThemeRestoreFailed: themeWork._abortThemeWork(message)
         onUninstallCompleted: {
             settings.isRunning = false;
-            themeWork._progressBody = "";
             app.showToast(qsTr("Theme removed."));
         }
-        onUninstallFailed: themeWork._abortThemeWork(message)
         onDpiRestored: themeWork.finishDensityApply()
     }
 

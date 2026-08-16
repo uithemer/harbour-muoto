@@ -1,16 +1,7 @@
 #!/bin/sh
-# Upgrade heal, two stages.
-#
-# 1) Launcher entries destroyed by the pre-3.5.2 desktop writer, which replaced
-#    any .desktop it could not read with a two-line stub. jolla-clock is the
-#    usual casualty: the dynamic clock rewrote it every 60 s. Muoto cannot
-#    regenerate content it never read, so the file has to come back from its rpm.
-# 2) Silica folder glyphs, the original reason this unit exists.
-#
-# The desktop stage runs first and independently: the folder stage exits early on
-# devices whose glyphs are fine, which is most of them, and that must not skip
-# the entry repair. Both feed one pkcon download. No healed marker; boot retries
-# while the unit stays enabled, up to MAX_ATTEMPTS.
+# Upgrade heal for silica folder glyphs: save pack → RestoreIcons → download
+# owning graphics RPMs and rpm force-install → reapply pack → disable/remove
+# this unit. No healed marker; boot retries while the unit stays enabled.
 # shellcheck shell=sh
 set -eu
 
@@ -21,10 +12,7 @@ SILICA=/usr/share/themes/sailfish-default/silica
 UNIT=harbour-muoto-repair-folder-icons.service
 STATE="$DATADIR/repair-folder-icons.state"
 ICON_WAIT_SEC=180
-MAX_ATTEMPTS=5
-MAX_PKGS=12
 TMPDIR=""
-APPDIRS="/usr/share/applications /home/defaultuser/.local/share/applications"
 
 log() {
     echo "muoto-repair-folder-icons: $*" >&2
@@ -70,187 +58,29 @@ if ! command -v rpm >/dev/null 2>&1; then
     exit 1
 fi
 
-# --- 0) Preamble: the transaction must be over and the fixed daemon live ---
-# %post starts this with --no-block while the old launcher-icond is still the
-# running process; repairing jolla-clock under it just gets it re-stubbed on the
-# next tick. %post also runs inside the rpm transaction, so the db is still
-# locked against the rpm -qf calls below, and it has not reached setcap yet.
-_wait_rpm_db() {
-    _i=0
-    while [ "$_i" -lt 120 ]; do
-        # Any successful query means the transaction released the lock. Do not
-        # compare versions: this script would have to know its own.
-        if rpm -q harbour-muoto >/dev/null 2>&1; then
-            return 0
-        fi
-        sleep 2
-        _i=$((_i + 1))
-    done
-    return 1
-}
-
-if ! _wait_rpm_db; then
-    log "rpm database still busy after 4 min; retrying next boot"
-    exit 1
-fi
-
-muoto_run_as_user 'systemctl --user try-restart harbour-muoto-launcher-icond.service' \
-    2>/dev/null || true
-if ! muoto_ensure_launcher_icond; then
-    log "launcher-icond not available; retrying next boot"
-    exit 1
-fi
-
-# Without cap_dac_override every write fails silently and a "successful" reapply
-# would theme nothing. %post sets it, but only after this unit is started.
-_icond_pid=$(pgrep -f /usr/libexec/harbour-muoto-launcher-icond 2>/dev/null | head -1)
-if [ -n "$_icond_pid" ] && [ -r "/proc/$_icond_pid/status" ]; then
-    _capeff=$(sed -n 's/^CapEff:[[:space:]]*//p' "/proc/$_icond_pid/status")
-    # CAP_DAC_OVERRIDE is bit 1, so it lives in the last hex digit.
-    _nibble=${_capeff#"${_capeff%?}"}
-    case "$_nibble" in
-        2|3|6|7|a|b|e|f|A|B|E|F)
-            ;;
-        *)
-            log "launcher-icond has no cap_dac_override (CapEff=$_capeff); retrying next boot"
-            exit 1
-            ;;
-    esac
-fi
-
-# --- Attempt counter: give up rather than flicker icons on every boot ---
-# Without a bound, a device that can never finish (offline, a package no repo
-# carries) would run RestoreIcons and reapply on every single boot forever,
-# which the user sees as icons flickering at every startup.
-saved_pack=""
-saved_o=false
-attempts=0
-if [ -f "$STATE" ]; then
-    # shellcheck disable=SC1090
-    . "$STATE" 2>/dev/null || true
-fi
-
-_save_state() {
-    mkdir -p "$DATADIR"
-    _pack_esc=$(printf '%s' "${saved_pack:-}" | sed "s/'/'\\\\''/g")
-    printf "saved_pack='%s'\nsaved_o=%s\nattempts=%s\n" \
-        "$_pack_esc" "${saved_o:-false}" "${attempts:-0}" > "$STATE"
-}
-
-attempts=$((${attempts:-0} + 1))
-if [ "$attempts" -gt "$MAX_ATTEMPTS" ]; then
-    log "giving up after $MAX_ATTEMPTS attempts; unrepaired entries left as-is"
-    rm -f "$STATE"
-    systemctl disable "$UNIT" 2>/dev/null || true
-    rm -f /etc/systemd/system/"$UNIT"
-    exit 0
-fi
-log "attempt $attempts of $MAX_ATTEMPTS"
-
 # --- 1) Save theme (persist across retries: RestoreIcons clears dconf) ---
-# The state file already gave us whatever a previous attempt saved; a live pack
-# in dconf supersedes it.
-_live_pack=$(muoto_dconf_as_user "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
-_live_pack=${_live_pack#\'}
-_live_pack=${_live_pack%\'}
-if [ -n "$_live_pack" ] && [ "$_live_pack" != "default" ]; then
-    saved_pack="$_live_pack"
-    _live_overlay=$(muoto_dconf_as_user "dconf read /apps/harbour-muoto/iconOverlay" 2>/dev/null || true)
-    case "$_live_overlay" in
-        true) saved_o=true ;;
-        *) saved_o=false ;;
-    esac
-fi
-_save_state
+saved_pack=$(muoto_dconf_as_user "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+saved_pack=${saved_pack#\'}
+saved_pack=${saved_pack%\'}
+saved_overlay=$(muoto_dconf_as_user "dconf read /apps/harbour-muoto/iconOverlay" 2>/dev/null || true)
+case "$saved_overlay" in
+    true) saved_o=true ;;
+    *) saved_o=false ;;
+esac
 
-log "using pack='${saved_pack:-default}' overlay=$saved_o"
-
-# --- 1b) Destroyed launcher entries -----------------------------------------
-# A stub is a .desktop missing Type or Name: Lipstick cannot build a launcher
-# item from it, which is the "my clock icon disappeared" report.
-desktop_pkgs=""
-stub_count=0
-
-_is_stub() {
-    grep -q '^Type=' "$1" 2>/dev/null || return 0
-    grep -q '^Name' "$1" 2>/dev/null || return 0
-    return 1
-}
-
-for _dir in $APPDIRS; do
-    [ -d "$_dir" ] || continue
-    for f in "$_dir"/*.desktop; do
-        [ -e "$f" ] || continue
-        _is_stub "$f" || continue
-        stub_count=$((stub_count + 1))
-
-        # Local copy first: entries themed after 3.5.2 have one, and restoring
-        # from it needs no network at all.
-        _hash=$(printf '%s' "$f" | sha1sum | cut -d' ' -f1)
-        _bk="/home/defaultuser/.local/share/harbour-muoto/desktop-backup/$_hash"
-        if [ -s "$_bk" ]; then
-            log "restoring $f from local backup"
-            cat "$_bk" > "$f" && continue
-        fi
-
-        case "$(basename "$f")" in
-            apkd_launcher_*)
-                # Nothing in rpm owns these; apkd regenerates them on the next
-                # container sync, so a stub is only in the way.
-                log "removing apkd stub $f"
-                rm -f "$f"
-                continue
-                ;;
-        esac
-
-        _owner=$(rpm -qf --queryformat '%{NAME}' "$f" 2>/dev/null) || _owner=""
-        case "$_owner" in
-            ''|*'not owned'*|*'no package'*)
-                # Ownerless *and* a stub. Muoto never creates pack desktops --
-                # pack rpms ship them -- so this is a ghost the old writer
-                # recreated after its package was removed.
-                log "removing ownerless stub $f"
-                rm -f "$f"
-                ;;
-            *)
-                case " $desktop_pkgs " in
-                    *" $_owner "*) ;;
-                    *) desktop_pkgs="$desktop_pkgs $_owner" ;;
-                esac
-                ;;
-        esac
-    done
-done
-
-# Legacy ownership drift: the pre-3.5.2 writer replaced entries instead of
-# rewriting them, and without CAP_CHOWN it could not put root back. Harmless to
-# theming -- the daemon's cap_dac_override writes them either way -- but rpm -V
-# reports U/G on every one. Only touch files rpm owns, never a hand-placed one.
-drifted=0
-for f in /usr/share/applications/*.desktop; do
-    [ -e "$f" ] || continue
-    [ "$(stat -c %U "$f" 2>/dev/null)" = defaultuser ] || continue
-    _owner=$(rpm -qf --queryformat '%{NAME}' "$f" 2>/dev/null) || continue
-    case "$_owner" in
-        ''|*'not owned'*|*'no package'*) continue ;;
-    esac
-    chown root:root "$f" 2>/dev/null && drifted=$((drifted + 1))
-done
-[ "$drifted" -gt 0 ] && log "restored root ownership on $drifted launcher entries"
-
-# jolla-clock unconditionally: it is the entry the dynamic clock rewrote 1440
-# times a day, so it is the likeliest casualty on any device, and it always
-# resolves from the jolla repo.
-if rpm -q jolla-clock >/dev/null 2>&1; then
-    case " $desktop_pkgs " in
-        *" jolla-clock "*) ;;
-        *) desktop_pkgs="$desktop_pkgs jolla-clock" ;;
-    esac
+if [ -z "$saved_pack" ] || [ "$saved_pack" = "default" ]; then
+    if [ -f "$STATE" ]; then
+        # shellcheck disable=SC1090
+        . "$STATE"
+        log "restored saved state pack='$saved_pack' overlay=$saved_o"
+    fi
+elif [ -n "$saved_pack" ] && [ "$saved_pack" != "default" ]; then
+    mkdir -p "$DATADIR"
+    _pack_esc=$(printf '%s' "$saved_pack" | sed "s/'/'\\\\''/g")
+    printf "saved_pack='%s'\nsaved_o=%s\n" "$_pack_esc" "$saved_o" > "$STATE"
 fi
 
-# shellcheck disable=SC2086
-desktop_pkgs=$(echo $desktop_pkgs)
-log "desktop stage: $stub_count stub(s), packages to reinstall:${desktop_pkgs:- none}"
+log "using pack='$saved_pack' overlay=$saved_o"
 
 # --- 2) RestoreIcons (stock launcher + folder backups if any) ---
 _restore_icons_once() {
@@ -275,7 +105,6 @@ if ! _restore_icons_once; then
     sleep 3
     if ! _restore_icons_once; then
         log "RestoreIcons failed"
-        _save_state
         exit 1
     fi
 fi
@@ -297,33 +126,12 @@ for z in z2.0 z1.75 z1.5-large z1.5 z1.25 z1.0; do
     done
 done
 
-# Both stages feed one transaction. An empty folder set is the normal case on a
-# healthy device and must not skip the desktop repair, which is why this is no
-# longer an early exit.
-for _p in $desktop_pkgs; do
-    case " $pkgs " in
-        *" $_p "*) ;;
-        *) pkgs="$pkgs $_p" ;;
-    esac
-done
-
 # shellcheck disable=SC2086
 pkgs=$(echo $pkgs)
 
 if [ -z "$pkgs" ]; then
-    log "nothing to reinstall; done"
-    rm -rf "$DATADIR/backup/icons/folder-icons" "$DATADIR/backup/folder-icons"
-    self_delete
-    exit 0
-fi
-
-_pkg_count=$(printf '%s\n' $pkgs | wc -l | tr -d ' ')
-if [ "$_pkg_count" -gt "$MAX_PKGS" ]; then
-    # Force-reinstalling an unbounded set could pull tens of megabytes on a
-    # metered connection at first boot. Do the folder glyphs now and let the
-    # next boot take another slice.
-    log "capping batch at $MAX_PKGS of $_pkg_count packages this boot"
-    pkgs=$(printf '%s\n' $pkgs | head -n "$MAX_PKGS" | tr '\n' ' ')
+    log "no owning packages found for folder icons"
+    exit 1
 fi
 
 # --- 4) Refresh jolla metadata, then download + rpm force-install ---
@@ -332,7 +140,6 @@ TMPDIR=$(mktemp -d /tmp/muoto-repair-folder-icons.XXXXXX)
 log "refreshing jolla repo metadata"
 if ! pkcon repo-set-data jolla refresh-now true; then
     log "jolla repo refresh failed"
-    _save_state
     exit 1
 fi
 
@@ -341,7 +148,6 @@ log "downloading:$pkgs → $TMPDIR"
 # shellcheck disable=SC2086
 if ! pkcon -y download "$TMPDIR" $pkgs; then
     log "pkcon download failed"
-    _save_state
     exit 1
 fi
 
@@ -349,7 +155,6 @@ fi
 rpm_count=$(ls "$TMPDIR"/*.rpm 2>/dev/null | wc -l | tr -d ' ')
 if [ "$rpm_count" -lt 1 ]; then
     log "no RPMs in $TMPDIR after download"
-    _save_state
     exit 1
 fi
 
@@ -357,15 +162,12 @@ log "rpm force-install $rpm_count package(s)"
 # shellcheck disable=SC2086
 if ! rpm -Uvh --replacepkgs --replacefiles "$TMPDIR"/*.rpm; then
     log "rpm force-install failed"
-    _save_state
     exit 1
 fi
 
 cleanup
 
-# Only safe here, with real stock just restored on disk. %post used to do this
-# unconditionally, so when the repair did not complete the next apply captured
-# already-themed glyphs as "stock" and restore was permanently poisoned.
+# Drop any poison/legacy folder backups so the next apply seeds from real stock.
 rm -rf "$DATADIR/backup/icons/folder-icons" \
        "$DATADIR/backup/folder-icons"
 
@@ -376,12 +178,8 @@ if [ -n "$saved_pack" ] && [ "$saved_pack" != "default" ]; then
     _pack_lit=$(printf '%s' "$saved_pack" | sed "s/'/'\\\\''/g")
     muoto_dconf_as_user "dconf write /apps/harbour-muoto/activeIconPack \"'${_pack_lit}'\"" || true
     muoto_dconf_as_user "dconf write /apps/harbour-muoto/iconOverlay $saved_o" || true
-    # update-icons exits non-zero only on a hard failure. A partial apply -- a
-    # stub this run could not source, say -- still counts as applied, or a single
-    # unrepairable entry would keep this unit retrying until it hit MAX_ATTEMPTS.
     if ! /usr/bin/harbour-muoto-update-icons; then
         log "update-icons / reapply failed"
-        _save_state
         exit 1
     fi
 else

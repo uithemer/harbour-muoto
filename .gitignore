@@ -1,6 +1,4 @@
-**/icon-options/
-**/scripts/
-*.list
+**/icon-options/**
 **/__pycache__/
 *.rpm
 *.so.*

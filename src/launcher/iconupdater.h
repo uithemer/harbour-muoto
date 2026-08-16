@@ -29,11 +29,6 @@ public:
     // what an rpm update of the owning app does to a hicolor icon.
     static bool isThemedIconIntact(const QString& iconPath);
 
-    // Whether the most recent update() actually wrote the icon. The constructor
-    // performs one, so this is meaningful straight after construction. Apply
-    // reports a real result from these rather than assuming success.
-    bool lastUpdateOk() const;
-
 public slots:
     void update();
 

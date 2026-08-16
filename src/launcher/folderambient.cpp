@@ -1,6 +1,5 @@
 #include "folderambient.h"
 
-#include "filewrite.h"
 #include "iconpaths.h"
 #include "overlayrender.h"
 
@@ -63,32 +62,15 @@ bool ensureParentDir(const QString& filePath)
     return QDir().mkpath(QFileInfo(filePath).absolutePath());
 }
 
-bool readAll(const QString& path, QByteArray* out)
-{
-    QFile file(path);
-    if(!file.open(QIODevice::ReadOnly))
-        return false;
-    *out = file.readAll();
-    return !out->isEmpty();
-}
-
-// Never removes the destination before the replacement bytes are in hand: the
-// old remove-then-copy left the folder glyph missing if the copy failed, which
-// is the damage the repair service exists to heal.
 bool copyFileOverwrite(const QString& src, const QString& dst)
 {
-    QByteArray content;
-    if(!readAll(src, &content))
+    if(!QFileInfo::exists(src))
         return false;
-
-    if(QFileInfo::exists(dst))
-        return FileWrite::inPlace(dst, content);
-
-    // No live file to preserve identity from (fresh slot): a plain copy is the
-    // only option, and the result being defaultuser-owned is unavoidable.
     if(!ensureParentDir(dst))
         return false;
-    return QFile::copy(src, dst) && QFileInfo(dst).size() > 0;
+    if(QFileInfo::exists(dst) && !QFile::remove(dst))
+        return false;
+    return QFile::copy(src, dst);
 }
 
 bool backupOnce(const QString& livePath, const QString& backupPath)
@@ -124,28 +106,25 @@ bool writeOverlayOnly(const QString& sizeRefPath, const QString& overlayBasePath
         return false;
     if(!ensureParentDir(livePath))
         return false;
-
     const QString tmp = livePath + QStringLiteral(".muoto-write.png");
-    QFile::remove(tmp);
-    if(!out.save(tmp, "PNG") || QFileInfo(tmp).size() <= 0)
+    if(QFileInfo::exists(tmp))
+        QFile::remove(tmp);
+    if(!out.save(tmp, "PNG"))
     {
         QFile::remove(tmp);
         return false;
     }
-
-    QByteArray content;
-    const bool read = readAll(tmp, &content);
-    QFile::remove(tmp);
-    if(!read)
+    if(QFileInfo::exists(livePath) && !QFile::remove(livePath))
+    {
+        QFile::remove(tmp);
         return false;
-
-    if(QFileInfo::exists(livePath))
-        return FileWrite::inPlace(livePath, content);
-
-    QFile fresh(livePath);
-    if(!fresh.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    }
+    if(!QFile::rename(tmp, livePath))
+    {
+        QFile::remove(tmp);
         return false;
-    return fresh.write(content) == content.size();
+    }
+    return true;
 }
 
 void removeBackupTrees()
@@ -172,7 +151,6 @@ void apply(const QString& packShortName, bool overlayEnabled)
         return;
 
     int updated = 0;
-    int skipped = 0;
     for(const QString& zSize : IconPaths::jollaSizes())
     {
         const QString liveDir = IconPaths::liveJollaIconsDir(zSize);
@@ -185,17 +163,9 @@ void apply(const QString& packShortName, bool overlayEnabled)
             const QString backupPath = folderBackupDir(zSize) + iconName + QStringLiteral(".png");
             const QString packPath = packJollaIconPath(packRoot, zSize, iconName);
 
-            // Theming a slot whose stock we could not capture is irreversible:
-            // restore() would have nothing to put back. Skip it instead.
             if(!packPath.isEmpty())
             {
-                if(!backupOnce(livePath, backupPath))
-                {
-                    qWarning() << "FolderAmbient: no stock backup for" << livePath
-                               << "- leaving it alone";
-                    ++skipped;
-                    continue;
-                }
+                backupOnce(livePath, backupPath);
                 if(copyFileOverwrite(packPath, livePath))
                     ++updated;
                 continue;
@@ -206,14 +176,9 @@ void apply(const QString& packShortName, bool overlayEnabled)
                 const QString overlayBase = OverlayRender::overlayBaseForDesktop(packRoot, iconName);
                 if(!overlayBase.isEmpty())
                 {
-                    if(!backupOnce(livePath, backupPath))
-                    {
-                        qWarning() << "FolderAmbient: no stock backup for" << livePath
-                                   << "- leaving it alone";
-                        ++skipped;
-                        continue;
-                    }
-                    if(writeOverlayOnly(backupPath, overlayBase, livePath))
+                    backupOnce(livePath, backupPath);
+                    const QString sizeRef = QFileInfo::exists(backupPath) ? backupPath : livePath;
+                    if(writeOverlayOnly(sizeRef, overlayBase, livePath))
                         ++updated;
                     continue;
                 }
@@ -227,8 +192,7 @@ void apply(const QString& packShortName, bool overlayEnabled)
     }
 
     qInfo() << "FolderAmbient: apply pack=" << packShortName
-            << "overlay=" << overlayEnabled << "updated=" << updated
-            << "skipped=" << skipped;
+            << "overlay=" << overlayEnabled << "updated=" << updated;
 }
 
 void restore()
