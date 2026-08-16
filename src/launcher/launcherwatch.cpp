@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QEventLoop>
 #include <QFile>
 #include <QTimer>
 
@@ -22,102 +23,61 @@ QString asidePath(const QString& desktopPath)
     return desktopPath + QLatin1String(kRearmSuffix);
 }
 
+void waitMs(int ms)
+{
+    // A nested loop rather than a blocking sleep: the daemon has to keep
+    // answering D-Bus while we sit out Lipstick's holdback.
+    QEventLoop loop;
+    QTimer::singleShot(ms, &loop, &QEventLoop::quit);
+    loop.exec();
+}
+
 } // namespace
 
-LauncherRearm::LauncherRearm(QObject* parent)
-    : QObject(parent)
+void LauncherWatch::rearmDesktopWatches(const QStringList& desktopPaths)
 {
-}
+    if(desktopPaths.isEmpty())
+        return;
 
-LauncherRearm::~LauncherRearm()
-{
-    // Anything still aside here would be a launcher entry the user cannot see.
-    abortAndRestore();
-}
-
-void LauncherRearm::start(const QStringList& desktopPaths)
-{
-    m_moved.clear();
-    m_running = true;
+    QStringList moved;
+    moved.reserve(desktopPaths.size());
 
     for(const QString& desktopPath : desktopPaths)
     {
         const QString aside = asidePath(desktopPath);
         QFile::remove(aside);
         if(QFile::rename(desktopPath, aside))
-            m_moved.append(desktopPath);
+            moved.append(desktopPath);
         else
             qWarning() << "muoto-launcher: could not re-arm watch for" << desktopPath;
     }
 
-    if(m_moved.isEmpty())
-    {
-        done();
+    if(moved.isEmpty())
         return;
-    }
 
     // Two separate directory scans are needed. Without the gap Lipstick can
     // fold both renames into one scan, see an unchanged file list and never
     // re-add the watch.
-    QTimer::singleShot(kSettleMs, this, &LauncherRearm::moveBack);
-}
+    waitMs(kSettleMs);
 
-void LauncherRearm::startHoldbackOnly()
-{
-    m_moved.clear();
-    m_running = true;
-    emit heartbeat();
-    QTimer::singleShot(kHoldbackMs, this, &LauncherRearm::done);
-}
-
-void LauncherRearm::moveBack()
-{
-    if(!m_running)
-        return;
-
-    for(const QString& desktopPath : m_moved)
+    for(const QString& desktopPath : moved)
     {
         if(!QFile::rename(asidePath(desktopPath), desktopPath))
             qWarning() << "muoto-launcher: could not restore" << desktopPath << "after re-arm";
     }
-    const int count = m_moved.size();
-    m_moved.clear();
-    emit heartbeat();
 
     // Let the holdback expire so the watch is live before callers rewrite Icon=.
-    QTimer::singleShot(kHoldbackMs, this, [this, count]() {
-        qInfo() << "muoto-launcher: re-armed launcher watches for" << count << "desktop entries";
-        done();
-    });
+    waitMs(kHoldbackMs);
+
+    qInfo() << "muoto-launcher: re-armed launcher watches for" << moved.size() << "desktop entries";
 }
 
-void LauncherRearm::done()
+void LauncherWatch::waitForMonitorHoldback()
 {
-    if(!m_running)
-        return;
-    m_running = false;
-    emit finished();
+    waitMs(kHoldbackMs);
 }
 
-void LauncherRearm::abortAndRestore()
-{
-    m_running = false;
-    if(m_moved.isEmpty())
-        return;
-
-    qWarning() << "muoto-launcher: restoring" << m_moved.size()
-               << "entries left aside by an interrupted re-arm";
-    for(const QString& desktopPath : m_moved)
-    {
-        if(!QFile::rename(asidePath(desktopPath), desktopPath))
-            qWarning() << "muoto-launcher: could not restore" << desktopPath;
-    }
-    m_moved.clear();
-}
-
-namespace LauncherWatch {
-
-void sweepStaleRearmFiles(const QStringList& directories)
+void LauncherWatch::sweepStaleRearmFiles(const QStringList& directories)
 {
     const QString suffix = QLatin1String(kRearmSuffix);
 
@@ -148,5 +108,3 @@ void sweepStaleRearmFiles(const QStringList& directories)
         }
     }
 }
-
-} // namespace LauncherWatch

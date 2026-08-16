@@ -140,25 +140,12 @@ void ThemePackModel::restoreTheme(bool font)
 
 void ThemePackModel::restoreDpi(bool dpr, bool iconSize)
 {
-    // Both signals, or a failed restore leaves the GUI waiting forever now that
-    // restoreDensity() no longer emits restored() after an error.
-    auto* okConn = new QMetaObject::Connection;
-    auto* errConn = new QMetaObject::Connection;
-    const auto drain = [okConn, errConn]() {
-        QObject::disconnect(*okConn);
-        QObject::disconnect(*errConn);
-        delete okConn;
-        delete errConn;
-    };
-
-    *okConn = QObject::connect(&_density, &DensityEnabler::restored, this, [this, drain]() {
+    QMetaObject::Connection* conn = new QMetaObject::Connection;
+    *conn = QObject::connect(&_density, &DensityEnabler::restored, this,
+                             [this, conn]() {
         emit dpiRestored();
-        drain();
-    });
-    *errConn = QObject::connect(&_density, &DensityEnabler::error, this,
-                                [this, drain](const QString& message) {
-        emit dpiRestoreFailed(message);
-        drain();
+        QObject::disconnect(*conn);
+        delete conn;
     });
     _density.restoreDensity(dpr, iconSize);
 }

@@ -8,8 +8,6 @@ HEADERS += \
     $$PWD/desktopfile.h \
     $$PWD/filewrite.h \
     $$PWD/iconbackup.h \
-    $$PWD/iconjob.h \
-    $$PWD/iconjobqueue.h \
     $$PWD/launchermanifest.h \
     $$PWD/opstatus.h \
     $$PWD/iconprovider.h \
@@ -36,7 +34,6 @@ SOURCES += \
     $$PWD/desktopfile.cpp \
     $$PWD/filewrite.cpp \
     $$PWD/iconbackup.cpp \
-    $$PWD/iconjobqueue.cpp \
     $$PWD/launchermanifest.cpp \
     $$PWD/opstatus.cpp \
     $$PWD/iconprovider.cpp \

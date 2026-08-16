@@ -25,14 +25,12 @@ namespace
     const char* kLauncherObjectPath  = "/org/muoto/Launcher1";
     const char* kLauncherIfaceThemes = "org.muoto.Launcher1.Themes";
 
-    // Poll cadence and budget for a launcher daemon we just kicked.
+    // Poll cadence and budget for a launcher daemon we just kicked, and for
+    // waiting out a held icon-ops.lock (boot update-icons / in-flight apply).
     const int kLauncherPollMs  = 250;
     const int kLauncherGiveUpMs = 15000;
-
-    // Silence budget for an inflight op. Restarted on every Progress, and the
-    // daemon emits one on enqueue and through re-arm and the holdback, so this
-    // only elapses when nothing is coming back at all.
-    const int kOpSilenceMs = 90000;
+    const int kLockPollMs = 400;
+    const int kLockGiveUpMs = 180000;
 
     struct Endpoint
     {
@@ -67,16 +65,16 @@ namespace
 HelperClient::HelperClient()
     : QObject(nullptr)
     , _launcherWait(new QTimer(this))
-    , _opWatchdog(new QTimer(this))
+    , _lockWait(new QTimer(this))
     , _launcherWaitedMs(0)
+    , _lockWaitedMs(0)
     , _hooked(false)
 {
     _launcherWait->setInterval(kLauncherPollMs);
     connect(_launcherWait, &QTimer::timeout, this, &HelperClient::onLauncherWaitTick);
 
-    _opWatchdog->setInterval(kOpSilenceMs);
-    _opWatchdog->setSingleShot(true);
-    connect(_opWatchdog, &QTimer::timeout, this, &HelperClient::onOpWatchdog);
+    _lockWait->setInterval(kLockPollMs);
+    connect(_lockWait, &QTimer::timeout, this, &HelperClient::onLockWaitTick);
 
     hookBroadcastSignals();
 
@@ -200,14 +198,30 @@ void HelperClient::asyncCall(const QString& op, const QVariantList& args)
 
 void HelperClient::queueIconOp(const QString& op, const QVariantList& args)
 {
-    // Latest request wins if we are still waiting for the daemon.
+    // Latest request wins if we are already waiting on the lock or daemon.
     _pendingIconOp = op;
     _pendingIconArgs = args;
 
-    // No lock probe: the daemon serialises, and it reports a queued job as
-    // indeterminate progress, which is both accurate and something the client
-    // could never work out by sampling a lock.
+    if(!FileLock::tryProbe())
+    {
+        startLockWait(op, args);
+        return;
+    }
+
     dispatchPendingIconOp();
+}
+
+void HelperClient::startLockWait(const QString& op, const QVariantList& args)
+{
+    Q_UNUSED(args);
+    _lockWaitedMs = 0;
+    if(!_lockWait->isActive())
+    {
+        qInfo() << "HelperClient:" << op << "icon-ops.lock held, waiting";
+        _lockWait->start();
+    }
+    // total=0 → ThemeWork shows an indeterminate “Waiting…” progress body.
+    emit iconProgress(op, 0, 0);
 }
 
 void HelperClient::dispatchPendingIconOp()
@@ -223,8 +237,8 @@ void HelperClient::dispatchPendingIconOp()
         _inflightIconArgs = args;
         _pendingIconOp.clear();
         _pendingIconArgs.clear();
+        _lockWait->stop();
         _launcherWait->stop();
-        _opWatchdog->start();
         qInfo() << "HelperClient: dispatching" << op;
         asyncCall(op, args);
         return;
@@ -241,7 +255,7 @@ void HelperClient::dispatchPendingIconOp()
 
 void HelperClient::failPendingIconOp(const QString& message)
 {
-    _opWatchdog->stop();
+    _lockWait->stop();
     _launcherWait->stop();
     QString op = _pendingIconOp;
     if(op.isEmpty())
@@ -254,13 +268,29 @@ void HelperClient::failPendingIconOp(const QString& message)
         emit error(op, message);
 }
 
-void HelperClient::onOpWatchdog()
+void HelperClient::onLockWaitTick()
 {
-    if(_inflightIconOp.isEmpty())
+    if(_pendingIconOp.isEmpty())
+    {
+        _lockWait->stop();
+        return;
+    }
+
+    if(FileLock::tryProbe())
+    {
+        _lockWait->stop();
+        qInfo() << "HelperClient: icon-ops.lock free after" << _lockWaitedMs
+                << "ms";
+        dispatchPendingIconOp();
+        return;
+    }
+
+    _lockWaitedMs += kLockPollMs;
+    if(_lockWaitedMs < kLockGiveUpMs)
         return;
 
-    qWarning() << "HelperClient:" << _inflightIconOp << "silent for" << kOpSilenceMs
-               << "ms; giving up";
+    qWarning() << "HelperClient:" << _pendingIconOp
+               << "timed out waiting for icon-ops.lock";
     failPendingIconOp(QStringLiteral("timed out waiting for icon operation"));
 }
 
@@ -271,6 +301,12 @@ void HelperClient::onLauncherWaitTick()
         _launcherWait->stop();
         qInfo() << "HelperClient: launcher daemon up after" << _launcherWaitedMs
                 << "ms";
+        // Lock may have been taken while we waited for the name.
+        if(!FileLock::tryProbe())
+        {
+            startLockWait(_pendingIconOp, _pendingIconArgs);
+            return;
+        }
         dispatchPendingIconOp();
         return;
     }
@@ -308,11 +344,6 @@ void HelperClient::uninstallPack(const QString& rpmName)
 
 void HelperClient::onLauncherProgress(const QString& op, int done, int total)
 {
-    // Any progress is proof of life: restart the silence budget so a job that is
-    // slow, or queued behind a drain, is not mistaken for a dead daemon.
-    if(!_inflightIconOp.isEmpty() && op == _inflightIconOp)
-        _opWatchdog->start();
-
     emit iconProgress(op, done, total);
 }
 
@@ -335,12 +366,20 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
         return;
     }
 
-    // The busy re-queue branch is gone with the probe: the daemon queues rather
-    // than rejecting, and waits out another process holding the lock.
-    _opWatchdog->stop();
-
     if(!ok)
     {
+        // ApplyIcons/RestoreIcons return busy when icon-ops.lock is held.
+        // The probe can race the holder; wait it out instead of aborting.
+        if(message == QLatin1String("busy")
+           && (op == QLatin1String("ApplyIcons") || op == QLatin1String("RestoreIcons"))
+           && !_inflightIconOp.isEmpty())
+        {
+            qInfo() << "HelperClient:" << op << "daemon busy, waiting for lock";
+            _pendingIconOp = _inflightIconOp;
+            _pendingIconArgs = _inflightIconArgs;
+            startLockWait(op, _pendingIconArgs);
+            return;
+        }
         _inflightIconOp.clear();
         _inflightIconArgs.clear();
         emit error(op, message);

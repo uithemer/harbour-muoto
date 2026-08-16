@@ -51,13 +51,7 @@ class IconpackCalendarIconRenderer : public CalendarIconRenderer
 public:
     explicit IconpackCalendarIconRenderer(const QString& name)
     {
-        // Owns it: byShortName() allocates a fresh pack index per call.
         m_iconPack = HarbourThemePack::byShortName(name);
-    }
-
-    ~IconpackCalendarIconRenderer() override
-    {
-        delete m_iconPack;
     }
 
     QImage requestImage(const QDate& date, const QSize& requestedSize) override

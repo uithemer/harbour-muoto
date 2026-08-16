@@ -49,11 +49,6 @@ QString fingerprintKey(const QString& normalizedPath)
         .arg(normalizedPath);
 }
 
-QString desktopInodeKey(const QString& desktopBaseName)
-{
-    return QStringLiteral("/apps/harbour-muoto/launcher/desktop-inode/%1").arg(desktopBaseName);
-}
-
 QString iconBackupPath(const QString& iconPath)
 {
     const QString dataPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);

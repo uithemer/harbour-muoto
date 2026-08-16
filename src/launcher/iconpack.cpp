@@ -91,14 +91,8 @@ QString IconPack::iconByDesktopPath(const QString& desktopPath)
 
 IconUpdater* IconPack::iconUpdater(const QString& desktopPath, const QString& iconId)
 {
-    // The provider belongs to the updater, not to the pack. Parenting it to the
-    // pack meant reloadIconPacks() -- which deletes and recreates packs on every
-    // rebuild -- freed providers out from under any updater that outlived the
-    // rebuild, and it accumulated one provider per themed entry per rebuild.
     auto* provider = new IconPackIconProvider(this, iconId);
-    auto* updater = new IconUpdater(provider, desktopPath, this);
-    provider->setParent(updater);
-    return updater;
+    return new IconUpdater(provider, desktopPath, this);
 }
 
 QImage IconPack::loadImageFromFile(const QString& path, const QSize& requestedSize)

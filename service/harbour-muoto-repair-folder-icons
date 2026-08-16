@@ -238,13 +238,10 @@ for f in /usr/share/applications/*.desktop; do
 done
 [ "$drifted" -gt 0 ] && log "restored root ownership on $drifted launcher entries"
 
-# jolla-clock is the likeliest casualty -- the dynamic clock rewrote its entry
-# 1440 times a day -- but the scan above already catches it when it is damaged.
-# Adding it unconditionally meant every upgrade downloaded it, which forced the
-# whole restore-and-reapply cycle on devices with nothing wrong at all.
-if [ ! -e /usr/share/applications/jolla-clock.desktop ] && rpm -q jolla-clock >/dev/null 2>&1; then
-    log "jolla-clock.desktop is missing entirely; reinstalling it"
-    stub_count=$((stub_count + 1))
+# jolla-clock unconditionally: it is the entry the dynamic clock rewrote 1440
+# times a day, so it is the likeliest casualty on any device, and it always
+# resolves from the jolla repo.
+if rpm -q jolla-clock >/dev/null 2>&1; then
     case " $desktop_pkgs " in
         *" jolla-clock "*) ;;
         *) desktop_pkgs="$desktop_pkgs jolla-clock" ;;
@@ -255,27 +252,7 @@ fi
 desktop_pkgs=$(echo $desktop_pkgs)
 log "desktop stage: $stub_count stub(s), packages to reinstall:${desktop_pkgs:- none}"
 
-_reapply_saved() {
-    if [ -z "${saved_pack:-}" ] || [ "$saved_pack" = "default" ]; then
-        log "no pack to reapply (stock)"
-        return 0
-    fi
-    log "reapplying pack='$saved_pack' overlay=$saved_o"
-    # Escape single quotes for dconf string literals: 'foo' → '\''foo'\'''
-    _pack_lit=$(printf '%s' "$saved_pack" | sed "s/'/'\\\\''/g")
-    muoto_dconf_as_user "dconf write /apps/harbour-muoto/activeIconPack \"'${_pack_lit}'\"" || true
-    muoto_dconf_as_user "dconf write /apps/harbour-muoto/iconOverlay $saved_o" || true
-    # update-icons exits non-zero only on a hard failure. A partial apply -- a
-    # stub this run could not source, say -- still counts as applied, or a single
-    # unrepairable entry would keep this unit retrying until it hit MAX_ATTEMPTS.
-    if ! /usr/bin/harbour-muoto-update-icons; then
-        log "update-icons / reapply failed"
-        _save_state
-        return 1
-    fi
-    return 0
-}
-
+# --- 2) RestoreIcons (stock launcher + folder backups if any) ---
 _restore_icons_once() {
     if ! muoto_ensure_launcher_icond; then
         log "launcher-icond not available"
@@ -292,35 +269,33 @@ _restore_icons_once() {
     muoto_wait_op_end RestoreIcons
 }
 
-# --- 2) Which folder glyphs are actually damaged? ---
-# Only *missing* files count. A themed glyph legitimately differs from its rpm,
-# so rpm -V cannot be the test while a pack is applied, and reinstalling the
-# graphics packages unconditionally on every upgrade is what made a Muoto update
-# cost the user their icons.
+log "RestoreIcons"
+if ! _restore_icons_once; then
+    log "RestoreIcons failed; retry in 3s"
+    sleep 3
+    if ! _restore_icons_once; then
+        log "RestoreIcons failed"
+        _save_state
+        exit 1
+    fi
+fi
+
+# --- 3) Discover installed packages that own folder glyphs ---
 pkgs=""
-missing_glyphs=0
 for z in z2.0 z1.75 z1.5-large z1.5 z1.25 z1.0; do
-    [ -d "$SILICA/$z/icons" ] || continue
     for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16; do
         f="$SILICA/$z/icons/icon-launcher-folder-$i.png"
-        if [ -e "$f" ]; then
-            continue
-        fi
-        # Absent: only a problem if some package is supposed to provide it.
-        ref="$SILICA/$z/icons/icon-launcher-folder-01.png"
-        [ -e "$ref" ] || continue
-        name=$(rpm -qf --queryformat '%{NAME}' "$ref" 2>/dev/null) || continue
+        [ -e "$f" ] || continue
+        name=$(rpm -qf --queryformat '%{NAME}' "$f" 2>/dev/null) || continue
         case "$name" in
             *not\ owned*|*"no package"*) continue ;;
         esac
-        missing_glyphs=$((missing_glyphs + 1))
         case " $pkgs " in
             *" $name "*) ;;
             *) pkgs="$pkgs $name" ;;
         esac
     done
 done
-[ "$missing_glyphs" -gt 0 ] && log "folder stage: $missing_glyphs missing glyph(s)"
 
 # Both stages feed one transaction. An empty folder set is the normal case on a
 # healthy device and must not skip the desktop repair, which is why this is no
@@ -335,12 +310,9 @@ done
 # shellcheck disable=SC2086
 pkgs=$(echo $pkgs)
 
-# Nothing is broken: leave the device completely alone. This is the normal case
-# on an upgrade, and the old code still ran RestoreIcons and a reapply here --
-# so every Muoto update stripped the user's icons and put them back, and any
-# failure in between left them stock.
-if [ -z "$pkgs" ] && [ "$stub_count" -eq 0 ]; then
-    log "nothing damaged; leaving the current theme untouched"
+if [ -z "$pkgs" ]; then
+    log "nothing to reinstall; done"
+    rm -rf "$DATADIR/backup/icons/folder-icons" "$DATADIR/backup/folder-icons"
     self_delete
     exit 0
 fi
@@ -381,29 +353,11 @@ if [ "$rpm_count" -lt 1 ]; then
     exit 1
 fi
 
-# Everything above this line is read-only or additive. Only now, with the
-# replacement packages actually downloaded and verified, do we start changing
-# the user's device -- restoring to stock before knowing we could finish is what
-# left a device unthemed when pkcon could not resolve a package.
-log "RestoreIcons before force-install"
-if ! _restore_icons_once; then
-    log "RestoreIcons failed; retry in 3s"
-    sleep 3
-    if ! _restore_icons_once; then
-        log "RestoreIcons failed"
-        _save_state
-        exit 1
-    fi
-fi
-
 log "rpm force-install $rpm_count package(s)"
 # shellcheck disable=SC2086
 if ! rpm -Uvh --replacepkgs --replacefiles "$TMPDIR"/*.rpm; then
     log "rpm force-install failed"
     _save_state
-    # The theme is off at this point; put it back rather than leaving the user
-    # staring at stock icons until the next boot.
-    _reapply_saved
     exit 1
 fi
 
@@ -416,8 +370,22 @@ rm -rf "$DATADIR/backup/icons/folder-icons" \
        "$DATADIR/backup/folder-icons"
 
 # --- 5) Reapply saved theme ---
-if ! _reapply_saved; then
-    exit 1
+if [ -n "$saved_pack" ] && [ "$saved_pack" != "default" ]; then
+    log "reapplying pack='$saved_pack' overlay=$saved_o"
+    # Escape single quotes for dconf string literals: 'foo' → '\''foo'\'''
+    _pack_lit=$(printf '%s' "$saved_pack" | sed "s/'/'\\\\''/g")
+    muoto_dconf_as_user "dconf write /apps/harbour-muoto/activeIconPack \"'${_pack_lit}'\"" || true
+    muoto_dconf_as_user "dconf write /apps/harbour-muoto/iconOverlay $saved_o" || true
+    # update-icons exits non-zero only on a hard failure. A partial apply -- a
+    # stub this run could not source, say -- still counts as applied, or a single
+    # unrepairable entry would keep this unit retrying until it hit MAX_ATTEMPTS.
+    if ! /usr/bin/harbour-muoto-update-icons; then
+        log "update-icons / reapply failed"
+        _save_state
+        exit 1
+    fi
+else
+    log "no pack to reapply (stock)"
 fi
 
 # --- 6) Self-delete (no healed marker) ---

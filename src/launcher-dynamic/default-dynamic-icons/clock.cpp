@@ -52,14 +52,7 @@ class IconpackClockIconRenderer : public ClockIconRenderer
 public:
     explicit IconpackClockIconRenderer(const QString& name)
     {
-        // byShortName() hands back a fresh allocation each call, so this owns it.
-        // Without the delete below, every pack change leaked a whole pack index.
         m_iconPack = HarbourThemePack::byShortName(name);
-    }
-
-    ~IconpackClockIconRenderer() override
-    {
-        delete m_iconPack;
     }
 
     QImage requestImage(int hoursAngle, int minutesAngle, const QSize& requestedSize) override
