@@ -754,7 +754,7 @@
     </message>
     <message>
         <source>Font applied. %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Font applicato. %1</translation>
     </message>
 </context>
 <context>
@@ -875,19 +875,19 @@
     </message>
     <message>
         <source>Icons could not be changed — try restarting the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile cambiare le icone — prova a riavviare il dispositivo</translation>
     </message>
     <message>
         <source>Some icons could not be updated</source>
-        <translation type="unfinished"></translation>
+        <translation>Alcune icone non sono state aggiornate</translation>
     </message>
     <message>
         <source>Some icons could not be restored</source>
-        <translation type="unfinished"></translation>
+        <translation>Alcune icone non sono state ripristinate</translation>
     </message>
     <message>
         <source>Could not remove this theme — try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile rimuovere questo tema — riprova tra un attimo</translation>
     </message>
 </context>
 </TS>

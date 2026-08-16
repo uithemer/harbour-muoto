@@ -14,7 +14,7 @@ Low-level documentation for Muoto maintainers, contributors, and coding agents.
 | Page | Contents |
 | ---- | -------- |
 | [Architecture](architecture) | Processes, icon apply path, dconf, source map |
-| [Testing](testing) | Build/deploy, manual smoke, device scripts |
+| [Testing](testing) | Build/deploy, manual smoke |
 | [Debugging](debugging) | Journal, D-Bus, dconf, common failure modes |
 | [Automation](automation) | Boot/install auto-apply, OS update guard, uninstall |
 

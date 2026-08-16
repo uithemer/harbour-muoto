@@ -133,9 +133,9 @@ for(ts_path, TS_SOURCES) {
 }
 
 # --- non-source asset installs ---
-# 2.6.0: legacy tps/ + scripts/ shells were retired (the daemon owns
-# every privileged op now). Only the systemd unit files, image assets
-# and app icons need explicit install rules.
+# 2.6.0: legacy tps/ shells were retired (the daemon owns every
+# privileged op now). Only the systemd unit files, image assets and
+# app icons need explicit install rules.
 
 service.files = \
     $$ROOT/service/harbour-muoto-helperd.service \
