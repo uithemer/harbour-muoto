@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QDebug>
+#include <QThread>
 
 #include <sys/file.h>
 #include <fcntl.h>
@@ -18,6 +19,43 @@ bool FileLock::tryProbe(const QString& path)
 {
     FileLock lk(path, false);
     return lk.isHeld();
+}
+
+bool FileLock::waitFor(FileLock* lock, int timeoutMs, const QString& path)
+{
+    if(!lock)
+        return false;
+
+    const int stepMs = 200;
+    int waited = 0;
+    while(true)
+    {
+        if(lock->isHeld())
+            return true;
+        if(waited >= timeoutMs)
+        {
+            qWarning() << "FileLock: gave up waiting for" << path << "after" << waited << "ms";
+            return false;
+        }
+        QThread::msleep(stepMs);
+        waited += stepMs;
+        lock->reacquire();
+    }
+}
+
+void FileLock::reacquire()
+{
+    if(_fd >= 0)
+        return;
+
+    _fd = ::open(_path.toLocal8Bit().constData(), O_RDWR | O_CREAT | O_CLOEXEC, 0666);
+    if(_fd < 0)
+        return;
+    if(::flock(_fd, LOCK_EX | LOCK_NB) != 0)
+    {
+        ::close(_fd);
+        _fd = -1;
+    }
 }
 
 FileLock::FileLock(const QString& path, bool blocking)

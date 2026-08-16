@@ -1,13 +1,12 @@
 #ifndef LAUNCHERSERVICE_H
 #define LAUNCHERSERVICE_H
 
+#include "iconjob.h"
 #include "muotolauncherglobal.h"
 #include <QObject>
 #include <QDBusAbstractAdaptor>
 #include <QDBusMessage>
 #include <QString>
-
-#include <functional>
 
 class LauncherIconOps;
 
@@ -50,16 +49,16 @@ signals:
     void Progress(const QString& op, int done, int total);
 
 private:
-    // Replies to message straight away, then runs start() from the event
-    // loop so the daemon stays responsive for the duration of the op.
-    void runIconOpVoid(const QString& op,
-                       const QDBusMessage& message,
-                       std::function<void(LauncherIconOps&)> start,
-                       void (LauncherIconOps::*doneSignal)(bool, const QString&));
+    // Replies to the caller straight away, then hands the job to IconJobQueue.
+    // The reply says "accepted", not "done": OperationCompleted follows when the
+    // job actually runs, which may be after a drain.
+    void enqueueOp(const QString& op, IconJob job, const QDBusMessage& message);
 
     LauncherBackend* m_backend;
-    // Op the deferred worker is currently running, used to label Progress.
-    QString m_currentOp;
+    // Op of the job the queue is currently running, used to label Progress.
+    // Derived from the running job rather than set around the call, which would
+    // now always be clear by the time any progress arrived.
+    QString m_runningOp;
 };
 
 #endif // LAUNCHERSERVICE_H

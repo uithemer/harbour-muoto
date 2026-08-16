@@ -65,8 +65,10 @@ void DensityEnabler::runUserDconf(const QStringList& args)
 
 void DensityEnabler::ensureEnabled()
 {
+    // Runs in helperd, a short-lived dbus-activated service, so waiting here is
+    // free. launcher-icond holds the shared sentinel across a whole drain now.
     FileLock lk;
-    if(!lk.isHeld())
+    if(!FileLock::waitFor(&lk, 60 * 1000))
     {
         emit error(QStringLiteral("busy"));
         return;
@@ -103,11 +105,14 @@ void DensityEnabler::ensureEnabled()
 
 void DensityEnabler::restoreDensity(bool dpr, bool iconSize)
 {
+    // Shorter than the others: this one runs on the GUI thread.
     FileLock lk;
-    if(!lk.isHeld())
+    if(!FileLock::waitFor(&lk, 5 * 1000))
     {
+        // Emitting restored() here as well used to make the GUI toast "Display
+        // settings updated." for a restore that reset nothing: ThemePackModel
+        // only listens to restored(), never to error().
         emit error(QStringLiteral("busy"));
-        emit restored();
         return;
     }
 

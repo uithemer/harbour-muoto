@@ -80,7 +80,10 @@ IconProvider* DynamicIcon::iconProvider()
 
 IconUpdater* DynamicIcon::iconUpdater()
 {
-    return new IconUpdater(iconProvider(), d_ptr->desktopPath, this);
+    // RedirectStable: these redraw once a minute, so the generated filename must
+    // not change or every tick rewrites the .desktop and the whole manifest.
+    return new IconUpdater(iconProvider(), d_ptr->desktopPath, this,
+                           IconUpdater::RedirectStable);
 }
 
 void registerDynamicIconMeta(const QMetaObject& meta)

@@ -21,17 +21,6 @@ namespace
         QStringLiteral("z1.0"),
     };
 
-    QString packShortName(QString packName)
-    {
-        static const QString kBare = QStringLiteral("harbour-themepack-");
-        const QString kFullPrefix = QString::fromLatin1(kPackPrefix);
-        if (packName.startsWith(kFullPrefix))
-            packName = packName.mid(kFullPrefix.size());
-        else if (packName.startsWith(kBare))
-            packName = packName.mid(kBare.size());
-        return packName;
-    }
-
     QString userHomeDir()
     {
         struct passwd *pw = getpwuid(getuid());
@@ -91,6 +80,17 @@ namespace
 QString IconPaths::muotoShare()
 {
     return QString::fromLatin1(kMuotoShare);
+}
+
+QString IconPaths::packShortName(const QString& packName)
+{
+    static const QString kBare = QStringLiteral("harbour-themepack-");
+    const QString kFullPrefix = QString::fromLatin1(kPackPrefix);
+    if (packName.startsWith(kFullPrefix))
+        return packName.mid(kFullPrefix.size());
+    if (packName.startsWith(kBare))
+        return packName.mid(kBare.size());
+    return packName;
 }
 
 QString IconPaths::backupIconsRoot()
