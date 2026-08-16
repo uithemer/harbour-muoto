@@ -55,6 +55,15 @@ private:
     void startHoldbackThen(const QString& message, bool ok);
     void finishJob(bool ok, const QString& message);
     void rearmThen(const QStringList& paths, void (LauncherIconOps::*next)());
+    void holdbackThen(void (LauncherIconOps::*next)());
+    void refreshDesktopsRearmPhase();
+    void applyRearmPhase();
+    // Fills m_rearmPaths / m_freshPaths: entries whose watch needs restoring
+    // versus ones Lipstick may still be in the middle of adding.
+    void splitByFamiliarity(const QStringList& paths);
+    // Record the inode we just wrote, so the next pass can tell a live watch
+    // from one rpm dropped underneath us.
+    void rememberDesktopInodes(const QStringList& paths);
 
     void rebuildIconUpdatersNow();
     // Drops generated PNGs nothing references; keeps the ones a desktop or a
@@ -81,6 +90,11 @@ private:
 
     IconJob m_job;
     QScopedPointer<LauncherRearm> m_rearm;
+    // A refresh splits its work: entries Lipstick already knew about need their
+    // watch put back, entries it has just added must not be touched until its
+    // own add has settled.
+    QStringList m_rearmPaths;
+    QStringList m_freshPaths;
 
     // Reset per rebuild. Apply reports ok / partial / hard failure from these
     // instead of assuming success, so a device that themed nothing (a lost

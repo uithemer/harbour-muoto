@@ -19,6 +19,9 @@
 #include <MDesktopEntry>
 #include <MGConfItem>
 
+#include <sys/stat.h>
+
+#include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -245,6 +248,54 @@ IconUpdater* createIconUpdater(const QString& desktopPath)
     return nullptr;
 }
 
+// Lipstick loses its per-file watch when the inode behind a .desktop is
+// replaced -- rpm and apkd both install with rename(2) -- and gets a fresh one
+// when it adds a launcher item for a file it has not seen before. Those are the
+// only two states that matter, and the inode distinguishes them exactly:
+//
+//   inode unchanged since our last write -> the watch is live, leave it alone.
+//   inode changed                        -> rpm/apkd replaced it, re-arm.
+//   no record at all                     -> we have never written this entry.
+//
+// Re-arming unnecessarily is not free: it renames the entry aside for 400 ms,
+// and doing that to an entry Lipstick is still adding cancels the add, so the
+// item materialises with the icon the file had beforehand. Trying to spot that
+// case by file age does not work either, because our own re-arm rename updates
+// ctime on every entry it touches.
+qint64 currentInode(const QString& desktopPath)
+{
+    struct stat sb;
+    if(::stat(desktopPath.toLocal8Bit().constData(), &sb) != 0)
+        return 0;
+    return static_cast<qint64>(sb.st_ino);
+}
+
+qint64 storedInode(const QString& desktopPath)
+{
+    const QFileInfo info(desktopPath);
+    MGConfItem conf(LauncherPaths::desktopInodeKey(info.completeBaseName()));
+    return conf.value(0).toLongLong();
+}
+
+void storeInode(const QString& desktopPath)
+{
+    const QFileInfo info(desktopPath);
+    MGConfItem conf(LauncherPaths::desktopInodeKey(info.completeBaseName()));
+    conf.set(currentInode(desktopPath));
+}
+
+const int kFreshEntryWindowSecs = 30;
+
+bool appearedJustNow(const QString& desktopPath)
+{
+    struct stat sb;
+    if(::stat(desktopPath.toLocal8Bit().constData(), &sb) != 0)
+        return false;
+    const qint64 nowSecs = QDateTime::currentMSecsSinceEpoch() / 1000;
+    const qint64 age = nowSecs - static_cast<qint64>(sb.st_ctime);
+    return age >= 0 && age < kFreshEntryWindowSecs;
+}
+
 QStringList visibleDesktopPaths()
 {
     QStringList paths;
@@ -378,6 +429,20 @@ void LauncherIconOps::rearmThen(const QStringList& paths, void (LauncherIconOps:
         (this->*next)();
     });
     m_rearm->start(paths);
+}
+
+void LauncherIconOps::holdbackThen(void (LauncherIconOps::*next)())
+{
+    if(m_rearm.isNull())
+        m_rearm.reset(new LauncherRearm(this));
+
+    auto* conn = new QMetaObject::Connection;
+    *conn = connect(m_rearm.data(), &LauncherRearm::finished, this, [this, next, conn]() {
+        QObject::disconnect(*conn);
+        delete conn;
+        (this->*next)();
+    });
+    m_rearm->startHoldbackOnly();
 }
 
 void LauncherIconOps::startHoldbackThen(const QString& message, bool ok)
@@ -641,9 +706,39 @@ void LauncherIconOps::runRefreshDesktops()
         return;
     }
 
-    // rpm install/update replaces the .desktop with rename(2), which drops
-    // Lipstick's per-file watch. Re-arm before we write the themed PNG.
-    rearmThen(m_job.paths, &LauncherIconOps::refreshDesktopsAfterRearm);
+    // Split by whether Lipstick already had this entry.
+    //
+    // An rpm *update* replaces the .desktop with rename(2), which silently drops
+    // Lipstick's per-file watch, so those need the rename-aside-and-back trick to
+    // get it back. A *newly installed* app is the opposite case: Lipstick has no
+    // stale watch, it has a pending add for the file, and renaming it aside
+    // inside that window cancels the add -- the item then materialises with the
+    // pre-rewrite Icon= and stays stock until the homescreen restarts. Measured
+    // on device: install, themed on disk 12 s later, grid still stock.
+    splitByFamiliarity(m_job.paths);
+
+    if(!m_freshPaths.isEmpty())
+    {
+        // Let Lipstick's own add settle before touching anything: our scan
+        // debounce and its holdback are both 2 s off the same directory event,
+        // so without this we land right on top of it.
+        qInfo() << "muoto-launcher: refreshNewDesktops waiting out Lipstick's add for"
+                << m_freshPaths.size() << "new entries";
+        holdbackThen(&LauncherIconOps::refreshDesktopsRearmPhase);
+        return;
+    }
+
+    refreshDesktopsRearmPhase();
+}
+
+void LauncherIconOps::refreshDesktopsRearmPhase()
+{
+    if(!m_rearmPaths.isEmpty())
+    {
+        rearmThen(m_rearmPaths, &LauncherIconOps::refreshDesktopsAfterRearm);
+        return;
+    }
+    refreshDesktopsAfterRearm();
 }
 
 void LauncherIconOps::refreshDesktopsAfterRearm()
@@ -661,6 +756,7 @@ void LauncherIconOps::refreshDesktopsAfterRearm()
 
     ensureDesktopWatches();
     ensureDesktopDirWatch();
+    rememberDesktopInodes(m_job.paths);
 
     qInfo() << "muoto-launcher: refreshNewDesktops pending=" << m_job.paths.size()
             << "themed=" << themed;
@@ -751,8 +847,64 @@ void LauncherIconOps::runApply()
         m_job.runPack = true;
 
     // Native RPM updates rename(2) into /usr/share/applications just as apkd
-    // does, so every launcher entry needs its watch back, not only the APK ones.
-    rearmThen(visibleDesktopPaths(), &LauncherIconOps::applyAfterRearm);
+    // does, so those entries need their watch back. Entries Lipstick has only
+    // just added are the opposite case and must be left out of the re-arm --
+    // see refreshDesktopsRearmPhase. This is the path that matters in practice:
+    // installing an app runs the listener -> update-icons -> ApplyIcons, so a
+    // brand-new entry was being re-armed on the very apply meant to theme it.
+    splitByFamiliarity(visibleDesktopPaths());
+
+    if(!m_freshPaths.isEmpty())
+    {
+        qInfo() << "muoto-launcher: ApplyIcons waiting out Lipstick's add for"
+                << m_freshPaths.size() << "new entries";
+        holdbackThen(&LauncherIconOps::applyRearmPhase);
+        return;
+    }
+    applyRearmPhase();
+}
+
+void LauncherIconOps::applyRearmPhase()
+{
+    if(!m_rearmPaths.isEmpty())
+    {
+        rearmThen(m_rearmPaths, &LauncherIconOps::applyAfterRearm);
+        return;
+    }
+    applyAfterRearm();
+}
+
+void LauncherIconOps::splitByFamiliarity(const QStringList& paths)
+{
+    m_rearmPaths.clear();
+    m_freshPaths.clear();
+    for(const QString& path : paths)
+    {
+        const qint64 known = storedInode(path);
+        const qint64 now = currentInode(path);
+
+        if(known != 0 && known == now)
+            continue;  // watch is live; touching it would only risk breaking it
+
+        if(known == 0 && appearedJustNow(path))
+        {
+            // Brand new and Lipstick may still be adding it: wait, do not rename.
+            m_freshPaths.append(path);
+            continue;
+        }
+
+        m_rearmPaths.append(path);
+    }
+
+    qInfo() << "muoto-launcher: watches -" << m_rearmPaths.size() << "to re-arm,"
+            << m_freshPaths.size() << "newly added," << (paths.size() - m_rearmPaths.size()
+                                                         - m_freshPaths.size()) << "already live";
+}
+
+void LauncherIconOps::rememberDesktopInodes(const QStringList& paths)
+{
+    for(const QString& path : paths)
+        storeInode(path);
 }
 
 void LauncherIconOps::applyAfterRearm()
@@ -776,6 +928,7 @@ void LauncherIconOps::applyAfterRearm()
     rebuildIconUpdatersNow();
     FolderAmbient::apply(m_job.pack, m_job.overlay);
     reconcileGeneratedIcons();
+    rememberDesktopInodes(visibleDesktopPaths());
     emitProgress(m_progressTotal, m_progressTotal);
 
     const int built = m_updatersBuilt;
