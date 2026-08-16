@@ -38,7 +38,7 @@ flowchart LR
 ## Icon apply (launcher daemon)
 
 1. GUI (or `update-icons`) sets dconf `activeIconPack` / `iconOverlay`, then calls session `org.muoto.Launcher1.Themes.ApplyIcons`.
-2. `LauncherIconOps` re-arms Lipstick's watches on the APK desktops (see below), rebuilds one `IconUpdater` per launcher `.desktop` (system + user APK desktops), then applies homescreen **folders** via `FolderAmbient`.
+2. `LauncherIconOps` enqueues an `ApplyAll` job: re-arms Lipstick watches on known desktops (not clock/calendar, not brand-new names), rebuilds one `IconUpdater` per launcher `.desktop` (system + user APK desktops), then applies homescreen **folders** via `FolderAmbient`.
 3. Pack assets come from `/usr/share/harbour-themepack-<name>/` (`jolla/`, `native/`, `apk/` — often symlinked to `~/.themepack/…`). Overlay frames from `overlay/` composite onto stock when the pack has no matching icon.
 4. **Write model (hybrid):**
    - **Hicolor** (native / many overlay targets): **inplace** when the basename exists in exactly one hicolor size — keep `Icon=` as the theme name; replace that PNG (`N` ≥ `iconSizeLauncher` when upgrading from 86); `futimens` the `.desktop`. If other sizes or `scalable/` also ship the same basename, **redirect** instead (otherwise Lipstick may paint a stock sibling while we themed only one slot).
@@ -51,22 +51,22 @@ Restore uses the manifest (redirect + inplace backups), restores folder backups,
 
 ### Re-arming Lipstick's desktop watches
 
-Lipstick's `LauncherMonitor` holds a per-file inotify watch on every `.desktop` it has discovered, and `LauncherModel` only re-reads an entry when that watch fires. apkd regenerates `apkd_launcher_*.desktop` with `rename(2)` whenever the Android container is rebuilt; Qt drops the watch on the replaced inode, and `onDirectoryChanged` only calls `addPaths()` for filenames it has not seen before — so the watch is gone for good. Measured on device, all 15 APK desktops were unwatched while all 76 system ones were fine. From then on the `Icon=` redirect is invisible and the tiles need a homescreen restart.
+Lipstick's `LauncherMonitor` holds a per-file inotify watch on every `.desktop` it has discovered, and `LauncherModel` only re-reads an entry when that watch fires. apkd regenerates `apkd_launcher_*.desktop` with `rename(2)` whenever the Android container is rebuilt; native RPM updates do the same to existing names under `/usr/share/applications`. Qt drops the watch on the replaced inode, and `onDirectoryChanged` only calls `addPaths()` for filenames it has not seen before — so the watch is gone for good. From then on an `Icon=` rewrite is invisible and the tile needs a homescreen restart.
 
-`LauncherWatch::rearmDesktopWatches` (`src/launcher/launcherwatch.cpp`) fixes this by renaming each entry to `<name>.muoto-rearm` and back, batched across all APK desktops:
+`LauncherWatch::rearmDesktopWatches` (`src/launcher/launcherwatch.cpp`) fixes this by renaming each entry to `<name>.muoto-rearm` and back:
 
-- The two renames land in **separate** directory scans (400 ms apart), so Lipstick actually observes the name leaving and returning and calls `addPaths()` again.
-- Both scans fall inside the 2000 ms `LAUNCHER_MONITOR_HOLDBACK_TIMEOUT_MS` window, so the pending remove and add cancel out and no launcher item is rebuilt — grid positions in `[LauncherOrder]` are untouched.
-- `rename(2)` keeps the inode, owner, mode and contents, so nothing else about the entry changes.
-- Callers then wait out the remaining holdback before rewriting `Icon=`. The waits use a nested `QEventLoop` so the daemon keeps serving D-Bus.
+- The two renames land in **separate** directory scans (400 ms apart), so Lipstick observes the name leaving and returning and calls `addPaths()` again.
+- Both scans fall inside the 2000 ms `LAUNCHER_MONITOR_HOLDBACK_TIMEOUT_MS` window, so the pending remove and add cancel out — grid positions in `[LauncherOrder]` are untouched.
+- Waits use `QTimer` continuations (no nested `QEventLoop`). `IconJobQueue` runs one icon job at a time so a dyn tick or second D-Bus call cannot nest inside re-arm.
+- Callers wait out the remaining holdback before rewriting `Icon=`.
 
-`applyIcons()` and `restoreIcons()` both call it up front — restore rewrites `Icon=` too and needs a live watch just as much. `rebuildIconUpdatersNow()` sweeps leftover `*.muoto-rearm` files, which also covers a daemon killed mid-round-trip since the daemon rebuilds at startup.
+**Filter.** Re-arm never includes `jolla-clock` or `jolla-calendar` (dyn ticks use inplace + `futimens` only). It also skips filenames unseen since the last rebuild (`s_knownDesktops`) — Lipstick already watches those, and renaming them during the holdback was the two-app grid shuffle. Apply / restore / APK refresh re-arm the rest (including first Apply from `pack=default`, when most apps have no updater yet). `rebuildIconUpdatersNow()` and shutdown (`prepareShutdown`) sweep leftover `*.muoto-rearm` files.
 
 ### Recovering after an Android container restart
 
 When Android support restarts, apkd rewrites `apkd_launcher_*.desktop` and resets `Icon=` to the stock bridge path, so the APK tiles need re-theming. `AlienDalvikWatcher` (`src/launcher/aliendalvikwatcher.cpp`) listens for apkd's `containerReady` property going true — the standard `org.freedesktop.DBus.Properties.PropertiesChanged` on session-bus path `/com/jolla/apkd`, subscribed with no sender filter because apkd takes a new bus name each restart.
 
-`LauncherIconOps::refreshApkIcons()` then re-arms the watches and recreates only the APK `IconUpdater`s. It deliberately skips the folder pass, the native entries and `pruneOrphans` (which takes the full desktop list and would drop every native entry), so a container restart costs a couple of seconds rather than a full `ApplyIcons`.
+`LauncherIconOps` enqueues a `RefreshApk` job that re-arms filtered APK desktops and recreates only the APK `IconUpdater`s. It deliberately skips the folder pass, the native entries and `pruneOrphans` (which takes the full desktop list and would drop every native entry), so a container restart costs a couple of seconds rather than a full `ApplyIcons`.
 
 Measured on device, apkd rewrites the desktops around 9 s into the restart and announces `containerReady` at about 26 s — but it then syncs them **again** roughly 5 s later, which wipes the first refresh. Hence the one-shot verification pass 15 s after a refresh: if an APK entry that has an updater no longer carries one of our generated `Icon=` paths, the refresh runs once more. Journal for a healthy recovery:
 
@@ -98,7 +98,7 @@ The `Package` signal is `(u info, s package_id, s summary)` — info `11` updati
 
 `activeIconPack` stores the full package name (`harbour-themepack-xenlism-wildfire`). The script must strip that prefix before testing `/usr/share/harbour-themepack-$short` — prepending it a second time makes every apply a silent no-op.
 
-**Daemon watch.** Role constants have been wrong before, so `LauncherIconOps` also watches `/usr/share/applications` and `~/.local/share/applications`. After a 2 s debounce, `refreshNewDesktops()` (same lock / pack / upgrade guards as `refreshApkIcons`) attaches an `IconUpdater` for every non-`NoDisplay` desktop that has none, and recreates inplace updaters whose PNG no longer matches the stored fingerprint. Native RPM updates `rename(2)` the `.desktop` and drop Lipstick's watch, so this pass (and a full `ApplyIcons` / `RestoreIcons`) re-arm **all** launcher desktops, not only APK. Our own writes call `storeFingerprint`, so the wake-up they cause is a no-op. Journal for a healthy native install:
+**Daemon watch.** Role constants have been wrong before, so `LauncherIconOps` also watches `/usr/share/applications` and `~/.local/share/applications`. After a 3 s trailing debounce (each `directoryChanged` restarts the timer), a `RefreshDesktops` job (same lock / pack / upgrade guards as APK refresh) attaches an `IconUpdater` for every non-`NoDisplay` desktop that has none, and recreates inplace updaters whose PNG no longer matches the stored fingerprint. Re-arm only paths already in `s_knownDesktops` (never clock/calendar, never names unseen since the last full rebuild). A pending `ApplyIcons` from the listener drops a pending desktop refresh so the new app is not folded into known before Apply's re-arm. Our own writes call `storeFingerprint`, so the wake-up they cause is a no-op. Journal for a healthy native install:
 
 ```
 tracking PK transaction "..." role= 11 roleRelevant= true
@@ -128,6 +128,7 @@ ApplyIcons done ok=true
 | Area | Path |
 | ---- | ---- |
 | Apply / rebuild | `src/launcher/launchericonops.cpp` |
+| Job queue | `src/launcher/iconjobqueue.cpp` |
 | Install / update re-theme | `src/listener/installlistener.cpp`, `src/listener/pktxwatch.cpp` |
 | Per-desktop update | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
 | Pack index | `src/launcher/harbourthemepack.cpp` |

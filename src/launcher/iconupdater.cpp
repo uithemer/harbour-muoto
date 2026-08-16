@@ -323,7 +323,12 @@ IconUpdater::IconUpdater(IconProvider* provider, const QString& desktopPath,
     : QObject(parent)
     , d_ptr(new IconUpdaterPrivate(provider, desktopPath, mode))
 {
-    connect(provider, &IconProvider::imageUpdated, this, &IconUpdater::update);
+    // Dyn ticks (clock/calendar) must not write while Apply/restore is mid
+    // re-arm — enqueue a coalesced update instead. The synchronous update()
+    // below still runs when a job is constructing this updater.
+    connect(provider, &IconProvider::imageUpdated, this, [desktopPath]() {
+        LauncherIconOps::instance()->enqueueRebuildDyn(desktopPath);
+    });
 
     // APK entries are refreshed as a batch by LauncherIconOps::refreshApkIcons:
     // a per-updater update() cannot re-arm Lipstick's watch, so the Icon= it

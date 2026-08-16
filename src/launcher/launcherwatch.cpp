@@ -2,7 +2,6 @@
 
 #include <QDebug>
 #include <QDir>
-#include <QEventLoop>
 #include <QFile>
 #include <QTimer>
 
@@ -23,21 +22,106 @@ QString asidePath(const QString& desktopPath)
     return desktopPath + QLatin1String(kRearmSuffix);
 }
 
-void waitMs(int ms)
+enum class Phase
 {
-    // A nested loop rather than a blocking sleep: the daemon has to keep
-    // answering D-Bus while we sit out Lipstick's holdback.
-    QEventLoop loop;
-    QTimer::singleShot(ms, &loop, &QEventLoop::quit);
-    loop.exec();
+    Idle,
+    Aside,
+    Back,
+    Holdback
+};
+
+struct RearmState
+{
+    Phase phase = Phase::Idle;
+    QStringList moved;
+    std::function<void()> onDone;
+    QTimer* timer = nullptr;
+};
+
+RearmState& state()
+{
+    static RearmState s;
+    return s;
+}
+
+void finish(std::function<void()> onDone)
+{
+    RearmState& s = state();
+    s.phase = Phase::Idle;
+    s.moved.clear();
+    s.onDone = nullptr;
+    if(s.timer)
+    {
+        s.timer->stop();
+        s.timer->deleteLater();
+        s.timer = nullptr;
+    }
+    if(onDone)
+        onDone();
+}
+
+void restoreMoved(const QStringList& moved)
+{
+    for(const QString& desktopPath : moved)
+    {
+        if(!QFile::rename(asidePath(desktopPath), desktopPath))
+            qWarning() << "muoto-launcher: could not restore" << desktopPath << "after re-arm";
+    }
+}
+
+void schedule(int ms, std::function<void()> step)
+{
+    RearmState& s = state();
+    if(!s.timer)
+    {
+        s.timer = new QTimer;
+        s.timer->setSingleShot(true);
+    }
+    else
+    {
+        s.timer->disconnect();
+        s.timer->stop();
+    }
+    QObject::connect(s.timer, &QTimer::timeout, s.timer, [step]() { step(); });
+    s.timer->start(ms);
+}
+
+void moveBackThenHoldback()
+{
+    RearmState& s = state();
+    s.phase = Phase::Back;
+    restoreMoved(s.moved);
+    const int count = s.moved.size();
+    s.moved.clear();
+
+    s.phase = Phase::Holdback;
+    schedule(kHoldbackMs, [count]() {
+        qInfo() << "muoto-launcher: re-armed launcher watches for" << count << "desktop entries";
+        auto done = state().onDone;
+        finish(done);
+    });
 }
 
 } // namespace
 
-void LauncherWatch::rearmDesktopWatches(const QStringList& desktopPaths)
+void LauncherWatch::rearmDesktopWatches(const QStringList& desktopPaths,
+                                        std::function<void()> onDone)
 {
     if(desktopPaths.isEmpty())
+    {
+        if(onDone)
+            onDone();
         return;
+    }
+
+    RearmState& s = state();
+    if(s.phase != Phase::Idle)
+    {
+        qWarning() << "muoto-launcher: re-arm requested while another is in progress";
+        if(onDone)
+            onDone();
+        return;
+    }
 
     QStringList moved;
     moved.reserve(desktopPaths.size());
@@ -53,28 +137,64 @@ void LauncherWatch::rearmDesktopWatches(const QStringList& desktopPaths)
     }
 
     if(moved.isEmpty())
+    {
+        if(onDone)
+            onDone();
         return;
+    }
 
     // Two separate directory scans are needed. Without the gap Lipstick can
     // fold both renames into one scan, see an unchanged file list and never
     // re-add the watch.
-    waitMs(kSettleMs);
-
-    for(const QString& desktopPath : moved)
-    {
-        if(!QFile::rename(asidePath(desktopPath), desktopPath))
-            qWarning() << "muoto-launcher: could not restore" << desktopPath << "after re-arm";
-    }
-
-    // Let the holdback expire so the watch is live before callers rewrite Icon=.
-    waitMs(kHoldbackMs);
-
-    qInfo() << "muoto-launcher: re-armed launcher watches for" << moved.size() << "desktop entries";
+    s.phase = Phase::Aside;
+    s.moved = moved;
+    s.onDone = std::move(onDone);
+    schedule(kSettleMs, []() { moveBackThenHoldback(); });
 }
 
-void LauncherWatch::waitForMonitorHoldback()
+void LauncherWatch::waitForMonitorHoldback(std::function<void()> onDone)
 {
-    waitMs(kHoldbackMs);
+    RearmState& s = state();
+    if(s.phase != Phase::Idle)
+    {
+        qWarning() << "muoto-launcher: holdback wait while re-arm in progress";
+        if(onDone)
+            onDone();
+        return;
+    }
+
+    s.phase = Phase::Holdback;
+    s.onDone = std::move(onDone);
+    schedule(kHoldbackMs, []() {
+        auto done = state().onDone;
+        finish(done);
+    });
+}
+
+bool LauncherWatch::rearmInProgress()
+{
+    return state().phase != Phase::Idle;
+}
+
+void LauncherWatch::abortAndRecover(const QStringList& directories)
+{
+    RearmState& s = state();
+    if(s.timer)
+    {
+        s.timer->stop();
+        s.timer->disconnect();
+        s.timer->deleteLater();
+        s.timer = nullptr;
+    }
+
+    if(!s.moved.isEmpty())
+        restoreMoved(s.moved);
+
+    s.phase = Phase::Idle;
+    s.moved.clear();
+    s.onDone = nullptr;
+
+    sweepStaleRearmFiles(directories);
 }
 
 void LauncherWatch::sweepStaleRearmFiles(const QStringList& directories)

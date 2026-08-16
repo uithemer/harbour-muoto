@@ -53,7 +53,10 @@ InstallListener::InstallListener(QObject* parent)
     , _system(QDBusConnection::systemBus())
 {
     _debounce.setSingleShot(true);
-    _debounce.setInterval(1500);
+    // Trailing: each PackageKit/apkd hit restarts the window. 3 s so two
+    // quick installs coalesce into one update-icons / ApplyIcons, and so
+    // Lipstick's 2 s add holdback can finish before we rewrite Icon=.
+    _debounce.setInterval(3000);
     connect(&_debounce, &QTimer::timeout, this, &InstallListener::onDebounceTimeout);
 
     subscribeSession();

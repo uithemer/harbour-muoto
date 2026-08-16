@@ -4,9 +4,13 @@
 #include "muotolauncherglobal.h"
 #include <QObject>
 #include <QString>
+#include <QStringList>
 #include <QTimer>
 
+#include <functional>
+
 class QFileSystemWatcher;
+class IconJobQueue;
 
 class MUOTO_LAUNCHER_EXPORT LauncherIconOps : public QObject
 {
@@ -24,44 +28,61 @@ public:
 
     void rebuildIconUpdaters();
 
+    // True while the job queue is running a job (including async re-arm).
+    bool isJobRunning() const;
+
+    // Dyn tick: coalesce per-desktop updates through the queue.
+    void enqueueRebuildDyn(const QString& desktopPath);
+
+    // Recover aside files and stop the re-arm state machine before quit.
+    void prepareShutdown();
+
+    // Whether an IconUpdater is already attached (brand-new installs have none).
+    bool hasUpdater(const QString& desktopPath) const;
+
 signals:
     void progress(int done, int total);
     void applied(bool ok, const QString& message);
     void restored(bool ok, const QString& message);
 
 private:
+    friend class IconJobQueue;
+
     explicit LauncherIconOps(QObject* parent = nullptr);
+
+    void emitApplyFinished(bool ok, const QString& message);
+    void emitRestoreFinished(bool ok, const QString& message);
+
+    void runApplyIcons(const QString& pack, bool runPack, bool overlay);
+    void runRestoreIcons();
+    void runRefreshNewDesktops();
+    void runRefreshApkIcons(bool scheduleVerify);
+    void runRebuildDyn(const QStringList& desktopPaths);
+    void runRebuild();
 
     void rebuildIconUpdatersNow();
     void clearUpdaters(bool restoreOnDestroy);
     void reloadIconPacks();
     void ensureDesktopWatches();
-    void rearmApkDesktopWatches();
-    void rearmAllDesktopWatches();
+    void ensureDesktopDirWatch();
 
-    // Re-theme only the APK bridge entries after apkd regenerated them.
-    void refreshApkIcons(bool scheduleVerify);
+    QStringList desktopsNeedingTheme() const;
+    QStringList desktopsNeedingWatchRearm(const QStringList& candidates) const;
+    void rearmThen(const QStringList& candidates, const std::function<void()>& next);
+
     bool apkIconsClobbered() const;
 
-    // Theme apps installed or updated behind our back, whatever installer did it.
-    void ensureDesktopDirWatch();
-    void refreshNewDesktops();
-    QStringList desktopsNeedingTheme() const;
-
-    // Silent unless an apply/restore is in flight: rebuildIconUpdatersNow()
-    // also runs from dconf watches, where there is nothing to report.
     void emitProgress(int done, int total);
+    void finishJob();
 
+    IconJobQueue* m_queue = nullptr;
     QFileSystemWatcher* m_desktopDirWatcher = nullptr;
     QTimer m_desktopScan;
 
     bool m_restoreOnUpdaterDestroy = true;
     bool m_applyPackIcons = true;
-    bool m_inIconOp = false;
     bool m_rebuilding = false;
-    // Desktop entries plus one step for the folder-tile pass that follows.
     int m_progressTotal = 0;
-    // Last reported percentage, used to rate-limit the progress signal.
     int m_progressPercent = -1;
 };
 

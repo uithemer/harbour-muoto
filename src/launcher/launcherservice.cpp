@@ -87,13 +87,16 @@ void LauncherThemesAdaptor::runIconOpVoid(const QString& op,
         *conn = connect(ops, doneSignal, this,
                         [this, op, conn](bool ok, const QString& msg) {
                             emit OperationCompleted(op, ok, msg);
+                            if(m_currentOp == op)
+                                m_currentOp.clear();
                             QObject::disconnect(*conn);
                             delete conn;
                         });
 
         m_currentOp = op;
         start(*ops);
-        m_currentOp.clear();
+        // Keep m_currentOp until OperationCompleted so Progress stays labelled
+        // while the queued job (and async re-arm) runs.
     });
 }
 

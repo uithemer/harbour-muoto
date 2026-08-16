@@ -40,22 +40,23 @@ Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting byte
 2. **Inplace (single-slot hicolor)** — replace via temp `*.muoto-write.png` then rename onto the live path; `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick reloads the named icon.
 3. **Always touch the `.desktop`** after PNG / `Icon=` changes (`touchFile` / `futimens`).
 4. Avoid deleting a PNG while `Icon=` still names it (`inotify_add_watch` ENOENT → frozen tile until lipstick restart).
-5. **Re-arm the watch on APK desktops first.** Lipstick keeps a per-file inotify watch on every `.desktop` and only re-reads one when that watch fires. apkd rewrites `apkd_launcher_*.desktop` with `rename(2)`, so Qt drops the watch, and `LauncherMonitor::onDirectoryChanged` never re-adds it (the filename is already known). After that, `Icon=` rewrites are invisible. `LauncherWatch::rearmDesktopWatches` renames each entry aside and back with a short gap: two directory scans inside Lipstick's 2000 ms holdback, so the pending add and remove cancel — the watch comes back with no launcher item or grid-position churn. Apply and restore both call it before touching `Icon=`.
+5. **Re-arm Lipstick watches before Icon= writes (filtered).** Lipstick keeps a per-file inotify watch on every `.desktop` and only re-reads one when that watch fires. apkd and native RPM updates rewrite existing names with `rename(2)`, so Qt drops the watch, and `LauncherMonitor::onDirectoryChanged` never re-adds it (the filename is already known). `LauncherWatch::rearmDesktopWatches` renames each entry aside and back with a short gap inside Lipstick's 2000 ms holdback so the watch returns without grid churn. **Never** re-arm `jolla-clock` / `jolla-calendar` (dyn ticks use inplace + `futimens` only). **Never** re-arm filenames unseen since the last rebuild (Lipstick already called `addPaths()` — renaming those caused the two-app shuffle). Apply / restore / APK refresh re-arm the rest. Waits are async (`QTimer`); icon work is serialised by `IconJobQueue` so a clock tick cannot nest inside re-arm.
 
-Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatch.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
+Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatch.cpp`, `iconjobqueue.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
 
 ## Android container restarts
 
-- apkd resets `Icon=` on all `apkd_launcher_*.desktop` whenever the container restarts. `AlienDalvikWatcher` waits for apkd's `containerReady` property (standard `PropertiesChanged` on session path `/com/jolla/apkd`, no sender filter — apkd's bus name changes every restart), then `LauncherIconOps::refreshApkIcons()` re-arms the watches and recreates **only** the APK updaters. No folder pass, no native entries, no `pruneOrphans`.
+- apkd resets `Icon=` on all `apkd_launcher_*.desktop` whenever the container restarts. `AlienDalvikWatcher` waits for apkd's `containerReady` property (standard `PropertiesChanged` on session path `/com/jolla/apkd`, no sender filter — apkd's bus name changes every restart), then the job queue runs `refreshApkIcons`: re-arm filtered APK desktops and recreate **only** the APK updaters. No folder pass, no native entries, no `pruneOrphans`.
 - apkd syncs the entries a second time a few seconds after `containerReady`, so `refreshApkIcons` schedules a one-shot verification 15 s later and repeats itself if an entry it themed lost our `Icon=`.
 - Do not hook per-`IconUpdater` refreshes to container events: a single updater cannot re-arm the watch, so its `Icon=` write goes unread.
+- Dynamic clock/calendar ticks enqueue a coalesced `RebuildDyn` job instead of writing during Apply/restore.
 
 ## New apps / app updates
 
 Two independent triggers re-theme after an install or update while a pack is active:
 
 - **Listener** (`harbour-muoto-install-listener`) watches PackageKit roles `10` (`InstallFiles`, local RPM), `11` (`InstallPackages`), `22` (`UpdatePackages` — Storeman uses this for both install and update), `33` (`UpgradeSystem`). The `Package` signal is `(u info, s package_id, s summary)`; info `11`/`12` is the fallback. APK installs/updates still use session `com.jolla.apkd` `appInstalled` / `appUpdated`. On a hit it runs `/usr/bin/harbour-muoto-update-icons`, which calls `ApplyIcons`. `activeIconPack` is the full `harbour-themepack-*` name — strip that prefix before building `/usr/share/harbour-themepack-…` or the script no-ops.
-- **Daemon watch** (`LauncherIconOps::refreshNewDesktops`): `QFileSystemWatcher` on the applications dirs, 2 s debounce. Attaches an updater for every launcher `.desktop` that has none, and recreates inplace updaters whose hicolor PNG no longer matches the stored fingerprint (an RPM update overwrote it). Native RPM updates `rename(2)` the `.desktop` the same way apkd does, so this path (and `ApplyIcons` / `RestoreIcons`) re-arm Lipstick watches on **all** launcher desktops, not only APK. Same guards as `refreshApkIcons`. This is the path that still works if the listener is down.
+- **Daemon watch** (`LauncherIconOps` → `RefreshDesktops` job): `QFileSystemWatcher` on the applications dirs, 3 s trailing debounce (each dir event restarts the timer). Attaches an updater for every launcher `.desktop` that has none, and recreates inplace updaters whose hicolor PNG no longer matches the stored fingerprint (an RPM update overwrote it). Re-arm only paths that already have an updater (and never clock/calendar). Brand-new installs are themed without re-arm. A pending `ApplyIcons` from the listener drops a pending desktop refresh so the new app is not attached before Apply's re-arm filter runs. Same busy/upgrade guards as APK refresh. This is the path that still works if the listener is down.
 
 ## Fonts apply / restore
 
@@ -96,7 +97,7 @@ Two independent triggers re-theme after an install or update while a pack is act
 
 | Concern | Files |
 | ------- | ----- |
-| Icon apply / rebuild | `src/launcher/launchericonops.cpp` |
+| Icon apply / rebuild | `src/launcher/launchericonops.cpp`, `iconjobqueue.cpp` |
 | Install / update re-theme | `src/listener/installlistener.cpp`, `src/listener/pktxwatch.cpp`, `service/harbour-muoto-update-icons` |
 | Icon inplace / redirect | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
 | Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |

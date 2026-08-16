@@ -43,6 +43,8 @@ void setupSignalHandlers()
         termNotifier->setEnabled(false);
         char tmp;
         if(read(sigtermFd[1], &tmp, 1) != 1) { /* ignore */ }
+        if(LauncherIconOps* ops = LauncherIconOps::instance())
+            ops->prepareShutdown();
         qApp->quit();
         termNotifier->setEnabled(true);
     });
@@ -121,9 +123,12 @@ int main(int argc, char* argv[])
     if(!session.registerService(QString::fromLatin1(kLauncherService)))
         qWarning() << "muoto-launcher-icond: registerService failed (may already be owned)";
 
-    QObject::connect(&backend, &LauncherBackend::prepareQuit, &app, &QGuiApplication::quit);
-
     LauncherIconOps* ops = LauncherIconOps::instance();
+
+    QObject::connect(&backend, &LauncherBackend::prepareQuit, ops, [ops, &app]() {
+        ops->prepareShutdown();
+        app.quit();
+    });
 
     QObject::connect(activeIconPackConf(), &MGConfItem::valueChanged, ops, &LauncherIconOps::rebuildIconUpdaters);
     QObject::connect(iconOverlayConf(), &MGConfItem::valueChanged, ops, &LauncherIconOps::rebuildIconUpdaters);
