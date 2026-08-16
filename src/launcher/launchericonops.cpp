@@ -880,25 +880,22 @@ void LauncherIconOps::splitByFamiliarity(const QStringList& paths)
     m_freshPaths.clear();
     for(const QString& path : paths)
     {
-        const qint64 known = storedInode(path);
-        const qint64 now = currentInode(path);
-
-        if(known != 0 && known == now)
-            continue;  // watch is live; touching it would only risk breaking it
-
-        if(known == 0 && appearedJustNow(path))
+        // Re-arm by default. An unchanged inode is not proof the watch is live:
+        // Lipstick can have dropped it for reasons we never see, and skipping
+        // those entries leaves a dead watch dead forever -- measured as apps
+        // stuck on stock while their .desktop pointed at the right icon.
+        // The only entries worth leaving alone are the ones Lipstick may be in
+        // the middle of adding, where renaming aside cancels the add.
+        if(storedInode(path) == 0 && appearedJustNow(path))
         {
-            // Brand new and Lipstick may still be adding it: wait, do not rename.
             m_freshPaths.append(path);
             continue;
         }
-
         m_rearmPaths.append(path);
     }
 
     qInfo() << "muoto-launcher: watches -" << m_rearmPaths.size() << "to re-arm,"
-            << m_freshPaths.size() << "newly added," << (paths.size() - m_rearmPaths.size()
-                                                         - m_freshPaths.size()) << "already live";
+            << m_freshPaths.size() << "just added by Lipstick";
 }
 
 void LauncherIconOps::rememberDesktopInodes(const QStringList& paths)
