@@ -27,11 +27,15 @@ cleanup() {
 
 self_delete() {
     # Do not use disable --now: that SIGTERMs this running oneshot.
-    log "disabling and removing $UNIT"
+    # Do not rm the unit file while we are still MainPID — systemd then logs
+    # "Current command vanished from the unit file". Disable now; remove later.
+    log "disabling $UNIT (unit file removed after exit)"
     rm -f "$STATE"
     systemctl disable "$UNIT" 2>/dev/null || true
-    rm -f /etc/systemd/system/"$UNIT"
-    systemctl daemon-reload 2>/dev/null || true
+    ( sleep 2
+      rm -f /etc/systemd/system/"$UNIT"
+      systemctl daemon-reload 2>/dev/null || true
+    ) >/dev/null 2>&1 &
 }
 
 trap cleanup EXIT
