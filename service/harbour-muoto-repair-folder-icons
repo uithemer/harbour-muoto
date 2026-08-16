@@ -27,10 +27,19 @@ cleanup() {
 
 self_delete() {
     # Do not use disable --now: that SIGTERMs this running oneshot.
-    # Leave the unit file in place; disabled is enough to stop boot retries.
+    # rm the unit file only after this process exits — deleting it while we are
+    # still MainPID makes systemd log "Current command vanished from the unit file".
     log "disabling $UNIT"
     rm -f "$STATE"
     systemctl disable "$UNIT" 2>/dev/null || true
+    (
+        # Wait until the oneshot shell (our parent) is gone — no sleep.
+        while kill -0 "$PPID" 2>/dev/null; do
+            :
+        done
+        rm -f /etc/systemd/system/"$UNIT"
+        systemctl daemon-reload 2>/dev/null || true
+    ) >/dev/null 2>&1 &
 }
 
 trap cleanup EXIT
