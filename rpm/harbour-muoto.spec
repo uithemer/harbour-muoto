@@ -227,19 +227,13 @@ systemctl stop harbour-muoto-helperd.service 2>/dev/null || :
 systemctl enable harbour-muoto-update-icons.service 2>/dev/null || :
 systemctl enable harbour-muoto-oneshot-restore.service 2>/dev/null || :
 
-# A1: on upgrade only — heal folder glyphs after the transaction (pkcon must not
-# run inside %post; rpm db is locked). Repair owns restore → pkcon → reapply.
-if [ "$1" -ge 2 ]; then
-    systemctl enable harbour-muoto-repair-folder-icons.service 2>/dev/null || :
-    systemctl start --no-block harbour-muoto-repair-folder-icons.service 2>/dev/null || :
-else
-    # Fresh install: re-apply active pack if any (repair not started).
-    pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
-    pack=${pack#\'}; pack=${pack%\'}
-    if [ -n "$pack" ] && [ "$pack" != "default" ]; then
-        systemctl start --no-block harbour-muoto-update-icons.service 2>/dev/null \
-            || ( systemctl start harbour-muoto-update-icons.service >/dev/null 2>&1 & )
-    fi
+# If a theme is already active, run boot apply once (no need to wait for reboot).
+pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+pack=${pack#\'}; pack=${pack%\'}
+if [ -n "$pack" ] && [ "$pack" != "default" ]; then
+    # Do not block RPM install on a full icon re-apply (can take minutes).
+    systemctl start --no-block harbour-muoto-update-icons.service 2>/dev/null \
+        || ( systemctl start harbour-muoto-update-icons.service >/dev/null 2>&1 & )
 fi
 
 MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
