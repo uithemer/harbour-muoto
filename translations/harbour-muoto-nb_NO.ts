@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
-        <translation>Start startskjermen på nytt etter at du har brukt ikoner, slik at alle snarveiene oppdateres.</translation>
+        <translation>Start startskjermen på nytt etter at du har valgt ikoner, slik at alle snarveiene oppdateres.</translation>
     </message>
     <message>
         <source>Default</source>
@@ -369,7 +369,7 @@
     </message>
     <message>
         <source>Keep proximity ready</source>
-        <translation>Hold avstandssensoren klar</translation>
+        <translation>Hold avstandssensoren aktiv</translation>
     </message>
     <message>
         <source>Use recommended</source>
@@ -389,7 +389,7 @@
     </message>
     <message>
         <source>Needed for reliable glance on many devices. Enabling this may use more battery, and the screen may not turn off reliably during calls.</source>
-        <translation>Nødvendig for pålitelig hurtigvisning på mange enheter. Aktivering av dette kan bruke mer batteri, og det er ikke sikkert at skjermen slår seg av pålitelig under samtaler.</translation>
+        <translation>Nødvendig for pålitelig hurtigvisning på mange enheter. Aktivering av dette kan bruke mer batteri, og det er ikke sikkert at skjermen slår seg av korrekt under samtaler.</translation>
     </message>
     <message>
         <source>Double tap the glance screen to wake fully.</source>
@@ -548,7 +548,7 @@
     </message>
     <message>
         <source>Homepage</source>
-        <translation>Hjemmeside</translation>
+        <translation>Nettside</translation>
     </message>
     <message>
         <source>Changelog</source>
