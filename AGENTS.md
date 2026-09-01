@@ -78,12 +78,13 @@ Two independent triggers re-theme after an install or update while a pack is act
 - Use the Sailfish SDK (`sfdk`); do not assume a desktop Qt toolchain can produce the RPM.
 - Prefer the SailfishOS Cursor skill when scaffolding or debugging SFOS-specific issues.
 - After RPM install over SSH, enable user units for `harbour-muoto-launcher-icond` and `harbour-muoto-install-listener` if D-Bus name `org.muoto.Launcher1` is missing — see [testing](docs/devel/testing.md).
-- Do **not** commit device passwords, SSH keys, or personal dconf dumps.
+- Do **not** commit device passwords, SSH keys, or personal dconf dumps. Test scripts may document `MUOTO_SUDO_PASS` as an env override only.
 
 ## Test and debug
 
-- Manual checks: [docs/devel/testing.md](docs/devel/testing.md).
+- Manual and scripted checks: [docs/devel/testing.md](docs/devel/testing.md).
 - Journals, D-Bus, dconf, common failures: [docs/devel/debugging.md](docs/devel/debugging.md).
+- Device scripts live under `scripts/` (`device-test-3.2.sh`, `device-test-preupgrade-install.sh`, `pipeline-review-*.sh`).
 
 ## Conventions
 

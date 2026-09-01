@@ -41,6 +41,32 @@ Confirm session D-Bus name `org.muoto.Launcher1` is owned before calling `ApplyI
 5. On Icons (and Fonts if needed), select **Default** and **Apply** → stock; `activeIconPack` is `default`.
 6. Display density: change scale, apply, restore.
 
+## Automated device scripts
+
+Copy scripts from the repo onto the device (or run via SSH). Run as **defaultuser** unless noted. Sudo password override: `MUOTO_SUDO_PASS` (default `rootme` on typical devel images).
+
+| Script | Purpose |
+| ------ | ------- |
+| `scripts/device-test-3.2.sh` | Smoke: units, `cap_dac_override`, manifest, `update-icons`; `--destructive` runs restore |
+| `scripts/device-test-preupgrade-install.sh` | **T-20** pre-upgrade, **T-21** install re-theme, **T-22** folder ambient, **T-23** dynamic icons |
+| `scripts/pipeline-review-full.sh` | Pipeline slices `p1`…`p13` (includes T-20…T-23 as `p10`…`p13`) |
+| `scripts/pipeline-review-p5-p9.sh` | Subset of pipeline cases |
+
+```bash
+# On device
+bash device-test-3.2.sh
+bash device-test-3.2.sh --destructive
+
+bash device-test-preupgrade-install.sh --pack haiku
+bash device-test-preupgrade-install.sh --pack haiku --skip-install --skip-folder --skip-dyn   # T-20
+bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-folder --skip-dyn # T-21
+
+# Or from host
+ssh defaultuser@<device> 'bash -s' < scripts/device-test-3.2.sh
+```
+
+Probe package overrides for T-21: `MUOTO_PROBE_PKG`, `MUOTO_PROBE_DESKTOP`.
+
 Auto-apply / upgrade / uninstall expectations are detailed under [Automation](automation).
 
 ## What “good” looks like after ApplyIcons

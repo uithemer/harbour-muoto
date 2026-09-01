@@ -14,8 +14,8 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.5.2
-Release:        3
+Version:        3.5.3
+Release:        1
 Group:          Qt/Qt
 License:        GPLv3
 Packager:       fravaccaro
@@ -362,8 +362,16 @@ if [ $1 -eq 0 ]; then
     systemctl stop harbour-muoto-update-icons.service 2>/dev/null || true
     MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
     if [ -n "$MUOTO_UID" ]; then
-        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-launcher-icond.service" 2>/dev/null || true
-        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-install-listener.service" 2>/dev/null || true
+        # SFOS needs DBUS_SESSION_BUS_ADDRESS as well as XDG_RUNTIME_DIR for a
+        # `systemctl --user` from root -- the same reason muoto_dconf_env_prefix
+        # exists. Without it these stops silently fail (the || true hides it) and
+        # --restore-once below races a daemon that is still running.
+        MUOTO_ENV="XDG_RUNTIME_DIR=/run/user/$MUOTO_UID"
+        if [ -S "/run/user/$MUOTO_UID/dbus/user_bus_socket" ]; then
+            MUOTO_ENV="$MUOTO_ENV DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$MUOTO_UID/dbus/user_bus_socket"
+        fi
+        su defaultuser -c "$MUOTO_ENV systemctl --user disable --now harbour-muoto-launcher-icond.service" 2>/dev/null || true
+        su defaultuser -c "$MUOTO_ENV systemctl --user disable --now harbour-muoto-install-listener.service" 2>/dev/null || true
     fi
     if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID /usr/libexec/harbour-muoto-launcher-icond --restore-once" 2>/dev/null || true

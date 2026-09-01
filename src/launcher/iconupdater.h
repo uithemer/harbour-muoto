@@ -18,7 +18,10 @@ public:
     enum Mode
     {
         Default = 0,
-        RedirectOnly
+        RedirectOnly,
+        // Redirect to a filename that does not change between updates. For the
+        // dynamic clock and calendar, which redraw every minute.
+        RedirectStable
     };
 
     IconUpdater(IconProvider* provider, const QString& desktopPath,
@@ -34,8 +37,16 @@ public:
     // reports a real result from these rather than assuming success.
     bool lastUpdateOk() const;
 
+    // Puts the stock icon back and drops this entry's manifest record. Explicit:
+    // the destructor no longer does it as a side effect.
+    void restore();
+
 public slots:
     void update();
+
+    // What a provider's imageUpdated is wired to: asks the queue for a rebuild
+    // rather than writing from whatever context the signal fired in.
+    void requestUpdate();
 
 private:
     QScopedPointer<IconUpdaterPrivate> d_ptr;

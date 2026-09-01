@@ -80,6 +80,13 @@ IconProvider* DynamicIcon::iconProvider()
 
 IconUpdater* DynamicIcon::iconUpdater()
 {
+    // A stable filename looked attractive -- it would stop the 60 s tick
+    // rewriting the .desktop and the manifest -- but Lipstick caches launcher
+    // artwork by the Icon= path and never re-reads it. Measured: after switching
+    // packs the file on disk held the new pack's clock while the grid still drew
+    // the old one. A changing path is what forces the refresh, so the timestamped
+    // name stays. The manifest churn that causes is now safe, since the manifest
+    // is written atomically and skipped when the entry is unchanged.
     return new IconUpdater(iconProvider(), d_ptr->desktopPath, this);
 }
 

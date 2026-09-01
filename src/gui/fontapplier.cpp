@@ -12,6 +12,10 @@
 #include <QDebug>
 #include <QtConcurrent>
 
+// Long enough to sit out a launcher-icond drain, short enough that a genuinely
+// stuck holder still surfaces as an error.
+static const int kLockWaitMs = 60 * 1000;
+
 static const char* kPackPrefix = "/usr/share/harbour-themepack-";
 static const char* kSailFamily   = "Sail Sans Pro Light";
 static const char* kSailHeading  = "Sail Sans Pro";
@@ -321,8 +325,12 @@ void FontApplier::applyFromPackWorker(const QString& packName, const QString& we
     QString err;
     bool ok = false;
     {
+        // Waits rather than failing: this runs on a worker thread, and
+        // launcher-icond now holds the shared sentinel for a whole queue drain,
+        // so a user's font apply should sit out someone else's work instead of
+        // returning "busy".
         FileLock lk;
-        if(!lk.isHeld())
+        if(!FileLock::waitFor(&lk, kLockWaitMs))
         {
             err = QStringLiteral("busy");
         }
@@ -371,7 +379,7 @@ void FontApplier::restoreFontsWorker()
     bool ok = false;
     {
         FileLock lk;
-        if(!lk.isHeld())
+        if(!FileLock::waitFor(&lk, kLockWaitMs))
         {
             err = QStringLiteral("busy");
         }

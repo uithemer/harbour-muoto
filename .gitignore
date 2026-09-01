@@ -1,4 +1,5 @@
 **/icon-options/
+**/scripts/
 *.list
 **/__pycache__/
 *.rpm

@@ -2,7 +2,7 @@ remote_theme: pmarsceill/just-the-docs
 title: Muoto
 description: Enables customization of icons, fonts and pixel density in Sailfish OS
 baseurl: "/harbour-muoto"
-exclude: ["appicons/", "images/", "qml/", "rpm/", "src/", "translations/", "LICENSE", "*.desktop", "*.pro", "AGENTS.md"]
+exclude: ["appicons/", "images/", "qml/", "rpm/", "scripts/", "src/", "translations/", "LICENSE", "*.desktop", "*.pro", "AGENTS.md"]
 
 url: "https://uithemer.github.io"
 search_enabled: true

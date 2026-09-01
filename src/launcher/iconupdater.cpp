@@ -2,6 +2,8 @@
 #include "desktopfile.h"
 #include "filewrite.h"
 #include "iconbackup.h"
+#include "iconjob.h"
+#include "iconjobqueue.h"
 #include "iconprovider.h"
 #include "iconresolve.h"
 #include "iconupdater_p.h"
@@ -39,9 +41,19 @@ void storeIconPath(const QString& desktopPath, const QString& iconPath)
     dconf.set(iconPath);
 }
 
-QString generateIconPath(const QString& desktopPath)
+QString generateIconPath(const QString& desktopPath, bool stable)
 {
     const QFileInfo info(desktopPath);
+    if(stable)
+    {
+        // Dynamic entries redraw every 60 s. A timestamped path each tick meant
+        // a new file, an Icon= rewrite and a full manifest rewrite 1440 times a
+        // day -- 1440 chances to lose the .desktop or the manifest. Overwriting
+        // one path leaves both untouched; only the PNG bytes and the desktop's
+        // mtime change.
+        return LauncherPaths::generatedIconsDir() + QLatin1Char('/')
+               + info.completeBaseName() + QStringLiteral("-dyn.png");
+    }
     // Include msecs so rapid rebuilds never collide on the same path.
     const QString stamp = QString::number(QDateTime::currentMSecsSinceEpoch());
     return LauncherPaths::generatedIconsDir() + QLatin1Char('/') + info.completeBaseName()
@@ -105,7 +117,8 @@ IconUpdaterPrivate::IconUpdaterPrivate(IconProvider* provider, const QString& de
                                        IconUpdater::Mode mode)
     : provider(provider)
     , desktopPath(desktopPath)
-    , forceRedirect(mode == IconUpdater::RedirectOnly)
+    , forceRedirect(mode == IconUpdater::RedirectOnly || mode == IconUpdater::RedirectStable)
+    , stablePath(mode == IconUpdater::RedirectStable)
 {
     MDesktopEntry desktopEntry(desktopPath);
     QString iconRef = desktopEntry.icon();
@@ -246,7 +259,7 @@ bool IconUpdaterPrivate::updateNonMonitoredIcon()
             restoreIcon(stockPath);
     }
 
-    const QString newIconPath = generateIconPath(desktopPath);
+    const QString newIconPath = generateIconPath(desktopPath, stablePath);
     QDir dir = QFileInfo(newIconPath).absoluteDir();
     if(!dir.mkpath(QStringLiteral(".")))
         return false;
@@ -338,20 +351,37 @@ IconUpdater::IconUpdater(IconProvider* provider, const QString& desktopPath,
     : QObject(parent)
     , d_ptr(new IconUpdaterPrivate(provider, desktopPath, mode))
 {
-    connect(provider, &IconProvider::imageUpdated, this, &IconUpdater::update);
+    // The provider signal enqueues; it does not write. The dynamic clock fires
+    // this every 60 s, and running a write straight off the timer is how a tick
+    // landed inside another operation's re-arm. Deliberately not connected to
+    // update(): the constructor's own update() below is the in-job write path,
+    // and routing that through the queue would enqueue work behind the job
+    // currently building this very updater.
+    connect(provider, &IconProvider::imageUpdated, this, &IconUpdater::requestUpdate);
 
-    // APK entries are refreshed as a batch by LauncherIconOps::refreshApkIcons:
-    // a per-updater update() cannot re-arm Lipstick's watch, so the Icon= it
-    // wrote would go unread.
+    // APK entries are refreshed as a batch by the RefreshApk job: a per-updater
+    // update() cannot re-arm Lipstick's watch, so the Icon= it wrote would go
+    // unread.
 
     update();
 }
 
-IconUpdater::~IconUpdater()
+void IconUpdater::requestUpdate()
 {
-    if(!LauncherIconOps::instance()->restoreOnUpdaterDestroy())
-        return;
+    IconJob job;
+    job.kind = IconJob::RebuildDyn;
+    IconJobQueue::instance()->enqueue(job);
+}
 
+// Inert on purpose. This used to restore the icon depending on a global flag on
+// LauncherIconOps, which meant deleting an updater had file-writing side effects
+// that depended on who happened to be deleting it -- and it never ran at process
+// exit anyway, since the updaters are leaked there, so the behaviour was already
+// inconsistent. Callers now say what they mean via restore().
+IconUpdater::~IconUpdater() = default;
+
+void IconUpdater::restore()
+{
     if(d_ptr->monitoredIcon)
         d_ptr->restoreMonitoredIcon();
     else
@@ -360,6 +390,14 @@ IconUpdater::~IconUpdater()
 
 void IconUpdater::update()
 {
+    if(d_ptr->provider.isNull())
+    {
+        qWarning() << "muoto-launcher: updater for" << d_ptr->desktopPath
+                   << "has no provider; skipping";
+        d_ptr->lastUpdateOk = false;
+        return;
+    }
+
     d_ptr->lastUpdateOk = d_ptr->monitoredIcon ? d_ptr->updateMonitoredIcon()
                                                : d_ptr->updateNonMonitoredIcon();
 }

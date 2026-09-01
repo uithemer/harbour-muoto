@@ -386,6 +386,7 @@ Item {
         }
         onUninstallFailed: themeWork._abortThemeWork(message)
         onDpiRestored: themeWork.finishDensityApply()
+        onDpiRestoreFailed: themeWork._abortThemeWork(message)
     }
 
     Timer {

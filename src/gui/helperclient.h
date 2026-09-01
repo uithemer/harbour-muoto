@@ -46,8 +46,6 @@ public slots:
     void applyIcons(const QString& pack, bool runPack, bool overlay);
     void restoreIcons();
     // -- system org.muoto.Muoto1.Themes (bus-policy gated) --
-    // Waits out a held icon-ops.lock like the icon ops do: the density page
-    // re-runs the unlock every time it is shown, so it can land mid-apply.
     void densityEnable();
 
     // -- system org.muoto.Muoto1.Packs (bus-policy gated) --
@@ -79,8 +77,8 @@ private slots:
 
     // Poll for the session daemon after startLauncherDaemonDetached().
     void onLauncherWaitTick();
-    // Poll until icon-ops.lock is free (boot update-icons / prior apply).
-    void onLockWaitTick();
+    // Nothing has answered for an inflight op and no progress is arriving.
+    void onOpWatchdog();
 
 private:
     // Wrap a fire-and-forget D-Bus method call. On transport failure
@@ -91,18 +89,13 @@ private:
     // method is invoked.
     void hookBroadcastSignals();
 
-    // Common entry for ApplyIcons / RestoreIcons: wait briefly if the
-    // icon-ops lock is taken, dispatch when the daemon is on the bus,
-    // otherwise kick it and retry from onLauncherWaitTick().
+    // Common entry for ApplyIcons / RestoreIcons. No longer probes the icon-ops
+    // lock first: the daemon queues and reports back, and with the lock now held
+    // across a whole drain a client-side probe just parked the GUI in "Waiting…"
+    // whenever any background job was running.
     void queueIconOp(const QString& op, const QVariantList& args);
     void dispatchPendingIconOp();
     void failPendingIconOp(const QString& message);
-    void startLockWait(const QString& op, const QVariantList& args);
-
-    // Density unlock shares the icon-ops lock (and the poll timer) but not
-    // the launcher-daemon wait: it goes to helperd on the system bus.
-    void dispatchPendingDensityEnable();
-    void startDensityLockWait();
 
     // Private: callers go through HelperClient::instance() or the
     // QML `Helper` singleton.
@@ -110,15 +103,16 @@ private:
     Q_DISABLE_COPY(HelperClient)
 
     QTimer*      _launcherWait;
-    QTimer*      _lockWait;
+    // Restarted by every Progress signal, so a job that is merely slow or queued
+    // behind a drain is not mistaken for a dead daemon. Without it, dropping the
+    // lock-wait timeout would leave a never-answered op showing a permanent
+    // "Applying theme" notification, since only the GUI ever clears that.
+    QTimer*      _opWatchdog;
     int          _launcherWaitedMs;
-    int          _lockWaitedMs;
     QString      _pendingIconOp;
     QVariantList _pendingIconArgs;
     QString      _inflightIconOp;
     QVariantList _inflightIconArgs;
-    bool         _pendingDensityEnable;
-    bool         _inflightDensityEnable;
     bool         _hooked;
 };
 
