@@ -233,6 +233,19 @@ Page {
 
                 }
 
+                HomeTile {
+                    width: (parent.width - (parent.columns - 1) * parent.spacing) / parent.columns
+                    title: qsTr("Quick app switching")
+                    subtitle: quickSwitchKey.value === true ? qsTr("On") : qsTr("Off")
+                    onClicked: pageStack.push(Qt.resolvedUrl("QuickSwitchPage.qml"))
+
+                    QuickSwitchPreview {
+                        anchors.fill: parent
+                        enabled: quickSwitchKey.value === true
+                    }
+
+                }
+
             }
 
             LabelSpacer {
@@ -252,6 +265,13 @@ Page {
         id: iconSizeKey
 
         key: "/desktop/sailfish/silica/icon_size_launcher"
+    }
+
+    ConfigurationValue {
+        id: quickSwitchKey
+
+        key: "/desktop/sailfish/experimental/quickAppToggleGesture"
+        defaultValue: false
     }
 
     DBusInterface {

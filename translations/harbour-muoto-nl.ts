@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="nl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
 <context>
     <name>AboutPage</name>
     <message>
@@ -17,383 +15,387 @@
     </message>
     <message>
         <source>Muoto lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation type="unfinished">Met Muoto kan je pictogrammen, lettertypen en pixeldichtheid in Sailfish OS aanpassen.</translation>
+        <translation>Met Muoto kun je de pictogrammen, lettertypen en pixeldichtheid in Sailfish OS aanpassen.</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation type="unfinished">Bijdragers</translation>
+        <translation>Bijdragers</translation>
     </message>
     <message>
         <source>Testing</source>
-        <translation type="unfinished"></translation>
+        <translation>Testen</translation>
     </message>
     <message>
         <source>Community testers</source>
-        <translation type="unfinished"></translation>
+        <translation>Gemeenschapstesters</translation>
     </message>
     <message>
         <source>Theme packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Themapakketten</translation>
     </message>
     <message>
         <source>If you want to create a theme compatible with Muoto, please read the documentation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Lees de documentatie om te weten te komen hoe je een thema kan maken dat compatibel is met Muoto.</translation>
     </message>
     <message>
         <source>Feedback</source>
-        <translation type="unfinished"></translation>
+        <translation>Terugkoppeling</translation>
     </message>
     <message>
         <source>If you want to provide feedback or report an issue, please use GitHub.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruik GitHub om terugkoppeling te geven of een probleem te melden.</translation>
     </message>
     <message>
         <source>Credits for existing translations and how to contribute.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dankwoord voor bestaande vertalingen, en hoe bij te dragen.</translation>
     </message>
     <message>
         <source>UI Themer C++</source>
-        <translation type="unfinished"></translation>
+        <translation>UI Themer C++</translation>
     </message>
     <message>
         <source>UI Themer Services</source>
-        <translation type="unfinished"></translation>
+        <translation>UI Themer-diensten</translation>
     </message>
     <message>
         <source>UI Themer porting for Sailfish OS 5</source>
-        <translation type="unfinished"></translation>
+        <translation>Compatibel maken van UI Themer met Sailfish OS 5</translation>
     </message>
 </context>
 <context>
     <name>AskForSupport</name>
     <message>
         <source>Please take a moment to consider if you can contribute to this project in one way or another.</source>
-        <translation type="unfinished"></translation>
+        <translation>Denk even na of je op een manier aan dit project zou kunnen bijdragen.</translation>
     </message>
 </context>
 <context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Kon pixeldichtheidsinstellingen niet ontgrendelen</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Toepassen</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Weergaveschaal</translation>
     </message>
     <message>
         <source>Restore default</source>
-        <translation type="unfinished"></translation>
+        <translation>Standaardinstelling herstellen</translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bepaalt hoe groot de elementen van de Sailfish-interface verschijnen. Lager = meer op het scherm; hoger = grotere tekst en knoppen.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation type="unfinished"></translation>
+        <translation>Pictogramgrootte in appstarter</translation>
     </message>
     <message>
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pictogrammen op het startscherm en in het appraster. Systeemstandaard gebruikt de normale grootte voor je apparaat.</translation>
     </message>
     <message>
         <source>System default</source>
-        <translation type="unfinished"></translation>
+        <translation>Systeemstandaard</translation>
     </message>
     <message>
         <source>Compact (86)</source>
-        <translation type="unfinished"></translation>
+        <translation>Compact (86)</translation>
     </message>
     <message>
         <source>Normal (108)</source>
-        <translation type="unfinished"></translation>
+        <translation>Normaal (108)</translation>
     </message>
     <message>
         <source>Medium (129)</source>
-        <translation type="unfinished"></translation>
+        <translation>Medium (129)</translation>
     </message>
     <message>
         <source>Large (151)</source>
-        <translation type="unfinished"></translation>
+        <translation>Groot (151)</translation>
     </message>
     <message>
         <source>Extra large (172)</source>
-        <translation type="unfinished"></translation>
+        <translation>Extra groot (172)</translation>
+    </message>
+    <message>
+        <source>When you are done, restart the homescreen to apply these changes.</source>
+        <translation>Herstart het startscherm wanneer je klaar bent om de wijzigingen toe te passen.</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Herstart het startscherm nadat je de pixeldichtheid hebt aangepast zodat alle apps de wijzigingen volgen.</translation>
     </message>
 </context>
 <context>
     <name>DetailsDrawer</name>
     <message>
         <source>show less</source>
-        <translation type="unfinished"></translation>
+        <translation>minder tonen</translation>
     </message>
     <message>
         <source>show more</source>
-        <translation type="unfinished"></translation>
+        <translation>meer tonen</translation>
     </message>
 </context>
 <context>
     <name>DynamicIconsPage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Toepassen</translation>
     </message>
     <message>
         <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit thema bevat geen pictogrammen voor live Klok of Agenda. Probeer een ander thema, of herstel het standaardthema.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toon de huidige datum en tijd op je Agenda- en Klok-pictogrammen.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toon de huidige datum en tijd op je Agenda- en Klok-pictogrammen, in de stijl van dit thema.</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamisch klokpictogram</translation>
     </message>
     <message>
         <source>Shows the current time on the Clock launcher icon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toont de huidige tijd op het Klok-pictogram in de appstarter.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamisch agendapictogram</translation>
     </message>
     <message>
         <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toont de huidige datum op het Agenda-pictogram in de appstarter.</translation>
     </message>
     <message>
         <source>Dynamic icons updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamische pictogrammen bijgewerkt.</translation>
     </message>
 </context>
 <context>
     <name>ExternalUrlPage</name>
     <message>
         <source>Swipe left to preview.</source>
-        <translation type="unfinished"></translation>
+        <translation>Veeg naar links voor een voorbeeldweergave.</translation>
     </message>
     <message>
         <source>You are using a mobile data connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Je gebruikt een mobielegegevensverbinding.</translation>
     </message>
 </context>
 <context>
     <name>FontCarouselModel</name>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Standaard</translation>
     </message>
 </context>
 <context>
     <name>FontsConfigurePage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Toepassen</translation>
     </message>
     <message>
         <source>This pack provides non-Latin fonts only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit pakket levert enkel lettertypes voor niet-Latijnse schriften.</translation>
     </message>
     <message>
         <source>Choose a font weight to preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Kies welk lettergewicht je in de voorbeeldweergave wilt bekijken</translation>
     </message>
     <message>
         <source>Font packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Lettertypepakketten</translation>
     </message>
     <message>
         <source>Font weight</source>
-        <translation type="unfinished"></translation>
+        <translation>Lettergewicht</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
-        <translation type="unfinished"></translation>
+        <translation>Herstart het startscherm nadat je de lettertypes toegepast hebt zodat alle apps het nieuwe lettertype volgen.</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished">Verwijderen</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 wordt verwijderd</translation>
     </message>
 </context>
 <context>
     <name>HomescreenRestartSection</name>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Startscherm herstarten</translation>
     </message>
     <message>
         <source>Restart homescreen automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Startscherm automatisch herstarten</translation>
     </message>
 </context>
 <context>
     <name>IconPackPreview</name>
     <message>
         <source>No preview available</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen voorbeeld beschikbaar</translation>
     </message>
 </context>
 <context>
     <name>IconsConfigurePage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Toepassen</translation>
     </message>
     <message>
         <source>Icon packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Pictogrampakketten</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opties</translation>
     </message>
     <message>
         <source>Style missing app icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Ontbrekende app-pictogrammen stileren</translation>
     </message>
     <message>
         <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruikt het uitzicht van dit thema voor apps die in het pakket geen aangepast pictogram hebben.</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamisch klokpictogram</translation>
     </message>
     <message>
         <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toon de huidige tijd op het Klok-pictogram, in de stijl van dit thema.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamisch agendapictogram</translation>
     </message>
     <message>
         <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toon de huidige datum op het agendapictogram, in de stijl van dit thema.</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
-        <translation type="unfinished"></translation>
+        <translation>Herstart het startscherm nadat je de pictogrammen hebt toegepast zodat alle tegels in de appstarter vernieuwd worden.</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Standaard</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished">Verwijderen</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 wordt verwijderd</translation>
     </message>
 </context>
 <context>
     <name>LicenseListPart</name>
     <message>
         <source>License text</source>
-        <translation type="unfinished"></translation>
+        <translation>Licentietekst</translation>
     </message>
 </context>
 <context>
     <name>LowPowerPage</name>
     <message>
         <source>Could not update low-power mode settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Kon instellingen voor laagverbruiksmodus niet bijwerken</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Toepassen</translation>
     </message>
     <message>
         <source>Low-power mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Laagverbruiksmodus</translation>
     </message>
     <message>
         <source>Low-power mode settings are not available on this device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Instellingen voor laagverbruiksmodus zijn niet beschikbaar op dit apparaat.</translation>
     </message>
     <message>
         <source>Wake from pocket</source>
-        <translation type="unfinished"></translation>
+        <translation>Wekken uit broekzak</translation>
     </message>
     <message>
         <source>Wake on hover</source>
-        <translation type="unfinished"></translation>
+        <translation>Wekken bij zwaaien</translation>
     </message>
     <message>
         <source>Show the glance screen when you hold your hand over the sensor.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toon het oogopslagscherm wanneer je je hand over de sensor beweegt.</translation>
     </message>
     <message>
         <source>Keep proximity ready</source>
-        <translation type="unfinished"></translation>
+        <translation>Proximiteitssensor actief houden</translation>
     </message>
     <message>
         <source>Use recommended</source>
-        <translation type="unfinished"></translation>
+        <translation>Aanbevolen instellingen gebruiken</translation>
     </message>
     <message>
         <source>Restore defaults</source>
-        <translation type="unfinished"></translation>
+        <translation>Standaardinstellingen herstellen</translation>
     </message>
     <message>
         <source>Automatically show time and status information when the screen is off.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toon automatisch de tijd en status wanneer het scherm uit staat.</translation>
     </message>
     <message>
         <source>Show the glance screen when taking the device out of pocket.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toon het oogopslagscherm wanneer je het apparaat uit je broekzak haalt.</translation>
     </message>
     <message>
         <source>Needed for reliable glance on many devices. Enabling this may use more battery, and the screen may not turn off reliably during calls.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit is op veel apparaten nodig voor een correcte functionering van het oogopslagscherm. Als je dit inschakelt kun je een hoger batterijverbruik hebben, en schakelt het scherm mogelijk niet altijd uit tijdens oproepen.</translation>
     </message>
     <message>
         <source>Double tap the glance screen to wake fully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dubbeltik op het oogopslagscherm om het apparaat volledig te wekken.</translation>
     </message>
     <message>
         <source>Low-power settings updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Laagverbruiksinstellingen bijgewerkt.</translation>
     </message>
 </context>
 <context>
@@ -404,131 +406,131 @@
     </message>
     <message>
         <source>Dynamic icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamische pictogrammen</translation>
     </message>
     <message>
         <source>Download more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Meer thema’s downloaden</translation>
     </message>
     <message>
         <source>Muoto</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto</translation>
     </message>
     <message>
         <source>Icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Pictogrammen</translation>
     </message>
     <message>
         <source>Stock</source>
-        <translation type="unfinished"></translation>
+        <translation>Standaard</translation>
     </message>
     <message>
         <source>Fonts</source>
-        <translation type="unfinished"></translation>
+        <translation>Lettertypen</translation>
     </message>
     <message>
         <source>Tap to configure</source>
-        <translation type="unfinished"></translation>
+        <translation>Tik om te configureren</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet beschikbaar</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"></translation>
+        <translation>Aan</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Uit</translation>
     </message>
     <message>
         <source>Low-power mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Laagverbruiksmodus</translation>
     </message>
 </context>
 <context>
     <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
-        <translation type="unfinished">Over Muoto</translation>
+        <translation>Over Muoto</translation>
     </message>
 </context>
 <context>
     <name>MuotoRestartHomescreenMenuItem</name>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Startscherm herstarten</translation>
     </message>
     <message>
         <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Startscherm wordt herstart</translation>
     </message>
 </context>
 <context>
     <name>MuotoSupportDialog</name>
     <message>
         <source>Hi there!</source>
-        <translation type="unfinished"></translation>
+        <translation>Hallo daar!</translation>
     </message>
     <message>
         <source>Thank you for using Muoto! If you find it useful, consider supporting its development.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bedankt dat je Muoto gebruikt! Als je het nuttig vindt, overweeg dan de ontwikkeling ervan te ondersteunen.</translation>
     </message>
     <message>
         <source>Thank you for your support!</source>
-        <translation type="unfinished"></translation>
+        <translation>Bedankt voor je steun!</translation>
     </message>
     <message>
         <source>Donate via Liberapay</source>
-        <translation type="unfinished"></translation>
+        <translation>Doneren via Liberapay</translation>
     </message>
     <message>
         <source>Help with translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Hulp bij vertalingen</translation>
     </message>
     <message>
         <source>Improve Muoto in your language on Transifex.</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbeter de vertalingen van Muoto op Transifex.</translation>
     </message>
     <message>
         <source>Report issues on GitHub</source>
-        <translation type="unfinished"></translation>
+        <translation>Problemen melden op GitHub</translation>
     </message>
     <message>
         <source>File bugs, suggest features, or follow development.</source>
-        <translation type="unfinished"></translation>
+        <translation>Meld fouten, stel functies voor, of volg de ontwikkeling.</translation>
     </message>
     <message>
         <source>Why support this app?</source>
-        <translation type="unfinished"></translation>
+        <translation>Waarom deze app ondersteunen?</translation>
     </message>
     <message>
         <source>Muoto is free software (GPLv3) for customizing Sailfish icons, fonts, and display density. It is maintained in spare time alongside other projects.</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto is vrije software (GPLv3) waarmee je de pictogrammen, lettertypen en pixeldichtheid van Sailfish kunt aanpassen. Ik beheer het in mijn vrije tijd, naast andere projecten.</translation>
     </message>
     <message>
         <source>Donations and contributions help keep the app compatible with new Sailfish releases and theme packs from the community.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dankzij donaties en bijdragen blijft de app compatibel met nieuwe Sailfish-versies en themapakketten van de gemeenschap.</translation>
     </message>
     <message>
         <source>Other ways to help</source>
-        <translation type="unfinished"></translation>
+        <translation>Andere manieren om te helpen</translation>
     </message>
     <message>
         <source>Share theme packs, write documentation, test beta builds, or star the project on GitHub — every bit helps.</source>
-        <translation type="unfinished"></translation>
+        <translation>Deel themapakketten, schrijf documentatie, test bètaversies, of voeg het project toe aan je favorieten op GitHub — alle kleine beetjes helpen.</translation>
     </message>
     <message>
         <source>Send a tip or recurring support on Liberapay.</source>
-        <translation type="unfinished"></translation>
+        <translation>Geef een fooi of doorlopende steun op Liberapay.</translation>
     </message>
 </context>
 <context>
     <name>Opal.About</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Over</translation>
     </message>
     <message>
         <source>Version %1</source>
@@ -540,15 +542,15 @@
     </message>
     <message>
         <source>show contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>bijdragers tonen</translation>
     </message>
     <message>
         <source>Homepage</source>
-        <translation type="unfinished"></translation>
+        <translation>Startpagina</translation>
     </message>
     <message>
         <source>Changelog</source>
-        <translation type="unfinished"></translation>
+        <translation>Lijst met wijzigingen</translation>
     </message>
     <message>
         <source>Translations</source>
@@ -556,11 +558,11 @@
     </message>
     <message>
         <source>Source Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Broncode</translation>
     </message>
     <message>
         <source>Donations</source>
-        <translation type="unfinished"></translation>
+        <translation>Donaties</translation>
     </message>
     <message>
         <source>License</source>
@@ -568,30 +570,27 @@
     </message>
     <message numerus="yes">
         <source>show license(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
+        <translation><numerusform>licentie tonen</numerusform><numerusform>licenties tonen</numerusform></translation>
     </message>
     <message>
         <source>News</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuws</translation>
     </message>
     <message>
         <source>Changes since version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Wijzigingen sinds versie %1</translation>
     </message>
     <message>
         <source>show details</source>
-        <translation type="unfinished"></translation>
+        <translation>details tonen</translation>
     </message>
     <message>
         <source>Thank you!</source>
-        <translation type="unfinished"></translation>
+        <translation>Dankjewel!</translation>
     </message>
     <message>
         <source>Details</source>
-        <translation>Informatie</translation>
+        <translation>Details</translation>
     </message>
     <message>
         <source>Contributors</source>
@@ -599,162 +598,155 @@
     </message>
     <message>
         <source>Acknowledgements</source>
-        <translation type="unfinished"></translation>
+        <translation>Dankbetuigingen</translation>
     </message>
     <message>
         <source>Please refer to &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Bekijk &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Download license texts</source>
-        <translation type="unfinished"></translation>
+        <translation>Licentieteksten downloaden</translation>
     </message>
     <message>
         <source>You are using a mobile data connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Je gebruikt een mobielegegevensverbinding.</translation>
     </message>
     <message numerus="yes">
         <source>License(s)</source>
-        <translation>
-            <numerusform>Licentie</numerusform>
-            <numerusform>Licenties</numerusform>
-        </translation>
+        <translation><numerusform>Licentie</numerusform><numerusform>Licenties</numerusform></translation>
     </message>
     <message>
         <source>Note: please check the source code for most accurate information.</source>
-        <translation type="unfinished"></translation>
+        <translation>Let op: bekijk de broncode voor accuraatste informatie.</translation>
     </message>
 </context>
 <context>
     <name>Opal.About.Common</name>
     <message>
         <source>If you want to support my work, you can buy me a cup of coffee.</source>
-        <translation type="unfinished"></translation>
+        <translation>Als je mijn werk wilt ondersteunen, kun je me een kopje koffie kopen.</translation>
     </message>
     <message>
         <source>You can support this project by contributing, or by donating using any of these services.</source>
-        <translation type="unfinished"></translation>
+        <translation>Je kunt dit project ondersteunen door bij te dragen, of door via een van deze diensten te doneren.</translation>
     </message>
     <message>
         <source>Your contributions to translations or code would be most welcome.</source>
-        <translation type="unfinished"></translation>
+        <translation>Je bijdragen aan vertalingen of code zijn uiterst welkom.</translation>
     </message>
 </context>
 <context>
     <name>Opal.LinkHandler</name>
     <message>
         <source>Copied to clipboard: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Gekopieerd naar klembord: %1</translation>
     </message>
     <message>
         <source>Share link</source>
-        <translation type="unfinished"></translation>
+        <translation>Koppeling delen</translation>
     </message>
     <message>
         <source>Phone number</source>
-        <translation type="unfinished"></translation>
+        <translation>Telefoonnummer</translation>
     </message>
     <message>
         <source>External link</source>
-        <translation type="unfinished"></translation>
+        <translation>Externe koppeling</translation>
     </message>
     <message>
         <source>Open in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Openen in browser</translation>
     </message>
     <message>
         <source>Open externally</source>
-        <translation type="unfinished"></translation>
+        <translation>Openen in een andere app</translation>
     </message>
     <message>
         <source>Share</source>
-        <translation type="unfinished"></translation>
+        <translation>Delen</translation>
     </message>
     <message>
         <source>Copy link</source>
-        <translation type="unfinished"></translation>
+        <translation>Koppeling kopiëren</translation>
     </message>
     <message>
         <source>Copy text</source>
-        <translation type="unfinished"></translation>
+        <translation>Tekst kopiëren</translation>
     </message>
     <message>
         <source>No preview available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen voorbeeld beschikbaar</translation>
     </message>
     <message>
         <source>The page is taking too long to load.</source>
-        <translation type="unfinished"></translation>
+        <translation>Het duurt te lang om de pagina te laden.</translation>
     </message>
 </context>
 <context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
-        <translation type="unfinished"></translation>
+        <translation>Hallo daar!</translation>
     </message>
     <message>
         <source>Thank you for using my little app! Maybe you can contribute back?</source>
-        <translation type="unfinished"></translation>
+        <translation>Bedankt dat je mijn kleine app gebruikt! Misschien kun je er zelf ook iets aan bijdragen?</translation>
     </message>
     <message>
         <source>Thank you for your support!</source>
-        <translation type="unfinished"></translation>
+        <translation>Bedankt voor je steun!</translation>
     </message>
     <message>
         <source>Remind me later</source>
-        <translation type="unfinished"></translation>
+        <translation>Later herinneren</translation>
     </message>
     <message>
         <source>Don&apos;t ask me again</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet opnieuw vragen</translation>
     </message>
 </context>
 <context>
     <name>ThemeWork</name>
     <message>
         <source>Stock</source>
-        <translation type="unfinished"></translation>
+        <translation>Standaard</translation>
     </message>
     <message>
         <source>Applying theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema wordt toegepast</translation>
     </message>
     <message>
         <source>Applying icons…</source>
-        <translation type="unfinished"></translation>
+        <translation>Pictogrammen worden toegepast…</translation>
     </message>
     <message>
         <source>Applying fonts…</source>
-        <translation type="unfinished"></translation>
+        <translation>Lettertypen worden toegepast…</translation>
     </message>
     <message>
         <source>Restoring theme…</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema wordt hersteld…</translation>
     </message>
     <message>
         <source>Uninstalling theme…</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema wordt verwijderd…</translation>
     </message>
     <message>
         <source>Waiting…</source>
-        <translation type="unfinished"></translation>
+        <translation>Wachten…</translation>
     </message>
     <message>
         <source>Theme updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema bijgewerkt.</translation>
     </message>
     <message>
         <source>Display settings updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Weergave-instellingen bijgewerkt.</translation>
     </message>
     <message>
         <source>Theme removed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Font applied. %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema verwijderd.</translation>
     </message>
 </context>
 <context>
@@ -792,7 +784,7 @@
     </message>
     <message>
         <source>Muoto lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation>Met Muoto kan je pictogrammen, lettertypen en pixeldichtheid in Sailfish OS aanpassen.</translation>
+        <translation>Met Muoto kun je de pictogrammen, lettertypen en pixeldichtheid in Sailfish OS aanpassen.</translation>
     </message>
     <message>
         <source>If you like my work and want to buy me a beer, feel free to do it!</source>
@@ -808,86 +800,70 @@
     </message>
     <message>
         <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
-        <translation type="unfinished"></translation>
+        <translation>Deze software wordt geleverd ‘zoals ze is’, zonder enige vorm van garantie, noch uitdrukkelijk noch impliciet. In geen geval zijn de auteurs of auteursrechthebbenden aansprakelijk voor vorderingen, schade of andere aansprakelijkheid die voortvloeit uit, voortkomt uit of verband houdt met de software. Je bent zelf volledig verantwoordelijk voor de veiligheid van je gegevens.</translation>
     </message>
     <message>
         <source>I understand and accept</source>
-        <translation type="unfinished"></translation>
+        <translation>Ik begrijp en accepteer het</translation>
     </message>
     <message>
         <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
-        <translation type="unfinished"></translation>
+        <translation>Moto verstuurt geen gegevens. Bepaalde essentiële informatie (bv. het huidige thema) worden verzameld en uitsluitend lokaal bewaard, en worden enkel gebruikt voor het correct functioneren van de app (bv. om het huidige thema in de app weer te geven).</translation>
     </message>
 </context>
 <context>
     <name>harbour-muoto</name>
     <message>
         <source>Busy...</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig…</translation>
     </message>
     <message>
         <source>Cannot apply changes while shutting down</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan geen wijzigingen toepassen tijdens afsluiten</translation>
     </message>
     <message>
         <source>Wait for the system update to finish</source>
-        <translation type="unfinished"></translation>
+        <translation>Wacht totdat de systeemupdate voltooid is</translation>
     </message>
     <message>
         <source>Try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Probeer het zo dadelijk nog een keer</translation>
     </message>
     <message>
         <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Kon pixeldichtheidsinstellingen niet ontgrendelen</translation>
     </message>
     <message>
         <source>This theme pack cannot be used</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit themapakket kan niet gebruikt worden</translation>
     </message>
     <message>
         <source>No icons to apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen pictogrammen om toe te passen</translation>
     </message>
     <message>
         <source>Theme pack is not installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Themapakket is niet geïnstalleerd</translation>
     </message>
     <message>
         <source>Could not style missing app icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Kon ontbrekende app-pictogrammen niet stileren</translation>
     </message>
     <message>
         <source>No icons could be installed from this theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Er zijn geen pictogrammen van dit thema geïnstalleerd</translation>
     </message>
     <message>
         <source>Something went wrong</source>
-        <translation type="unfinished"></translation>
+        <translation>Er ging iets mis</translation>
     </message>
     <message>
         <source>Operation failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Bewerking mislukt</translation>
     </message>
     <message>
         <source>Busy — try again in a moment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icons could not be changed — try restarting the device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Some icons could not be updated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Some icons could not be restored</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not remove this theme — try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig — probeer het zo dadelijk nog een keer</translation>
     </message>
 </context>
 </TS>
