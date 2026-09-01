@@ -427,10 +427,6 @@
         <translation>Font</translation>
     </message>
     <message>
-        <source>Tap to configure</source>
-        <translation>Tocca per configurare</translation>
-    </message>
-    <message>
         <source>Not available</source>
         <translation>Non disponibile</translation>
     </message>
@@ -445,6 +441,14 @@
     <message>
         <source>Low-power mode</source>
         <translation>Modalità a basso consumo</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Predefinito</translation>
+    </message>
+    <message>
+        <source>Quick app switching</source>
+        <translation>Cambio rapido app</translation>
     </message>
 </context>
 <context>
@@ -688,6 +692,41 @@
     </message>
 </context>
 <context>
+    <name>QuickSwitchPage</name>
+    <message>
+        <source>Quick app switching enabled.</source>
+        <translation>Cambio rapido app attivato.</translation>
+    </message>
+    <message>
+        <source>Quick app switching disabled.</source>
+        <translation>Cambio rapido app disattivato.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Applica</translation>
+    </message>
+    <message>
+        <source>Quick app switching</source>
+        <translation>Cambio rapido app</translation>
+    </message>
+    <message>
+        <source>Jump straight back to the previous app, like Alt+Tab on a computer.</source>
+        <translation>Torna subito all&apos;app precedente, come Alt+Tab sul computer.</translation>
+    </message>
+    <message>
+        <source>Peek slowly from the edge of the screen, about three centimetres and for more than half a second. The previous app&apos;s cover highlights on the switcher; lift your finger to switch to it, or peek back towards the edge to cancel.</source>
+        <translation>Trascina lentamente dal bordo dello schermo, per circa tre centimetri e per più di mezzo secondo. La copertina dell&apos;app precedente viene evidenziata tra le app aperte: solleva il dito per passare a quell&apos;app, oppure torna verso il bordo per annullare.</translation>
+    </message>
+    <message>
+        <source>This is an experimental Sailfish OS setting. It may behave differently or disappear in a future OS release.</source>
+        <translation>Questa è un&apos;impostazione sperimentale di Sailfish OS. Potrebbe funzionare diversamente o scomparire in una futura versione del sistema.</translation>
+    </message>
+</context>
+<context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
@@ -754,7 +793,7 @@
     </message>
     <message>
         <source>Font applied. %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Font applicato. %1</translation>
     </message>
 </context>
 <context>
@@ -875,19 +914,19 @@
     </message>
     <message>
         <source>Icons could not be changed — try restarting the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile cambiare le icone — prova a riavviare il dispositivo</translation>
     </message>
     <message>
         <source>Some icons could not be updated</source>
-        <translation type="unfinished"></translation>
+        <translation>Alcune icone non sono state aggiornate</translation>
     </message>
     <message>
         <source>Some icons could not be restored</source>
-        <translation type="unfinished"></translation>
+        <translation>Alcune icone non sono state ripristinate</translation>
     </message>
     <message>
         <source>Could not remove this theme — try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile rimuovere questo tema — riprova tra un momento</translation>
     </message>
 </context>
 </TS>

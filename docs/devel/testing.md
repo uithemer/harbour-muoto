@@ -39,7 +39,8 @@ Confirm session D-Bus name `org.muoto.Launcher1` is owned before calling `ApplyI
 3. Switch to a second pack; icons should follow without a full reboot (APK may need pulley **Restart homescreen** if Lipstick caches absolute `Icon=`).
 4. **Icons** page or **Dynamic icons** tile: enable clock or calendar when the pack ships `dynclock/` / `dyncal/`.
 5. On Icons (and Fonts if needed), select **Default** and **Apply** → stock; `activeIconPack` is `default`.
-6. Display density: change scale, apply, restore.
+6. Display density: change scale, apply, restore. The home tile subtitle should read the live values (`2.0 / 86`, or `Default` per control).
+7. **Quick app switching** tile: toggle and Apply, then check `dconf read /desktop/sailfish/experimental/quickAppToggleGesture` flipped and the tile subtitle followed without restarting anything; the slow edge peek should reach the previous app.
 
 ## Automated device scripts
 

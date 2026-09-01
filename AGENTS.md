@@ -10,7 +10,7 @@ Muoto lets users apply `harbour-themepack-*` icon/font packs and display density
 
 | Audience | Where |
 | -------- | ----- |
-| End users | [docs/guide.md](docs/guide.md), [docs/themes.md](docs/themes.md), [docs/dynamic-icons.md](docs/dynamic-icons.md), [docs/density.md](docs/density.md) |
+| End users | [docs/guide.md](docs/guide.md), [docs/themes.md](docs/themes.md), [docs/dynamic-icons.md](docs/dynamic-icons.md), [docs/density.md](docs/density.md), [docs/quick-app-switching.md](docs/quick-app-switching.md) |
 | Pack authors | [docs/getstarted.md](docs/getstarted.md), [docs/icons.md](docs/icons.md), [docs/fonts.md](docs/fonts.md) |
 | Maintainers / agents | [docs/devel/](docs/devel/) — [architecture](docs/devel/architecture.md), [testing](docs/devel/testing.md), [debugging](docs/devel/debugging.md), [automation](docs/devel/automation.md) |
 
@@ -74,6 +74,14 @@ Two independent triggers re-theme after an install or update while a pack is act
 - **Restore:** Per-control Restore default buttons set pending reset; Apply calls `ThemePackModel::restoreDpi` → `DensityEnabler::restoreDensity` (dconf reset of selected keys). Completion is handled on `ThemeWork` (`dpiRestored`).
 - User docs: [docs/density.md](docs/density.md).
 
+## Quick app switching
+
+- Surfaces the experimental SFOS gesture (slow ~3 cm edge peek jumps back to the previous app) behind a home tile, so users do not have to write dconf over SSH.
+- Plain **user** key `/desktop/sailfish/experimental/quickAppToggleGesture` — no helper, no daemon, no vendor locks to move: the GUI writes it in-process with `ConfigurationValue` and Lipstick applies it live. Nothing to restart.
+- Dialog `qml/pages/QuickSwitchPage.qml` uses the pending/applied/dirty pattern (Apply writes the key and toasts, Cancel discards). The `MainPage` tile subtitle binds the same key, so it also tracks changes made outside the app.
+- This is a **system** setting Muoto exposes, not theming state: restore, uninstall, and pre-upgrade `oneshot-restore` all leave it alone (that script only touches `/apps/harbour-muoto/*` and `/desktop/sailfish/silica/*`).
+- User docs: [docs/quick-app-switching.md](docs/quick-app-switching.md).
+
 ## Build and device
 
 - Use the Sailfish SDK (`sfdk`); do not assume a desktop Qt toolchain can produce the RPM.
@@ -111,4 +119,5 @@ Two independent triggers re-theme after an install or update while a pack is act
 | Mosaic home / theme work | `qml/pages/MainPage.qml`, `qml/components/ThemeWork.qml` |
 | Icons / fonts configure | `qml/pages/IconsConfigurePage.qml`, `qml/pages/FontsConfigurePage.qml` |
 | Dyn icons | `qml/pages/DynamicIconsPage.qml` |
+| Quick app switching | `qml/pages/QuickSwitchPage.qml`, `qml/components/QuickSwitchPreview.qml` |
 | Session D-Bus | `dbus/org.muoto.Launcher1.Themes.xml`, `src/launcher-daemon/main.cpp` |
