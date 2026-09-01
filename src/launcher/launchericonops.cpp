@@ -551,8 +551,15 @@ void LauncherIconOps::runRefreshApk()
     // apkd rewrites apkd_launcher_*.desktop with rename(2) whenever Android
     // support regenerates them, and Lipstick never re-adds the inotify watch it
     // loses on the old inode. Any Icon= we write afterwards goes unnoticed, so
-    // put the watches back first.
-    rearmThen(apkBridgeDesktops(), &LauncherIconOps::refreshApkAfterRearm);
+    // put the watches back first. Only the entries apkd actually rewrote show
+    // a changed inode; re-arming the untouched rest risks deafening them.
+    splitByFamiliarity(apkBridgeDesktops());
+    if(!m_rearmPaths.isEmpty())
+    {
+        rearmThen(m_rearmPaths, &LauncherIconOps::refreshApkAfterRearm);
+        return;
+    }
+    refreshApkAfterRearm();
 }
 
 void LauncherIconOps::refreshApkAfterRearm()
@@ -846,6 +853,14 @@ void LauncherIconOps::runApply()
     if(m_job.overlay && !m_job.runPack)
         m_job.runPack = true;
 
+    // Reclaim before any Icon= rewrite, never after. Lipstick holds the previous
+    // Icon= for up to its 2000 ms holdback, so a PNG that looks unreferenced the
+    // instant we redirect is still the one Lipstick is about to watch: it gets
+    // inotify ENOENT and freezes the tile until the homescreen restarts. Here
+    // the live Icon= values still name the current generation, so only orphans
+    // from earlier applies -- which Lipstick settled off long ago -- are dropped.
+    reconcileGeneratedIcons();
+
     // Native RPM updates rename(2) into /usr/share/applications just as apkd
     // does, so those entries need their watch back. Entries Lipstick has only
     // just added are the opposite case and must be left out of the re-arm --
@@ -878,24 +893,44 @@ void LauncherIconOps::splitByFamiliarity(const QStringList& paths)
 {
     m_rearmPaths.clear();
     m_freshPaths.clear();
+    int unchanged = 0;
     for(const QString& path : paths)
     {
-        // Re-arm by default. An unchanged inode is not proof the watch is live:
-        // Lipstick can have dropped it for reasons we never see, and skipping
-        // those entries leaves a dead watch dead forever -- measured as apps
-        // stuck on stock while their .desktop pointed at the right icon.
-        // The only entries worth leaving alone are the ones Lipstick may be in
-        // the middle of adding, where renaming aside cancels the add.
-        if(storedInode(path) == 0 && appearedJustNow(path))
+        const qint64 stored = storedInode(path);
+
+        // Entries Lipstick may still be adding must be left alone: renaming
+        // them aside cancels the add and the item materialises with the icon
+        // the file had beforehand.
+        if(stored == 0 && appearedJustNow(path))
         {
             m_freshPaths.append(path);
             continue;
         }
+
+        // Only a rename(2) kills Lipstick's per-file watch, and a rename shows
+        // up as an inode change since we last stored it. Re-arming an entry
+        // whose inode is unchanged is not just wasted work -- it is the thing
+        // that froze tiles: renaming a quiet entry aside and back while
+        // Lipstick still had holdback timers pending from a write moments
+        // earlier (restore then apply, or a listener-triggered apply right
+        // after an install) sometimes left that item permanently deaf to every
+        // later update, stuck on stock until a homescreen restart. Reproduced
+        // on device: restore+apply froze the same entries twice in a row.
+        // Wholesale re-arming was once justified as insurance against watches
+        // dying for unseen reasons, but a deaf item is not revived by a
+        // re-arm anyway, so skipping intact entries loses nothing.
+        if(stored != 0 && stored == currentInode(path))
+        {
+            ++unchanged;
+            continue;
+        }
+
         m_rearmPaths.append(path);
     }
 
     qInfo() << "muoto-launcher: watches -" << m_rearmPaths.size() << "to re-arm,"
-            << m_freshPaths.size() << "just added by Lipstick";
+            << m_freshPaths.size() << "just added by Lipstick,"
+            << unchanged << "unchanged";
 }
 
 void LauncherIconOps::rememberDesktopInodes(const QStringList& paths)
@@ -924,7 +959,6 @@ void LauncherIconOps::applyAfterRearm()
 
     rebuildIconUpdatersNow();
     FolderAmbient::apply(m_job.pack, m_job.overlay);
-    reconcileGeneratedIcons();
     rememberDesktopInodes(visibleDesktopPaths());
     emitProgress(m_progressTotal, m_progressTotal);
 
@@ -965,9 +999,22 @@ void LauncherIconOps::runRestore()
 {
     qInfo() << "muoto-launcher: RestoreIcons start";
 
-    // Restoring rewrites Icon= back to the stock value, which needs a live watch
-    // just as much as applying does.
-    rearmThen(visibleDesktopPaths(), &LauncherIconOps::restoreAfterRearm);
+    // Same ordering rule as runApply: anything still named by a live Icon= or by
+    // the manifest survives, so this only drops older orphans. The PNGs this
+    // restore is about to strip stay on disk until the next job reclaims them.
+    reconcileGeneratedIcons();
+
+    // Restoring rewrites Icon= back to the stock value, which needs a live
+    // watch just as much as applying does -- but only entries whose desktop
+    // was rename(2)d behind our back (rpm/apkd updates) actually lost theirs.
+    // Re-arming the rest is what used to deafen tiles; see splitByFamiliarity.
+    splitByFamiliarity(visibleDesktopPaths());
+    if(!m_rearmPaths.isEmpty())
+    {
+        rearmThen(m_rearmPaths, &LauncherIconOps::restoreAfterRearm);
+        return;
+    }
+    restoreAfterRearm();
 }
 
 void LauncherIconOps::restoreAfterRearm()
@@ -985,8 +1032,6 @@ void LauncherIconOps::restoreAfterRearm()
         backup.removeRecursively();
     else if(!restoredOk)
         qWarning() << "muoto-launcher: keeping launcher-backup after partial restore failure";
-
-    reconcileGeneratedIcons();
 
     FolderAmbient::restore();
 

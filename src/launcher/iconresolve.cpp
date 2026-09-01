@@ -64,47 +64,44 @@ bool isApkBridgeIcon(const QString& iconPath)
 bool isMonitoredIcon(const QString& iconPath)
 {
     // Raster size slots only. `\w+` also matched `scalable`, so an app whose icon
-    // resolved to scalable/apps/foo.svg was treated as a single-slot inplace
-    // candidate and got PNG bytes written over its SVG. AGENTS.md already states
-    // the rule as "siblings in other sizes or scalable/ force a redirect"; only
-    // the sibling half was implemented.
+    // resolved to scalable/apps/foo.svg was treated as an inplace candidate and
+    // got PNG bytes written over its SVG.
     static QRegularExpression re(QStringLiteral("/usr/share/icons/hicolor/\\d+x\\d+/apps/.*"));
     return re.match(iconPath).hasMatch();
 }
 
-bool hasAlternateHicolor(const QString& iconPath)
+QStringList hicolorSlotPaths(const QString& iconPath)
 {
+    QStringList slotPaths;
     if(!isMonitoredIcon(iconPath))
-        return false;
+        return slotPaths;
 
-    const QFileInfo info(iconPath);
-    const QString fileName = info.fileName();
+    const QString fileName = QFileInfo(iconPath).fileName();
     if(fileName.isEmpty())
-        return false;
+        return slotPaths;
 
-    const QString baseName = info.completeBaseName();
+    // Raster slots only: scalable/apps SVGs are left alone, PNG bytes must
+    // never be written over an SVG.
+    static QRegularExpression re(QStringLiteral("^\\d+x\\d+$"));
     const QString hicolorRoot = QStringLiteral("/usr/share/icons/hicolor");
-    QDir hicolor(hicolorRoot);
-    const QStringList sizeDirs = hicolor.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-
+    const QStringList sizeDirs = QDir(hicolorRoot).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     for(const QString& sizeDir : sizeDirs)
     {
+        if(!re.match(sizeDir).hasMatch())
+            continue;
         const QString candidate = hicolorRoot + QLatin1Char('/') + sizeDir
                                   + QStringLiteral("/apps/") + fileName;
-        if(candidate != iconPath && QFile::exists(candidate))
-            return true;
-
-        // Scalable SVG sibling of a raster (or another scalable path).
-        if(sizeDir == QLatin1String("scalable"))
-        {
-            const QString svg = hicolorRoot + QStringLiteral("/scalable/apps/")
-                                + baseName + QStringLiteral(".svg");
-            if(svg != iconPath && QFile::exists(svg))
-                return true;
-        }
+        if(QFile::exists(candidate))
+            slotPaths.append(candidate);
     }
+    return slotPaths;
+}
 
-    return false;
+int hicolorSlotSize(const QString& slotPath)
+{
+    static QRegularExpression re(QStringLiteral("/hicolor/(\\d+)x\\d+/apps/"));
+    const QRegularExpressionMatch m = re.match(slotPath);
+    return m.hasMatch() ? m.captured(1).toInt() : 0;
 }
 
 QString resolveIconPath(const QString& iconId)

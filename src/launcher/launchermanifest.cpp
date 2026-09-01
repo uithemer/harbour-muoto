@@ -163,6 +163,43 @@ bool LauncherManifest::appendEntry(const LauncherManifestEntry& entry)
     return save(entries);
 }
 
+bool LauncherManifest::replaceEntriesForDesktop(const QString& desktopPath,
+                                                const QList<LauncherManifestEntry>& newEntries)
+{
+    QList<LauncherManifestEntry> entries;
+    if(!load(&entries))
+        return false;
+
+    QList<LauncherManifestEntry> kept;
+    QList<LauncherManifestEntry> existing;
+    for(const LauncherManifestEntry& e : entries)
+    {
+        if(e.desktop == desktopPath)
+            existing.append(e);
+        else
+            kept.append(e);
+    }
+
+    // Re-applies rewrite an identical slot set; skip the rewrite then, for the
+    // same reason appendEntry short-circuits the dynamic tick.
+    if(existing.size() == newEntries.size())
+    {
+        bool same = true;
+        for(int i = 0; i < existing.size() && same; ++i)
+        {
+            const LauncherManifestEntry& a = existing.at(i);
+            const LauncherManifestEntry& b = newEntries.at(i);
+            same = a.desktop == b.desktop && a.originalIcon == b.originalIcon
+                   && a.themedPath == b.themedPath && a.mode == b.mode;
+        }
+        if(same)
+            return true;
+    }
+
+    kept.append(newEntries);
+    return save(kept);
+}
+
 bool LauncherManifest::removeEntryForDesktop(const QString& desktopPath)
 {
     QList<LauncherManifestEntry> entries;
@@ -216,10 +253,16 @@ bool LauncherManifest::restoreAll()
                 ++failures;
             }
 
-            if(!e.themedPath.isEmpty() && QFile::exists(e.themedPath))
-                QFile::remove(e.themedPath);
+            // Do NOT delete e.themedPath here. Lipstick is still painting that
+            // PNG and processes the Icon= flip only after its holdback; yanking
+            // the file underneath it leaves the tile deaf on stock artwork until
+            // a homescreen restart (reproduced on device: restore+apply left
+            // Pure Maps and Storeman stock). It becomes unreferenced once the
+            // manifest clears, and reconcileGeneratedIcons() reclaims it at the
+            // start of the next job.
         }
-        else if(e.mode == QLatin1String("inplace"))
+        bool inplaceRestored = false;
+        if(e.mode == QLatin1String("inplace"))
         {
             if(!e.themedPath.isEmpty())
             {
@@ -235,6 +278,7 @@ bool LauncherManifest::restoreAll()
                 else
                 {
                     touchPath(e.themedPath);
+                    inplaceRestored = true;
                 }
             }
             // Lipstick caches by Icon= name; inplace never changes Icon=, so touch
@@ -244,7 +288,12 @@ bool LauncherManifest::restoreAll()
         }
 
         saved.set(QString());
-        if(e.mode == QLatin1String("inplace") && !e.themedPath.isEmpty())
+        // Only forget the fingerprint when the slot really went back to stock.
+        // After a failed restore the file still holds our bytes; clearing the
+        // fingerprint made the next apply mistake them for stock and "back them
+        // up", burying the real stock artwork for good (found on device: four
+        // 86x86 backups held pack art instead of stock).
+        if(inplaceRestored)
         {
             MGConfItem fingerprint(LauncherPaths::fingerprintKey(normalizePath(e.themedPath)));
             fingerprint.set(QStringLiteral("<unknown>"));

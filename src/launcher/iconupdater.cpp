@@ -136,13 +136,22 @@ IconUpdaterPrivate::IconUpdaterPrivate(IconProvider* provider, const QString& de
     alienDalvikIcon = IconResolve::isApkBridgeIcon(iconPath);
 
     // APK bridge: always redirect (Lipstick caches absolute Icon= paths).
-    // Hicolor with a single size slot: inplace (Icon=harbour-* unchanged).
-    // Multi-size hicolor: redirect — inplace only rewrites one slot while
-    // image://theme/ may paint another sibling (looks stock on the grid).
+    // Raster hicolor: always inplace, across every size slot, overlay included.
+    // Redirect is a trap for these entries: Lipstick's LauncherModel pins a
+    // launcher item to a concrete hicolor PNG path whenever it processes the
+    // entry while Icon= is a bare hicolor-resolvable name (add, restore, rpm
+    // update), and from then on the item paints that file and ignores Icon=
+    // rewrites entirely -- a redirected apply after any such moment is
+    // invisible until a homescreen restart. Keeping Icon= as the name and
+    // rewriting the slot bytes instead makes every desktop touch re-pin the
+    // item (with a bumped cache serial), so the grid follows pinned or not.
+    // Only the dynamic clock/calendar keep their stable redirect path; their
+    // icons are jolla theme names, which never resolve to hicolor and so
+    // never pin.
     if(alienDalvikIcon)
         forceRedirect = true;
-    else if(IconResolve::isMonitoredIcon(iconPath))
-        forceRedirect = IconResolve::hasAlternateHicolor(iconPath);
+    else if(IconResolve::isMonitoredIcon(iconPath) && !stablePath)
+        forceRedirect = false;
 
     monitoredIcon = !forceRedirect && IconResolve::isMonitoredIcon(iconPath);
 }
@@ -155,82 +164,133 @@ bool IconUpdaterPrivate::updateMonitoredIcon()
         return false;
     }
 
-    // Revert a prior redirect Icon= so Lipstick uses the inplace path again.
+    // Write every existing raster slot, not just the resolved one. Which size
+    // directory Lipstick pins an item to is its configuration, and image://theme
+    // may pick yet another sibling -- the only state that renders pack art
+    // everywhere is: all slots hold pack art.
+    const QStringList slotPaths = IconResolve::hicolorSlotPaths(iconPath);
+    if(slotPaths.isEmpty())
     {
-        MDesktopEntry current(desktopPath);
-        const QString currentIcon = current.icon();
-        if(LauncherPaths::isOurGeneratedIconPath(currentIcon))
+        qWarning() << "muoto-launcher: no hicolor slots for" << desktopPath;
+        return false;
+    }
+
+    QString originalIcon = storedIconPath(desktopPath);
+    if(originalIcon.isEmpty())
+    {
+        const QString current = MDesktopEntry(desktopPath).icon();
+        if(!LauncherPaths::isOurGeneratedIconPath(current))
+            originalIcon = current;
+    }
+
+    QList<LauncherManifestEntry> entries;
+    int written = 0;
+    for(const QString& slot : slotPaths)
+    {
+        LauncherManifestEntry entry;
+        entry.desktop = desktopPath;
+        entry.originalIcon = originalIcon;
+        entry.themedPath = slot;
+        entry.mode = QStringLiteral("inplace");
+
+        // A slot themed by an earlier apply stays themed even if this rewrite
+        // fails, so its restore record has to survive the manifest swap below.
+        const bool wasOurs = isOurIcon(slot);
+
+        // Without a stock backup an inplace restore has nothing to put back, so
+        // do not theme the slot at all rather than theme it irreversibly.
+        if(!wasOurs && !backupIcon(slot))
         {
-            const QString orig = storedIconPath(desktopPath);
-            if(!orig.isEmpty())
+            qWarning() << "muoto-launcher: no stock backup for" << slot << "- skipping slot";
+            continue;
+        }
+
+        int size = IconResolve::hicolorSlotSize(slot);
+        if(size <= 0)
+            size = qRound(Silica::Theme::instance()->iconSizeLauncher());
+        // Request while the backup exists so overlay can load stock from backup.
+        const QImage icon = provider->requestImage(QSize(size, size));
+        if(icon.isNull())
+        {
+            qWarning() << "muoto-launcher: could not render icon for" << desktopPath;
+            if(wasOurs)
+                entries.append(entry);
+            continue;
+        }
+
+        // Encode first, then replace the bytes of the existing hicolor PNG. A
+        // remove-and-rename would drop the file to defaultuser ownership (no
+        // CAP_CHOWN to put it back) and leave the icon missing if it failed.
+        QByteArray png;
+        {
+            QBuffer buffer(&png);
+            buffer.open(QIODevice::WriteOnly);
+            if(!icon.save(&buffer, "PNG") || png.isEmpty())
             {
-                DesktopFile desktop(desktopPath);
-                desktop.setIcon(orig);
-                if(desktop.save())
-                    QFile::remove(currentIcon);
+                qWarning() << "muoto-launcher: could not encode icon for" << desktopPath;
+                if(wasOurs)
+                    entries.append(entry);
+                continue;
             }
         }
-    }
 
-    // Without a stock backup an inplace restore has nothing to put back, so do
-    // not theme the slot at all rather than theme it irreversibly.
-    if(!isOurIcon(iconPath) && !backupIcon(iconPath))
-    {
-        qWarning() << "muoto-launcher: not theming" << desktopPath << "- no stock backup";
-        return false;
-    }
-
-    const int size = qRound(Silica::Theme::instance()->iconSizeLauncher());
-    // Request while backup exists so overlay can load stock from backup or live path.
-    QImage icon = provider->requestImage(QSize(size, size));
-    if(icon.isNull())
-    {
-        qWarning() << "muoto-launcher: could not render icon for" << desktopPath;
-        return false;
-    }
-
-    // Encode first, then replace the bytes of the existing hicolor PNG. The old
-    // remove-and-rename dropped the file to defaultuser ownership (no CAP_CHOWN
-    // to put it back) and left the icon missing entirely if the rename failed.
-    QByteArray png;
-    {
-        QBuffer buffer(&png);
-        buffer.open(QIODevice::WriteOnly);
-        if(!icon.save(&buffer, "PNG") || png.isEmpty())
+        if(!FileWrite::inPlace(slot, png))
         {
-            qWarning() << "muoto-launcher: could not encode icon for" << desktopPath;
-            return false;
+            qWarning() << "muoto-launcher: could not write icon" << slot;
+            if(wasOurs)
+                entries.append(entry);
+            continue;
         }
+
+        storeFingerprint(slot, getFileFingerprint(slot));
+        entries.append(entry);
+        ++written;
     }
 
-    if(!FileWrite::inPlace(iconPath, png))
-    {
-        qWarning() << "muoto-launcher: could not write icon" << iconPath;
+    if(written == 0)
         return false;
+
+    LauncherManifest::replaceEntriesForDesktop(desktopPath, entries);
+
+    // Revert a prior redirect Icon= to the stock name only now, after the slots
+    // already hold pack art: whenever Lipstick processes the change, the name
+    // never resolves to stock bytes. The old generated PNG is left on disk for
+    // the next job's reconcileGeneratedIcons() -- deleting a file Lipstick may
+    // still be showing is how tiles used to freeze.
+    {
+        MDesktopEntry current(desktopPath);
+        if(LauncherPaths::isOurGeneratedIconPath(current.icon()) && !originalIcon.isEmpty())
+        {
+            DesktopFile desktop(desktopPath);
+            desktop.setIcon(originalIcon);
+            if(!desktop.save())
+                qWarning() << "muoto-launcher: could not revert Icon= for" << desktopPath;
+        }
     }
 
     if(!touchFile(desktopPath))
         qWarning() << "muoto-launcher: could not touch" << desktopPath;
 
-    storeFingerprint(iconPath, getFileFingerprint(iconPath));
-
-    LauncherManifestEntry entry;
-    entry.desktop = desktopPath;
-    entry.originalIcon = storedIconPath(desktopPath);
-    if(entry.originalIcon.isEmpty())
-        entry.originalIcon = MDesktopEntry(desktopPath).icon();
-    entry.themedPath = iconPath;
-    entry.mode = QStringLiteral("inplace");
-    LauncherManifest::appendEntry(entry);
     return true;
 }
 
 void IconUpdaterPrivate::restoreMonitoredIcon()
 {
-    if(iconPath.isEmpty() || !isOurIcon(iconPath))
+    if(iconPath.isEmpty())
         return;
 
-    restoreIcon(iconPath);
+    bool restored = false;
+    for(const QString& slot : IconResolve::hicolorSlotPaths(iconPath))
+    {
+        if(!isOurIcon(slot))
+            continue;
+        restoreIcon(slot);
+        restored = true;
+    }
+
+    if(!restored)
+        return;
+
     touchFile(desktopPath);
     LauncherManifest::removeEntryForDesktop(desktopPath);
 }
