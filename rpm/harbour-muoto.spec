@@ -14,7 +14,7 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.5.3
+Version:        3.6.0
 Release:        1
 Group:          Qt/Qt
 License:        GPLv3
@@ -270,6 +270,15 @@ if [ -n "$MUOTO_UID" ]; then
 fi
 setcap cap_dac_override+ep /usr/libexec/harbour-muoto-launcher-icond 2>/dev/null || :
 mkdir -p %{_datadir}/%{name}/launcher-icons 2>/dev/null || :
+
+# 3.6: the write model changed (inplace across all hicolor slots); a daemon
+# left running from 3.5 keeps the old redirect behaviour until the session
+# ends. Restart it so the startup rebuild transitions the live theme now.
+# Must run after setcap above: try-restart before it would boot the new
+# binary without cap_dac_override and every inplace write would fail.
+if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
+    su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-launcher-icond.service" 2>/dev/null || :
+fi
 
 # 3.2: one-shot bulk stock restore from 3.1 backup/icons, then retire tree.
 /usr/bin/harbour-muoto-migrate-bulk-icons 2>/dev/null || :

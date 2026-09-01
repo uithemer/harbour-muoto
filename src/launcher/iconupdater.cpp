@@ -183,28 +183,53 @@ bool IconUpdaterPrivate::updateMonitoredIcon()
             originalIcon = current;
     }
 
+    // Pass 1: back up and record. Every slot that has (or gets) a stock backup
+    // is entered in the manifest *before* any byte is written, so a crash mid
+    // -apply can never leave a themed slot that restore does not know about.
+    // The premature entry is harmless the other way around: restoring a slot
+    // that never got themed writes its own stock backup over stock bytes.
     QList<LauncherManifestEntry> entries;
-    int written = 0;
+    QStringList writable;
     for(const QString& slot : slotPaths)
     {
+        // Without a stock backup an inplace restore has nothing to put back, so
+        // do not theme the slot at all rather than theme it irreversibly.
+        if(!isOurIcon(slot))
+        {
+            if(!backupIcon(slot))
+            {
+                qWarning() << "muoto-launcher: no stock backup for" << slot << "- skipping slot";
+                continue;
+            }
+        }
+        else if(!IconBackup::exists(slot))
+        {
+            // Bytes are ours (fingerprint matches) but the backup vanished --
+            // someone removed ~/.local/share/harbour-muoto. There is no stock
+            // source to recreate it from; keep theming so packs still switch,
+            // but say clearly that restore cannot recover this slot.
+            qWarning() << "muoto-launcher: themed slot has no stock backup" << slot
+                       << "- restore cannot recover it (reinstall the owning app to fix)";
+        }
+
         LauncherManifestEntry entry;
         entry.desktop = desktopPath;
         entry.originalIcon = originalIcon;
         entry.themedPath = slot;
         entry.mode = QStringLiteral("inplace");
+        entries.append(entry);
+        writable.append(slot);
+    }
 
-        // A slot themed by an earlier apply stays themed even if this rewrite
-        // fails, so its restore record has to survive the manifest swap below.
-        const bool wasOurs = isOurIcon(slot);
+    if(writable.isEmpty())
+        return false;
 
-        // Without a stock backup an inplace restore has nothing to put back, so
-        // do not theme the slot at all rather than theme it irreversibly.
-        if(!wasOurs && !backupIcon(slot))
-        {
-            qWarning() << "muoto-launcher: no stock backup for" << slot << "- skipping slot";
-            continue;
-        }
+    LauncherManifest::replaceEntriesForDesktop(desktopPath, entries);
 
+    // Pass 2: render and write the bytes.
+    int written = 0;
+    for(const QString& slot : writable)
+    {
         int size = IconResolve::hicolorSlotSize(slot);
         if(size <= 0)
             size = qRound(Silica::Theme::instance()->iconSizeLauncher());
@@ -213,8 +238,6 @@ bool IconUpdaterPrivate::updateMonitoredIcon()
         if(icon.isNull())
         {
             qWarning() << "muoto-launcher: could not render icon for" << desktopPath;
-            if(wasOurs)
-                entries.append(entry);
             continue;
         }
 
@@ -228,8 +251,6 @@ bool IconUpdaterPrivate::updateMonitoredIcon()
             if(!icon.save(&buffer, "PNG") || png.isEmpty())
             {
                 qWarning() << "muoto-launcher: could not encode icon for" << desktopPath;
-                if(wasOurs)
-                    entries.append(entry);
                 continue;
             }
         }
@@ -237,20 +258,15 @@ bool IconUpdaterPrivate::updateMonitoredIcon()
         if(!FileWrite::inPlace(slot, png))
         {
             qWarning() << "muoto-launcher: could not write icon" << slot;
-            if(wasOurs)
-                entries.append(entry);
             continue;
         }
 
         storeFingerprint(slot, getFileFingerprint(slot));
-        entries.append(entry);
         ++written;
     }
 
     if(written == 0)
         return false;
-
-    LauncherManifest::replaceEntriesForDesktop(desktopPath, entries);
 
     // Revert a prior redirect Icon= to the stock name only now, after the slots
     // already hold pack art: whenever Lipstick processes the change, the name
