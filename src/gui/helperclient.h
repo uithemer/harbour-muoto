@@ -46,6 +46,8 @@ public slots:
     void applyIcons(const QString& pack, bool runPack, bool overlay);
     void restoreIcons();
     // -- system org.muoto.Muoto1.Themes (bus-policy gated) --
+    // Waits out a held icon-ops.lock like the icon ops do: the density page
+    // re-runs the unlock every time it is shown, so it can land mid-apply.
     void densityEnable();
 
     // -- system org.muoto.Muoto1.Packs (bus-policy gated) --
@@ -97,6 +99,11 @@ private:
     void failPendingIconOp(const QString& message);
     void startLockWait(const QString& op, const QVariantList& args);
 
+    // Density unlock shares the icon-ops lock (and the poll timer) but not
+    // the launcher-daemon wait: it goes to helperd on the system bus.
+    void dispatchPendingDensityEnable();
+    void startDensityLockWait();
+
     // Private: callers go through HelperClient::instance() or the
     // QML `Helper` singleton.
     HelperClient();
@@ -110,6 +117,8 @@ private:
     QVariantList _pendingIconArgs;
     QString      _inflightIconOp;
     QVariantList _inflightIconArgs;
+    bool         _pendingDensityEnable;
+    bool         _inflightDensityEnable;
     bool         _hooked;
 };
 

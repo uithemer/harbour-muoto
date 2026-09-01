@@ -125,10 +125,18 @@ Dialog {
         xhr.send();
     }
 
-    canAccept: densityReady && dirty
-    Component.onCompleted: {
+    // Re-read the vendor default and re-run the unlock every time the dialog
+    // is shown: SFOS upgrades can restore the vendor dconf locks behind us.
+    function activateDensityPage() {
         loadVendorDpr();
         requestDensityUnlock();
+    }
+
+    canAccept: densityReady && dirty
+    onStatusChanged: {
+        if (status === PageStatus.Active)
+            activateDensityPage();
+
     }
     onAccepted: {
         settings.homeRefresh = restartSection.homeRefreshSwitch.checked;

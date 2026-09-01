@@ -68,6 +68,8 @@ HelperClient::HelperClient()
     , _lockWait(new QTimer(this))
     , _launcherWaitedMs(0)
     , _lockWaitedMs(0)
+    , _pendingDensityEnable(false)
+    , _inflightDensityEnable(false)
     , _hooked(false)
 {
     _launcherWait->setInterval(kLauncherPollMs);
@@ -186,6 +188,8 @@ void HelperClient::asyncCall(const QString& op, const QVariantList& args)
         {
             // No OperationCompleted will follow a transport failure, so the
             // GUI needs this to drain its busy state.
+            if(op == QLatin1String("DensityEnable"))
+                _inflightDensityEnable = false;
             qWarning() << "HelperClient::asyncCall:" << op
                        << "method reply:" << r.error().message();
             emit error(op, QStringLiteral("D-Bus interface unavailable"));
@@ -222,6 +226,30 @@ void HelperClient::startLockWait(const QString& op, const QVariantList& args)
     }
     // total=0 → ThemeWork shows an indeterminate “Waiting…” progress body.
     emit iconProgress(op, 0, 0);
+}
+
+void HelperClient::startDensityLockWait()
+{
+    // No iconProgress here: an unlock is not a theme job, and the icon op that
+    // holds the lock is already driving the progress notification. Joining a
+    // wait that is already running keeps the remaining budget on purpose.
+    if(_lockWait->isActive())
+        return;
+
+    _lockWaitedMs = 0;
+    qInfo() << "HelperClient: DensityEnable icon-ops.lock held, waiting";
+    _lockWait->start();
+}
+
+void HelperClient::dispatchPendingDensityEnable()
+{
+    if(!_pendingDensityEnable)
+        return;
+
+    _pendingDensityEnable = false;
+    _inflightDensityEnable = true;
+    qInfo() << "HelperClient: dispatching DensityEnable";
+    asyncCall(QStringLiteral("DensityEnable"), QVariantList());
 }
 
 void HelperClient::dispatchPendingIconOp()
@@ -266,11 +294,14 @@ void HelperClient::failPendingIconOp(const QString& message)
     _inflightIconArgs.clear();
     if(!op.isEmpty())
         emit error(op, message);
+    // Stopping the shared poll timer above must not strand a queued unlock.
+    if(_pendingDensityEnable)
+        startDensityLockWait();
 }
 
 void HelperClient::onLockWaitTick()
 {
-    if(_pendingIconOp.isEmpty())
+    if(_pendingIconOp.isEmpty() && !_pendingDensityEnable)
     {
         _lockWait->stop();
         return;
@@ -281,7 +312,17 @@ void HelperClient::onLockWaitTick()
         _lockWait->stop();
         qInfo() << "HelperClient: icon-ops.lock free after" << _lockWaitedMs
                 << "ms";
-        dispatchPendingIconOp();
+        // An icon op takes the lock first: it is the job the user is watching.
+        // A density unlock left pending re-arms the wait and goes out once the
+        // daemon has released the lock again.
+        if(!_pendingIconOp.isEmpty())
+        {
+            dispatchPendingIconOp();
+            if(_pendingDensityEnable)
+                startDensityLockWait();
+            return;
+        }
+        dispatchPendingDensityEnable();
         return;
     }
 
@@ -289,9 +330,18 @@ void HelperClient::onLockWaitTick()
     if(_lockWaitedMs < kLockGiveUpMs)
         return;
 
-    qWarning() << "HelperClient:" << _pendingIconOp
-               << "timed out waiting for icon-ops.lock";
-    failPendingIconOp(QStringLiteral("timed out waiting for icon operation"));
+    _lockWait->stop();
+    const QString timedOut = QStringLiteral("timed out waiting for icon operation");
+    qWarning() << "HelperClient: timed out waiting for icon-ops.lock; icon op"
+               << _pendingIconOp << "density" << _pendingDensityEnable;
+    if(_pendingDensityEnable)
+    {
+        _pendingDensityEnable = false;
+        _inflightDensityEnable = false;
+        emit error(QStringLiteral("DensityEnable"), timedOut);
+    }
+    if(!_pendingIconOp.isEmpty())
+        failPendingIconOp(timedOut);
 }
 
 void HelperClient::onLauncherWaitTick()
@@ -334,7 +384,17 @@ void HelperClient::densityEnable()
 {
     // org.muoto.Muoto1 is dbus-activatable (system-services + SystemdService),
     // so the bus starts helperd for us while the call is in flight.
-    asyncCall(QStringLiteral("DensityEnable"), QVariantList());
+    //
+    // helperd answers "busy" while icon-ops.lock is held, and the density page
+    // asks for an unlock every time it is shown -- which may be mid-apply.
+    // Wait the holder out instead of greying out the dialog.
+    _pendingDensityEnable = true;
+    if(!FileLock::tryProbe())
+    {
+        startDensityLockWait();
+        return;
+    }
+    dispatchPendingDensityEnable();
 }
 
 void HelperClient::uninstallPack(const QString& rpmName)
@@ -356,9 +416,9 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
     // process dispatched are ours.
     //
     // Scoped to those two on purpose. DensityEnable shares this slot (helperd's
-    // Themes interface on the system bus) but goes out through asyncCall without
-    // ever setting _inflightIconOp, so a blanket check would strand the density
-    // dialog waiting for a completion it already had.
+    // Themes interface on the system bus) but tracks its own inflight flag, so
+    // a blanket check against _inflightIconOp would strand the density dialog
+    // waiting for a completion it already had.
     const bool iconOp = op == QLatin1String("ApplyIcons") || op == QLatin1String("RestoreIcons");
     if(iconOp && op != _inflightIconOp)
     {
@@ -380,8 +440,21 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
             startLockWait(op, _pendingIconArgs);
             return;
         }
+        // Same for the unlock: helperd takes icon-ops.lock in ensureEnabled().
+        if(message == QLatin1String("busy")
+           && op == QLatin1String("DensityEnable")
+           && _inflightDensityEnable)
+        {
+            qInfo() << "HelperClient: DensityEnable daemon busy, waiting for lock";
+            _inflightDensityEnable = false;
+            _pendingDensityEnable = true;
+            startDensityLockWait();
+            return;
+        }
         _inflightIconOp.clear();
         _inflightIconArgs.clear();
+        if(op == QLatin1String("DensityEnable"))
+            _inflightDensityEnable = false;
         emit error(op, message);
         return;
     }
@@ -398,7 +471,10 @@ void HelperClient::onThemesOperationCompleted(const QString& op, bool ok,
         emit iconsRestored();
     }
     else if(op == QLatin1String("DensityEnable"))
+    {
+        _inflightDensityEnable = false;
         emit densityEnabled();
+    }
     else
         qWarning() << "HelperClient: unknown Themes op" << op;
 }
