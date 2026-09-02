@@ -1,4 +1,5 @@
 import "../components"
+import Nemo.Configuration 1.0
 import Nemo.DBus 2.0
 import QtQuick 2.0
 import Sailfish.Silica 1.0
@@ -7,6 +8,43 @@ import harbour.muoto 1.0
 Page {
     id: mainpage
 
+    property real vendorDpr: 0
+    property bool vendorDprKnown: false
+
+    // Same source DensityPage uses: the vendor dconf db supplies
+    // theme_pixel_ratio even when the user key is unset, so "default" can
+    // only be told apart by comparing against the vendor value.
+    function loadVendorDpr() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState !== XMLHttpRequest.DONE)
+                return ;
+
+            var t = xhr.responseText || "";
+            var m = t.match(/theme_pixel_ratio\s*=\s*([0-9]*\.?[0-9]+)/);
+            if (m) {
+                mainpage.vendorDpr = Number(m[1]);
+                mainpage.vendorDprKnown = mainpage.vendorDpr > 0;
+            }
+        };
+        xhr.open("GET", "file:///etc/dconf/db/vendor.d/silica-configs.txt");
+        xhr.send();
+    }
+
+    function densitySubtitle() {
+        var dprTxt = qsTr("Default");
+        var v = Number(dprKey.value);
+        if (!isNaN(v) && v > 0 && vendorDprKnown && Math.abs(v - vendorDpr) >= 0.001)
+            dprTxt = v.toFixed(2).replace(/0$/, "");
+
+        var iconTxt = qsTr("Default");
+        var px = Number(iconSizeKey.value);
+        if (iconSizeKey.value !== undefined && !isNaN(px) && px >= 1)
+            iconTxt = Math.round(px).toString();
+
+        return dprTxt + " / " + iconTxt;
+    }
+
     function refreshHomeIconPreview() {
         if (settings.isRunning)
             return ;
@@ -14,7 +52,10 @@ Page {
         iconapplier.buildPreview(settings.hasActiveIconPack() ? settings.activeIconPack : "default");
     }
 
-    Component.onCompleted: refreshHomeIconPreview()
+    Component.onCompleted: {
+        refreshHomeIconPreview();
+        loadVendorDpr();
+    }
     onStatusChanged: {
         if (status === PageStatus.Active) {
             refreshHomeIconPreview();
@@ -127,7 +168,7 @@ Page {
                 HomeTile {
                     width: (parent.width - (parent.columns - 1) * parent.spacing) / parent.columns
                     title: qsTr("Display density")
-                    subtitle: qsTr("Tap to configure")
+                    subtitle: densitySubtitle()
                     onClicked: pageStack.push(Qt.resolvedUrl("DensityPage.qml"), {
                         "themeWork": themeWork,
                         "settings": settings
@@ -192,6 +233,19 @@ Page {
 
                 }
 
+                HomeTile {
+                    width: (parent.width - (parent.columns - 1) * parent.spacing) / parent.columns
+                    title: qsTr("Quick app switching")
+                    subtitle: quickSwitchKey.value === true ? qsTr("On") : qsTr("Off")
+                    onClicked: pageStack.push(Qt.resolvedUrl("QuickSwitchPage.qml"))
+
+                    QuickSwitchPreview {
+                        anchors.fill: parent
+                        enabled: quickSwitchKey.value === true
+                    }
+
+                }
+
             }
 
             LabelSpacer {
@@ -199,6 +253,25 @@ Page {
 
         }
 
+    }
+
+    ConfigurationValue {
+        id: dprKey
+
+        key: "/desktop/sailfish/silica/theme_pixel_ratio"
+    }
+
+    ConfigurationValue {
+        id: iconSizeKey
+
+        key: "/desktop/sailfish/silica/icon_size_launcher"
+    }
+
+    ConfigurationValue {
+        id: quickSwitchKey
+
+        key: "/desktop/sailfish/experimental/quickAppToggleGesture"
+        defaultValue: false
     }
 
     DBusInterface {

@@ -125,10 +125,18 @@ Dialog {
         xhr.send();
     }
 
-    canAccept: densityReady && dirty
-    Component.onCompleted: {
+    // Re-read the vendor default and re-run the unlock every time the dialog
+    // is shown: SFOS upgrades can restore the vendor dconf locks behind us.
+    function activateDensityPage() {
         loadVendorDpr();
         requestDensityUnlock();
+    }
+
+    canAccept: densityReady && dirty
+    onStatusChanged: {
+        if (status === PageStatus.Active)
+            activateDensityPage();
+
     }
     onAccepted: {
         settings.homeRefresh = restartSection.homeRefreshSwitch.checked;
@@ -272,8 +280,6 @@ Dialog {
                     }
 
                     MuotoButton {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: Math.min(parent.width - Theme.paddingLarge * 2, Theme.buttonWidthMedium)
                         text: qsTr("Restore default")
                         enabled: dlg.densityReady && dlg.vendorDprKnown && !dlg.dprAtDefault
                         onClicked: dlg.restoreDefaultDpr()

@@ -74,7 +74,7 @@ Page {
 
                     DetailItem {
                         label: "Nederlands"
-                        value: "Nathan Follens"
+                        value: "pljmn"
                     }
 
                 }
@@ -84,7 +84,7 @@ Page {
 
                     DetailItem {
                         label: "Neerlandais (Belgique)"
-                        value: "Nathan Follens"
+                        value: "pljmn"
                     }
 
                     DetailItem {

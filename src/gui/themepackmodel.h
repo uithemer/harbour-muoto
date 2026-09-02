@@ -65,7 +65,9 @@ class ThemePackModel : public QAbstractListModel
         void themeRestored();
         void themeRestoreFailed(const QString& message);
         void uninstallCompleted();
+        void uninstallFailed(const QString& message);
         void dpiRestored();
+        void dpiRestoreFailed(const QString& message);
 
     private:
         // Look up the rpm (package) name that owns a given pack

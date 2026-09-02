@@ -1,4 +1,5 @@
 #include "fontapplier.h"
+#include "dconfuser.h"
 #include "filelock.h"
 
 #include <QDir>
@@ -12,9 +13,15 @@
 #include <QDebug>
 #include <QtConcurrent>
 
+// Long enough to sit out a launcher-icond drain, short enough that a genuinely
+// stuck holder still surfaces as an error.
+static const int kLockWaitMs = 60 * 1000;
+
 static const char* kPackPrefix = "/usr/share/harbour-themepack-";
 static const char* kSailFamily   = "Sail Sans Pro Light";
 static const char* kSailHeading  = "Sail Sans Pro";
+static const char* kActiveFontPackKey   = "/apps/harbour-muoto/activeFontPack";
+static const char* kActiveFontWeightKey = "/apps/harbour-muoto/activeFontWeight";
 
 namespace
 {
@@ -43,6 +50,16 @@ namespace
         r.replace(QLatin1Char('"'),  QStringLiteral("&quot;"));
         r.replace(QLatin1Char('\''), QStringLiteral("&apos;"));
         return r;
+    }
+
+    // A GVariant string literal for `dconf write`, which parses its value
+    // argument as GVariant text: single-quoted, backslash-escaped.
+    QString gvariantString(const QString& s)
+    {
+        QString r = s;
+        r.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
+        r.replace(QLatin1Char('\''), QStringLiteral("\\'"));
+        return QLatin1Char('\'') + r + QLatin1Char('\'');
     }
 }
 
@@ -74,6 +91,47 @@ QString FontApplier::packDir(const QString& packName) const
     if(name.startsWith(kBarePrefix))
         name = name.mid(kBarePrefix.size());
     return QString::fromLatin1(kPackPrefix) + name;
+}
+
+QString FontApplier::fullPackName(const QString& packName) const
+{
+    static const QString kBarePrefix = QStringLiteral("harbour-themepack-");
+    // "default" is the stock sentinel, never a directory: leave it bare.
+    if(packName.isEmpty() || packName == QLatin1String("default"))
+        return QStringLiteral("default");
+    return packName.startsWith(kBarePrefix) ? packName : kBarePrefix + packName;
+}
+
+void FontApplier::storeActiveFont(const QString& packName, const QString& weightBasename)
+{
+    // Record the state here, in the worker, the way launcher-icond owns
+    // activeIconPack: QML commits these keys only when it sees applied(), so a
+    // GUI that goes away first (window closed while fc-cache still runs) left
+    // the conf written and the fonts staged while dconf still named the old
+    // pack -- the Fonts tile then lied about what the system was rendering.
+    //
+    // Callers invoke this as soon as the conf is in place and before fc-cache:
+    // once fontconfig can read the conf the font is applied, and the cache
+    // refresh is the slow part where a close is actually likely to land.
+    //
+    // Best effort: a failure here is logged, not fatal. The fonts are already
+    // applied by this point, and QML's commit on applied() still covers the
+    // normal path.
+    if(!runDconfAsDefaultUser(QStringList()
+                              << QStringLiteral("write")
+                              << QString::fromLatin1(kActiveFontPackKey)
+                              << gvariantString(fullPackName(packName))))
+    {
+        qWarning() << "FontApplier: could not record active font pack" << packName;
+    }
+
+    if(!runDconfAsDefaultUser(QStringList()
+                              << QStringLiteral("write")
+                              << QString::fromLatin1(kActiveFontWeightKey)
+                              << gvariantString(weightBasename)))
+    {
+        qWarning() << "FontApplier: could not record active font weight" << weightBasename;
+    }
 }
 
 QString FontApplier::stageRoot() const
@@ -321,8 +379,12 @@ void FontApplier::applyFromPackWorker(const QString& packName, const QString& we
     QString err;
     bool ok = false;
     {
+        // Waits rather than failing: this runs on a worker thread, and
+        // launcher-icond now holds the shared sentinel for a whole queue drain,
+        // so a user's font apply should sit out someone else's work instead of
+        // returning "busy".
         FileLock lk;
-        if(!lk.isHeld())
+        if(!FileLock::waitFor(&lk, kLockWaitMs))
         {
             err = QStringLiteral("busy");
         }
@@ -354,6 +416,7 @@ void FontApplier::applyFromPackWorker(const QString& packName, const QString& we
                 }
                 else
                 {
+                    storeActiveFont(packName, weightBasename);
                     runFcCache();
                     ok = true;
                 }
@@ -371,7 +434,7 @@ void FontApplier::restoreFontsWorker()
     bool ok = false;
     {
         FileLock lk;
-        if(!lk.isHeld())
+        if(!FileLock::waitFor(&lk, kLockWaitMs))
         {
             err = QStringLiteral("busy");
         }
@@ -385,6 +448,7 @@ void FontApplier::restoreFontsWorker()
         }
         else
         {
+            storeActiveFont(QStringLiteral("default"), QString());
             runFcCache();
             ok = true;
         }

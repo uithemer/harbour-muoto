@@ -22,6 +22,7 @@ The app opens on a mosaic of tiles:
 * **[Themes](themes)** — **Icons** and **Fonts** tiles open configure pages to apply packs, style missing icons, restore to stock, and uninstall
 * **[Dynamic icons](dynamic-icons)** — live clock and calendar on the homescreen
 * **[Display density](density)** — pixel ratio, launcher icon size
+* **[Quick app switching](quick-app-switching)** — hidden Sailfish OS gesture to jump back to the previous app
 
 ## Cover
 

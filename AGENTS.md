@@ -10,7 +10,7 @@ Muoto lets users apply `harbour-themepack-*` icon/font packs and display density
 
 | Audience | Where |
 | -------- | ----- |
-| End users | [docs/guide.md](docs/guide.md), [docs/themes.md](docs/themes.md), [docs/dynamic-icons.md](docs/dynamic-icons.md), [docs/density.md](docs/density.md) |
+| End users | [docs/guide.md](docs/guide.md), [docs/themes.md](docs/themes.md), [docs/dynamic-icons.md](docs/dynamic-icons.md), [docs/density.md](docs/density.md), [docs/quick-app-switching.md](docs/quick-app-switching.md) |
 | Pack authors | [docs/getstarted.md](docs/getstarted.md), [docs/icons.md](docs/icons.md), [docs/fonts.md](docs/fonts.md) |
 | Maintainers / agents | [docs/devel/](docs/devel/) — [architecture](docs/devel/architecture.md), [testing](docs/devel/testing.md), [debugging](docs/devel/debugging.md), [automation](docs/devel/automation.md) |
 
@@ -21,23 +21,24 @@ Muoto lets users apply `harbour-themepack-*` icon/font packs and display density
 - Session D-Bus `org.muoto.Launcher1.Themes` (`ApplyIcons` / `RestoreIcons`).
 - **ApplyIcons** sets `activeIconPack` / `iconOverlay`, `rebuildIconUpdaters()`, then `FolderAmbient::apply` (no stock intermediate).
 - **Hybrid write model** (`IconUpdater` ctor):
-  - **Hicolor** (`/usr/share/icons/hicolor/…/apps/`) → **inplace**: keep `Icon=harbour-foo`, replace the single resolved launcher-size PNG, touch desktop. Fingerprint in dconf detects “our” bytes.
-  - **APK bridge** (`~/.local/share/apkd-bridge/launcherIcon/`) → **redirect**: unique `launcher-icons/<desktop>-<msecs>.png` + `Icon=` rewrite (absolute paths need a new path for Lipstick to refresh).
-  - **Overlay** (missing pack icons only): `RedirectOnly` updater, but hicolor still forces inplace via the rule above.
+ - **Hicolor** (`/usr/share/icons/hicolor/…/apps/`) → **inplace across every raster size slot**: keep `Icon=harbour-foo`, replace the PNG bytes in each existing `<N>x<N>/apps/` slot (render per slot size), touch desktop. Fingerprint in dconf per slot detects “our” bytes. Never redirect these: Lipstick pins a launcher item to a concrete hicolor path the first time it processes the entry with a bare hicolor-resolvable name (`LauncherItem::m_customIconFilename`), and from then on ignores `Icon=` rewrites entirely — a redirect after any such moment (restore, install, rpm update) is invisible until a homescreen restart. Writing the slot bytes and touching the desktop re-pins with a bumped cache serial, so the tile follows whether pinned or not. `scalable/apps` SVGs are never written.
+ - **APK bridge** (`~/.local/share/apkd-bridge/launcherIcon/`) → **redirect**: unique `launcher-icons/<desktop>-<msecs>.png` + `Icon=` rewrite (absolute paths never pin; a new path busts the cache).
+ - **Jolla apps** (`icon-launcher-*`) → redirect; those names don’t resolve in hicolor, so they can’t pin.
+ - **Overlay** (missing pack icons only): same slot rule — hicolor names get the composite written inplace into every slot (stock loaded from backup), everything else redirects.
 - Pack lookup (`HarbourThemePack`): prefer `native|apk/<iconSizeLauncher>x…/`, else largest available pack size; jolla uses `jolla/z<pixelRatio>/`. Pack trees under `/usr/share/harbour-themepack-*` may be **symlinks** into `~/.themepack/` — follow them when debugging “empty native/”.
 - Overlay composites pack `overlay/*.png` onto **stock** (backup if live was already themed). Not used when the pack already has that app.
-- Only the **launcher-resolved** hicolor size is written (e.g. 172); other sizes (512, …) stay stock by design.
-- Manifest + `saved-id` for restore; folder tiles via `FolderAmbient` (silica `icon-launcher-folder-*`).
+- Manifest holds **one entry per themed slot** for inplace desktops (`LauncherManifest::replaceEntriesForDesktop`); restore puts each slot’s stock backup bytes back and touches the desktop — `Icon=` is never rewritten for hicolor apps, so restore is also restart-free. On a **failed** slot restore the fingerprint is kept, never reset: clearing it made the next apply back up our own bytes as “stock”.
+- `saved-id` dconf keeps the original ref for redirect entries; folder tiles via `FolderAmbient` (silica `icon-launcher-folder-*`).
 - Per-app dconf `launcher/applications/<desktop>/provider`: only `dynamic-icon://` (clock/calendar) is honored.
 
 ## Homescreen icon refresh (do not “just overwrite the PNG”)
 
-Lipstick caches launcher artwork by the desktop `Icon=` string. Overwriting bytes at a path Lipstick already resolved often leaves the grid stuck (no lipstick restart). Muoto’s refresh trick (`IconUpdater`):
+Lipstick caches launcher artwork by the desktop `Icon=` string, and **pins** items whose `Icon=` is a bare hicolor-resolvable name to a concrete PNG path, after which `Icon=` rewrites are ignored (see write model above). Muoto’s refresh trick (`IconUpdater`):
 
-1. **Redirect (APK / non-hicolor)** — write  
-   `/usr/share/harbour-muoto/launcher-icons/<desktopBase>-<msecs>.png`  
-   (`generateIconPath`), set `Icon=` to that path. A **new path** busts the cache.
-2. **Inplace (hicolor)** — replace via temp `*.muoto-write.png` then rename onto the live path; `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick reloads the named icon.
+1. **Redirect (APK / jolla / non-hicolor)** — write 
+ `/usr/share/harbour-muoto/launcher-icons/<desktopBase>-<msecs>.png` 
+ (`generateIconPath`), set `Icon=` to that path. A **new path** busts the cache.
+2. **Inplace (all hicolor raster slots)** — `FileWrite::inPlace` on each slot (inode preserved); `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick re-reads the entry and re-pins from the new bytes.
 3. **Always touch the `.desktop`** after PNG / `Icon=` changes (`touchFile` / `futimens`).
 4. Avoid deleting a PNG while `Icon=` still names it (`inotify_add_watch` ENOENT → frozen tile until lipstick restart).
 5. **Re-arm the watch on APK desktops first.** Lipstick keeps a per-file inotify watch on every `.desktop` and only re-reads one when that watch fires. apkd rewrites `apkd_launcher_*.desktop` with `rename(2)`, so Qt drops the watch, and `LauncherMonitor::onDirectoryChanged` never re-adds it (the filename is already known). After that, `Icon=` rewrites are invisible. `LauncherWatch::rearmDesktopWatches` renames each entry aside and back with a short gap: two directory scans inside Lipstick's 2000 ms holdback, so the pending add and remove cancel — the watch comes back with no launcher item or grid-position churn. Apply and restore both call it before touching `Icon=`.
@@ -61,8 +62,9 @@ Two independent triggers re-theme after an install or update while a pack is act
 
 - Unprivileged, in the **GUI process** via `FontApplier` (`src/gui/fontapplier.cpp`), driven by `ThemePackModel::applyTheme` / `restoreTheme`.
 - Icons/Fonts configure pages and `ThemeWork` call these (icons go through `Helper` → launcher-icond in parallel).
-- Apply: copy pack `font/` (+ optional `font-nonlatin/`) into `~/.local/share/fonts/muoto/` (Sailjail-readable), write `~/.config/fontconfig/conf.d/99-muoto.conf` with `<dir>` pointing at that staging tree, run `fc-cache`; sets `activeFontPack` in dconf. Real copies — not symlinks into `.themepack`.
-- Restore: remove that conf and wipe `~/.local/share/fonts/muoto/`, `fc-cache`, clear `activeFontPack`.
+- Apply: copy pack `font/` (+ optional `font-nonlatin/`) into `~/.local/share/fonts/muoto/` (Sailjail-readable), write `~/.config/fontconfig/conf.d/99-muoto.conf` with `<dir>` pointing at that staging tree, run `fc-cache`. Real copies — not symlinks into `.themepack`.
+- Restore: remove that conf and wipe `~/.local/share/fonts/muoto/`, `fc-cache`.
+- **The worker owns `activeFontPack` / `activeFontWeight`**, like launcher-icond owns `activeIconPack`: `FontApplier::storeActiveFont` writes them (via `runDconfAsDefaultUser`) as soon as the conf lands and *before* `fc-cache`, because the conf being on disk is what makes the font active and the cache refresh is the slow tail. QML's commit on `applied()` / `restored()` still runs and is belt-and-braces. Do not move the write back to QML only: the GUI closing mid-apply then left the pack staged and aliased while dconf still named the old one, so the Fonts tile lied about what was rendering.
 - After upgrading to 3.2.2+, reapply the font once so jailed apps pick up staging (RPM update does not rewrite an existing conf).
 - User docs: [docs/fonts.md](docs/fonts.md). UI: `qml/pages/FontsConfigurePage.qml`, `qml/components/ThemeWork.qml`.
 
@@ -72,6 +74,14 @@ Two independent triggers re-theme after an install or update while a pack is act
 - **Apply:** On Dialog accept, UI writes user dconf (`desktop/sailfish/silica/theme_pixel_ratio`, launcher icon size keys) once unlocked — see `qml/pages/DensityPage.qml`. Cancel discards pending slider/combo/restore values.
 - **Restore:** Per-control Restore default buttons set pending reset; Apply calls `ThemePackModel::restoreDpi` → `DensityEnabler::restoreDensity` (dconf reset of selected keys). Completion is handled on `ThemeWork` (`dpiRestored`).
 - User docs: [docs/density.md](docs/density.md).
+
+## Quick app switching
+
+- Surfaces the experimental SFOS gesture (slow ~3 cm edge peek jumps back to the previous app) behind a home tile, so users do not have to write dconf over SSH.
+- Plain **user** key `/desktop/sailfish/experimental/quickAppToggleGesture` — no helper, no daemon, no vendor locks to move: the GUI writes it in-process with `ConfigurationValue` and Lipstick applies it live. Nothing to restart.
+- Dialog `qml/pages/QuickSwitchPage.qml` uses the pending/applied/dirty pattern (Apply writes the key and toasts, Cancel discards). The `MainPage` tile subtitle binds the same key, so it also tracks changes made outside the app.
+- This is a **system** setting Muoto exposes, not theming state: restore, uninstall, and pre-upgrade `oneshot-restore` all leave it alone (that script only touches `/apps/harbour-muoto/*` and `/desktop/sailfish/silica/*`).
+- User docs: [docs/quick-app-switching.md](docs/quick-app-switching.md).
 
 ## Build and device
 
@@ -110,4 +120,5 @@ Two independent triggers re-theme after an install or update while a pack is act
 | Mosaic home / theme work | `qml/pages/MainPage.qml`, `qml/components/ThemeWork.qml` |
 | Icons / fonts configure | `qml/pages/IconsConfigurePage.qml`, `qml/pages/FontsConfigurePage.qml` |
 | Dyn icons | `qml/pages/DynamicIconsPage.qml` |
+| Quick app switching | `qml/pages/QuickSwitchPage.qml`, `qml/components/QuickSwitchPreview.qml` |
 | Session D-Bus | `dbus/org.muoto.Launcher1.Themes.xml`, `src/launcher-daemon/main.cpp` |

@@ -32,6 +32,7 @@ The SailfishOS Community Team is on Liberapay:
 - Font theming.
 - Display density (pixel ratio, launcher icon size).
 - Low-power mode settings.
+- Quick app switching (hidden Sailfish OS gesture to jump back to the previous app).
 
 ## Using Muoto
 

@@ -42,6 +42,7 @@ _apply_once() {
         muoto_log "update-icons: attempt $_attempt failed (launcher-icond not on session bus)"
         return 1
     fi
+    _seq_before=$(muoto_op_status_sequence)
     muoto_log "update-icons: attempt $_attempt ApplyIcons pack=$pack overlay=$o"
     muoto_wait_op_begin ApplyIcons 180
     if ! muoto_dbus_session_send \
@@ -57,8 +58,31 @@ _apply_once() {
         muoto_log "update-icons: attempt $_attempt wait lock failed"
         return 1
     fi
-    muoto_log "update-icons: attempt $_attempt finished (lock released)"
-    return 0
+
+    # The lock released, but that alone never meant our request had run.
+    _seq_after=$(muoto_op_status_sequence)
+    if [ "$_seq_after" = "$_seq_before" ]; then
+        muoto_log "update-icons: attempt $_attempt produced no result (daemon gone?)"
+        return 1
+    fi
+
+    _outcome=$(muoto_op_status_outcome)
+    case "$_outcome" in
+        ok)
+            muoto_log "update-icons: attempt $_attempt applied"
+            return 0
+            ;;
+        partial)
+            # Some entries could not be written. The pack is still applied, and
+            # failing here would keep the repair oneshot retrying forever.
+            muoto_log "update-icons: attempt $_attempt applied with skipped entries"
+            return 0
+            ;;
+        *)
+            muoto_log "update-icons: attempt $_attempt failed (outcome=$_outcome)"
+            return 1
+            ;;
+    esac
 }
 
 if _apply_once 1; then

@@ -1,0 +1,12 @@
+[Unit]
+Description=Muoto repair silica folder icons from graphics RPMs
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/harbour-muoto-repair-folder-icons
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target
