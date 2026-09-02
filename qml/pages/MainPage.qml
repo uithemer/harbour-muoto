@@ -58,6 +58,7 @@ Page {
     }
     onStatusChanged: {
         if (status === PageStatus.Active) {
+            themeWork.reloadPacks();
             refreshHomeIconPreview();
             MceLpm.refresh();
         }
@@ -130,10 +131,15 @@ Page {
                     width: (parent.width - (parent.columns - 1) * parent.spacing) / parent.columns
                     title: qsTr("Icons")
                     subtitle: settings.hasActiveIconPack() ? themeWork.packLabel(settings.activeIconPack) : qsTr("Stock")
-                    onClicked: pageStack.push(Qt.resolvedUrl("IconsConfigurePage.qml"), {
-                        "themeWork": themeWork,
-                        "settings": settings
-                    })
+                    onClicked: {
+                        // Catch a pack installed since the last rescan before the
+                        // page builds its carousel from the model's rows.
+                        themeWork.reloadPacks();
+                        pageStack.push(Qt.resolvedUrl("IconsConfigurePage.qml"), {
+                            "themeWork": themeWork,
+                            "settings": settings
+                        });
+                    }
 
                     IconPackPreview {
                         width: parent.width
@@ -147,10 +153,13 @@ Page {
                     width: (parent.width - (parent.columns - 1) * parent.spacing) / parent.columns
                     title: qsTr("Fonts")
                     subtitle: settings.hasActiveFontPack() ? themeWork.packLabel(settings.activeFontPack) : qsTr("Stock")
-                    onClicked: pageStack.push(Qt.resolvedUrl("FontsConfigurePage.qml"), {
-                        "themeWork": themeWork,
-                        "settings": settings
-                    })
+                    onClicked: {
+                        themeWork.reloadPacks();
+                        pageStack.push(Qt.resolvedUrl("FontsConfigurePage.qml"), {
+                            "themeWork": themeWork,
+                            "settings": settings
+                        });
+                    }
 
                     Label {
                         width: parent.width

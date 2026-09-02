@@ -32,6 +32,10 @@ Item {
     readonly property alias themepackmodel: themepackmodel
     readonly property alias remorsePopup: remorsepopup
     readonly property alias themePack: themepack
+    // Installing a pack means leaving Muoto, so coming back is the moment to
+    // rescan: reloadTimer is stopped while the app is inactive and only ticks
+    // a full interval after it restarts.
+    readonly property bool appActive: Qt.application.state === Qt.ApplicationActive
 
     function packLabel(packId) {
         if (!packId || packId === "" || packId === "default")
@@ -281,6 +285,21 @@ Item {
             _pendingIconRestore = true;
             Helper.restoreIcons();
         }
+    }
+
+    // Rescan /usr/share for packs installed since the last scan. Only safe
+    // from the home page: the reset renumbers rows, and the configure pages
+    // address packs by row index.
+    function reloadPacks() {
+        if (settings.isRunning)
+            return ;
+
+        themepackmodel.reloadAll();
+    }
+
+    onAppActiveChanged: {
+        if (appActive && reloadActive)
+            reloadPacks();
     }
 
     RemorsePopup {
