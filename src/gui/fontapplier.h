@@ -44,12 +44,14 @@ public slots:
     // Stage pack fonts under ~/.local/share/fonts/muoto/, write the
     // fontconfig conf for `packName` (bare or full "harbour-themepack-..."
     // form), aliasing Sail Sans Pro to the family exposed by
-    // `<pack>/font/<weightBasename>.ttf`. Refreshes fc-cache.
-    // Returns immediately; work runs off the GUI thread.
+    // `<pack>/font/<weightBasename>.ttf`. Records activeFontPack /
+    // activeFontWeight in dconf as soon as the conf lands, then refreshes
+    // fc-cache. Returns immediately; work runs off the GUI thread.
     void applyFromPack(const QString& packName, const QString& weightBasename);
 
-    // Remove the conf file and staging tree (no-op if missing) and refresh
-    // fc-cache. Returns immediately; work runs off the GUI thread.
+    // Remove the conf file and staging tree (no-op if missing), reset the
+    // recorded font dconf state, and refresh fc-cache. Returns immediately;
+    // work runs off the GUI thread.
     void restoreFonts();
 
 signals:
@@ -62,6 +64,10 @@ private:
     void restoreFontsWorker();
 
     QString packDir(const QString& packName) const;
+    QString fullPackName(const QString& packName) const;
+    // Writes activeFontPack / activeFontWeight so the recorded state survives
+    // the GUI going away mid-apply. Call once the conf is on disk.
+    void storeActiveFont(const QString& packName, const QString& weightBasename);
     QString stageRoot() const;
     QString stageFontDir() const;
     QString stageNonlatinDir() const;

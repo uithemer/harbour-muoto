@@ -450,6 +450,14 @@
         <source>Low-power mode</source>
         <translation>Lavstrømsmodus</translation>
     </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick app switching</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MuotoAboutMenuItem</name>
@@ -692,6 +700,41 @@
     </message>
 </context>
 <context>
+    <name>QuickSwitchPage</name>
+    <message>
+        <source>Quick app switching enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick app switching disabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished">Bruk</translation>
+    </message>
+    <message>
+        <source>Quick app switching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Jump straight back to the previous app, like Alt+Tab on a computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Peek slowly from the edge of the screen, about three centimetres and for more than half a second. The previous app&apos;s cover highlights on the switcher; lift your finger to switch to it, or peek back towards the edge to cancel.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This is an experimental Sailfish OS setting. It may behave differently or disappear in a future OS release.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
@@ -755,6 +798,10 @@
     <message>
         <source>Theme removed.</source>
         <translation>Tema fjernet.</translation>
+    </message>
+    <message>
+        <source>Font applied. %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -872,6 +919,22 @@
     <message>
         <source>Busy — try again in a moment</source>
         <translation>Opptatt — prøv igjen om et øyeblikk</translation>
+    </message>
+    <message>
+        <source>Icons could not be changed — try restarting the device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some icons could not be updated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some icons could not be restored</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not remove this theme — try again in a moment</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

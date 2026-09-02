@@ -14,8 +14,8 @@ Name:       harbour-muoto
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:        Muoto
-Version:        3.5.0
-Release:        2
+Version:        3.6.0
+Release:        6
 Group:          Qt/Qt
 License:        GPLv3
 Packager:       fravaccaro
@@ -129,6 +129,7 @@ rm -rf %{buildroot}
 chmod 755 %{buildroot}%{_bindir}/harbour-muoto-update-icons 2>/dev/null || :
 chmod 755 %{buildroot}%{_bindir}/harbour-muoto-oneshot-restore 2>/dev/null || :
 chmod 755 %{buildroot}%{_bindir}/harbour-muoto-migrate-bulk-icons 2>/dev/null || :
+chmod 755 %{buildroot}%{_bindir}/harbour-muoto-repair-folder-icons 2>/dev/null || :
 chmod 755 %{buildroot}%{_datadir}/%{name}/service/muoto-dbus-wait.sh 2>/dev/null || :
 
 mkdir -p %{buildroot}%{_datadir}/%{name}/launcher-icons
@@ -151,6 +152,7 @@ desktop-file-install --delete-original       \
 %attr(0755,root,root) %{_bindir}/harbour-muoto-update-icons
 %attr(0755,root,root) %{_bindir}/harbour-muoto-oneshot-restore
 %attr(0755,root,root) %{_bindir}/harbour-muoto-migrate-bulk-icons
+%attr(0755,root,root) %{_bindir}/harbour-muoto-repair-folder-icons
 %attr(0755,root,root) /usr/libexec/harbour-muoto-helperd
 %attr(0755,root,root) /usr/libexec/harbour-muoto-install-listener
 %attr(0755,root,root) /usr/libexec/harbour-muoto-launcher-icond
@@ -186,6 +188,7 @@ systemctl stop sailfishos-uithemer-helperd.service 2>/dev/null || :
 mv -f %{_datadir}/%{name}/service/harbour-muoto-helperd.service /etc/systemd/system/
 mv -f %{_datadir}/%{name}/service/harbour-muoto-update-icons.service /etc/systemd/system/
 mv -f %{_datadir}/%{name}/service/harbour-muoto-oneshot-restore.service /etc/systemd/system/
+mv -f %{_datadir}/%{name}/service/harbour-muoto-repair-folder-icons.service /etc/systemd/system/
 mkdir -p /etc/systemd/system/sailfish-upgrade-ui.service.d
 cp -f %{_datadir}/%{name}/service/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf \
     /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
@@ -224,13 +227,25 @@ systemctl stop harbour-muoto-helperd.service 2>/dev/null || :
 systemctl enable harbour-muoto-update-icons.service 2>/dev/null || :
 systemctl enable harbour-muoto-oneshot-restore.service 2>/dev/null || :
 
-# If a theme is already active, run boot apply once (no need to wait for reboot).
-pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
-pack=${pack#\'}; pack=${pack%\'}
-if [ -n "$pack" ] && [ "$pack" != "default" ]; then
-    # Do not block RPM install on a full icon re-apply (can take minutes).
-    systemctl start --no-block harbour-muoto-update-icons.service 2>/dev/null \
-        || ( systemctl start harbour-muoto-update-icons.service >/dev/null 2>&1 & )
+# A1: on upgrade only — heal folder glyphs and destroyed launcher entries after
+# the transaction (pkcon must not run inside %post; rpm db is locked). Repair
+# owns restore → pkcon → reapply.
+#
+# Enabled here but deliberately NOT started yet. rpm has just replaced the daemon
+# binary, which clears its file capability, and setcap does not run until further
+# down: starting the repair here makes it restart the daemon off a cap-less
+# binary, after which every write fails silently. Observed doing exactly that.
+# The start moved to the end of %post, after setcap and the daemon restart.
+if [ "$1" -ge 2 ]; then
+    systemctl enable harbour-muoto-repair-folder-icons.service 2>/dev/null || :
+else
+    # Fresh install: re-apply active pack if any (repair not started).
+    pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
+    pack=${pack#\'}; pack=${pack%\'}
+    if [ -n "$pack" ] && [ "$pack" != "default" ]; then
+        systemctl start --no-block harbour-muoto-update-icons.service 2>/dev/null \
+            || ( systemctl start harbour-muoto-update-icons.service >/dev/null 2>&1 & )
+    fi
 fi
 
 MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
@@ -256,19 +271,38 @@ fi
 setcap cap_dac_override+ep /usr/libexec/harbour-muoto-launcher-icond 2>/dev/null || :
 mkdir -p %{_datadir}/%{name}/launcher-icons 2>/dev/null || :
 
+# 3.6: the write model changed (inplace across all hicolor slots); a daemon
+# left running from 3.5 keeps the old redirect behaviour until the session
+# ends. Restart it so the startup rebuild transitions the live theme now.
+# Must run after setcap above: try-restart before it would boot the new
+# binary without cap_dac_override and every inplace write would fail.
+if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
+    su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-launcher-icond.service" 2>/dev/null || :
+fi
+
 # 3.2: one-shot bulk stock restore from 3.1 backup/icons, then retire tree.
 /usr/bin/harbour-muoto-migrate-bulk-icons 2>/dev/null || :
+# Legacy nested folder backups under the retired backup/icons tree only.
 rm -rf %{_datadir}/%{name}/backup/icons 2>/dev/null || :
+# NOTE: backup/folder-icons is deliberately NOT wiped here. Wiping it without
+# restoring stock first means the next apply captures already-themed glyphs as
+# "stock" and restore is permanently poisoned. The repair oneshot discards them
+# at the one point where it is safe: immediately after the rpm force-install.
 
 su defaultuser -c "dconf reset /apps/harbour-muoto/launcherInstantApply" 2>/dev/null || :
 
 MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
 if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
-    _pack=$(su defaultuser -c "dconf read /apps/harbour-muoto/activeIconPack" 2>/dev/null || true)
-    _pack=${_pack#\'}; _pack=${_pack%\'}
-    if [ -n "$_pack" ] && [ "$_pack" != "default" ]; then
-        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-launcher-icond.service" 2>/dev/null || :
-    fi
+    # Unconditional: rpm replaced the binary and cleared its capability, so the
+    # running daemon is stale whether or not a pack is active. setcap above has
+    # already re-applied cap_dac_override, so the restart picks it up.
+    su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user try-restart harbour-muoto-launcher-icond.service" 2>/dev/null || :
+fi
+
+# A1: now that setcap has run and the daemon is back on the new binary, the
+# repair can safely start. Its own preamble re-checks both anyway.
+if [ "$1" -ge 2 ]; then
+    systemctl start --no-block harbour-muoto-repair-folder-icons.service 2>/dev/null || :
 fi
 
 # Icon ops flock sentinel (GUI probe + launcher-icond).
@@ -337,8 +371,16 @@ if [ $1 -eq 0 ]; then
     systemctl stop harbour-muoto-update-icons.service 2>/dev/null || true
     MUOTO_UID=$(id -u defaultuser 2>/dev/null || echo "")
     if [ -n "$MUOTO_UID" ]; then
-        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-launcher-icond.service" 2>/dev/null || true
-        su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID systemctl --user disable --now harbour-muoto-install-listener.service" 2>/dev/null || true
+        # SFOS needs DBUS_SESSION_BUS_ADDRESS as well as XDG_RUNTIME_DIR for a
+        # `systemctl --user` from root -- the same reason muoto_dconf_env_prefix
+        # exists. Without it these stops silently fail (the || true hides it) and
+        # --restore-once below races a daemon that is still running.
+        MUOTO_ENV="XDG_RUNTIME_DIR=/run/user/$MUOTO_UID"
+        if [ -S "/run/user/$MUOTO_UID/dbus/user_bus_socket" ]; then
+            MUOTO_ENV="$MUOTO_ENV DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$MUOTO_UID/dbus/user_bus_socket"
+        fi
+        su defaultuser -c "$MUOTO_ENV systemctl --user disable --now harbour-muoto-launcher-icond.service" 2>/dev/null || true
+        su defaultuser -c "$MUOTO_ENV systemctl --user disable --now harbour-muoto-install-listener.service" 2>/dev/null || true
     fi
     if [ -n "$MUOTO_UID" ] && [ -d "/run/user/$MUOTO_UID" ]; then
         su defaultuser -c "XDG_RUNTIME_DIR=/run/user/$MUOTO_UID /usr/libexec/harbour-muoto-launcher-icond --restore-once" 2>/dev/null || true
@@ -365,6 +407,7 @@ if [ $1 -eq 0 ]; then
     systemctl disable --now harbour-muoto-rescan.path 2>/dev/null || :
     systemctl disable --now harbour-muoto-update-icons.service 2>/dev/null || :
     systemctl disable --now harbour-muoto-oneshot-restore.service 2>/dev/null || :
+    systemctl disable --now harbour-muoto-repair-folder-icons.service 2>/dev/null || :
     rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
     rmdir /etc/systemd/system/sailfish-upgrade-ui.service.d 2>/dev/null || :
 fi
@@ -379,7 +422,9 @@ if [ $1 -eq 0 ]; then
     rm -f /etc/systemd/system/harbour-muoto-rescan.service
     rm -f /etc/systemd/system/harbour-muoto-update-icons.service
     rm -f /etc/systemd/system/harbour-muoto-oneshot-restore.service
+    rm -f /etc/systemd/system/harbour-muoto-repair-folder-icons.service
     rm -f /etc/systemd/system/sailfish-upgrade-ui.service.d/muoto-oneshot-restore.conf
+    rm -f %{_datadir}/%{name}/repair-folder-icons.state
     systemctl daemon-reload
     # 2.6.0: refresh dbus so the just-removed system bus name drops
     # from the registry. 2.6.2: polkit reload dropped.

@@ -45,6 +45,14 @@ ApplicationWindow {
             return qsTr("Could not style missing app icons");
         case "pack run produced no copies":
             return qsTr("No icons could be installed from this theme");
+        case "no icons could be written":
+            return qsTr("Icons could not be changed — try restarting the device");
+        case "some icons could not be updated":
+            return qsTr("Some icons could not be updated");
+        case "inplace restore failed":
+            return qsTr("Some icons could not be restored");
+        case "cannot determine the package to remove":
+            return qsTr("Could not remove this theme — try again in a moment");
         default:
             return message.length ? qsTr("Something went wrong") : (emptyFallback || qsTr("Operation failed"));
         }

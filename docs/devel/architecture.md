@@ -24,7 +24,7 @@ flowchart LR
   GUI -->|system D-Bus density uninstall| HD
   IL -->|exec update-icons| UI
   UI -->|session ApplyIcons / RestoreIcons| IC
-  IC -->|inplace hicolor / redirect APK| L
+  IC -->|inplace or redirect| L
 ```
 
 | Process | Bus / unit | Role |
@@ -41,13 +41,14 @@ flowchart LR
 2. `LauncherIconOps` re-arms Lipstick's watches on the APK desktops (see below), rebuilds one `IconUpdater` per launcher `.desktop` (system + user APK desktops), then applies homescreen **folders** via `FolderAmbient`.
 3. Pack assets come from `/usr/share/harbour-themepack-<name>/` (`jolla/`, `native/`, `apk/` — often symlinked to `~/.themepack/…`). Overlay frames from `overlay/` composite onto stock when the pack has no matching icon.
 4. **Write model (hybrid):**
-   - **Hicolor** (native / many overlay targets): **inplace** — keep `Icon=` as the theme name; replace the single resolved launcher-size PNG under `/usr/share/icons/hicolor/<N>x<N>/apps/` (`N` ≥ `iconSizeLauncher`, first hit); `futimens` the `.desktop`. Other hicolor sizes stay stock.
-   - **APK bridge**: **redirect** — write `/usr/share/harbour-muoto/launcher-icons/<desktop>-<msecs>.png`, set `Icon=` to that path, touch the desktop (absolute paths need a new `Icon=` for Lipstick to refresh).
-5. Original `Icon=` / paths are tracked in dconf `saved-id`, fingerprints (inplace), and `launcher-manifest.json`.
+   - **Hicolor** (native / overlay targets whose stock `Icon=` resolves to a raster hicolor slot): **inplace across every `<N>x<N>/apps/` slot that exists** — keep `Icon=` as the theme name; render the pack icon (or overlay composite) at each slot's size and `FileWrite::inPlace` it (inode preserved); `futimens` the `.desktop`. Never redirect these entries: `LauncherModel::updateItemsWithIcon` pins an item to a concrete hicolor path whenever it processes the entry while `Icon=` is a bare name that exists under a configured icon directory (`LauncherItem::m_customIconFilename`), and a pinned item ignores `Icon=` rewrites until the homescreen restarts. Writing the slot bytes and touching the desktop makes Lipstick re-pin (serial bump) and repaint — self-healing whether the item was pinned or not, which is what makes restore→apply, fresh installs and rpm updates work without a restart. `scalable/apps` SVGs are never written; entries that resolve only to scalable keep redirecting.
+   - **APK bridge**: **redirect** — write `/usr/share/harbour-muoto/launcher-icons/<desktop>-<msecs>.png`, set `Icon=` to that path, touch the desktop (absolute paths never pin; a new `Icon=` path is what makes Lipstick refresh).
+   - **Jolla apps** (`icon-launcher-*` theme names): **redirect** — those names don't resolve in hicolor, so they cannot pin.
+5. Original `Icon=` / paths are tracked in dconf `saved-id`, per-slot fingerprints (inplace), and `launcher-manifest.json` (**one entry per themed slot** for inplace desktops; `LauncherManifest::replaceEntriesForDesktop` swaps a desktop's set atomically).
 6. Homescreen **folders** (`icon-launcher-folder-01`…`16`) use scoped silica writeback + `backup/folder-icons/` (`FolderAmbient`).
 7. Dynamic clock/calendar use pack `dynclock/` / `dyncal/` (or stock SVG when pack is `default`) when dconf dyn flags are on.
 
-Restore uses the manifest (redirect + inplace backups), restores folder backups, clears generated `launcher-icons/`, and sets `activeIconPack` to `default`.
+Restore uses the manifest (redirect `Icon=` reverts + per-slot inplace backups), restores folder backups, clears generated `launcher-icons/`, and sets `activeIconPack` to `default`. For hicolor apps `Icon=` is never rewritten, so restore repaints live through the same slot-write + desktop-touch path as apply. On a **failed** slot restore the stored fingerprint is kept: resetting it made the next apply treat our leftover bytes as stock and overwrite the real backup (seen on device — four 86x86 backups ended up holding pack art).
 
 ### Re-arming Lipstick's desktop watches
 

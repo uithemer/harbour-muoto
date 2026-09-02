@@ -56,6 +56,17 @@ InstallListener::InstallListener(QObject* parent)
     _debounce.setInterval(1500);
     connect(&_debounce, &QTimer::timeout, this, &InstallListener::onDebounceTimeout);
 
+    // Generous: two 180 s lock waits plus a 3 s retry gap is the legitimate
+    // worst case, so this only fires on a genuinely stuck script.
+    _updateWatchdog.setSingleShot(true);
+    _updateWatchdog.setInterval(420 * 1000);
+    connect(&_updateWatchdog, &QTimer::timeout, this, [this]() {
+        if(!_updateRunning || _updateProc == nullptr)
+            return;
+        qWarning() << "muoto-listener: update-icons exceeded its watchdog, killing it";
+        _updateProc->kill();
+    });
+
     subscribeSession();
     subscribeSystem();
 
@@ -90,11 +101,17 @@ InstallListener::InstallListener(QObject* parent)
                                 this);
     connect(pkWatch, &QDBusServiceWatcher::serviceOwnerChanged,
             this, [this](const QString&, const QString& newOwner, const QString&) {
-                if(!newOwner.isEmpty())
+                if(newOwner.isEmpty())
                 {
-                    qInfo() << "muoto-listener: PackageKit appeared, syncing transactions";
-                    syncPkTransactions();
+                    // Their Finished signal is never coming. Tracked paths are
+                    // only forgotten in onPkFinished, so without this they (and
+                    // their watches) accumulate for the life of the process.
+                    qInfo() << "muoto-listener: PackageKit went away, dropping tracked transactions";
+                    forgetPkTransactions();
+                    return;
                 }
+                qInfo() << "muoto-listener: PackageKit appeared, syncing transactions";
+                syncPkTransactions();
             });
 }
 
@@ -324,6 +341,13 @@ void InstallListener::onPrepareForShutdown(bool active)
     }
 }
 
+void InstallListener::forgetPkTransactions()
+{
+    _pkTransactions.clear();
+    qDeleteAll(_pkWatches);
+    _pkWatches.clear();
+}
+
 void InstallListener::onDebounceTimeout()
 {
     if(guardsBlockApply())
@@ -333,7 +357,10 @@ void InstallListener::onDebounceTimeout()
     }
     if(_updateRunning)
     {
-        qInfo() << "muoto-listener: debounce skipped (update running)";
+        // Do not drop it: a second install arriving mid-run is exactly the case
+        // where the new app ends up unthemed.
+        qInfo() << "muoto-listener: update running, queuing another pass";
+        _applyAgain = true;
         return;
     }
     qInfo() << "muoto-listener: debounce fired, trigger" << _lastTrigger;
@@ -347,27 +374,42 @@ void InstallListener::runUpdateScript()
 
     qInfo() << "muoto-listener: starting" << kUpdateScript << "trigger" << _lastTrigger;
 
+    _applyAgain = false;
     auto* proc = new QProcess(this);
+    _updateProc = proc;
     _updateRunning = true;
     connect(proc,
             static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
             this,
             &InstallListener::onUpdateScriptFinished);
+    // started()/errorOccurred() rather than waitForStarted(), which blocked this
+    // process's event loop for up to five seconds.
+    connect(proc, &QProcess::errorOccurred, this, [this, proc](QProcess::ProcessError error) {
+        if(error != QProcess::FailedToStart)
+            return;
+        qWarning() << "muoto-listener: failed to start" << kUpdateScript;
+        _updateRunning = false;
+        _updateProc = nullptr;
+        _updateWatchdog.stop();
+        proc->deleteLater();
+        if(_applyAgain)
+        {
+            _applyAgain = false;
+            _debounce.start();
+        }
+    });
     proc->setProgram(QString::fromLatin1(kUpdateScript));
     // Forward script stderr (muoto_log) into this unit's journal.
     proc->setProcessChannelMode(QProcess::ForwardedChannels);
     proc->start();
-    if(!proc->waitForStarted(5000))
-    {
-        qWarning() << "muoto-listener: failed to start" << kUpdateScript;
-        _updateRunning = false;
-        proc->deleteLater();
-    }
+    _updateWatchdog.start();
 }
 
 void InstallListener::onUpdateScriptFinished(int exitCode, QProcess::ExitStatus status)
 {
     _updateRunning = false;
+    _updateProc = nullptr;
+    _updateWatchdog.stop();
     const char* statusStr = (status == QProcess::NormalExit) ? "normal" : "crashed";
     qInfo() << "muoto-listener: update-icons finished exit=" << exitCode
             << "status=" << statusStr << "trigger=" << _lastTrigger;
@@ -375,4 +417,11 @@ void InstallListener::onUpdateScriptFinished(int exitCode, QProcess::ExitStatus 
         qWarning() << "muoto-listener: update-icons failed";
     if(auto* proc = qobject_cast<QProcess*>(sender()))
         proc->deleteLater();
+
+    if(_applyAgain)
+    {
+        _applyAgain = false;
+        qInfo() << "muoto-listener: running a queued pass for a install that arrived mid-run";
+        _debounce.start();
+    }
 }

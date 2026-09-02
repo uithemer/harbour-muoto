@@ -18,6 +18,10 @@ class MUOTO_LAUNCHER_EXPORT LauncherManifest
 public:
     static bool load(QList<LauncherManifestEntry>* out);
     static bool appendEntry(const LauncherManifestEntry& entry);
+    /** Swap all of a desktop's entries for a new set, e.g. one per themed
+     *  hicolor slot. No-op (and no manifest rewrite) when nothing changed. */
+    static bool replaceEntriesForDesktop(const QString& desktopPath,
+                                         const QList<LauncherManifestEntry>& newEntries);
     static bool removeEntryForDesktop(const QString& desktopPath);
     static bool restoreAll();
     static void pruneOrphans(const QStringList& existingDesktops);

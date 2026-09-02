@@ -140,12 +140,25 @@ void ThemePackModel::restoreTheme(bool font)
 
 void ThemePackModel::restoreDpi(bool dpr, bool iconSize)
 {
-    QMetaObject::Connection* conn = new QMetaObject::Connection;
-    *conn = QObject::connect(&_density, &DensityEnabler::restored, this,
-                             [this, conn]() {
+    // Both signals, or a failed restore leaves the GUI waiting forever now that
+    // restoreDensity() no longer emits restored() after an error.
+    auto* okConn = new QMetaObject::Connection;
+    auto* errConn = new QMetaObject::Connection;
+    const auto drain = [okConn, errConn]() {
+        QObject::disconnect(*okConn);
+        QObject::disconnect(*errConn);
+        delete okConn;
+        delete errConn;
+    };
+
+    *okConn = QObject::connect(&_density, &DensityEnabler::restored, this, [this, drain]() {
         emit dpiRestored();
-        QObject::disconnect(*conn);
-        delete conn;
+        drain();
+    });
+    *errConn = QObject::connect(&_density, &DensityEnabler::error, this,
+                                [this, drain](const QString& message) {
+        emit dpiRestoreFailed(message);
+        drain();
     });
     _density.restoreDensity(dpr, iconSize);
 }
@@ -178,9 +191,13 @@ void ThemePackModel::uninstall(int index)
     const QString rpmName = rpmNameForPack(_packlist[index]);
     if(rpmName.isEmpty())
     {
+        // Reporting completion here told the user "Theme removed." while the
+        // pack was still installed. The rpm database is genuinely busy at times
+        // -- the repair oneshot force-installs packages at first boot after an
+        // upgrade -- so this has to surface as a failure they can retry.
         qWarning() << "uninstall: cannot determine rpm for"
                    << _packlist[index];
-        emit uninstallCompleted();
+        emit uninstallFailed(QStringLiteral("cannot determine the package to remove"));
         return;
     }
     // Per-row removal happens in the HelperClient::packUninstalled

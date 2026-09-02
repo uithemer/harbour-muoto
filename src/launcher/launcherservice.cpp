@@ -1,4 +1,6 @@
 #include "launcherservice.h"
+#include "iconjob.h"
+#include "iconjobqueue.h"
 #include "launchericonops.h"
 #include "osupdateguard.h"
 
@@ -59,76 +61,78 @@ LauncherThemesAdaptor::LauncherThemesAdaptor(LauncherBackend* backend, QObject* 
 {
     setAutoRelaySignals(false);
 
-    LauncherIconOps* ops = m_backend->iconOps();
-    connect(ops, &LauncherIconOps::progress, this,
-            [this](int done, int total) {
-                emit Progress(m_currentOp, done, total);
+    IconJobQueue* queue = IconJobQueue::instance();
+
+    // Completion is matched by request id. Back-to-back operations used to be
+    // able to latch onto each other's completion; the id makes that impossible
+    // now that work is queued and a reply can arrive long after the call.
+    connect(queue, &IconJobQueue::jobFinished, this,
+            [this](const IconJob& job, bool ok, const QString& message) {
+                if(job.dbusOp.isEmpty())
+                    return;
+                emit OperationCompleted(job.dbusOp, ok, message);
+            });
+
+    // Queued-but-not-started is reported as indeterminate progress, which the
+    // GUI already renders as "Waiting…". It replaces the client-side lock probe:
+    // the daemon knows whether work is queued, the GUI could only guess by
+    // sampling a lock.
+    connect(queue, &IconJobQueue::jobQueued, this, [this](const IconJob& job) {
+        if(!job.dbusOp.isEmpty())
+            emit Progress(job.dbusOp, 0, 0);
+    });
+
+    connect(queue, &IconJobQueue::jobStarted, this, [this](const IconJob& job) {
+        m_runningOp = job.dbusOp;
+    });
+
+    connect(m_backend->iconOps(), &LauncherIconOps::progress, this,
+            [this, queue](int done, int total) {
+                if(!m_runningOp.isEmpty())
+                    emit Progress(m_runningOp, done, total);
             });
 }
 
-void LauncherThemesAdaptor::runIconOpVoid(const QString& op,
-                                          const QDBusMessage& message,
-                                          std::function<void(LauncherIconOps&)> start,
-                                          void (LauncherIconOps::*doneSignal)(bool, const QString&))
+void LauncherThemesAdaptor::enqueueOp(const QString& op, IconJob job,
+                                      const QDBusMessage& message)
 {
-    LauncherIconOps* ops = m_backend->iconOps();
-
     // Reply before the work, not after: the caller's pending call completes
     // immediately and this connection keeps serving Introspect and signal
     // traffic while the icons are rewritten.
     sendMethodReply(message);
 
-    // Context is the adaptor: if it goes away at shutdown the queued op is
-    // dropped rather than firing on a dangling `this`.
-    QTimer::singleShot(0, this, [this, ops, op, start, doneSignal]() {
-        // Connect here rather than at method-call time so back-to-back ops
-        // cannot both latch onto the first completion.
-        auto* conn = new QMetaObject::Connection;
-        *conn = connect(ops, doneSignal, this,
-                        [this, op, conn](bool ok, const QString& msg) {
-                            emit OperationCompleted(op, ok, msg);
-                            QObject::disconnect(*conn);
-                            delete conn;
-                        });
+    if(m_backend->shuttingDown())
+    {
+        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
+        return;
+    }
 
-        m_currentOp = op;
-        start(*ops);
-        m_currentOp.clear();
-    });
+    job.dbusOp = op;
+    QString rejection;
+    if(IconJobQueue::instance()->enqueue(job, &rejection) == 0)
+    {
+        // Rejected on inspection rather than queued behind a drain: an empty
+        // reason means it was a legitimate no-op.
+        const bool ok = rejection.isEmpty();
+        qInfo() << "muoto-launcher-icond:" << op << "done ok=" << ok << "msg=" << rejection;
+        emit OperationCompleted(op, ok, rejection);
+    }
 }
 
 void LauncherThemesAdaptor::ApplyIcons(const QString& pack, bool runPack, bool overlay,
                                        const QDBusMessage& message)
 {
-    const QString op = QStringLiteral("ApplyIcons");
-    if(m_backend->shuttingDown())
-    {
-        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
-        sendMethodReply(message);
-        return;
-    }
-    if(OsUpdateGuard::running())
-    {
-        emit OperationCompleted(op, false, QStringLiteral("upgrade in progress"));
-        sendMethodReply(message);
-        return;
-    }
-
-    runIconOpVoid(op, message, [pack, runPack, overlay](LauncherIconOps& o) {
-                  o.applyIcons(pack, runPack, overlay); },
-                  &LauncherIconOps::applied);
+    IconJob job;
+    job.kind = IconJob::ApplyAll;
+    job.pack = pack;
+    job.runPack = runPack;
+    job.overlay = overlay;
+    enqueueOp(QStringLiteral("ApplyIcons"), job, message);
 }
 
 void LauncherThemesAdaptor::RestoreIcons(const QDBusMessage& message)
 {
-    const QString op = QStringLiteral("RestoreIcons");
-    if(m_backend->shuttingDown())
-    {
-        emit OperationCompleted(op, false, QStringLiteral("shutting down"));
-        sendMethodReply(message);
-        return;
-    }
-
-    runIconOpVoid(op, message, [](LauncherIconOps& o) { o.restoreIcons(); },
-                  &LauncherIconOps::restored);
+    IconJob job;
+    job.kind = IconJob::Restore;
+    enqueueOp(QStringLiteral("RestoreIcons"), job, message);
 }

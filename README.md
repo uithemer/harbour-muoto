@@ -24,6 +24,7 @@ Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundl
 - Font theming.
 - Display density (pixel ratio, launcher icon size).
 - Low-power mode settings.
+- Quick app switching (hidden Sailfish OS gesture to jump back to the previous app).
 
 ## Using Muoto
 

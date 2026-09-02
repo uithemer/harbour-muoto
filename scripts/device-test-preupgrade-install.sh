@@ -20,7 +20,7 @@ RUN_PREUPGRADE=true
 RUN_INSTALL=true
 RUN_FOLDER=true
 RUN_DYN=true
-SUDO_PASS=${MUOTO_SUDO_PASS:-rootme}
+SUDO_PASS=${MUOTO_SUDO_PASS}
 PROBE_PKG=${MUOTO_PROBE_PKG:-harbour-file-browser}
 PROBE_DESKTOP=${MUOTO_PROBE_DESKTOP:-/usr/share/applications/harbour-file-browser.desktop}
 

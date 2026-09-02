@@ -72,6 +72,7 @@ OTHER_FILES += \
     $$ROOT/qml/components/DensityPreview.qml \
     $$ROOT/qml/components/DynIconsPreview.qml \
     $$ROOT/qml/components/LowPowerPreview.qml \
+    $$ROOT/qml/components/QuickSwitchPreview.qml \
     $$ROOT/qml/components/IconPackCarouselTile.qml \
     $$ROOT/qml/components/StockLauncherIcons.qml \
     $$ROOT/qml/components/FontPackCarouselTile.qml \
@@ -94,6 +95,7 @@ OTHER_FILES += \
     $$ROOT/qml/pages/DensityPage.qml \
     $$ROOT/qml/pages/DynamicIconsPage.qml \
     $$ROOT/qml/pages/LowPowerPage.qml \
+    $$ROOT/qml/pages/QuickSwitchPage.qml \
     $$ROOT/qml/pages/WelcomePage.qml \
     $$ROOT/qml/pages/AboutPage.qml \
     $$ROOT/rpm/* \
@@ -141,13 +143,15 @@ service.files = \
     $$ROOT/service/harbour-muoto-helperd.service \
     $$ROOT/service/harbour-muoto-update-icons.service \
     $$ROOT/service/harbour-muoto-oneshot-restore.service \
+    $$ROOT/service/harbour-muoto-repair-folder-icons.service \
     $$ROOT/service/muoto-dbus-wait.sh
 service.path  = /usr/share/$$TARGET/service
 
 autobin.files = \
     $$ROOT/service/harbour-muoto-update-icons \
     $$ROOT/service/harbour-muoto-oneshot-restore \
-    $$ROOT/service/harbour-muoto-migrate-bulk-icons
+    $$ROOT/service/harbour-muoto-migrate-bulk-icons \
+    $$ROOT/service/harbour-muoto-repair-folder-icons
 autobin.path = /usr/bin
 
 upgrade_dropin.files = \

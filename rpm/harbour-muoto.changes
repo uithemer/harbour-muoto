@@ -1,3 +1,9 @@
+* Sun Aug 16 2026 3.5.2-3
+- Fix for missing default jolla folder icons.
+
+* Sat Aug 15 2026 3.5.1-1
+- Fix for apps missing hicon sizes
+
 * Sat Aug 15 2026 3.5.0-1
 - Mosaic home with Icons, Fonts, Display density, and Dynamic icons pages.
 - UI polish for cover, previews and notification.

@@ -63,8 +63,45 @@ bool isApkBridgeIcon(const QString& iconPath)
 
 bool isMonitoredIcon(const QString& iconPath)
 {
-    static QRegularExpression re(QStringLiteral("/usr/share/icons/hicolor/\\w+/apps/.*"));
+    // Raster size slots only. `\w+` also matched `scalable`, so an app whose icon
+    // resolved to scalable/apps/foo.svg was treated as an inplace candidate and
+    // got PNG bytes written over its SVG.
+    static QRegularExpression re(QStringLiteral("/usr/share/icons/hicolor/\\d+x\\d+/apps/.*"));
     return re.match(iconPath).hasMatch();
+}
+
+QStringList hicolorSlotPaths(const QString& iconPath)
+{
+    QStringList slotPaths;
+    if(!isMonitoredIcon(iconPath))
+        return slotPaths;
+
+    const QString fileName = QFileInfo(iconPath).fileName();
+    if(fileName.isEmpty())
+        return slotPaths;
+
+    // Raster slots only: scalable/apps SVGs are left alone, PNG bytes must
+    // never be written over an SVG.
+    static QRegularExpression re(QStringLiteral("^\\d+x\\d+$"));
+    const QString hicolorRoot = QStringLiteral("/usr/share/icons/hicolor");
+    const QStringList sizeDirs = QDir(hicolorRoot).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for(const QString& sizeDir : sizeDirs)
+    {
+        if(!re.match(sizeDir).hasMatch())
+            continue;
+        const QString candidate = hicolorRoot + QLatin1Char('/') + sizeDir
+                                  + QStringLiteral("/apps/") + fileName;
+        if(QFile::exists(candidate))
+            slotPaths.append(candidate);
+    }
+    return slotPaths;
+}
+
+int hicolorSlotSize(const QString& slotPath)
+{
+    static QRegularExpression re(QStringLiteral("/hicolor/(\\d+)x\\d+/apps/"));
+    const QRegularExpressionMatch m = re.match(slotPath);
+    return m.hasMatch() ? m.captured(1).toInt() : 0;
 }
 
 QString resolveIconPath(const QString& iconId)
