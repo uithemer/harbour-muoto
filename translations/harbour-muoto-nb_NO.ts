@@ -29,7 +29,7 @@
     </message>
     <message>
         <source>Community testers</source>
-        <translation>Testere fra fellesskapet</translation>
+        <translation>Testere fra brukermiljøet</translation>
     </message>
     <message>
         <source>Theme packs</source>
@@ -68,70 +68,74 @@
     <name>AskForSupport</name>
     <message>
         <source>Please take a moment to consider if you can contribute to this project in one way or another.</source>
-        <translation>Vennligst ta deg tid til å vurdere om du kan bidra til dette prosjektet på en eller annen måte.</translation>
+        <translation>Vennligst tenk på om du kan bidra til dette prosjektet på en eller annen måte.</translation>
     </message>
 </context>
 <context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
-        <translation type="unfinished">Kunne ikke låse opp innstillinger for skjermtetthet</translation>
+        <translation>Kunne ikke låse opp innstillinger for skjermtetthet</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Avbryt</translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Bruk</translation>
+        <translation>Bruk</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation type="unfinished">Skjermskalering</translation>
+        <translation>Skjermskalering</translation>
     </message>
     <message>
         <source>Restore default</source>
-        <translation type="unfinished"></translation>
+        <translation>Gjenopprett standard</translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation type="unfinished">Styrer hvor store elementene i Sailfish-grensesnittet skal være. Lavere = plass til mer på skjermen; høyere = større tekst og knapper.</translation>
+        <translation>Styrer hvor store elementene i Sailfish-grensesnittet skal være. Lavere = plass til mer på skjermen; høyere = større tekst og knapper.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation type="unfinished">Ikonstørrelse i app-oversikt</translation>
+        <translation>Ikonstørrelse i app-oversikt</translation>
     </message>
     <message>
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation type="unfinished">Ikoner på startskjermen og i app-rutenettet. Systemstandarden bruker enhetens normale størrelse.</translation>
+        <translation>Ikoner på startskjermen og i app-rutenettet. Systemstandarden bruker enhetens normale størrelse.</translation>
     </message>
     <message>
         <source>System default</source>
-        <translation type="unfinished">Systemstandard</translation>
+        <translation>Systemstandard</translation>
     </message>
     <message>
         <source>Compact (86)</source>
-        <translation type="unfinished">Kompakt (86)</translation>
+        <translation>Kompakt (86)</translation>
     </message>
     <message>
         <source>Normal (108)</source>
-        <translation type="unfinished">Normal (108)</translation>
+        <translation>Normal (108)</translation>
     </message>
     <message>
         <source>Medium (129)</source>
-        <translation type="unfinished">Medium (129)</translation>
+        <translation>Medium (129)</translation>
     </message>
     <message>
         <source>Large (151)</source>
-        <translation type="unfinished">Stor (151)</translation>
+        <translation>Stor (151)</translation>
     </message>
     <message>
         <source>Extra large (172)</source>
-        <translation type="unfinished">Ekstra stor (172)</translation>
+        <translation>Ekstra stor (172)</translation>
+    </message>
+    <message>
+        <source>When you are done, restart the homescreen to apply these changes.</source>
+        <translation>Når du er ferdig, starter du startskjermen på nytt for å ta i bruk endringene.</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Start startskjermen på nytt etter at skjermtettheten er satt, slik at alle apper fanger opp endringene.</translation>
     </message>
 </context>
 <context>
@@ -149,43 +153,43 @@
     <name>DynamicIconsPage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Avbryt</translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Bruk</translation>
+        <translation>Bruk</translation>
     </message>
     <message>
         <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dette temaet inneholder ikke dynamiske klokke- eller kalenderikoner. Prøv et annet tema, eller gjenopprett standardutseendet.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis gjeldende tid og dato på klokke- og kalenderikonene dine.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis gjeldende tid og dato på klokke- og kalenderikonene dine i stilen til dette temaet.</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamisk klokkeikon</translation>
     </message>
     <message>
         <source>Shows the current time on the Clock launcher icon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Viser gjeldende tid på klokkeikonet i app-oversikten.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamisk kalenderikon</translation>
     </message>
     <message>
         <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Viser dagens dato på kalenderikonet i app-oversikten.</translation>
     </message>
     <message>
         <source>Dynamic icons updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamiske ikoner er oppdatert.</translation>
     </message>
 </context>
 <context>
@@ -203,46 +207,46 @@
     <name>FontCarouselModel</name>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard</translation>
     </message>
 </context>
 <context>
     <name>FontsConfigurePage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Avbryt</translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Bruk</translation>
+        <translation>Bruk</translation>
     </message>
     <message>
         <source>This pack provides non-Latin fonts only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Denne pakken inneholder kun ikke-latinske skrifttyper.</translation>
     </message>
     <message>
         <source>Choose a font weight to preview</source>
-        <translation type="unfinished">Velg en skrifttykkelse for å forhåndsvise</translation>
+        <translation>Velg en skrifttykkelse for å forhåndsvise</translation>
     </message>
     <message>
         <source>Font packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrifttypepakker</translation>
     </message>
     <message>
         <source>Font weight</source>
-        <translation type="unfinished">Skrifttykkelse</translation>
+        <translation>Skrifttykkelse</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
-        <translation type="unfinished"></translation>
+        <translation>Start startskjermen på nytt etter at du har endret skrifttype, slik at alle apper fanger opp den nye skrifttypen.</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished">Avinstaller</translation>
+        <translation>Avinstaller</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished">Avinstallerer %1</translation>
+        <translation>Avinstallerer %1</translation>
     </message>
 </context>
 <context>
@@ -260,66 +264,66 @@
     <name>IconPackPreview</name>
     <message>
         <source>No preview available</source>
-        <translation type="unfinished">Ingen forhåndsvisning tilgjengelig</translation>
+        <translation>Ingen forhåndsvisning tilgjengelig</translation>
     </message>
 </context>
 <context>
     <name>IconsConfigurePage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Avbryt</translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Bruk</translation>
+        <translation>Bruk</translation>
     </message>
     <message>
         <source>Icon packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Ikonpakker</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Alternativer</translation>
     </message>
     <message>
         <source>Style missing app icons</source>
-        <translation type="unfinished">Tilpass manglende app-ikoner</translation>
+        <translation>Tilpass manglende app-ikoner</translation>
     </message>
     <message>
         <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation type="unfinished">Bruker dette temaets utseende for apper som ikke har et eget ikon i pakken.</translation>
+        <translation>Bruker dette temaets utseende for apper som ikke har et eget ikon i pakken.</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamisk klokkeikon</translation>
     </message>
     <message>
         <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis gjeldende tid på klokkeikonet i stilen til dette temaet.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamisk kalenderikon</translation>
     </message>
     <message>
         <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis dagens dato på kalenderikonet i stilen til dette temaet.</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
-        <translation type="unfinished"></translation>
+        <translation>Start startskjermen på nytt etter at du har valgt ikoner, slik at alle snarveiene oppdateres.</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished">Avinstaller</translation>
+        <translation>Avinstaller</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished">Avinstallerer %1</translation>
+        <translation>Avinstallerer %1</translation>
     </message>
 </context>
 <context>
@@ -333,67 +337,67 @@
     <name>LowPowerPage</name>
     <message>
         <source>Could not update low-power mode settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunne ikke oppdatere innstillinger for lavstrømsmodus</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Avbryt</translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Bruk</translation>
+        <translation>Bruk</translation>
     </message>
     <message>
         <source>Low-power mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Lavstrømsmodus</translation>
     </message>
     <message>
         <source>Low-power mode settings are not available on this device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Innstillinger for lavstrømsmodus er ikke tilgjengelige på denne enheten.</translation>
     </message>
     <message>
         <source>Wake from pocket</source>
-        <translation type="unfinished"></translation>
+        <translation>Vekk fra lomme</translation>
     </message>
     <message>
         <source>Wake on hover</source>
-        <translation type="unfinished"></translation>
+        <translation>Vekk ved berøringsfri sveip</translation>
     </message>
     <message>
         <source>Show the glance screen when you hold your hand over the sensor.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis hurtigvisningsskjermen når du holder hånden over sensoren.</translation>
     </message>
     <message>
         <source>Keep proximity ready</source>
-        <translation type="unfinished"></translation>
+        <translation>Hold avstandssensoren aktiv</translation>
     </message>
     <message>
         <source>Use recommended</source>
-        <translation type="unfinished"></translation>
+        <translation>Bruk anbefalt</translation>
     </message>
     <message>
         <source>Restore defaults</source>
-        <translation type="unfinished"></translation>
+        <translation>Gjenopprett standarder</translation>
     </message>
     <message>
         <source>Automatically show time and status information when the screen is off.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis tid og statusinformasjon automatisk når skjermen er slått av.</translation>
     </message>
     <message>
         <source>Show the glance screen when taking the device out of pocket.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis hurtigvisningsskjermen når enheten tas ut av lommen.</translation>
     </message>
     <message>
         <source>Needed for reliable glance on many devices. Enabling this may use more battery, and the screen may not turn off reliably during calls.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nødvendig for pålitelig hurtigvisning på mange enheter. Aktivering av dette kan bruke mer batteri, og det er ikke sikkert at skjermen slår seg av korrekt under samtaler.</translation>
     </message>
     <message>
         <source>Double tap the glance screen to wake fully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dobbelttrykk på hurtigvisningsskjermen for å vekke enheten helt.</translation>
     </message>
     <message>
         <source>Low-power settings updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Innstillinger for lavstrømsmodus er oppdatert.</translation>
     </message>
 </context>
 <context>
@@ -404,43 +408,47 @@
     </message>
     <message>
         <source>Dynamic icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamiske ikoner</translation>
     </message>
     <message>
         <source>Download more themes</source>
-        <translation type="unfinished">Last ned flere temaer</translation>
+        <translation>Last ned flere temaer</translation>
     </message>
     <message>
         <source>Muoto</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto</translation>
     </message>
     <message>
         <source>Icons</source>
-        <translation type="unfinished">Ikoner</translation>
+        <translation>Ikoner</translation>
     </message>
     <message>
         <source>Stock</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard</translation>
     </message>
     <message>
         <source>Fonts</source>
-        <translation type="unfinished">Skrifttyper</translation>
+        <translation>Skrifttyper</translation>
+    </message>
+    <message>
+        <source>Tap to configure</source>
+        <translation>Trykk for å konfigurere</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Ikke tilgjengelig</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"></translation>
+        <translation>På</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Av</translation>
     </message>
     <message>
         <source>Low-power mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Lavstrømsmodus</translation>
     </message>
     <message>
         <source>Default</source>
@@ -513,7 +521,7 @@
     </message>
     <message>
         <source>Donations and contributions help keep the app compatible with new Sailfish releases and theme packs from the community.</source>
-        <translation>Donasjoner og bidrag bidrar til å holde appen kompatibel med nye Sailfish-versjoner og temapakker fra fellesskapet.</translation>
+        <translation>Donasjoner og bidrag bidrar til å holde appen kompatibel med nye Sailfish-versjoner og temapakker fra brukermiljøet.</translation>
     </message>
     <message>
         <source>Other ways to help</source>
@@ -548,7 +556,7 @@
     </message>
     <message>
         <source>Homepage</source>
-        <translation>Hjemmeside</translation>
+        <translation>Nettside</translation>
     </message>
     <message>
         <source>Changelog</source>
@@ -753,43 +761,43 @@
     <name>ThemeWork</name>
     <message>
         <source>Stock</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard</translation>
     </message>
     <message>
         <source>Applying theme</source>
-        <translation type="unfinished">Aktiverer tema</translation>
+        <translation>Aktiverer tema</translation>
     </message>
     <message>
         <source>Applying icons…</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiverer ikoner…</translation>
     </message>
     <message>
         <source>Applying fonts…</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiverer skrifttyper…</translation>
     </message>
     <message>
         <source>Restoring theme…</source>
-        <translation type="unfinished">Gjenoppretter tema…</translation>
+        <translation>Gjenoppretter tema…</translation>
     </message>
     <message>
         <source>Uninstalling theme…</source>
-        <translation type="unfinished">Avinstallerer tema…</translation>
+        <translation>Avinstallerer tema…</translation>
     </message>
     <message>
         <source>Waiting…</source>
-        <translation type="unfinished"></translation>
+        <translation>Venter…</translation>
     </message>
     <message>
         <source>Theme updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema oppdatert.</translation>
     </message>
     <message>
         <source>Display settings updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Skjerminnstillinger oppdatert.</translation>
     </message>
     <message>
         <source>Theme removed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema fjernet.</translation>
     </message>
     <message>
         <source>Font applied. %1</source>
@@ -910,7 +918,7 @@
     </message>
     <message>
         <source>Busy — try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Opptatt — prøv igjen om et øyeblikk</translation>
     </message>
     <message>
         <source>Icons could not be changed — try restarting the device</source>
