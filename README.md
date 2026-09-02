@@ -10,7 +10,15 @@ permalink: /
 
 Muoto lets you customize icons, fonts and pixel density in Sailfish OS. It bundles the former **Theme pack support** engine (systemd services, privileged helper, and compatibility with `harbour-themepack-*` packages) in a single app.
 
-[![GitHub license](https://img.shields.io/github/license/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/releases/latest) [![Donate on Liberapay](https://img.shields.io/badge/Donate-Liberapay-orange.svg)](https://liberapay.com/fravaccaro)
+[![GitHub license](https://img.shields.io/github/license/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/issues) [![GitHub releases](https://img.shields.io/github/release/uithemer/harbour-muoto.svg)](https://github.com/uithemer/harbour-muoto/releases/latest)
+
+## Donate
+
+The SailfishOS Community Team is on Liberapay:
+
+[![Liberapay receiving](https://img.shields.io/liberapay/receives/SailfishOScommunityTeam?logo=liberapay&label=SailfishOSCommunity)](https://liberapay.com/SailfishOScommunityTeam)
+
+[![Liberapay receiving](https://img.shields.io/liberapay/receives/fravaccaro?logo=liberapay&label=fravaccaro)](https://liberapay.com/fravaccaro)
 
 ## Features
 
