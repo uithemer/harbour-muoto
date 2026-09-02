@@ -62,8 +62,9 @@ Two independent triggers re-theme after an install or update while a pack is act
 
 - Unprivileged, in the **GUI process** via `FontApplier` (`src/gui/fontapplier.cpp`), driven by `ThemePackModel::applyTheme` / `restoreTheme`.
 - Icons/Fonts configure pages and `ThemeWork` call these (icons go through `Helper` → launcher-icond in parallel).
-- Apply: copy pack `font/` (+ optional `font-nonlatin/`) into `~/.local/share/fonts/muoto/` (Sailjail-readable), write `~/.config/fontconfig/conf.d/99-muoto.conf` with `<dir>` pointing at that staging tree, run `fc-cache`; sets `activeFontPack` in dconf. Real copies — not symlinks into `.themepack`.
-- Restore: remove that conf and wipe `~/.local/share/fonts/muoto/`, `fc-cache`, clear `activeFontPack`.
+- Apply: copy pack `font/` (+ optional `font-nonlatin/`) into `~/.local/share/fonts/muoto/` (Sailjail-readable), write `~/.config/fontconfig/conf.d/99-muoto.conf` with `<dir>` pointing at that staging tree, run `fc-cache`. Real copies — not symlinks into `.themepack`.
+- Restore: remove that conf and wipe `~/.local/share/fonts/muoto/`, `fc-cache`.
+- **The worker owns `activeFontPack` / `activeFontWeight`**, like launcher-icond owns `activeIconPack`: `FontApplier::storeActiveFont` writes them (via `runDconfAsDefaultUser`) as soon as the conf lands and *before* `fc-cache`, because the conf being on disk is what makes the font active and the cache refresh is the slow tail. QML's commit on `applied()` / `restored()` still runs and is belt-and-braces. Do not move the write back to QML only: the GUI closing mid-apply then left the pack staged and aliased while dconf still named the old one, so the Fonts tile lied about what was rendering.
 - After upgrading to 3.2.2+, reapply the font once so jailed apps pick up staging (RPM update does not rewrite an existing conf).
 - User docs: [docs/fonts.md](docs/fonts.md). UI: `qml/pages/FontsConfigurePage.qml`, `qml/components/ThemeWork.qml`.
 

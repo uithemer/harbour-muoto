@@ -427,10 +427,6 @@
         <translation type="unfinished">Teckensnitt</translation>
     </message>
     <message>
-        <source>Tap to configure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Not available</source>
         <translation type="unfinished"></translation>
     </message>
@@ -444,6 +440,14 @@
     </message>
     <message>
         <source>Low-power mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick app switching</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -685,6 +689,41 @@
     <message>
         <source>The page is taking too long to load.</source>
         <translation>Sidan tar för lång tid att läsa in.</translation>
+    </message>
+</context>
+<context>
+    <name>QuickSwitchPage</name>
+    <message>
+        <source>Quick app switching enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick app switching disabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished">Tillämpa</translation>
+    </message>
+    <message>
+        <source>Quick app switching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Jump straight back to the previous app, like Alt+Tab on a computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Peek slowly from the edge of the screen, about three centimetres and for more than half a second. The previous app&apos;s cover highlights on the switcher; lift your finger to switch to it, or peek back towards the edge to cancel.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This is an experimental Sailfish OS setting. It may behave differently or disappear in a future OS release.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

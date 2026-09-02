@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl_BE">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="nl_BE">
 <context>
     <name>AboutPage</name>
     <message>
@@ -126,10 +128,6 @@
     <message>
         <source>Extra large (172)</source>
         <translation>Extra groôt (172)</translation>
-    </message>
-    <message>
-        <source>When you are done, restart the homescreen to apply these changes.</source>
-        <translation>Herstart ’t startschèrm als ge gereêd zij’ voôr de wijzigingen toe te passen.</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
@@ -429,10 +427,6 @@
         <translation>Lettertypen</translation>
     </message>
     <message>
-        <source>Tap to configure</source>
-        <translation>Tikt voôr te configureren</translation>
-    </message>
-    <message>
         <source>Not available</source>
         <translation>Ni beschikbaar</translation>
     </message>
@@ -447,6 +441,14 @@
     <message>
         <source>Low-power mode</source>
         <translation>Leêgverbruiksmodus</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished">Standaard</translation>
+    </message>
+    <message>
+        <source>Quick app switching</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -570,7 +572,10 @@
     </message>
     <message numerus="yes">
         <source>show license(s)</source>
-        <translation><numerusform>licentie tônen</numerusform><numerusform>licenties tônen</numerusform></translation>
+        <translation>
+            <numerusform>licentie tônen</numerusform>
+            <numerusform>licenties tônen</numerusform>
+        </translation>
     </message>
     <message>
         <source>News</source>
@@ -614,7 +619,10 @@
     </message>
     <message numerus="yes">
         <source>License(s)</source>
-        <translation><numerusform>Licentie</numerusform><numerusform>Licenties</numerusform></translation>
+        <translation>
+            <numerusform>Licentie</numerusform>
+            <numerusform>Licenties</numerusform>
+        </translation>
     </message>
     <message>
         <source>Note: please check the source code for most accurate information.</source>
@@ -684,6 +692,41 @@
     </message>
 </context>
 <context>
+    <name>QuickSwitchPage</name>
+    <message>
+        <source>Quick app switching enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick app switching disabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuleren</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished">Toepassen</translation>
+    </message>
+    <message>
+        <source>Quick app switching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Jump straight back to the previous app, like Alt+Tab on a computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Peek slowly from the edge of the screen, about three centimetres and for more than half a second. The previous app&apos;s cover highlights on the switcher; lift your finger to switch to it, or peek back towards the edge to cancel.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This is an experimental Sailfish OS setting. It may behave differently or disappear in a future OS release.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
@@ -747,6 +790,10 @@
     <message>
         <source>Theme removed.</source>
         <translation>’t Thema is verwijderd.</translation>
+    </message>
+    <message>
+        <source>Font applied. %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -864,6 +911,22 @@
     <message>
         <source>Busy — try again in a moment</source>
         <translation>Bezig — probeer ’t sebiet nog ne keêr</translation>
+    </message>
+    <message>
+        <source>Icons could not be changed — try restarting the device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some icons could not be updated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some icons could not be restored</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not remove this theme — try again in a moment</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
