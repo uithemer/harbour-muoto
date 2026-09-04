@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="nl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
 <context>
     <name>AboutPage</name>
     <message>
@@ -444,11 +442,11 @@
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished">Standaard</translation>
+        <translation>Standaard</translation>
     </message>
     <message>
         <source>Quick app switching</source>
-        <translation type="unfinished"></translation>
+        <translation>Snel wisselen van app</translation>
     </message>
 </context>
 <context>
@@ -572,10 +570,7 @@
     </message>
     <message numerus="yes">
         <source>show license(s)</source>
-        <translation>
-            <numerusform>licentie tonen</numerusform>
-            <numerusform>licenties tonen</numerusform>
-        </translation>
+        <translation><numerusform>licentie tonen</numerusform><numerusform>licenties tonen</numerusform></translation>
     </message>
     <message>
         <source>News</source>
@@ -619,10 +614,7 @@
     </message>
     <message numerus="yes">
         <source>License(s)</source>
-        <translation>
-            <numerusform>Licentie</numerusform>
-            <numerusform>Licenties</numerusform>
-        </translation>
+        <translation><numerusform>Licentie</numerusform><numerusform>Licenties</numerusform></translation>
     </message>
     <message>
         <source>Note: please check the source code for most accurate information.</source>
@@ -695,35 +687,35 @@
     <name>QuickSwitchPage</name>
     <message>
         <source>Quick app switching enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Snel wisselen van app ingeschakeld.</translation>
     </message>
     <message>
         <source>Quick app switching disabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Snel wisselen van app uitgeschakeld.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished">Toepassen</translation>
+        <translation>Toepassen</translation>
     </message>
     <message>
         <source>Quick app switching</source>
-        <translation type="unfinished"></translation>
+        <translation>Snel wisselen van app</translation>
     </message>
     <message>
         <source>Jump straight back to the previous app, like Alt+Tab on a computer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Keer meteen terug naar de vorige app, zoals met Alt+Tab op een computer.</translation>
     </message>
     <message>
         <source>Peek slowly from the edge of the screen, about three centimetres and for more than half a second. The previous app&apos;s cover highlights on the switcher; lift your finger to switch to it, or peek back towards the edge to cancel.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gluur even van de rand van het scherm en beweeg je vinger tot aan of over het midden. De hoes van de laatst actieve app zal oplichten. Laat je vinger los van het scherm om naar die app te wisselen, of beweeg hem terug naar de rand om het wisselen te annuleren.</translation>
     </message>
     <message>
         <source>This is an experimental Sailfish OS setting. It may behave differently or disappear in a future OS release.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit is een experimentele instelling in Sailfish OS. In toekomstige versies zou de instelling anders kunnen werken of verwijderd worden.</translation>
     </message>
 </context>
 <context>
@@ -793,7 +785,7 @@
     </message>
     <message>
         <source>Font applied. %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Lettertype toegepast. %1</translation>
     </message>
 </context>
 <context>
@@ -914,19 +906,19 @@
     </message>
     <message>
         <source>Icons could not be changed — try restarting the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Pictogrammen konden niet gewijzigd worden — probeer het apparaat te herstarten</translation>
     </message>
     <message>
         <source>Some icons could not be updated</source>
-        <translation type="unfinished"></translation>
+        <translation>Sommige pictogrammen konden niet gewijzigd worden</translation>
     </message>
     <message>
         <source>Some icons could not be restored</source>
-        <translation type="unfinished"></translation>
+        <translation>Sommige pictogrammen konden niet hersteld worden</translation>
     </message>
     <message>
         <source>Could not remove this theme — try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Kon dit thema niet verwijderen — probeer het zo dadelijk nog een keer</translation>
     </message>
 </context>
 </TS>
