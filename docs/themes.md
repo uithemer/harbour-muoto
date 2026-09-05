@@ -9,13 +9,15 @@ nav_order: 2
 
 From the home mosaic, open the **Icons** or **Fonts** tile. Each configure page lists installed `harbour-themepack-*` packages (e.g. from OpenRepos).
 
+Installing a pack means leaving Muoto, so the list is rescanned when you come back to the app — a pack installed from Storeman while Muoto was in the background shows up without restarting it.
+
 ## Apply a theme
 
 Swipe the pack carousel, choose options (style for missing icons and/or font weight if offered), then tap **Apply**.
 
 You can combine packs — for example icons from one pack and fonts from another (apply each part from its configure page).
 
-If the pack includes live clock or calendar artwork, the Icons page also offers **Dynamic clock** / **Dynamic calendar** switches. You can change those later from the **[Dynamic icons](dynamic-icons)** tile.
+If the pack includes live clock or calendar artwork, the Icons page also offers **Dynamic clock** / **Dynamic calendar** switches. You can change those later from the **[Dynamic icons](dynamic-icons.md)** tile.
 
 ## Style missing app icons
 

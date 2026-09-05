@@ -1,3 +1,19 @@
+* Fri Sep 04 2026 3.6.0-7
+- Icon apply rewritten: native app icons are written in place across every
+  icon size an app ships. Fixes icons that stayed on the previous pack, or
+  came back as a mix of themed and default ones after a restore.
+- Stock icons are backed up and restored per size, and a failed restore no
+  longer lets the next apply save themed artwork as the stock icon.
+- All icon operations run one at a time through a single queue, removing the
+  overlapping-operation races that could leave a launcher entry broken.
+- Apply and restore report progress and a real outcome; the result of the last
+  operation is kept in /usr/share/harbour-muoto/last-op.json for support.
+- More reliable display density unlock; the Display density tile shows the
+  live pixel ratio and launcher icon size.
+- Theme list is rescanned when returning to the app, so packs installed
+  meanwhile appear without restarting Muoto.
+- Translations updated.
+
 * Sun Aug 16 2026 3.5.2-3
 - Fix for missing default jolla folder icons.
 

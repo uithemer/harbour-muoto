@@ -41,9 +41,17 @@ Lipstick caches launcher artwork by the desktop `Icon=` string, and **pins** ite
 2. **Inplace (all hicolor raster slots)** — `FileWrite::inPlace` on each slot (inode preserved); `Icon=` name unchanged; **`futimens` the `.desktop`** so Lipstick re-reads the entry and re-pins from the new bytes.
 3. **Always touch the `.desktop`** after PNG / `Icon=` changes (`touchFile` / `futimens`).
 4. Avoid deleting a PNG while `Icon=` still names it (`inotify_add_watch` ENOENT → frozen tile until lipstick restart).
-5. **Re-arm the watch on APK desktops first.** Lipstick keeps a per-file inotify watch on every `.desktop` and only re-reads one when that watch fires. apkd rewrites `apkd_launcher_*.desktop` with `rename(2)`, so Qt drops the watch, and `LauncherMonitor::onDirectoryChanged` never re-adds it (the filename is already known). After that, `Icon=` rewrites are invisible. `LauncherWatch::rearmDesktopWatches` renames each entry aside and back with a short gap: two directory scans inside Lipstick's 2000 ms holdback, so the pending add and remove cancel — the watch comes back with no launcher item or grid-position churn. Apply and restore both call it before touching `Icon=`.
+5. **Re-arm the watch on APK desktops first.** Lipstick keeps a per-file inotify watch on every `.desktop` and only re-reads one when that watch fires. apkd rewrites `apkd_launcher_*.desktop` with `rename(2)`, so Qt drops the watch, and `LauncherMonitor::onDirectoryChanged` never re-adds it (the filename is already known). After that, `Icon=` rewrites are invisible. `LauncherRearm` renames each entry aside and back with a short gap: two directory scans inside Lipstick's 2000 ms holdback, so the pending add and remove cancel — the watch comes back with no launcher item or grid-position churn. Apply and restore both call it (`rearmThen()`) before touching `Icon=`. It is a **single-shot timer state machine, never a nested `QEventLoop`**: nested loops made the daemon re-entrant, and a write to an entry that was renamed aside produced a stub. Entries left aside must always be put back — `sweepStaleRearmFiles()` at rebuild, `abortAndRestore()` on SIGTERM — or the user loses those launcher items for good.
 
 Implementation: `src/launcher/iconupdater.cpp`, `iconresolve.cpp`, `launcherwatch.cpp`, `overlayiconprovider.cpp`, `folderambient.cpp`.
+
+## Operation queue and outcome
+
+- **Every** trigger (D-Bus, dconf watches, desktop-directory watcher, apkd readiness, dynamic tick) describes an `IconJob` and hands it to `IconJobQueue`. Do not call `LauncherIconOps` directly: that is what let two operations overlap in one process, where `FileLock` cannot arbitrate.
+- One job at a time; callers never block. The flock is held across the whole **drain**, because the shell callers watch that lock to decide an operation finished — a per-job lock would let them observe someone else's.
+- `beginSelfWrite()` / `endSelfWrite()` mark a job's own dconf writes so the resulting watches do not re-enqueue work in progress.
+- `ApplyIcons` / `RestoreIcons` **reply immediately**; the result comes back as `OperationCompleted(op, ok, message)`, matched by request id. `Progress(op, 0, 0)` means queued-not-started (GUI shows *Waiting…*).
+- `OpStatus` writes `/usr/share/harbour-muoto/last-op.json` (`ok` / `partial` / `failed`, plus `built` / `written`). The sequence is seeded from the file at startup, never from zero. Shell callers read it instead of inferring success from the lock lifecycle, and it is the only history a bug report has — journald is `Storage=volatile` on device.
 
 ## Android container restarts
 
@@ -109,6 +117,9 @@ Two independent triggers re-theme after an install or update while a pack is act
 | Icon apply / rebuild | `src/launcher/launchericonops.cpp` |
 | Install / update re-theme | `src/listener/installlistener.cpp`, `src/listener/pktxwatch.cpp`, `service/harbour-muoto-update-icons` |
 | Icon inplace / redirect | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
+| Operation queue / outcome | `src/launcher/iconjobqueue.cpp`, `iconjob.h`, `opstatus.cpp` |
+| Stock backup / inode-preserving write | `src/launcher/iconbackup.cpp`, `filewrite.cpp` |
+| Paths / dconf keys | `src/launcher/launcherpaths.cpp`, `launchersettings.cpp` |
 | Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |
 | apkd container readiness | `src/launcher/aliendalvikwatcher.cpp` |
 | Path resolve (hicolor size / APK) | `src/launcher/iconresolve.cpp` |
@@ -121,4 +132,4 @@ Two independent triggers re-theme after an install or update while a pack is act
 | Icons / fonts configure | `qml/pages/IconsConfigurePage.qml`, `qml/pages/FontsConfigurePage.qml` |
 | Dyn icons | `qml/pages/DynamicIconsPage.qml` |
 | Quick app switching | `qml/pages/QuickSwitchPage.qml`, `qml/components/QuickSwitchPreview.qml` |
-| Session D-Bus | `dbus/org.muoto.Launcher1.Themes.xml`, `src/launcher-daemon/main.cpp` |
+| Session D-Bus | `dbus/org.muoto.Launcher1.Themes.xml`, `src/launcher/launcherservice.cpp`, `src/launcher-daemon/main.cpp` |

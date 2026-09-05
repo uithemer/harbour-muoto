@@ -22,7 +22,7 @@ Note: results may vary if the fonts lack glyphs for some characters.
 
 ## Building
 
-Copy the [`font-theme/`](https://github.com/uithemer/harbour-themepack-example/tree/master/font-theme) template from the example repo, add your fonts under `theme/`, edit `rpm/*.spec` metadata, then build with the Sailfish SDK — see [Building](getstarted#building) in the getstarted guide.
+Copy the [`font-theme/`](https://github.com/uithemer/harbour-themepack-example/tree/master/font-theme) template from the example repo, add your fonts under `theme/`, edit `rpm/*.spec` metadata, then build with the Sailfish SDK — see [Building](getstarted.md#building) in the getstarted guide.
 
 ## Non-Latin fonts
 

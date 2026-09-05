@@ -48,7 +48,7 @@ Download theme packs from [OpenRepos](https://openrepos.net/tags/themepack).
 
 ## Developers
 
-[Developers](docs/devel/) — architecture, testing, debugging, and auto-apply automation (maintainers and contributors). See also **AGENTS.md** at the repository root for coding-agent orientation.
+[Developers](docs/devel/index.md) — architecture, testing, debugging, and auto-apply automation (maintainers and contributors). See also **AGENTS.md** at the repository root for coding-agent orientation.
 
 ## Translate
 

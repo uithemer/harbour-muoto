@@ -32,4 +32,4 @@ Open **Dynamic icons** to turn each option on or off without re-applying the who
 
 * Dynamic icons need the Muoto launcher icon service running (installed with the app).
 * If the homescreen still shows a static icon after enabling, use **Restart homescreen** from the home pulley menu.
-* Pack authors: see [DynCal](icons#dyncal) and [DynClock](icons#dynclock) for asset layout.
+* Pack authors: see [DynCal](icons.md#dyncal) and [DynClock](icons.md#dynclock) for asset layout.

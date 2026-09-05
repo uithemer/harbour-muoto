@@ -14,11 +14,11 @@ How to create icons compatible with **Muoto**.
 1. Copy the [`icon-theme/`](https://github.com/uithemer/harbour-themepack-example/tree/master/icon-theme) or [`full-theme/`](https://github.com/uithemer/harbour-themepack-example/tree/master/full-theme) template from the example repo.
 2. Place launcher and app icons under `theme/native/<size>/apps/`, `theme/jolla/<z>/icons/`, and/or `theme/apk/<size>/` using the **same basename** as the stock PNG (e.g. `icon-launcher-camera.png`).
 3. Optional: add `theme/overlay/*.png` (see [Style missing app icons (`overlay/`)](#style-missing-app-icons-overlay) below). Export SVG sources with [themepack-helper](https://github.com/uithemer/harbour-themepack-example/tree/master/themehelper).
-4. Build with the Sailfish SDK — see [Building](getstarted#building) in the getstarted guide. Publish on OpenRepos; users need **Muoto** installed.
+4. Build with the Sailfish SDK — see [Building](getstarted.md#building) in the getstarted guide. Publish on OpenRepos; users need **Muoto** installed.
 
 ## Theme pack layout
 
-When authoring a pack, place assets under `theme/` in your project (see [Project layout](getstarted#project-layout)). After installation on a device, Muoto reads them from `/usr/share/harbour-themepack-<name>/`:
+When authoring a pack, place assets under `theme/` in your project (see [Project layout](getstarted.md#project-layout)). After installation on a device, Muoto reads them from `/usr/share/harbour-themepack-<name>/`:
 
 ```
 theme/                         →  /usr/share/harbour-themepack-<name>/
@@ -67,7 +67,7 @@ Stock reference paths on device (read-only):
 
 From **Muoto 3.2**, only **`icon-launcher-*`** keys under `jolla/<z>/icons/` are themed (via the launcher daemon). Status bar, covers, in-app `graphic-*`, and other ambient families are **not** bulk-copied into silica anymore.
 
-Ship launcher keys under `jolla/<z>/icons/`. Jolla/system ids are usually applied via **redirect** to `/usr/share/harbour-muoto/launcher-icons/`; harbour/native pack icons under `native/` use **inplace** when the app ships a single hicolor size (`Icon=` name unchanged), or **redirect** when multiple hicolor sizes (or scalable) exist for the same basename. Engine details: [Architecture](devel/architecture).
+Ship launcher keys under `jolla/<z>/icons/`. Jolla/system ids are usually applied via **redirect** to `/usr/share/harbour-muoto/launcher-icons/`; harbour/native pack icons under `native/` use **inplace** when the app ships a single hicolor size (`Icon=` name unchanged), or **redirect** when multiple hicolor sizes (or scalable) exist for the same basename. Engine details: [Architecture](devel/architecture.md).
 
 Homescreen **folders** use theme ids `icon-launcher-folder-01` … `16` (`image://theme/` / Lipstick `Folder*.directory`). Muoto themes those by scoped writeback into sailfish-default silica (`icon-launcher-folder-NN.png` only), with backups under `/usr/share/harbour-muoto/backup/folder-icons/`. Ship matching PNGs under `jolla/`, or enable overlay to replace stock folder glyphs with the overlay frame alone (no inner stock icon). Folder **picker** and tiles then both show the themed silica assets.
 
@@ -98,7 +98,7 @@ The old Android-only overlay trick (root file `type` containing `android`) is **
 
 | Path / file | Status |
 |-------------|--------|
-| `sound/` | Removed in 2.4.4 — see [Sounds](sounds) |
+| `sound/` | Removed in 2.4.4 — see [Sounds](sounds.md) |
 | `dyncal/`, `dynclock/` | Launcher daemon when enabled via Icons configure / Dynamic icons screen; pack assets when present |
 | Root `type` (`android` overlay-only packs) | Dropped in 2.7.1 |
 

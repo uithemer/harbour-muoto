@@ -14,7 +14,8 @@ Headless icon re-apply after app installs and at boot, plus a full stock restore
 | Artifact | Role |
 | -------- | ---- |
 | `/usr/bin/harbour-muoto-update-icons` | Read dconf → `ApplyIcons` (cover-sync); waits on `icon-ops.lock` via flock |
-| `service/muoto-dbus-wait.sh` | Shared D-Bus helpers, backup probe, flock wait, `su defaultuser` dconf |
+| `service/muoto-dbus-wait.sh` | Shared D-Bus helpers, backup probe, flock wait, op-status read, `su defaultuser` dconf |
+| `/usr/share/harbour-muoto/last-op.json` | Outcome of the last icon operation; how the scripts tell success from a rejected no-op |
 | `/usr/bin/harbour-muoto-oneshot-restore` | Pre-upgrade (no args) or RPM uninstall (`--uninstall`): fonts, conditional `RestoreIcons`, dconf, density, vendor locks |
 | `harbour-muoto-update-icons.service` | Boot oneshot (runs as **root**; dconf via `su defaultuser`) |
 | `harbour-muoto-oneshot-restore.service` | Before `sailfish-upgrade-ui` |
@@ -55,7 +56,9 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 | Icon op retry gap | **3s** | Sleep between one retry on failed restore or apply |
 | systemd unit | **600s** | `TimeoutStartSec` on `harbour-muoto-update-icons.service` and `harbour-muoto-oneshot-restore.service` (whole oneshot run) |
 
-**Flock semantics:** scripts wait until `/usr/share/harbour-muoto/icon-ops.lock` is free again. That matches the launcher icon daemon holding the lock for the whole apply/restore (see `FileLock` in C++). It means “operation finished,” not a second read of the D-Bus `OperationCompleted` success flag (the GUI still uses that signal).
+**Flock semantics:** scripts wait until `/usr/share/harbour-muoto/icon-ops.lock` is free again. The launcher daemon holds that lock from its job queue going non-empty to it going empty — the whole **drain**, not one job (see `IconJobQueue` in C++). A per-job lock would let a script observe someone else's operation and return before its own request ran.
+
+The lock only says an operation *ran*. It never says whether it did anything, which is why a rejected apply used to be logged as a success. The outcome comes from `/usr/share/harbour-muoto/last-op.json` instead: `muoto_op_status_sequence` before the call and again after, plus `muoto_op_status_outcome` (`ok` / `partial` / `failed`), so the caller can tell its own result from a stale one. Reading `OperationCompleted` from a script would mean `dbus-monitor`, which is too fragile to gate the repair on; the GUI still uses the signal.
 
 **RPM uninstall:** `%preun` runs `harbour-muoto-oneshot-restore --uninstall` with no `timeout` and no `|| true`. If restore fails when `backup/icons` has PNGs, the script exits non-zero and the package stays installed.
 
@@ -69,7 +72,7 @@ Shell scripts do **not** wrap restore in an external `timeout` during RPM uninst
 6. After upgrade, boot apply no-ops until theme applied again in the app.
 7. **Remove Muoto (RPM):** `%preun` stops `harbour-muoto-update-icons` and disables `harbour-muoto-install-listener`, then runs `harbour-muoto-oneshot-restore --uninstall`. Close the Muoto app before uninstall if a theme apply is in progress.
 
-Broader smoke and script inventory: [Testing](testing).
+Broader smoke and script inventory: [Testing](testing.md).
 
 ### Automated scripts
 

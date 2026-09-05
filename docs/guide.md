@@ -2,7 +2,7 @@
 layout: default
 title: Using Muoto
 nav_order: 2
-permalink: docs/guide
+permalink: /docs/guide/
 has_children: true
 has_toc: true
 ---
@@ -19,10 +19,10 @@ Revert themes and display-density changes **before** updating Sailfish OS. If yo
 
 The app opens on a mosaic of tiles:
 
-* **[Themes](themes)** — **Icons** and **Fonts** tiles open configure pages to apply packs, style missing icons, restore to stock, and uninstall
-* **[Dynamic icons](dynamic-icons)** — live clock and calendar on the homescreen
-* **[Display density](density)** — pixel ratio, launcher icon size
-* **[Quick app switching](quick-app-switching)** — hidden Sailfish OS gesture to jump back to the previous app
+* **[Themes](themes.md)** — **Icons** and **Fonts** tiles open configure pages to apply packs, style missing icons, restore to stock, and uninstall
+* **[Dynamic icons](dynamic-icons.md)** — live clock and calendar on the homescreen
+* **[Display density](density.md)** — pixel ratio, launcher icon size
+* **[Quick app switching](quick-app-switching.md)** — hidden Sailfish OS gesture to jump back to the previous app
 
 ## Cover
 
@@ -34,4 +34,4 @@ The app cover shows the active icon/font pack when set. After applying from the 
 
 ## For theme pack authors
 
-Documentation on how to **create** compatible theme packs (icons, fonts, packaging, release) is under **[Create theme packs](getstarted)**.
+Documentation on how to **create** compatible theme packs (icons, fonts, packaging, release) is under **[Create theme packs](getstarted.md)**.

@@ -2,7 +2,7 @@
 layout: default
 title: Create theme packs
 nav_order: 3
-permalink: docs/getstarted
+permalink: /docs/getstarted/
 has_children: true
 has_toc: true
 ---
@@ -11,7 +11,7 @@ has_toc: true
 
 Information on how to create theme packs compatible with **Muoto**. Use the [example package](https://github.com/uithemer/harbour-themepack-example) as a reference — it includes starter templates for icon-only, font-only, and combined packs (`icon-theme/`, `font-theme/`, `full-theme/`), each with a `theme/` asset tree and `rpm/*.spec` for building with the Sailfish SDK.
 
-For **using** the app (apply themes, display density, restore), see **[Using Muoto](guide)**.
+For **using** the app (apply themes, display density, restore), see **[Using Muoto](guide.md)**.
 
 ## Requisites
 
@@ -22,9 +22,9 @@ For **using** the app (apply themes, display density, restore), see **[Using Muo
 
 Read the page for the part of the theme you are creating, then return here for packaging and release.
 
-* [Icons](icons)
-* [Fonts](fonts)
-* [Sounds](sounds) — **not supported** in current Muoto releases (format kept for reference and migration)
+* [Icons](icons.md)
+* [Fonts](fonts.md)
+* [Sounds](sounds.md) — **not supported** in current Muoto releases (format kept for reference and migration)
 
 ## Project layout
 
@@ -37,7 +37,7 @@ harbour-themepack-mypackage/
     └── harbour-themepack-mypackage.spec
 ```
 
-Place icons and fonts under `theme/` (see the [icon](icons) and [font](fonts) guidelines). The `theme/package` file holds the human-readable display name (one line). The spec's `%install` section copies `theme/` into `/usr/share/harbour-themepack-mypackage/` at build time.
+Place icons and fonts under `theme/` (see the [icon](icons.md) and [font](fonts.md) guidelines). The `theme/package` file holds the human-readable display name (one line). The spec's `%install` section copies `theme/` into `/usr/share/harbour-themepack-mypackage/` at build time.
 
 ## .spec file
 

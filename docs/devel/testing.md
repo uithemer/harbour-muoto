@@ -68,11 +68,11 @@ ssh defaultuser@<device> 'bash -s' < scripts/device-test-3.2.sh
 
 Probe package overrides for T-21: `MUOTO_PROBE_PKG`, `MUOTO_PROBE_DESKTOP`.
 
-Auto-apply / upgrade / uninstall expectations are detailed under [Automation](automation).
+Auto-apply / upgrade / uninstall expectations are detailed under [Automation](automation.md).
 
 ## What “good” looks like after ApplyIcons
 
-- `dconf read /apps/harbour-muoto/activeIconPack` is the pack short name.
+- `dconf read /apps/harbour-muoto/activeIconPack` is the full package name (`harbour-themepack-<name>`), not the short name.
 - `/usr/share/harbour-muoto/launcher-manifest.json` exists.
 - APK / redirect entries: PNGs under `launcher-icons/` and `Icon=/usr/share/harbour-muoto/launcher-icons/…`.
 - Native inplace: `Icon=` may still be `harbour-…` while the launcher-size hicolor PNG and manifest `mode=inplace` reflect the pack.

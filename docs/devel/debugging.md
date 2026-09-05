@@ -20,7 +20,7 @@ getcap /usr/libexec/harbour-muoto-launcher-icond
 # Or CapEff bit 1 (CAP_DAC_OVERRIDE) in /proc/<pid>/status while running
 ```
 
-If `org.muoto.Launcher1` has no owner after RPM install over SSH, symlink and enable the user unit (see [Testing](testing#build-and-deploy)).
+If `org.muoto.Launcher1` has no owner after RPM install over SSH, symlink and enable the user unit (see [Testing](testing.md#build-and-deploy)).
 
 ## D-Bus
 
@@ -43,6 +43,14 @@ dbus-send --session --type=method_call --print-reply \
   org.muoto.Launcher1.Themes.RestoreIcons
 ```
 
+Both methods **reply immediately**, before any icon is written, so a successful `dbus-send` reply only means the job was accepted. The outcome arrives later as a signal:
+
+```bash
+dbus-monitor --session "type='signal',interface='org.muoto.Launcher1.Themes'"
+```
+
+`OperationCompleted(op, ok, message)` carries the result; `Progress(op, 0, 0)` means the job is queued behind another one and has not started. To check an outcome after the fact instead of watching the bus, read `last-op.json` (below).
+
 **System** (density / uninstall pack): `org.muoto.Muoto1` — activated on demand via helperd.
 
 ## dconf and files
@@ -58,7 +66,12 @@ grep -H '^Icon=' ~/.local/share/applications/apkd_launcher_*.desktop | head
 
 ls -lt /usr/share/harbour-muoto/launcher-icons/ | head
 wc -c /usr/share/harbour-muoto/launcher-manifest.json
+
+# Outcome of the last icon operation
+cat /usr/share/harbour-muoto/last-op.json
 ```
+
+`last-op.json` is the first thing to read on a bug report: journald is `Storage=volatile` on device, so the journal is usually already gone. `outcome` is `ok`, `partial` (some entries were refused, the pack is still applied) or `failed` (nothing was written), with `built` / `written` counts and a `message`.
 
 Expect **APK** (and many jolla) themed launchers to use absolute paths under `launcher-icons/`. **Native/hicolor** themed apps often keep `Icon=harbour-foo` while only the launcher-size hicolor PNG changed — compare that file (and the manifest) before assuming apply failed. A stock-looking `Icon=` name alone does not mean “not themed.”
 
@@ -70,19 +83,21 @@ journalctl --user -u harbour-muoto-install-listener --no-pager -n 40
 journalctl --user --no-pager --since '5 min ago' | grep -iE 'muoto-launcher|muoto-listener|ApplyIcons|RestoreIcons'
 ```
 
-Look for `ApplyIcons start/done`, `rebuildIconUpdaters`, `file not found`, and `skip re-entrant`.
+Look for `ApplyIcons start/done`, `rebuildIconUpdaters`, `re-armed launcher watches`, and `file not found`.
 
 ## Common failure modes
 
 | Symptom | Likely cause | Check |
 | ------- | ------------ | ----- |
 | Nothing themes after install | `launcher-icond` not running / no D-Bus name | User unit symlink + `enable --now`; GetNameOwner |
-| Half icons look stock after pack switch | Lipstick cache; pack lacks assets (overlay off); or inplace only updated launcher size | Check manifest `mode`; compare hicolor launcher-size vs 512; restart homescreen if needed |
+| Half icons look stock after pack switch | Lipstick cache, or the pack lacks those assets and overlay is off | Check manifest `mode` and `last-op.json` `outcome`; restart homescreen if needed. Since 3.6.0 every raster slot is written, so a stale non-launcher size is no longer a cause |
+| Some icons stay on the **old pack** after restore, mixed with stock ones | Stock backups were lost or poisoned by a pre-3.6.0 apply, so there is no correct art left to put back. 3.6.0 stops this happening but cannot invent the missing bytes | `rpm -V <pkg>` on an affected app to confirm its hicolor PNGs differ from the package. Recover by reinstalling the owning packages (`pkcon install --allow-reinstall <pkg>`), then apply and restore once on 3.6.0+ |
 | APK icons stuck on previous pack | Lipstick lost its inotify watch on the desktop (apkd regenerated it) | Confirm on-disk `Icon=` changed, then check the watch (below); look for `re-armed launcher watches` in the icond journal |
 | APK icons stock after an Android container restart | `containerReady` not received, or apkd clobbered after the retry | icond journal should show `apkd containerReady` then `refreshApkIcons`; check the property with `dbus-send --session --print-reply --dest=com.jolla.apkd /com/jolla/apkd org.freedesktop.DBus.Properties.Get string:com.jolla.apkd string:containerReady` |
 | New app installed but icon is stock | Listener ignored the PackageKit role, or `update-icons` no-op'd on a double-prefixed pack dir | Listener journal: `role=` / `roleRelevant=` (expect `10`/`11`/`22` with `true`); `update-icons` must log `ApplyIcons`, not `missing /usr/share/harbour-themepack-harbour-themepack-…`. Icond should also log `refreshNewDesktops pending= N themed= N` |
-| Apply returns “upgrade in progress” | OS update guard | `/run/defaultuser/osupdate_running`, `system-update.target` — see [Automation](automation) |
-| Apply returns “busy” | `icon-ops.lock` held | Wait; check for stuck icond |
+| Apply returns “upgrade in progress” | OS update guard | `/run/defaultuser/osupdate_running`, `system-update.target` — see [Automation](automation.md) |
+| Apply seems to hang, UI shows “Waiting…” | Job is queued behind another one (`Progress` `0/0`); operations are serialised one at a time | Wait; icond journal shows the running job. A stuck icond still holds `icon-ops.lock` across the drain |
+| Apply rejected instantly | Refused on inspection (e.g. pack does not exist) rather than queued | `OperationCompleted` `message`, or `last-op.json` |
 | Blank tiles | Empty / deleted hicolor leftover | Manifest restore; `rpm -V` / reinstall app |
 | Folder icons stay themed after restore | Stock backups were under wiped `backup/icons/` or poisoned after re-apply | After 3.5.2 upgrade: `harbour-muoto-repair-folder-icons` runs (save pack → RestoreIcons → pkcon download + rpm force-install owning graphics packages → reapply → removes its own unit). Manual: `devel-su /usr/bin/harbour-muoto-repair-folder-icons` |
 | Dyn clock/calendar not live | Flags off or pack without `dynclock`/`dyncal` | dconf `dynamic*Enabled`; pack dirs |
@@ -97,8 +112,8 @@ D=~/.local/share/applications/apkd_launcher_org_telegram_messenger-org_telegram_
 sudo grep -h '^inotify' /proc/$LP/fdinfo/* | grep "ino:$(printf '%x' $(stat -c %i "$D")) "
 ```
 
-No match means the watch is gone and the tile cannot refresh until it is re-armed — see the re-arm section in [Architecture](architecture). Beware inode reuse when comparing across a rename; a surer signal is that `~/.config/nemomobile/lipstick.conf` gets rewritten (`savePositions()`) every time Lipstick processes a desktop change.
+No match means the watch is gone and the tile cannot refresh until it is re-armed — see the re-arm section in [Architecture](architecture.md). Beware inode reuse when comparing across a rename; a surer signal is that `~/.config/nemomobile/lipstick.conf` gets rewritten (`savePositions()`) every time Lipstick processes a desktop change.
 
 ## Architecture pointer
 
-Data flow and source map: [Architecture](architecture).
+Data flow and source map: [Architecture](architecture.md).

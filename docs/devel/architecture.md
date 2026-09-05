@@ -7,7 +7,7 @@ nav_order: 1
 
 # Architecture
 
-How Muoto theming works at runtime (3.2+). Pack-author layout is documented under [Icon pack guidelines](../icons); this page is the engine.
+How Muoto theming works at runtime (3.6+). Pack-author layout is documented under [Icon pack guidelines](../icons.md); this page is the engine.
 
 ## Processes
 
@@ -33,7 +33,7 @@ flowchart LR
 | `harbour-muoto-launcher-icond` | session `org.muoto.Launcher1` | All launcher icon apply/restore; `cap_dac_override` for system `.desktop` / silica folder writeback |
 | `harbour-muoto-helperd` | system `org.muoto.Muoto1` | On-demand: `DensityEnable`, `UninstallPack` only |
 | `harbour-muoto-install-listener` | user unit | D-Bus hooks → `/usr/bin/harbour-muoto-update-icons` |
-| Boot / upgrade scripts | root systemd oneshots | Re-apply or pre-upgrade restore — see [Automation](automation) |
+| Boot / upgrade scripts | root systemd oneshots | Re-apply or pre-upgrade restore — see [Automation](automation.md) |
 
 ## Icon apply (launcher daemon)
 
@@ -50,18 +50,39 @@ flowchart LR
 
 Restore uses the manifest (redirect `Icon=` reverts + per-slot inplace backups), restores folder backups, clears generated `launcher-icons/`, and sets `activeIconPack` to `default`. For hicolor apps `Icon=` is never rewritten, so restore repaints live through the same slot-write + desktop-touch path as apply. On a **failed** slot restore the stored fingerprint is kept: resetting it made the next apply treat our leftover bytes as stock and overwrite the real backup (seen on device — four 86x86 backups ended up holding pack art).
 
+### Serialising operations
+
+Everything that used to call `LauncherIconOps` directly — D-Bus, the dconf watches, the desktop-directory watcher, apkd container readiness, the dynamic-icon tick — now describes what it wants as an `IconJob` and hands it to `IconJobQueue` (`src/launcher/iconjobqueue.cpp`). Kinds are `ApplyAll`, `Restore`, `RefreshDesktops`, `RefreshApk`, `Rebuild` and `RebuildDyn`.
+
+Exactly one job runs at a time and callers never block. The old design ran each operation wherever its trigger fired, so an apply, the desktop watcher and the 60 s dynamic tick could all be part-way through at once; `FileLock` could not arbitrate because they shared a process. That overlap is what let a write land on an entry another operation had renamed aside.
+
+Two details are load-bearing:
+
+- The flock is held **across the whole drain**, not per job. `harbour-muoto-update-icons` and the repair oneshot decide an operation finished by watching that lock, so a per-job lock would let them observe someone else's and report success before their own request ran.
+- `beginSelfWrite()` / `endSelfWrite()` mark the dconf writes a job makes itself, so the watches those writes trigger do not enqueue a rebuild of work already in progress.
+
+`enqueue()` returns 0 for a request it can refuse on inspection (a pack that does not exist), rather than making the caller wait out a drain to be told no. Queued-but-not-started is reported via `jobQueued()`, so a caller can tell "waiting behind a drain" from "the daemon died".
+
+The D-Bus contract follows from this. `ApplyIcons` / `RestoreIcons` **reply immediately**, before the work: the caller's pending call completes at once and the connection keeps serving introspection and signals while icons are rewritten. Completion arrives as `OperationCompleted(op, ok, message)`, matched by request id so back-to-back operations cannot latch onto each other's completion. `Progress(op, done, total)` with `(0, 0)` means "queued, not started yet", which the GUI renders as *Waiting…*; it replaced the client-side lock probe, since the daemon knows what is queued and the GUI could only sample a lock and guess.
+
+`OpStatus` (`src/launcher/opstatus.cpp`) records the outcome of each operation — `Ok`, `Partial` (some updaters refused, pack still applied) or `HardFailure` (nothing written) — as a sequence-numbered record in `/usr/share/harbour-muoto/last-op.json`. The shell callers used to infer success from the lock lifecycle, which is how a rejected apply could still be logged as a success, and journald is `Storage=volatile` on device, so without this file a user bug report arrives with no history. The sequence is seeded from the existing file at startup, never from zero: the repair restarts the daemon and then immediately runs `update-icons`, so a counter that rewound would make the caller misread whose result it is reading.
+
 ### Re-arming Lipstick's desktop watches
 
 Lipstick's `LauncherMonitor` holds a per-file inotify watch on every `.desktop` it has discovered, and `LauncherModel` only re-reads an entry when that watch fires. apkd regenerates `apkd_launcher_*.desktop` with `rename(2)` whenever the Android container is rebuilt; Qt drops the watch on the replaced inode, and `onDirectoryChanged` only calls `addPaths()` for filenames it has not seen before — so the watch is gone for good. Measured on device, all 15 APK desktops were unwatched while all 76 system ones were fine. From then on the `Icon=` redirect is invisible and the tiles need a homescreen restart.
 
-`LauncherWatch::rearmDesktopWatches` (`src/launcher/launcherwatch.cpp`) fixes this by renaming each entry to `<name>.muoto-rearm` and back, batched across all APK desktops:
+`LauncherRearm` (`src/launcher/launcherwatch.cpp`) fixes this by renaming each entry to `<name>.muoto-rearm` and back, batched across all APK desktops:
 
-- The two renames land in **separate** directory scans (400 ms apart), so Lipstick actually observes the name leaving and returning and calls `addPaths()` again.
+- The two renames land in **separate** directory scans (`kSettleMs`, 400 ms apart), so Lipstick actually observes the name leaving and returning and calls `addPaths()` again.
 - Both scans fall inside the 2000 ms `LAUNCHER_MONITOR_HOLDBACK_TIMEOUT_MS` window, so the pending remove and add cancel out and no launcher item is rebuilt — grid positions in `[LauncherOrder]` are untouched.
 - `rename(2)` keeps the inode, owner, mode and contents, so nothing else about the entry changes.
-- Callers then wait out the remaining holdback before rewriting `Icon=`. The waits use a nested `QEventLoop` so the daemon keeps serving D-Bus.
+- Callers then sit out the holdback (`kHoldbackMs`, 2400 ms) before rewriting `Icon=`, and resume on `finished()`.
 
-`applyIcons()` and `restoreIcons()` both call it up front — restore rewrites `Icon=` too and needs a live watch just as much. `rebuildIconUpdatersNow()` sweeps leftover `*.muoto-rearm` files, which also covers a daemon killed mid-round-trip since the daemon rebuilds at startup.
+The sequence is a **single-shot timer state machine**, not a nested `QEventLoop`. Nested loops are what used to make the daemon re-entrant: a D-Bus call, the desktop-directory watcher or the 60 s dynamic tick could run *inside* a re-arm, while entries were renamed aside, and a write to an entry that was not there produced a stub. `startHoldbackOnly()` covers callers that only need the grid to settle.
+
+`applyIcons()` and `restoreIcons()` both re-arm up front (`rearmThen()`) — restore rewrites `Icon=` too and needs a live watch just as much. Leftovers are swept two ways: `rebuildIconUpdatersNow()` calls `LauncherWatch::sweepStaleRearmFiles()` (the daemon rebuilds at startup, so this covers a process killed mid-round-trip), and `abortAndRestore()` puts `asidePaths()` back synchronously on SIGTERM. Losing an entry that is still renamed aside costs the user that launcher item for good, so neither path is optional.
+
+`heartbeat()` is emitted as the machine progresses: re-arm plus holdback is ~5 s of otherwise total silence, and the GUI watchdog treats any progress as proof the daemon is alive rather than wedged.
 
 ### Recovering after an Android container restart
 
@@ -115,22 +136,41 @@ ApplyIcons done ok=true
 
 | Key | Purpose |
 | --- | ------- |
-| `activeIconPack` | Short pack name or `default` |
+| `activeIconPack` | Full package name (`harbour-themepack-<name>`) or `default` — **not** the short name; see the listener note above |
 | `iconOverlay` | Style missing icons |
+| `activeFontPack` / `activeFontWeight` | Active font pack, written by `FontApplier` (the worker owns these) |
 | `homeRefresh` | Restart Lipstick after apply (GUI) |
 | `launcher/dynamicClockEnabled` | Live clock icon |
 | `launcher/dynamicCalendarEnabled` | Live calendar icon |
 | `launcher/applications/<desktop>/provider` | Only `dynamic-icon://…` is honored (clock/calendar) |
 | `launcher/saved-id/<desktop>` | Original `Icon=` before redirect (and related restore state) |
 | `launcher/fingerprint/<hash>` | Inplace “our bytes” marker for hicolor paths |
+| `launcher/desktop-inode/<desktop>` | Last inode we saw for the entry. rpm and apkd both install with `rename(2)`, so comparing against this says precisely which entries lost Lipstick's watch — and which did not |
+
+## State on disk
+
+| Path | Contents |
+| ---- | -------- |
+| `/usr/share/harbour-muoto/launcher-manifest.json` | One entry per themed slot; the source of truth for restore |
+| `/usr/share/harbour-muoto/launcher-icons/` | Generated PNGs for redirect entries; wiped by restore |
+| `/usr/share/harbour-muoto/dynamic-icons/` | Rendered clock / calendar frames |
+| `~/.local/share/harbour-muoto/launcher-backup/` | Stock icon bytes per themed slot (`IconBackup`). Wiped by `RestoreIcons` once the icons are back |
+| `~/.local/share/harbour-muoto/desktop-backup/` | Pristine `.desktop` copies, captured once. Deliberately **not** under `launcher-backup`, so they outlive a restore and a later repair is a local copy instead of an rpm download |
+| `/usr/share/harbour-muoto/last-op.json` | Last operation outcome: `sequence`, `op`, `outcome` (`ok` / `partial` / `failed`), `message`, `built`, `written` — see `OpStatus` above |
 
 ## Source map
 
 | Area | Path |
 | ---- | ---- |
 | Apply / rebuild | `src/launcher/launchericonops.cpp` |
+| Operation queue / serialisation | `src/launcher/iconjobqueue.cpp`, `iconjob.h` |
+| Operation outcome record | `src/launcher/opstatus.cpp` |
 | Install / update re-theme | `src/listener/installlistener.cpp`, `src/listener/pktxwatch.cpp` |
 | Per-desktop update | `src/launcher/iconupdater.cpp`, `desktopentry.cpp` |
+| Stock icon backup / restore | `src/launcher/iconbackup.cpp` |
+| Inode-preserving writes | `src/launcher/filewrite.cpp` |
+| Paths / dconf keys | `src/launcher/launcherpaths.cpp`, `launchersettings.cpp` |
+| D-Bus adaptor / service | `src/launcher/launcherservice.cpp` |
 | Pack index | `src/launcher/harbourthemepack.cpp` |
 | Path resolve (hicolor / APK) | `src/launcher/iconresolve.cpp` |
 | Lipstick watch re-arm | `src/launcher/launcherwatch.cpp` |
