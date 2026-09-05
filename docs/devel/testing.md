@@ -44,7 +44,7 @@ Confirm session D-Bus name `org.muoto.Launcher1` is owned before calling `ApplyI
 
 ## Automated device scripts
 
-Copy scripts from the repo onto the device (or run via SSH). Run as **defaultuser** unless noted. Sudo password override: `MUOTO_SUDO_PASS` (default `rootme` on typical devel images).
+Copy scripts from the repo onto the device (or run via SSH). Run as **defaultuser** unless noted. Sudo password override: `MUOTO_SUDO_PASS`.
 
 | Script | Purpose |
 | ------ | ------- |

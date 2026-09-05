@@ -115,8 +115,8 @@ Page {
                     }
 
                     MuotoButton {
-                        text: qsTr("Transifex")
-                        onClicked: Qt.openUrlExternally("https://explore.transifex.com/fravaccaro/ui-themer")
+                        text: "Transifex"
+                        onClicked: L.LinkHandler.openOrCopyUrl("https://explore.transifex.com/fravaccaro/ui-themer", text)
                     }
 
                 }

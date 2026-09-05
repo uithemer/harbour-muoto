@@ -131,7 +131,7 @@ bash device-test-preupgrade-install.sh --pack haiku --skip-preupgrade --skip-ins
 | Both dyn flags false | Flags false; clock/calendar `Icon=` not muoto dyn redirects |
 | RestoreIcons + dyn flags off | `activeIconPack=default`, both dyn dconf keys **false** (UI usable for stock; live icons not applied until toggled) |
 
-Override probe with `MUOTO_PROBE_PKG` / `MUOTO_PROBE_DESKTOP`. Sudo password: `MUOTO_SUDO_PASS` (default `rootme`).
+Override probe with `MUOTO_PROBE_PKG` / `MUOTO_PROBE_DESKTOP`. Sudo password: `MUOTO_SUDO_PASS`.
 
 ### Uninstall behaviour
 
