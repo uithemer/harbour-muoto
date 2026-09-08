@@ -1,6 +1,9 @@
 TARGET = harbour-muoto
 TEMPLATE = app
 
+isEmpty(APP_VERSION): APP_VERSION = 0.0-devel
+DEFINES += APP_VERSION=\\\"$$APP_VERSION\\\"
+
 CONFIG += sailfishapp c++11 link_pkgconfig
 PKGCONFIG += mlite5 sailfishsilica glib-2.0
 

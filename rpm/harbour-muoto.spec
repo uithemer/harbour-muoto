@@ -114,7 +114,7 @@ fi
 # >> build pre
 # << build pre
 
-%qtc_qmake5
+%qtc_qmake5 APP_VERSION=%{version}-%{release}
 
 %qtc_make %{?_smp_mflags}
 

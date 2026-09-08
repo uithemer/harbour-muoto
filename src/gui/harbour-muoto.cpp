@@ -18,6 +18,10 @@
 #include "fontsampleprovider.h"
 #include "launcherimageprovider.h"
 
+#ifndef APP_VERSION
+#define APP_VERSION "0.0-devel"
+#endif
+
 // 2.6.0: setuid(0) is gone from main(). The GUI runs as defaultuser
 // (its packaged .desktop file targets the user session) and gets
 // privileges only when needed via HelperClient -> system bus ->
@@ -30,6 +34,7 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication *app = SailfishApp::application(argc, argv);
+    app->setApplicationVersion(QStringLiteral(APP_VERSION));
     QQuickView *view = SailfishApp::createView();
     QString qml = QString("qml/harbour-muoto.qml");
 
