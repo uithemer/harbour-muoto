@@ -258,7 +258,6 @@ Dialog {
                                 return dlg.previewIconPx;
                             }
                             fontScale: dlg.previewFontScale
-                            pixelRatio: sldpr.value
                         }
 
                     }
