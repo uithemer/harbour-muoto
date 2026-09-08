@@ -808,10 +808,6 @@
         <source>Request a new language or contribute to existing languages on the Transifex project page.</source>
         <translation>Запросите новый язык или внесите свой вклад в существующие языки на странице проекта Transifex.</translation>
     </message>
-    <message>
-        <source>Transifex</source>
-        <translation>Transifex</translation>
-    </message>
 </context>
 <context>
     <name>WelcomePage</name>

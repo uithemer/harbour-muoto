@@ -30,6 +30,7 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication *app = SailfishApp::application(argc, argv);
+    app->setApplicationVersion(QStringLiteral(APP_VERSION));
     QQuickView *view = SailfishApp::createView();
     QString qml = QString("qml/harbour-muoto.qml");
 

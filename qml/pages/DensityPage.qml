@@ -14,6 +14,7 @@ Dialog {
     property real vendorDpr: 0
     property bool vendorDprKnown: false
     property bool appliedSnapshotReady: false
+    property bool densityPageActivated: false
     property real appliedDpr: 0
     property int appliedIconIndex: 0
     readonly property bool dprAtDefault: vendorDprKnown && Math.abs(sldpr.value - vendorDpr) < 0.001
@@ -125,8 +126,9 @@ Dialog {
         xhr.send();
     }
 
-    // Re-read the vendor default and re-run the unlock every time the dialog
-    // is shown: SFOS upgrades can restore the vendor dconf locks behind us.
+    // Unlock once per dialog instance (this page is created on each push).
+    // ComboBox ContextMenu also toggles PageStatus.Active when it closes;
+    // re-running unlock+sync there overwrote the pending icon size from dconf.
     function activateDensityPage() {
         loadVendorDpr();
         requestDensityUnlock();
@@ -134,9 +136,10 @@ Dialog {
 
     canAccept: densityReady && dirty
     onStatusChanged: {
-        if (status === PageStatus.Active)
+        if (status === PageStatus.Active && !densityPageActivated) {
+            densityPageActivated = true;
             activateDensityPage();
-
+        }
     }
     onAccepted: {
         settings.homeRefresh = restartSection.homeRefreshSwitch.checked;
@@ -255,7 +258,6 @@ Dialog {
                                 return dlg.previewIconPx;
                             }
                             fontScale: dlg.previewFontScale
-                            pixelRatio: sldpr.value
                         }
 
                     }
