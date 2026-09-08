@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sv">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sv">
 <context>
     <name>AboutPage</name>
     <message>
@@ -570,7 +572,10 @@
     </message>
     <message numerus="yes">
         <source>show license(s)</source>
-        <translation><numerusform>visa licens</numerusform><numerusform>visa licenser</numerusform></translation>
+        <translation>
+            <numerusform>visa licens</numerusform>
+            <numerusform>visa licenser</numerusform>
+        </translation>
     </message>
     <message>
         <source>News</source>
@@ -614,7 +619,10 @@
     </message>
     <message numerus="yes">
         <source>License(s)</source>
-        <translation><numerusform>Licens</numerusform><numerusform>Licenser</numerusform></translation>
+        <translation>
+            <numerusform>Licens</numerusform>
+            <numerusform>Licenser</numerusform>
+        </translation>
     </message>
     <message>
         <source>Note: please check the source code for most accurate information.</source>
@@ -797,10 +805,6 @@
     <message>
         <source>Request a new language or contribute to existing languages on the Transifex project page.</source>
         <translation>Föreslå ett nytt språk eller bidra till ett befintligt, på Transifex projektsida.</translation>
-    </message>
-    <message>
-        <source>Transifex</source>
-        <translation>Transifex</translation>
     </message>
 </context>
 <context>

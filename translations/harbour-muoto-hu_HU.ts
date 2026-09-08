@@ -804,10 +804,6 @@
         <source>Request a new language or contribute to existing languages on the Transifex project page.</source>
         <translation type="unfinished">Kérj új nyelvet, vagy segíts a már meglévő nyelvek fordításában a Transifex projektoldalon.</translation>
     </message>
-    <message>
-        <source>Transifex</source>
-        <translation type="unfinished">Transifex</translation>
-    </message>
 </context>
 <context>
     <name>WelcomePage</name>

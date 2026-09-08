@@ -806,10 +806,6 @@
         <source>Request a new language or contribute to existing languages on the Transifex project page.</source>
         <translation>Fordern Sie auf der Projektseite von Transifex eine neue Sprache an oder tragen Sie zu bestehenden Sprachen bei.</translation>
     </message>
-    <message>
-        <source>Transifex</source>
-        <translation>Transifex</translation>
-    </message>
 </context>
 <context>
     <name>WelcomePage</name>

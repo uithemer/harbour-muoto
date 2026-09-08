@@ -130,10 +130,6 @@
         <translation>Ekstra stor (172)</translation>
     </message>
     <message>
-        <source>When you are done, restart the homescreen to apply these changes.</source>
-        <translation>Når du er ferdig, starter du startskjermen på nytt for å ta i bruk endringene.</translation>
-    </message>
-    <message>
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
         <translation>Start startskjermen på nytt etter at skjermtettheten er satt, slik at alle apper fanger opp endringene.</translation>
     </message>
@@ -431,10 +427,6 @@
         <translation>Skrifttyper</translation>
     </message>
     <message>
-        <source>Tap to configure</source>
-        <translation>Trykk for å konfigurere</translation>
-    </message>
-    <message>
         <source>Not available</source>
         <translation>Ikke tilgjengelig</translation>
     </message>
@@ -452,7 +444,7 @@
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Standard</translation>
     </message>
     <message>
         <source>Quick app switching</source>
@@ -813,10 +805,6 @@
     <message>
         <source>Request a new language or contribute to existing languages on the Transifex project page.</source>
         <translation>Be om et nytt språk eller bidra til eksisterende språk på Transifex-prosjektsiden.</translation>
-    </message>
-    <message>
-        <source>Transifex</source>
-        <translation>Transifex</translation>
     </message>
 </context>
 <context>
