@@ -1,6 +1,8 @@
 TARGET = harbour-muoto
 TEMPLATE = app
 
+# The packaged version, so that the About page cannot drift from what was built.
+# Building outside the spec still has to produce something, hence the fallback.
 isEmpty(APP_VERSION): APP_VERSION = 0.0-devel
 DEFINES += APP_VERSION=\\\"$$APP_VERSION\\\"
 
