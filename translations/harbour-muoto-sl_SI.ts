@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="sl_SI">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sl_SI">
 <context>
     <name>AboutPage</name>
     <message>
@@ -17,383 +15,383 @@
     </message>
     <message>
         <source>Muoto lets you customize icons, fonts and pixel density in Sailfish OS.</source>
-        <translation type="unfinished">Muoto vam omogoča prilagoditi ikone, pisave in gostoto pikslov sistema SailfishOS.</translation>
+        <translation>Muoto vam omogoča prilagoditi ikone, pisave in gostoto pikslov sistema SailfishOS.</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>Sodelavci</translation>
     </message>
     <message>
         <source>Testing</source>
-        <translation type="unfinished"></translation>
+        <translation>Preizkušanje</translation>
     </message>
     <message>
         <source>Community testers</source>
-        <translation type="unfinished"></translation>
+        <translation>Preizkuševalci iz skupnosti</translation>
     </message>
     <message>
         <source>Theme packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Paketi s temami</translation>
     </message>
     <message>
         <source>If you want to create a theme compatible with Muoto, please read the documentation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Če želite ustvariti temo, združljivo z aplikacijo Muoto, prosimo, preberite dokumentacijo</translation>
     </message>
     <message>
         <source>Feedback</source>
-        <translation type="unfinished"></translation>
+        <translation>Povratne informacije</translation>
     </message>
     <message>
         <source>If you want to provide feedback or report an issue, please use GitHub.</source>
-        <translation type="unfinished"></translation>
+        <translation>Za povratne informacije in prijavo napak uporabite GitHub.</translation>
     </message>
     <message>
         <source>Credits for existing translations and how to contribute.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zahvale za obstoječe prevode in navodila za sodelovanje.</translation>
     </message>
     <message>
         <source>UI Themer C++</source>
-        <translation type="unfinished"></translation>
+        <translation>UI Themer C++</translation>
     </message>
     <message>
         <source>UI Themer Services</source>
-        <translation type="unfinished"></translation>
+        <translation>UI Themer servisi</translation>
     </message>
     <message>
         <source>UI Themer porting for Sailfish OS 5</source>
-        <translation type="unfinished"></translation>
+        <translation>UI Themer prilagoditev za Sailfish OS 5</translation>
     </message>
 </context>
 <context>
     <name>AskForSupport</name>
     <message>
         <source>Please take a moment to consider if you can contribute to this project in one way or another.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prosimo, da si vzamete trenutek časa in razmislite, ali lahko na kakršen koli način prispevate k projektu.</translation>
     </message>
 </context>
 <context>
     <name>DensityPage</name>
     <message>
         <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne morem odkleniti nastavitve gostote zaslona</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavi</translation>
     </message>
     <message>
         <source>Display scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Povečava zaslona</translation>
     </message>
     <message>
         <source>Restore default</source>
-        <translation type="unfinished"></translation>
+        <translation>Obnovi privzeto</translation>
     </message>
     <message>
         <source>Controls how large Sailfish UI elements appear. Lower = more on screen; higher = larger text and buttons.</source>
-        <translation type="unfinished"></translation>
+        <translation>Določa velikost elementov uporabniškega vmesnika. Nižja vrednost = na zaslonu prikazanih več vsebin; višja vrednost = večje besedilo in gumbi.</translation>
     </message>
     <message>
         <source>Launcher icon size</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost ikon v zaganjalniku</translation>
     </message>
     <message>
         <source>Icons on the home screen and app grid. System default uses your device&apos;s normal size.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ikone na začetnem zaslonu in v mreži z aplikacijami. Privzeta sistemska nastavitev uporablja običajno velikost vaše naprave.</translation>
     </message>
     <message>
         <source>System default</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistemsko privzeto</translation>
     </message>
     <message>
         <source>Compact (86)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kompaktno (86 dpi)</translation>
     </message>
     <message>
         <source>Normal (108)</source>
-        <translation type="unfinished"></translation>
+        <translation>Običajno (108 dpi)</translation>
     </message>
     <message>
         <source>Medium (129)</source>
-        <translation type="unfinished"></translation>
+        <translation>Srednje (129 dpi)</translation>
     </message>
     <message>
         <source>Large (151)</source>
-        <translation type="unfinished"></translation>
+        <translation>Veliko (151 dpi)</translation>
     </message>
     <message>
         <source>Extra large (172)</source>
-        <translation type="unfinished"></translation>
+        <translation>Zelo veliko (172 dpi)</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying display density so all apps pick up the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Po nastavitvi gostote zaslona samodejno ponovno zaženi domači zaslon, da se sprememba uveljavi za vse aplikacije.</translation>
     </message>
 </context>
 <context>
     <name>DetailsDrawer</name>
     <message>
         <source>show less</source>
-        <translation type="unfinished"></translation>
+        <translation>prikaži manj</translation>
     </message>
     <message>
         <source>show more</source>
-        <translation type="unfinished"></translation>
+        <translation>prikaži več</translation>
     </message>
 </context>
 <context>
     <name>DynamicIconsPage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavi</translation>
     </message>
     <message>
         <source>This theme doesn&apos;t include live Clock or Calendar icons. Try another theme, or restore the default look.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta tema ne vključuje dinamične ikone Ure ali Koledarja. Poskusite z drugo temo ali pa obnovite privzeti videz.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikazuje trenuten datum in čas v ikoni Ure in Koledarja.</translation>
     </message>
     <message>
         <source>Show the current time and date on your Clock and Calendar icons, using this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikazuje trenuten datum in čas v ikoni Ure in Koledarja v stilu teme.</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dinamična ikona ure</translation>
     </message>
     <message>
         <source>Shows the current time on the Clock launcher icon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikazuje trenuten čas v ikoni Ure v zaganjalniku.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dinamična ikona koledarja</translation>
     </message>
     <message>
         <source>Shows today&apos;s date on the Calendar launcher icon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikazuje današnji datum v ikoni Koledarja v zaganjalniku.</translation>
     </message>
     <message>
         <source>Dynamic icons updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dinamične ikone so posodobljene.</translation>
     </message>
 </context>
 <context>
     <name>ExternalUrlPage</name>
     <message>
         <source>Swipe left to preview.</source>
-        <translation type="unfinished"></translation>
+        <translation>Za predogled podrsaj v levo</translation>
     </message>
     <message>
         <source>You are using a mobile data connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Uporabljate mobilne podatke</translation>
     </message>
 </context>
 <context>
     <name>FontCarouselModel</name>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Privzeto</translation>
     </message>
 </context>
 <context>
     <name>FontsConfigurePage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavi</translation>
     </message>
     <message>
         <source>This pack provides non-Latin fonts only.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta paket vsebuje pisave brez latinskih znakov.</translation>
     </message>
     <message>
         <source>Choose a font weight to preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Izberite debelino pisave za predogled</translation>
     </message>
     <message>
         <source>Font packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Paketi s pisavami</translation>
     </message>
     <message>
         <source>Font weight</source>
-        <translation type="unfinished"></translation>
+        <translation>Debelina pisave</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying fonts so all apps pick up the new typeface.</source>
-        <translation type="unfinished"></translation>
+        <translation>Po nastavitvi pisav ponovno zaženi domači zaslon, da se sprememba uveljavi za vse aplikacije.</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished">Odstrani</translation>
+        <translation>Odmesti</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Odmeščanje %1</translation>
     </message>
 </context>
 <context>
     <name>HomescreenRestartSection</name>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Ponovno zaženi domači zaslon</translation>
     </message>
     <message>
         <source>Restart homescreen automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Samodejni ponovni zagon domačega zaslona</translation>
     </message>
 </context>
 <context>
     <name>IconPackPreview</name>
     <message>
         <source>No preview available</source>
-        <translation type="unfinished"></translation>
+        <translation>Predogled ni na voljo</translation>
     </message>
 </context>
 <context>
     <name>IconsConfigurePage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavi</translation>
     </message>
     <message>
         <source>Icon packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Paketi z ikonami</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti</translation>
     </message>
     <message>
         <source>Style missing app icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Uskladi stil manjkajočih ikon</translation>
     </message>
     <message>
         <source>Uses this theme&apos;s look for apps that don&apos;t have a custom icon in the pack.</source>
-        <translation type="unfinished"></translation>
+        <translation>Uporabi videz teme za ikone aplikacij, ki nimajo ikone po meri.</translation>
     </message>
     <message>
         <source>Dynamic clock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dinamična ikona ure</translation>
     </message>
     <message>
         <source>Show the current time on the Clock icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikazuje trenuten čas v ikoni Ure v stilu teme.</translation>
     </message>
     <message>
         <source>Dynamic calendar icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Dinamična ikona koledarja</translation>
     </message>
     <message>
         <source>Show today&apos;s date on the Calendar icon, in this theme&apos;s style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikazuje trenuten datum v ikoni Koledarja v stilu teme.</translation>
     </message>
     <message>
         <source>Restart the homescreen after applying icons so all launcher tiles refresh.</source>
-        <translation type="unfinished"></translation>
+        <translation>Po nastavitvi ikon ponovno zaženi domači zaslon, da se sprememba uveljavi za vse aplikacije.</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Privzeto</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished">Odstrani</translation>
+        <translation>Odmesti</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Odmeščanje %1</translation>
     </message>
 </context>
 <context>
     <name>LicenseListPart</name>
     <message>
         <source>License text</source>
-        <translation type="unfinished"></translation>
+        <translation>Besedilo licence</translation>
     </message>
 </context>
 <context>
     <name>LowPowerPage</name>
     <message>
         <source>Could not update low-power mode settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavitev načina nizke porabe energije ni bilo mogoče posodobiti.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavi</translation>
     </message>
     <message>
         <source>Low-power mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Način nizke porabe</translation>
     </message>
     <message>
         <source>Low-power mode settings are not available on this device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavitve načina nizke porabi niso na voljo v tej napravi</translation>
     </message>
     <message>
         <source>Wake from pocket</source>
-        <translation type="unfinished"></translation>
+        <translation>Prebujanje iz žepa</translation>
     </message>
     <message>
         <source>Wake on hover</source>
-        <translation type="unfinished"></translation>
+        <translation>Prebujanje ob približanju</translation>
     </message>
     <message>
         <source>Show the glance screen when you hold your hand over the sensor.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaže zaslon za hiter pregled, ko z roko prekrijete senzor.</translation>
     </message>
     <message>
         <source>Keep proximity ready</source>
-        <translation type="unfinished"></translation>
+        <translation>Ohranjaj senzor bližine v pripravljenosti</translation>
     </message>
     <message>
         <source>Use recommended</source>
-        <translation type="unfinished"></translation>
+        <translation>Uporabi priporočeno</translation>
     </message>
     <message>
         <source>Restore defaults</source>
-        <translation type="unfinished"></translation>
+        <translation>Obnovi privzeto</translation>
     </message>
     <message>
         <source>Automatically show time and status information when the screen is off.</source>
-        <translation type="unfinished"></translation>
+        <translation>Samodejno prikazuje čas in stanje, ko je zaslon izklopljen.</translation>
     </message>
     <message>
         <source>Show the glance screen when taking the device out of pocket.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaže zaslon za hiter pregled, ko se napravo vzame iz žepa.</translation>
     </message>
     <message>
         <source>Needed for reliable glance on many devices. Enabling this may use more battery, and the screen may not turn off reliably during calls.</source>
-        <translation type="unfinished"></translation>
+        <translation>Potrebno za zanesljiv prikaz hitrega zaslona na večini naprav. Vklop te možnosti lahko troši več energije in zaslon se med klici morda ne bo pravilno izklopil.</translation>
     </message>
     <message>
         <source>Double tap the glance screen to wake fully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dvojni pritisk na hitrem zaslonu za popoln vklop zaslona.</translation>
     </message>
     <message>
         <source>Low-power settings updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Način nizke porabe je posodobljen.</translation>
     </message>
 </context>
 <context>
@@ -404,400 +402,390 @@
     </message>
     <message>
         <source>Dynamic icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Dinamične ikone</translation>
     </message>
     <message>
         <source>Download more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Prenesite več tem</translation>
     </message>
     <message>
         <source>Muoto</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto</translation>
     </message>
     <message>
         <source>Icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Ikone</translation>
     </message>
     <message>
         <source>Stock</source>
-        <translation type="unfinished"></translation>
+        <translation>Privzeto</translation>
     </message>
     <message>
         <source>Fonts</source>
-        <translation type="unfinished"></translation>
+        <translation>Pisave</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Ni na voljo</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"></translation>
+        <translation>Vključeno</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Izključeno</translation>
     </message>
     <message>
         <source>Low-power mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Način nizke porabe</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Privzeto</translation>
     </message>
     <message>
         <source>Quick app switching</source>
-        <translation type="unfinished"></translation>
+        <translation>Hitro preklapljanje med aplikacijami</translation>
     </message>
 </context>
 <context>
     <name>MuotoAboutMenuItem</name>
     <message>
         <source>About Muoto</source>
-        <translation type="unfinished">O programu Muoto</translation>
+        <translation>O programu Muoto</translation>
     </message>
 </context>
 <context>
     <name>MuotoRestartHomescreenMenuItem</name>
     <message>
         <source>Restart homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Ponovni zagon domačega zaslona</translation>
     </message>
     <message>
         <source>Restarting homescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>Domači zaslon se ponovno zaganja</translation>
     </message>
 </context>
 <context>
     <name>MuotoSupportDialog</name>
     <message>
         <source>Hi there!</source>
-        <translation type="unfinished"></translation>
+        <translation>Živjo!</translation>
     </message>
     <message>
         <source>Thank you for using Muoto! If you find it useful, consider supporting its development.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvala, da uporabljate Muoto! Če se vam zdi koristen, razmislite o podpori njegovega razvoja.</translation>
     </message>
     <message>
         <source>Thank you for your support!</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvala za vašo podporo!</translation>
     </message>
     <message>
         <source>Donate via Liberapay</source>
-        <translation type="unfinished"></translation>
+        <translation>Donirajte preko Liberapay</translation>
     </message>
     <message>
         <source>Help with translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Pomagajte s prevodi</translation>
     </message>
     <message>
         <source>Improve Muoto in your language on Transifex.</source>
-        <translation type="unfinished"></translation>
+        <translation>Izboljšajte Muoto v svojem jeziku na Transifex.</translation>
     </message>
     <message>
         <source>Report issues on GitHub</source>
-        <translation type="unfinished"></translation>
+        <translation>Prijava težav na GitHub</translation>
     </message>
     <message>
         <source>File bugs, suggest features, or follow development.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prijavite napake, predlagajte nove funkcije ali spremljajte razvoj.</translation>
     </message>
     <message>
         <source>Why support this app?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zakaj podpreti razvoj te aplikacije?</translation>
     </message>
     <message>
         <source>Muoto is free software (GPLv3) for customizing Sailfish icons, fonts, and display density. It is maintained in spare time alongside other projects.</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto je brezplačna programska oprema (GPLv3) za prilagajanje ikon, pisav in gostote prikaza v sistemu Sailfish OS. Razvija se v prostem času, vzporedno z drugimi projekti.</translation>
     </message>
     <message>
         <source>Donations and contributions help keep the app compatible with new Sailfish releases and theme packs from the community.</source>
-        <translation type="unfinished"></translation>
+        <translation>Donacije in prispevki pomagajo zagotoviti združljivost aplikacije z novimi izdajami Sailfish OS in paketi tem, ki jih prispeva skupnost.</translation>
     </message>
     <message>
         <source>Other ways to help</source>
-        <translation type="unfinished"></translation>
+        <translation>Drugi načini pomoči</translation>
     </message>
     <message>
         <source>Share theme packs, write documentation, test beta builds, or star the project on GitHub — every bit helps.</source>
-        <translation type="unfinished"></translation>
+        <translation>Delite pakete tem, pišite dokumentacijo, preizkušajte beta različice ali označite projekt z zvezdico na GitHub – vsak prispevek pomaga.</translation>
     </message>
     <message>
         <source>Send a tip or recurring support on Liberapay.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pošljite prispevek ali redno podporo prek Liberapay.</translation>
     </message>
 </context>
 <context>
     <name>Opal.About</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>O programu</translation>
     </message>
     <message>
         <source>Version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Različica %1</translation>
     </message>
     <message>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Razvoj</translation>
     </message>
     <message>
         <source>show contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>prikaži sodelavce</translation>
     </message>
     <message>
         <source>Homepage</source>
-        <translation type="unfinished"></translation>
+        <translation>Domača stran</translation>
     </message>
     <message>
         <source>Changelog</source>
-        <translation type="unfinished"></translation>
+        <translation>Dnevnik sprememb</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished">Prevodi</translation>
+        <translation>Prevajalci</translation>
     </message>
     <message>
         <source>Source Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Izvorna koda</translation>
     </message>
     <message>
         <source>Donations</source>
-        <translation type="unfinished"></translation>
+        <translation>Donacije</translation>
     </message>
     <message>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Licenca</translation>
     </message>
     <message numerus="yes">
         <source>show license(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
+        <translation><numerusform>prikaži licenco</numerusform><numerusform>prikaži licenci</numerusform><numerusform>prikaži licence</numerusform><numerusform>prikaži licence</numerusform></translation>
     </message>
     <message>
         <source>News</source>
-        <translation type="unfinished"></translation>
+        <translation>Novosti</translation>
     </message>
     <message>
         <source>Changes since version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Spremembe od različice %1 dalje</translation>
     </message>
     <message>
         <source>show details</source>
-        <translation type="unfinished"></translation>
+        <translation>prikaži podrobnosti</translation>
     </message>
     <message>
         <source>Thank you!</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvala!</translation>
     </message>
     <message>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Podrobnosti</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>Sodelavci</translation>
     </message>
     <message>
         <source>Acknowledgements</source>
-        <translation type="unfinished"></translation>
+        <translation>Zahvale</translation>
     </message>
     <message>
         <source>Please refer to &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Prosimo, glejte &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Download license texts</source>
-        <translation type="unfinished"></translation>
+        <translation>Prenesi besedila licenc</translation>
     </message>
     <message>
         <source>You are using a mobile data connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Uporabljate mobilne podatke</translation>
     </message>
     <message numerus="yes">
         <source>License(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
+        <translation><numerusform>Licenca</numerusform><numerusform>Licenci</numerusform><numerusform>Licence</numerusform><numerusform>Licenc</numerusform></translation>
     </message>
     <message>
         <source>Note: please check the source code for most accurate information.</source>
-        <translation type="unfinished"></translation>
+        <translation>Opomba: za čim natančnejše informacije preverite izvorno kodo.</translation>
     </message>
 </context>
 <context>
     <name>Opal.About.Common</name>
     <message>
         <source>If you want to support my work, you can buy me a cup of coffee.</source>
-        <translation type="unfinished"></translation>
+        <translation>Če želite podpreti moje delo, mi lahko kupite skodelico kave.</translation>
     </message>
     <message>
         <source>You can support this project by contributing, or by donating using any of these services.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta projekt lahko podprete s prispevkom ali z donacijo prek katere koli od teh storitev.</translation>
     </message>
     <message>
         <source>Your contributions to translations or code would be most welcome.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vaši prispevki k prevodom ali kodi bodo zelo dobrodošli.</translation>
     </message>
 </context>
 <context>
     <name>Opal.LinkHandler</name>
     <message>
         <source>Copied to clipboard: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopirano v odložišče: %1</translation>
     </message>
     <message>
         <source>Share link</source>
-        <translation type="unfinished"></translation>
+        <translation>Deli povezavo</translation>
     </message>
     <message>
         <source>Phone number</source>
-        <translation type="unfinished"></translation>
+        <translation>Številka telefona</translation>
     </message>
     <message>
         <source>External link</source>
-        <translation type="unfinished"></translation>
+        <translation>Zunanja povezava</translation>
     </message>
     <message>
         <source>Open in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Odpri v brskalniku</translation>
     </message>
     <message>
         <source>Open externally</source>
-        <translation type="unfinished"></translation>
+        <translation>Odpri v zunanji aplikaciji</translation>
     </message>
     <message>
         <source>Share</source>
-        <translation type="unfinished"></translation>
+        <translation>Deli</translation>
     </message>
     <message>
         <source>Copy link</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiraj povezavo</translation>
     </message>
     <message>
         <source>Copy text</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiraj besedilo</translation>
     </message>
     <message>
         <source>No preview available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Predogled ni na voljo</translation>
     </message>
     <message>
         <source>The page is taking too long to load.</source>
-        <translation type="unfinished"></translation>
+        <translation>Stran se predolgo nalaga.</translation>
     </message>
 </context>
 <context>
     <name>QuickSwitchPage</name>
     <message>
         <source>Quick app switching enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hitro preklapljanje med aplikacijami je omogočeno.</translation>
     </message>
     <message>
         <source>Quick app switching disabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hitro preklapljanje med aplikacijami je onemogočeno.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Prekliči</translation>
+        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavi</translation>
     </message>
     <message>
         <source>Quick app switching</source>
-        <translation type="unfinished"></translation>
+        <translation>Hitro preklapljanje med aplikacijami</translation>
     </message>
     <message>
         <source>Jump straight back to the previous app, like Alt+Tab on a computer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Skočite nazaj na prejšnjo aplikacijo, enako kot Alt+Tab na računalniku.</translation>
     </message>
     <message>
         <source>Peek slowly from the edge of the screen, about three centimetres and for more than half a second. The previous app&apos;s cover highlights on the switcher; lift your finger to switch to it, or peek back towards the edge to cancel.</source>
-        <translation type="unfinished"></translation>
+        <translation>Počasi povlecite iz roba zaslona, približno tri centimetre in za več kot pol sekunde. Na izbirniku se prikaže naslovnica prejšnje aplikacije; dvignite prst, da preklopite nanjo, ali pa ponovno povlecite proti robu za preklic.</translation>
     </message>
     <message>
         <source>This is an experimental Sailfish OS setting. It may behave differently or disappear in a future OS release.</source>
-        <translation type="unfinished"></translation>
+        <translation>To je eksperimentalna nastavitev Sailfish OS. V prihodnjih različicah operacijskega sistema se lahko obnaša drugače ali pa sploh ne bo več na voljo.</translation>
     </message>
 </context>
 <context>
     <name>SupportDialog</name>
     <message>
         <source>Hi there!</source>
-        <translation type="unfinished"></translation>
+        <translation>Živjo!</translation>
     </message>
     <message>
         <source>Thank you for using my little app! Maybe you can contribute back?</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvala, da uporabljate mojo aplikacijo! Morda lahko tudi vi prispevate k razvoju?</translation>
     </message>
     <message>
         <source>Thank you for your support!</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvala za vašo podporo!</translation>
     </message>
     <message>
         <source>Remind me later</source>
-        <translation type="unfinished"></translation>
+        <translation>Opomni kasneje</translation>
     </message>
     <message>
         <source>Don&apos;t ask me again</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne sprašuj več</translation>
     </message>
 </context>
 <context>
     <name>ThemeWork</name>
     <message>
         <source>Stock</source>
-        <translation type="unfinished"></translation>
+        <translation>Privzeto</translation>
     </message>
     <message>
         <source>Applying theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavljanje teme</translation>
     </message>
     <message>
         <source>Applying icons…</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavljanje ikon …</translation>
     </message>
     <message>
         <source>Applying fonts…</source>
-        <translation type="unfinished"></translation>
+        <translation>Uveljavljanje pisav …</translation>
     </message>
     <message>
         <source>Restoring theme…</source>
-        <translation type="unfinished"></translation>
+        <translation>Obnavljanje teme …</translation>
     </message>
     <message>
         <source>Uninstalling theme…</source>
-        <translation type="unfinished"></translation>
+        <translation>Odmeščanje teme …</translation>
     </message>
     <message>
         <source>Waiting…</source>
-        <translation type="unfinished"></translation>
+        <translation>Čakam ...</translation>
     </message>
     <message>
         <source>Theme updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema je posodobljena.</translation>
     </message>
     <message>
         <source>Display settings updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavitve zaslona so posodobljene.</translation>
     </message>
     <message>
         <source>Theme removed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema je odstranjena.</translation>
     </message>
     <message>
         <source>Font applied. %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pisava je nastavljena. %1</translation>
     </message>
 </context>
 <context>
@@ -810,12 +798,16 @@
         <source>Request a new language or contribute to existing languages on the Transifex project page.</source>
         <translation>Predlagajte nov jezik ali prispevajte k prevodu obstoječega na portalu Transifex .</translation>
     </message>
+    <message>
+        <source>Transifex</source>
+        <translation>Transifex</translation>
+    </message>
 </context>
 <context>
     <name>WelcomePage</name>
     <message>
         <source>Welcome to Muoto</source>
-        <translation>Dobrodošli v aplikaciji Muoto</translation>
+        <translation>Dobrodošli v Muoto</translation>
     </message>
     <message>
         <source>Donate</source>
@@ -847,86 +839,86 @@
     </message>
     <message>
         <source>This software is provided &quot;as is&quot;, without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with the software. You are solely responsible for the safety of your data.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta programska oprema se zagotavlja &quot;tako, kot je&quot;, brez kakršnihkoli izrecnih ali implicitnih jamstev. Avtorji ali imetniki avtorskih pravic v nobenem primeru ne odgovarjajo za kakršnekoli zahtevke, škodo ali druge obveznosti, ki izhajajo iz te programske opreme, so z njo povezane ali iz nje izhajajo. Za varnost vaših podatkov ste odgovorni izključno vi.</translation>
     </message>
     <message>
         <source>I understand and accept</source>
-        <translation type="unfinished"></translation>
+        <translation>Razumem in sprejemam</translation>
     </message>
     <message>
         <source>Muoto does not send any data. Some essential information (e.g. the current theme) are collected and stored exclusively locally and used only for the proper functioning of the app (e.g. to display the current theme in the app).</source>
-        <translation type="unfinished"></translation>
+        <translation>Muoto ne pošilja nobenih podatkov. Nekatere bistvene informacije (n. pr. trenutna tema) se zbirajo in shranjujejo izključno lokalno ter se uporabljajo le za pravilno delovanje aplikacije (n. pr. za prikaz trenutne teme v aplikaciji).</translation>
     </message>
 </context>
 <context>
     <name>harbour-muoto</name>
     <message>
         <source>Busy...</source>
-        <translation type="unfinished"></translation>
+        <translation>Obdelovanje ...</translation>
     </message>
     <message>
         <source>Cannot apply changes while shutting down</source>
-        <translation type="unfinished"></translation>
+        <translation>Sprememb ni možno uveljaviti med ugašanjem</translation>
     </message>
     <message>
         <source>Wait for the system update to finish</source>
-        <translation type="unfinished"></translation>
+        <translation>Počakajte, da se posodobitev sistema zaključi</translation>
     </message>
     <message>
         <source>Try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Poskusite znova čez nekaj trenutkov</translation>
     </message>
     <message>
         <source>Could not unlock display density settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne morem odkleniti nastavitve gostote zaslona</translation>
     </message>
     <message>
         <source>This theme pack cannot be used</source>
-        <translation type="unfinished"></translation>
+        <translation>Tega paketa ni možno uporabiti</translation>
     </message>
     <message>
         <source>No icons to apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Nobena ikona ne ustreza</translation>
     </message>
     <message>
         <source>Theme pack is not installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema ni nameščena</translation>
     </message>
     <message>
         <source>Could not style missing app icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Stila manjkajočih ikon ni možno uskladiti</translation>
     </message>
     <message>
         <source>No icons could be installed from this theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Ikon iz te teme ni možno namestiti</translation>
     </message>
     <message>
         <source>Something went wrong</source>
-        <translation type="unfinished"></translation>
+        <translation>Nekaj je šlo narobe</translation>
     </message>
     <message>
         <source>Operation failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Dejanje ni uspelo</translation>
     </message>
     <message>
         <source>Busy — try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Obdelujem — poskusite znova čez nekaj trenutkov</translation>
     </message>
     <message>
         <source>Icons could not be changed — try restarting the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Ikon ni možno spremeniti  — poskusite ponovno zagnati napravo</translation>
     </message>
     <message>
         <source>Some icons could not be updated</source>
-        <translation type="unfinished"></translation>
+        <translation>Nekaterih ikon ni možno posodobiti</translation>
     </message>
     <message>
         <source>Some icons could not be restored</source>
-        <translation type="unfinished"></translation>
+        <translation>Nekaterih ikon ni možno obnoviti</translation>
     </message>
     <message>
         <source>Could not remove this theme — try again in a moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Teme ni možno odstraniti — poskusite znova čez nekaj trenutkov</translation>
     </message>
 </context>
 </TS>

@@ -98,6 +98,11 @@ Page {
                     }
 
                     DetailItem {
+                        label: "Slovenščina"
+                        value: "Boštjan Štrumbelj"
+                    }
+
+                    DetailItem {
                         label: "Svenska"
                         value: "Åke Engelbrektson"
                     }
